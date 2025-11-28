@@ -12,17 +12,18 @@ const Header = () => {
       justifyContent={"space-between"}
     >
       <Box
+        minWidth={"165px"}
         alignContent={"center"}
         marginLeft={"50px"}
+        marginRight={"25px"}
       >
-        <Typography 
-        
-        variant="h4" >
-          The Budgeting App
+        <Typography variant="h4" >
+          My Budget
         </Typography>
       </Box>
       <Box
         alignContent={"center"}
+        marginLeft={"25px"}
         marginRight={"50px"}
       >
         <ThemeToggle />

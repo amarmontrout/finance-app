@@ -47,8 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Box
                 component="main"
                 sx={{
+                  display: "flex",
                   flex: 1,
-                  width: "100%",
                   bgcolor: "background.default",
                   color: "text.primary",
                 }}

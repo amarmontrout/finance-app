@@ -2,6 +2,9 @@
 
 import { linkStyle, navSelection } from "@/globals/styles"
 import { Box, Stack, Typography } from "@mui/material"
+import PaidIcon from '@mui/icons-material/Paid';
+import SavingsIcon from '@mui/icons-material/Savings';
+import CreditCardIcon from '@mui/icons-material/CreditCard';
 import Link from "next/link"
 
 const Navbar = () => {
@@ -9,7 +12,9 @@ const Navbar = () => {
   return (
     <Stack height={"100%"} >
       <Box minHeight={"100px"} bgcolor={"background.default"} textAlign={"center"} alignContent={"center"}>
-        Logo
+        <PaidIcon fontSize={"large"} />
+        <SavingsIcon fontSize={"large"} />
+        <CreditCardIcon fontSize={"large"} />
       </Box>
       <Stack
         direction={"column"}

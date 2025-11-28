@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Providers from "./providers";
-import Header from "./header/Header";
 import { Box } from "@mui/material";
+import Navbar from "../navigation/Navbar";
+import Header from "@/header/Header";
 
 export const metadata: Metadata = {
   title: "My Budget App",
@@ -24,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 borderColor: "divider",
               }}
             >
-              Nav
+              <Navbar/>
             </Box>
 
             {/* Main column */}

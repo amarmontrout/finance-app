@@ -1,7 +1,7 @@
 "use client"
 
+import ThemeToggle from "@/components/ThemeToggle";
 import { Box, Stack, Typography } from "@mui/material";
-import ThemeToggle from "../components/ThemeToggle";
 
 const Header = () => {
     
@@ -25,7 +25,7 @@ const Header = () => {
         alignContent={"center"}
         marginRight={"50px"}
       >
-        <ThemeToggle/>
+        <ThemeToggle />
       </Box>
     </Stack>
   )

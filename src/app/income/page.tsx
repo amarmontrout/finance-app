@@ -1,7 +1,7 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { Box } from "@mui/material"
 
-const Income = () => {
+const Page = () => {
   return (
     <Box
       display={"flex"}
@@ -17,4 +17,4 @@ const Income = () => {
   )
 }
 
-export default Income
+export default Page

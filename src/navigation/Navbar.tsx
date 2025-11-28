@@ -32,7 +32,7 @@ const Navbar = () => {
         <Link style={linkStyle} href={"/expenses"} ><Box sx={navSelection} ><Typography variant={"h5"} >Expenses</Typography></Box></Link>
         <hr style={{ width: "100%" }} />
         <Typography>Actions</Typography>
-        <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Enter Income</Typography></Box></Link>
+        <Link style={linkStyle} href={"/add-income"} ><Box sx={navSelection} ><Typography variant={"h5"} >Enter Income</Typography></Box></Link>
         <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Enter Expense</Typography></Box></Link>
         <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Set Goals</Typography></Box></Link>
         <hr style={{ width: "100%" }} />

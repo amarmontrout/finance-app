@@ -1,5 +1,6 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { Box } from "@mui/material"
+import AddIncome from "./AddIncome"
 
 const Page = () => {
   return (
@@ -10,8 +11,8 @@ const Page = () => {
       alignItems={"center"}
       padding={"50px"}
     >
-      <ShowCaseCard title={"Expenses"}>
-        Content
+      <ShowCaseCard title={"Add Income"}>
+        <AddIncome/>
       </ShowCaseCard>
     </Box>
   )

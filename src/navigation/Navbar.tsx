@@ -1,20 +1,37 @@
 "use client"
 
-import { linkStyle, navSelection } from "@/globals/styles"
 import { Box, Stack, Typography } from "@mui/material"
-import PaidIcon from '@mui/icons-material/Paid';
-import SavingsIcon from '@mui/icons-material/Savings';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import Link from "next/link"
+import PageLink, { PageLinkType } from "./PageLink";
+import Logo from "@/components/Logo";
+
+const quickInfo: PageLinkType[] = [
+  {"name": "Overview", "link": "/"},
+  {"name": "Income", "link": "/income"},
+  {"name": "Expenses", "link": "/expenses"},
+]
+
+const actions: PageLinkType[] = [
+  {"name": "Enter Income", "link": "/add-income"},
+  {"name": "Enter Expense", "link": "#"},
+  {"name": "Set Goals", "link": "#"},
+]
+
+const misc: PageLinkType[] = [
+  {"name": "Calendar", "link": "#"},
+  {"name": "Categories", "link": "#"},
+]
 
 const Navbar = () => {
-
   return (
     <Stack height={"100%"} >
-      <Box minHeight={"100px"} bgcolor={"background.default"} textAlign={"center"} alignContent={"center"}>
-        <PaidIcon fontSize={"large"} />
-        <SavingsIcon fontSize={"large"} />
-        <CreditCardIcon fontSize={"large"} />
+      <Box 
+        display={"flex"} 
+        minHeight={"100px"} 
+        bgcolor={"background.default"} 
+        justifyContent={"center"} 
+        alignItems={"center"}
+      >
+        <Logo/>
       </Box>
       <Stack
         direction={"column"}
@@ -27,17 +44,24 @@ const Navbar = () => {
         }}
       >
         <Typography>Quick Info</Typography>
-        <Link style={linkStyle} href={"/"} ><Box sx={navSelection} ><Typography variant={"h5"} >Overview</Typography></Box></Link>
-        <Link style={linkStyle} href={"/income"} ><Box sx={navSelection} ><Typography variant={"h5"} >Income</Typography></Box></Link>
-        <Link style={linkStyle} href={"/expenses"} ><Box sx={navSelection} ><Typography variant={"h5"} >Expenses</Typography></Box></Link>
+        {quickInfo.map((item) => {
+          return (
+            <PageLink item={item} key={item.name} />
+          )
+        })}
         <hr style={{ width: "100%" }} />
         <Typography>Actions</Typography>
-        <Link style={linkStyle} href={"/add-income"} ><Box sx={navSelection} ><Typography variant={"h5"} >Enter Income</Typography></Box></Link>
-        <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Enter Expense</Typography></Box></Link>
-        <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Set Goals</Typography></Box></Link>
+        {actions.map((item) => {
+          return (
+            <PageLink item={item} key={item.name} />
+          )
+        })}
         <hr style={{ width: "100%" }} />
-        <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Calendar</Typography></Box></Link>
-        <Link style={linkStyle} href={"#"} ><Box sx={navSelection} ><Typography variant={"h5"} >Categories</Typography></Box></Link>
+        {misc.map((item) => {
+          return (
+            <PageLink item={item} key={item.name} />
+          )
+        })}
       </Stack>
     </Stack>
   )

@@ -29,12 +29,14 @@ const Page = () => {
         <ShowCaseCard title={"Add Income"}>
           <TransactionForm
             categories={incomeCategories}
+            type={"income"}
           />
         </ShowCaseCard>
 
         <ShowCaseCard title={"Add Expense"}>
           <TransactionForm
             categories={expenseCategories}
+            type={"expense"}
           />
         </ShowCaseCard>
       </Stack>

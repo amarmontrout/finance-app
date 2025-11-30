@@ -13,7 +13,6 @@ const quickInfo: PageLinkType[] = [
 const actions: PageLinkType[] = [
   {"name": "Transactions", "link": "/transactions"},
   {"name": "Set Goals", "link": "#"},
-  {"name": "Categories", "link": "#"},
 ]
 
 const misc: PageLinkType[] = [

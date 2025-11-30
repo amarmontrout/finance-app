@@ -1,8 +1,18 @@
 "use client"
 
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField } from "@mui/material"
+import { 
+  Box, 
+  Button,
+  FormControl,
+  InputAdornment, 
+  InputLabel, 
+  MenuItem, 
+  OutlinedInput, 
+  Select, 
+  SelectChangeEvent, 
+  Stack } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -23,31 +33,81 @@ const months = [
 ]
 
 type TransactionType = {
+  type: string | undefined,
   month: string,
   category: string,
   amount: string
 }
 
 const TransactionForm = (props: {
-  categories: string[]
+  categories: string[],
+  type: string
 }) => {
-  const { categories } = props
+  const { categories, type } = props
 
   const TRANSACTION_INIT: TransactionType = {
+    type: undefined,
     month: months[currentMonth],
     category: categories[0],
-    amount: "00.00"
+    amount: "0000.00"
   }
 
   const [transaction, setTransaction] = useState<TransactionType>(TRANSACTION_INIT)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
-    const { name, value } = e.target
+  useEffect(() => {
+    setTransaction(prev => ({
+      ...prev,
+      type: type,
+    }));
+  }, [])
+
+  const handleMonth = (e: SelectChangeEvent) => {
+    const { value } = e.target
 
     setTransaction(prev => ({
       ...prev,
-      [name]: value,
+      month: value,
     }));
+  }
+
+  const handleCategory = (e: SelectChangeEvent) => {
+    const { value } = e.target
+
+    setTransaction(prev => ({
+      ...prev,
+      category: value,
+    }));
+  }
+
+  const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    let digits = e.target.value.replace(/\D/g, ""); // numbers only
+
+    // If user cleared everything
+    if (digits === "") digits = "000000"; // force 0000.00
+
+    // Guarantee at least 6 digits so we always have xx.xx
+    digits = digits.padStart(6, "0");
+
+    // Last 2 = cents
+    const cents = digits.slice(-2);
+
+    // Everything before cents
+    let dollars = digits.slice(0, -2);
+
+    // Remove *unnecessary* leading zeros in dollars
+    dollars = dollars.replace(/^0+/, "");
+
+    // But ensure AT LEAST 4 dollars digits
+    dollars = dollars.padStart(4, "0");
+
+    const formatted = `${dollars}.${cents}`;
+
+    if (formatted.length <= 7) {
+      setTransaction(prev => ({
+        ...prev,
+        amount: formatted,
+      }));
+    }
   }
 
   return (
@@ -65,7 +125,7 @@ const TransactionForm = (props: {
             label="Month"
             value={transaction.month}
             name={"month"}
-            onChange={handleChange}
+            onChange={e => handleMonth(e)}
             sx={{
               width: "200px"
             }}
@@ -82,7 +142,7 @@ const TransactionForm = (props: {
             label="Category"
             value={transaction.category}
             name={"category"}
-            onChange={e => handleChange(e)}
+            onChange={e => handleCategory(e)}
             sx={{
               width: "200px"
             }}
@@ -93,16 +153,26 @@ const TransactionForm = (props: {
           </Select>
         </FormControl>
 
-        <TextField
-          label={"Amount"}
-          value={transaction.amount}
-          name={"amount"}
-          onChange={e => handleChange(e)}
-        />
+        <FormControl>
+          <InputLabel>Amount</InputLabel>
+          <OutlinedInput
+            label={"Amount"}
+            value={transaction.amount}
+            name={"amount"}
+            onChange={e => handleAmount(e)}
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            />
+        </FormControl>
 
-        <IconButton>
+        <Button 
+          variant={"contained"} 
+          disabled={
+            transaction.type === undefined
+            || transaction.amount === "0000.00"
+          }
+        >
           <AddIcon/>
-        </IconButton>
+        </Button>
       </Stack>
     </Box>
   )

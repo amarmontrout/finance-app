@@ -1,50 +1,108 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material"
-import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers"
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
-import { PickerValue } from "@mui/x-date-pickers/internals"
-import dayjs from "dayjs"
-import { useState } from "react"
+"use client"
 
-const TransactionForm = () => {
-  const today = Date()
-  const [date, setDate] = useState<PickerValue>(dayjs(today))
-  const [category, setCategory] = useState<string>("Paycheck")
-  const [amount, setAmount] = useState<string>()
+import { Box, FormControl, IconButton, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, TextField } from "@mui/material"
+import AddIcon from '@mui/icons-material/Add';
+import { ChangeEvent, useState } from "react"
+
+const today = new Date()
+const currentMonth = today.getMonth()
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+]
+
+type TransactionType = {
+  month: string,
+  category: string,
+  amount: string
+}
+
+const TransactionForm = (props: {
+  categories: string[]
+}) => {
+  const { categories } = props
+
+  const TRANSACTION_INIT: TransactionType = {
+    month: months[currentMonth],
+    category: categories[0],
+    amount: "00.00"
+  }
+
+  const [transaction, setTransaction] = useState<TransactionType>(TRANSACTION_INIT)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
+    const { name, value } = e.target
+
+    setTransaction(prev => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
 
   return (
     <Box
-      border={"1px solid blue"}
       width={"fit-content"}
       padding={"10px"}
     >
       <Stack
-        direction={"column"}
+        direction={"row"}
         gap={2}
       >
-        <Typography variant="h5">Add Income</Typography>
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DatePicker
-            label={"Pick date"}
-            value={date}
-            onChange={(newDate) => {setDate(newDate)}}
-          />
-        </LocalizationProvider>
+        <FormControl>
+          <InputLabel>Month</InputLabel>
+          <Select
+            label="Month"
+            value={transaction.month}
+            name={"month"}
+            onChange={handleChange}
+            sx={{
+              width: "200px"
+            }}
+          >
+            {months.map((month) => {
+              return <MenuItem value={month}>{month}</MenuItem>
+            })}
+          </Select>
+        </FormControl>
+
         <FormControl>
           <InputLabel>Category</InputLabel>
           <Select
             label="Category"
-            value={category}
-            onChange={(selection: SelectChangeEvent) => {setCategory(selection.target.value as string)}}
+            value={transaction.category}
+            name={"category"}
+            onChange={e => handleChange(e)}
+            sx={{
+              width: "200px"
+            }}
           >
-            <MenuItem value={"Paycheck"}>Paycheck</MenuItem>
-            <MenuItem value={"Misc"}>Misc</MenuItem>
+            {categories.map((category) => {
+              return <MenuItem value={category}>{category}</MenuItem>
+            })}
           </Select>
-      </FormControl>
-      <TextField
-        label={"Amount"}
-        value={amount}
-        onChange={(input) => {setAmount(input.target.value)}}
-      />
+        </FormControl>
+
+        <TextField
+          label={"Amount"}
+          value={transaction.amount}
+          name={"amount"}
+          onChange={e => handleChange(e)}
+        />
+
+        <IconButton>
+          <AddIcon/>
+        </IconButton>
       </Stack>
     </Box>
   )

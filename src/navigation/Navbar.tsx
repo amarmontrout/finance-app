@@ -11,14 +11,13 @@ const quickInfo: PageLinkType[] = [
 ]
 
 const actions: PageLinkType[] = [
-  {"name": "Enter Income", "link": "/add-income"},
-  {"name": "Enter Expense", "link": "#"},
+  {"name": "Transactions", "link": "/transactions"},
   {"name": "Set Goals", "link": "#"},
+  {"name": "Categories", "link": "#"},
 ]
 
 const misc: PageLinkType[] = [
   {"name": "Calendar", "link": "#"},
-  {"name": "Categories", "link": "#"},
 ]
 
 const Navbar = () => {

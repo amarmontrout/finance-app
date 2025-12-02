@@ -13,9 +13,11 @@ import {
   Stack } from "@mui/material"
 import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useEffect, useState } from "react"
+import saveTransaction from "@/utils/saveTransaction";
 
 const today = new Date()
 const currentMonth = today.getMonth()
+const currentYear = today.getFullYear()
 
 const months = [
   "January",
@@ -32,9 +34,15 @@ const months = [
   "December"
 ]
 
-type TransactionType = {
-  type: string | undefined,
+const years = [
+  "2023",
+  "2024",
+  "2025"
+]
+
+export type TransactionType = {
   month: string,
+  year: string,
   category: string,
   amount: string
 }
@@ -46,8 +54,8 @@ const TransactionForm = (props: {
   const { categories, type } = props
 
   const TRANSACTION_INIT: TransactionType = {
-    type: undefined,
     month: months[currentMonth],
+    year: String(currentYear),
     category: categories[0],
     amount: "0000.00"
   }
@@ -60,6 +68,15 @@ const TransactionForm = (props: {
       type: type,
     }));
   }, [])
+
+  const handleYear = (e: SelectChangeEvent) => {
+    const { value } = e.target
+
+    setTransaction(prev => ({
+      ...prev,
+      year: value,
+    }));
+  }
 
   const handleMonth = (e: SelectChangeEvent) => {
     const { value } = e.target
@@ -110,6 +127,10 @@ const TransactionForm = (props: {
     }
   }
 
+  const save = () => {
+    saveTransaction({key: type, transaction: transaction})
+  }
+
   return (
     <Box
       width={"fit-content"}
@@ -119,6 +140,23 @@ const TransactionForm = (props: {
         direction={"row"}
         gap={2}
       >
+        <FormControl>
+          <InputLabel>Year</InputLabel>
+          <Select
+            label="Year"
+            value={transaction.year}
+            name={"year"}
+            onChange={e => handleYear(e)}
+            sx={{
+              width: "200px"
+            }}
+          >
+            {years.map((year) => {
+              return <MenuItem value={year}>{year}</MenuItem>
+            })}
+          </Select>
+        </FormControl>
+
         <FormControl>
           <InputLabel>Month</InputLabel>
           <Select
@@ -167,9 +205,9 @@ const TransactionForm = (props: {
         <Button 
           variant={"contained"} 
           disabled={
-            transaction.type === undefined
-            || transaction.amount === "0000.00"
+            transaction.amount === "0000.00"
           }
+          onClick={save}
         >
           <AddIcon/>
         </Button>

@@ -1,5 +1,6 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
+import { EXPENSES, INCOME } from "@/globals/globals"
 import { Box, Stack } from "@mui/material"
 
 const incomeCategories = [
@@ -29,14 +30,14 @@ const Page = () => {
         <ShowCaseCard title={"Add Income"}>
           <TransactionForm
             categories={incomeCategories}
-            type={"income"}
+            type={INCOME}
           />
         </ShowCaseCard>
 
         <ShowCaseCard title={"Add Expense"}>
           <TransactionForm
             categories={expenseCategories}
-            type={"expense"}
+            type={EXPENSES}
           />
         </ShowCaseCard>
       </Stack>

@@ -14,6 +14,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
+import { accentColorPrimary } from "@/globals/colors";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -49,9 +50,10 @@ export type TransactionType = {
 
 const TransactionForm = (props: {
   categories: string[],
-  type: string
+  type: string,
+  refreshTransactions: () => void
 }) => {
-  const { categories, type } = props
+  const { categories, type, refreshTransactions } = props
 
   const TRANSACTION_INIT: TransactionType = {
     month: months[currentMonth],
@@ -129,6 +131,7 @@ const TransactionForm = (props: {
 
   const save = () => {
     saveTransaction({key: type, transaction: transaction})
+    refreshTransactions()
   }
 
   return (
@@ -148,7 +151,7 @@ const TransactionForm = (props: {
             name={"year"}
             onChange={e => handleYear(e)}
             sx={{
-              width: "200px"
+              width: "150px"
             }}
           >
             {years.map((year) => {
@@ -165,7 +168,7 @@ const TransactionForm = (props: {
             name={"month"}
             onChange={e => handleMonth(e)}
             sx={{
-              width: "200px"
+              width: "150px"
             }}
           >
             {months.map((month) => {
@@ -182,7 +185,7 @@ const TransactionForm = (props: {
             name={"category"}
             onChange={e => handleCategory(e)}
             sx={{
-              width: "200px"
+              width: "150px"
             }}
           >
             {categories.map((category) => {
@@ -199,6 +202,9 @@ const TransactionForm = (props: {
             name={"amount"}
             onChange={e => handleAmount(e)}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            sx={{
+              width: "150px"
+            }}
             />
         </FormControl>
 

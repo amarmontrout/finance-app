@@ -15,6 +15,7 @@ const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: s
         sx={{
           display: "flex",
           flexDirection: "column",
+          minHeight: 0,
           flex: 1,
           px: 2,
           py: 3
@@ -25,6 +26,8 @@ const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: s
         <Box
           sx={{
             flex: 1,
+            minHeight: 0,
+            overflowY: "auto",
             display: "flex",
             flexDirection: "column"
           }}

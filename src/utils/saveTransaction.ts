@@ -1,7 +1,7 @@
 import { TransactionType } from "@/components/TransactionForm"
 import { months } from "@/globals/globals"
 
-export type TransactionData = {[year: string]: {[month: string]: Array<{category: string, amount: string}>}}
+export type TransactionData = {[year: string]: {[month: string]: Array<{id: string, category: string, amount: string}>}}
 
 const saveTransaction = (props: {
   key: string,
@@ -41,6 +41,8 @@ const saveTransaction = (props: {
   if (transaction) {
     try {
       const { month, year, category, amount } = transaction
+      // TODO: Need a way to make the id fully unique
+      const id = `${year}-${month}-${category}-${amount}`
 
       if (!transactionData[year]) {
         transactionData[year] = {}
@@ -51,6 +53,7 @@ const saveTransaction = (props: {
       }
 
       transactionData[year][month].push({
+        id,
         category,
         amount
       })

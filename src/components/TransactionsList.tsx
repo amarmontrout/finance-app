@@ -1,10 +1,23 @@
 import { TransactionData } from "@/utils/saveTransaction"
-import { Stack, Typography } from "@mui/material"
+import { Chip, Stack, Typography } from "@mui/material"
 
 const TransactionsList = (props:{
+    type: "income" | "expenses"
     transactions: TransactionData
   }) => {
-  const {transactions} = props
+  const {type, transactions} = props
+
+  const handleDeleteTransaction = (passedYear: string, passedMonth: string, passedId: string) => {
+    Object.entries(transactions).map(([year, value]) => {
+      if (year === passedYear) {
+        Object.entries(value).map(([month, value]) => {
+          if (month === passedMonth) {
+            
+          }
+        })
+      }
+    })
+  }
 
   return (
     <Stack direction={"row"} gap={2}>
@@ -18,14 +31,10 @@ const TransactionsList = (props:{
                   return (
                     <Stack key={month} direction={"row"} gap={1} justifyContent={"space-between"}>
                       <Typography>{month}:</Typography>
-                      <Stack direction={"column"}>
-                        {transaction.map(({ category, amount}, idx) => {
+                      <Stack direction={"column"} gap={1}>
+                        {transaction.map(({ id, category, amount}) => {
                           return (
-                            <Stack key={`${idx}-${category}-${amount}`} direction={"row"} gap={1}>
-                              <Typography>{category}</Typography>
-                              <Typography>{amount}</Typography>
-                              <button onClick={() => {alert(idx)}}>X</button>
-                            </Stack>
+                            <Chip key={id} label={`${category}: $${amount}`} onDelete={() => {handleDeleteTransaction(year, month, id)}}/>
                           )
                         })}
                       </Stack>

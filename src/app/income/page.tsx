@@ -33,6 +33,7 @@ const Page = () => {
     >
       <ShowCaseCard title={"Income"}>
         <TransactionsList
+          type={INCOME}
           transactions={incomeTransactions}
         />
       </ShowCaseCard>

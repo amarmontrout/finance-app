@@ -14,32 +14,11 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
-import { accentColorPrimary } from "@/globals/colors";
+import { months, years } from "@/globals/globals";
 
 const today = new Date()
 const currentMonth = today.getMonth()
 const currentYear = today.getFullYear()
-
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
-]
-
-const years = [
-  "2023",
-  "2024",
-  "2025"
-]
 
 export type TransactionType = {
   month: string,
@@ -51,15 +30,14 @@ export type TransactionType = {
 const TransactionForm = (props: {
   categories: string[],
   type: string,
-  refreshTransactions: () => void
 }) => {
-  const { categories, type, refreshTransactions } = props
+  const { categories, type } = props
 
   const TRANSACTION_INIT: TransactionType = {
     month: months[currentMonth],
     year: String(currentYear),
     category: categories[0],
-    amount: "0000.00"
+    amount: ""
   }
 
   const [transaction, setTransaction] = useState<TransactionType>(TRANSACTION_INIT)
@@ -99,39 +77,27 @@ const TransactionForm = (props: {
   }
 
   const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let digits = e.target.value.replace(/\D/g, ""); // numbers only
-
-    // If user cleared everything
-    if (digits === "") digits = "000000"; // force 0000.00
-
-    // Guarantee at least 6 digits so we always have xx.xx
-    digits = digits.padStart(6, "0");
-
-    // Last 2 = cents
+    let digits = e.target.value.replace(/\D/g, "");
     const cents = digits.slice(-2);
-
-    // Everything before cents
     let dollars = digits.slice(0, -2);
-
-    // Remove *unnecessary* leading zeros in dollars
     dollars = dollars.replace(/^0+/, "");
-
-    // But ensure AT LEAST 4 dollars digits
-    dollars = dollars.padStart(4, "0");
-
     const formatted = `${dollars}.${cents}`;
 
     if (formatted.length <= 7) {
       setTransaction(prev => ({
         ...prev,
-        amount: formatted,
+        amount: dollars || cents ? formatted : "",
       }));
     }
   }
 
+  const resetFormData = () => {
+    setTransaction(TRANSACTION_INIT)
+  }
+
   const save = () => {
     saveTransaction({key: type, transaction: transaction})
-    refreshTransactions()
+    resetFormData()
   }
 
   return (
@@ -211,7 +177,7 @@ const TransactionForm = (props: {
         <Button 
           variant={"contained"} 
           disabled={
-            transaction.amount === "0000.00"
+            transaction.amount === ""
           }
           onClick={save}
         >

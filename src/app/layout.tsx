@@ -3,6 +3,7 @@ import Providers from "./providers";
 import { Box } from "@mui/material";
 import Navbar from "../navigation/Navbar";
 import Header from "@/header/Header";
+import "../globals.css"
 
 export const metadata: Metadata = {
   title: "My Budget App",
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Box sx={{ display: "flex", flexDirection: "row", height: "100vh" }}>
             {/* Nav / Sidebar */}
             <Box
+              className="hidden lg:block"
               component="nav"
               sx={{
                 minWidth: 250,
@@ -30,18 +32,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             {/* Main column */}
             <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
-              {/* Header */}
-              <Box
-                component="header"
-                sx={{
-                  width: "100%",
-                  bgcolor: "primary.main",
-                  borderBottom: 2,
-                  borderColor: "divider",
-                }}
-              >
-                <Header />
-              </Box>
+                {/* Header */}
+                <Box
+                  component="header"
+                  sx={{
+                    width: "100%",
+                    bgcolor: "primary.main",
+                    borderBottom: 2,
+                    borderColor: "divider",
+                  }}
+                >
+                  <Header />
+                </Box>
 
               {/* Main content */}
               <Box

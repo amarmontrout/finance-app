@@ -21,7 +21,7 @@ const misc: PageLinkType[] = [
 
 const Navbar = () => {
   return (
-    <Stack height={"100%"} >
+    <Stack height={"100%"} width={"250px"}>
       <Box 
         display={"flex"} 
         minHeight={"100px"} 

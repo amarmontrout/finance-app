@@ -1,14 +1,15 @@
 import { TransactionType } from "@/components/TransactionForm"
-import { months } from "@/globals/globals"
+import { MONTHS } from "@/globals/globals"
 import makeId from "./makeId"
 
 export type TransactionData = {[year: string]: {[month: string]: Array<{id: string, category: string, amount: string}>}}
 
 const saveTransaction = (props: {
-  key: string,
-  transaction: TransactionType
+  key: string
+  transaction?: TransactionType
+  updatedTransactionData?: TransactionData
 }) => {
-  const { key, transaction } = props
+  const { key, transaction, updatedTransactionData } = props
   const currentTransactionData = localStorage.getItem(key)
   let transactionData: TransactionData = {}
 
@@ -19,7 +20,7 @@ const saveTransaction = (props: {
       const monthsObj = data[year];
       const sortedMonthsObj: TransactionData[string] = {};
 
-      months.forEach((month) => {
+      MONTHS.forEach((month) => {
         if (monthsObj[month]) {
           sortedMonthsObj[month] = monthsObj[month];
         }
@@ -42,7 +43,6 @@ const saveTransaction = (props: {
   if (transaction) {
     try {
       const { month, year, category, amount } = transaction
-      // TODO: Need a way to make the id fully unique
       const id = makeId(8)
 
       if (!transactionData[year]) {
@@ -61,6 +61,15 @@ const saveTransaction = (props: {
 
       const sortedTransactionData = sortMonths(transactionData)
       localStorage.setItem(key, JSON.stringify(sortedTransactionData));
+      console.log("Transaction saved");
+    } catch (error) {
+      console.error("Failed to save transaction", error)
+    }
+  }
+
+  if (updatedTransactionData) {
+    try {
+      localStorage.setItem(key, JSON.stringify(updatedTransactionData));
       console.log("Transaction saved");
     } catch (error) {
       console.error("Failed to save transaction", error)

@@ -35,6 +35,7 @@ const Page = () => {
         <TransactionsList
           type={INCOME}
           transactions={incomeTransactions}
+          refreshTransactions={refreshTransactions}
         />
       </ShowCaseCard>
     </Box>

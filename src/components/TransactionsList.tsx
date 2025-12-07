@@ -1,22 +1,35 @@
-import { TransactionData } from "@/utils/saveTransaction"
+import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { Chip, Stack, Typography } from "@mui/material"
 
 const TransactionsList = (props:{
     type: "income" | "expenses"
     transactions: TransactionData
+    refreshTransactions: () => void
   }) => {
-  const {type, transactions} = props
+  const {type, transactions, refreshTransactions} = props
 
   const handleDeleteTransaction = (passedYear: string, passedMonth: string, passedId: string) => {
-    Object.entries(transactions).map(([year, value]) => {
-      if (year === passedYear) {
-        Object.entries(value).map(([month, value]) => {
-          if (month === passedMonth) {
-            
-          }
-        })
+    const updated = {...transactions}
+    
+    if (updated[passedYear] && updated[passedYear][passedMonth]) {
+      updated[passedYear][passedMonth] = updated[passedYear][passedMonth].filter(
+        (transaction) => transaction.id !== passedId
+      )
+
+      if (updated[passedYear][passedMonth].length === 0) {
+        delete updated[passedYear][passedMonth];
       }
-    })
+
+      if (Object.keys(updated[passedYear]).length === 0) {
+        delete updated[passedYear];
+      }
+
+      console.log("Updated:", updated);
+      saveTransaction({key: type, updatedTransactionData: updated})
+      refreshTransactions()
+    } else {
+      console.warn("Year or month not found in records.");
+    }
   }
 
   return (

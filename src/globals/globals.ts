@@ -1,6 +1,6 @@
 export const EXPENSES = "expenses"
 export const INCOME = "income"
-export const months = [
+export const MONTHS = [
   "January",
   "February",
   "March",
@@ -14,17 +14,17 @@ export const months = [
   "November",
   "December"
 ]
-export const years = [
+export const YEARS = [
   "2023",
   "2024",
   "2025"
 ]
-export const incomeCategories = [
+export const INCOME_CATEGORIES = [
   "Paycheck",
   "Savings Interest",
   "Misc"
 ]
-export const expenseCategories = [
+export const EXPENSE_CATEGORIES = [
   "Mortgage",
   "Electric",
   "Water",

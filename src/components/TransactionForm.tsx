@@ -14,7 +14,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
-import { months, years } from "@/globals/globals";
+import { MONTHS, YEARS } from "@/globals/globals";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -34,7 +34,7 @@ const TransactionForm = (props: {
   const { categories, type } = props
 
   const TRANSACTION_INIT: TransactionType = {
-    month: months[currentMonth],
+    month: MONTHS[currentMonth],
     year: String(currentYear),
     category: categories[0],
     amount: ""
@@ -120,7 +120,7 @@ const TransactionForm = (props: {
               width: "150px"
             }}
           >
-            {years.map((year) => {
+            {YEARS.map((year) => {
               return <MenuItem value={year}>{year}</MenuItem>
             })}
           </Select>
@@ -137,7 +137,7 @@ const TransactionForm = (props: {
               width: "150px"
             }}
           >
-            {months.map((month) => {
+            {MONTHS.map((month) => {
               return <MenuItem value={month}>{month}</MenuItem>
             })}
           </Select>

@@ -53,6 +53,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   flex: 1,
                   bgcolor: "background.default",
                   color: "text.primary",
+                  overflow: "hidden",
+                  overflowY: "scroll"
                 }}
               >
                 {children}

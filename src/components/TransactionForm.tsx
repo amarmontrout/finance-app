@@ -11,7 +11,6 @@ import {
   Select, 
   SelectChangeEvent, 
   Stack } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
 import { MONTHS, YEARS } from "@/globals/globals";
@@ -117,7 +116,7 @@ const TransactionForm = (props: {
             name={"year"}
             onChange={e => handleYear(e)}
             sx={{
-              width: "150px"
+              width: "175px"
             }}
           >
             {YEARS.map((year) => {
@@ -134,7 +133,7 @@ const TransactionForm = (props: {
             name={"month"}
             onChange={e => handleMonth(e)}
             sx={{
-              width: "150px"
+              width: "175px"
             }}
           >
             {MONTHS.map((month) => {
@@ -151,7 +150,7 @@ const TransactionForm = (props: {
             name={"category"}
             onChange={e => handleCategory(e)}
             sx={{
-              width: "150px"
+              width: "175px"
             }}
           >
             {categories.map((category) => {
@@ -169,7 +168,7 @@ const TransactionForm = (props: {
             onChange={e => handleAmount(e)}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
             sx={{
-              width: "150px"
+              width: "175px"
             }}
             />
         </FormControl>
@@ -181,7 +180,8 @@ const TransactionForm = (props: {
           }
           onClick={save}
         >
-          <AddIcon/>
+          {/* <AddIcon/> */}
+          Add
         </Button>
       </Stack>
     </Box>

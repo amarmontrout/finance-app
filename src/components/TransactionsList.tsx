@@ -1,22 +1,34 @@
+import { MONTHS } from "@/globals/globals"
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
-import { Collapse, Divider, IconButton, List, ListItem, ListItemButton, ListItemText, Stack } from "@mui/material"
-import { useEffect, useState } from "react"
+import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButton } from "@mui/material"
+import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
-import { MONTHS } from "@/globals/globals";
 
-const TransactionsList = (props:{
-    type: "income" | "expenses"
-    transactions: TransactionData
-    refreshTransactions: () => void
-  }) => {
-  const today = new Date()
-  const currentYear = String(today.getFullYear())
-  const currentMonth = MONTHS[today.getMonth()]
-  const {type, transactions, refreshTransactions} = props
-  const [selectedYear, setSelectedYear] = useState("")
-  const [expandYear, setExpandYear] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("")
-  const [expandMonth, setExpandMonth] = useState(false);
+type TransactionsListProps = {
+  type: "income" | "expenses"
+  transactions: TransactionData
+  refreshTransactions: () => void
+  selectedMonth: string
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
+  selectedYear: string
+  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
+}
+
+const TransactionsList = ({
+    type, 
+    transactions, 
+    refreshTransactions,
+    selectedMonth,
+    setSelectedMonth,
+    selectedYear,
+    setSelectedYear
+  }: TransactionsListProps) => {
+    const [expandYear, setExpandYear] = useState(false)
+    const [expandMonth, setExpandMonth] = useState(false)
+
+    const today = new Date()
+    const currentYear = String(today.getFullYear())
+    const currentMonth = MONTHS[today.getMonth()]
 
   const handleSelectYear = (year: string) => {
     if (selectedYear === year) {
@@ -96,7 +108,6 @@ const TransactionsList = (props:{
       setExpandMonth(false)
     }
   }, [transactions])
-
 
   return (
     <List sx={{ width: '90%', margin: "0 auto" }}>

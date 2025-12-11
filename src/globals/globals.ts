@@ -17,7 +17,8 @@ export const MONTHS = [
 export const YEARS = [
   "2023",
   "2024",
-  "2025"
+  "2025",
+  "2026"
 ]
 export const INCOME_CATEGORIES = [
   "Paycheck",

@@ -8,8 +8,12 @@ import { TransactionData } from "@/utils/saveTransaction"
 import { Box } from "@mui/material"
 import { useState, useEffect } from "react"
 
+
+
 const Page = () => {
   const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
+  const [selectedYear, setSelectedYear] = useState<string>("")
+  const [selectedMonth, setSelectedMonth] = useState<string>("")
 
   const refreshTransactions = () => {
     const localIncomeData = getTransactions({key: INCOME})
@@ -19,9 +23,28 @@ const Page = () => {
     setIncomeTransactions(localIncomeData)
   }
 
+  const getTotalIncome = () => {
+    if (selectedYear === "" && selectedMonth === "") {
+      return
+    }
+    let total = 0
+
+    incomeTransactions[selectedYear][selectedMonth].map((detail) => {
+      total = total + Number(detail.amount)
+    })
+
+    return total
+  }
+
   useEffect(() => {
     refreshTransactions()
   }, [])
+
+  useEffect(() => {
+    if (selectedMonth !== "") {
+      console.log(getTotalIncome())
+    }
+  }, [selectedMonth])
 
   return (
     <Box
@@ -36,6 +59,10 @@ const Page = () => {
           type={INCOME}
           transactions={incomeTransactions}
           refreshTransactions={refreshTransactions}
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
         />
       </ShowCaseCard>
     </Box>

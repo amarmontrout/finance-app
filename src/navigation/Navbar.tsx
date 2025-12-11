@@ -1,25 +1,14 @@
 "use client"
 
 import { Box, Stack, Typography } from "@mui/material"
-import PageLink, { PageLinkType } from "./PageLink";
+import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
-
-const quickInfo: PageLinkType[] = [
-  {"name": "Overview", "link": "/"},
-  {"name": "Income", "link": "/income"},
-  {"name": "Expenses", "link": "/expenses"},
-]
-
-const actions: PageLinkType[] = [
-  {"name": "Transactions", "link": "/transactions"},
-  {"name": "Set Goals", "link": "#"},
-]
-
-const misc: PageLinkType[] = [
-  {"name": "Calendar", "link": "#"},
-]
+import { NAV_ACTIONS, NAV_MISC, NAV_QUICKINFO } from "@/globals/globals";
+import { usePathname } from "next/navigation";
 
 const Navbar = () => {
+  const pathname = usePathname()
+
   return (
     <Stack height={"100%"} width={"250px"}>
       <Box 
@@ -42,22 +31,22 @@ const Navbar = () => {
         }}
       >
         <Typography>Quick Info</Typography>
-        {quickInfo.map((item) => {
+        {NAV_QUICKINFO.map((item) => {
           return (
-            <PageLink item={item} key={item.name} />
+            <PageLink item={item} active={pathname === item.link} key={item.name} />
           )
         })}
         <hr style={{ width: "100%" }} />
         <Typography>Actions</Typography>
-        {actions.map((item) => {
+        {NAV_ACTIONS.map((item) => {
           return (
-            <PageLink item={item} key={item.name} />
+            <PageLink item={item} active={pathname === item.link} key={item.name} />
           )
         })}
         <hr style={{ width: "100%" }} />
-        {misc.map((item) => {
+        {NAV_MISC.map((item) => {
           return (
-            <PageLink item={item} key={item.name} />
+            <PageLink item={item} active={pathname === item.link} key={item.name} />
           )
         })}
       </Stack>

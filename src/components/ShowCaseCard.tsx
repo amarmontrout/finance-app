@@ -8,7 +8,8 @@ const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: s
         height: "100%",
         display: "flex",
         flexDirection: "column",
-        borderRadius: "15px"
+        borderRadius: "15px",
+        minHeight: 0
       }}
     >
       <CardContent
@@ -27,9 +28,8 @@ const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: s
           sx={{
             flex: 1,
             minHeight: 0,
-            overflowY: "auto",
             display: "flex",
-            flexDirection: "column"
+            flexDirection: "column",
           }}
         >
           {children}

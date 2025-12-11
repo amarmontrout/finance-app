@@ -110,9 +110,9 @@ const TransactionsList = ({
   }, [transactions])
 
   return (
-    <List sx={{ width: '90%', margin: "0 auto" }}>
-      <Stack  direction={"row"} width={"100%"} height={"100%"}>
-        <Stack direction={"column"} height={"fit-content"} width={"30%"}>
+
+      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"}>
+        <List sx={{maxWidth: "30%", flex: 1, minHeight: 0, overflowY: "auto"}}>
           {
             Object.entries(transactions).map(([year, _]) => {
               return (
@@ -129,65 +129,69 @@ const TransactionsList = ({
               )
             })
           }
-        </Stack>
+        </List>
 
-        <Collapse in={expandYear} timeout="auto" sx={{width: "30%"}} unmountOnExit>
-          { selectedYear &&
-            Object.entries(transactions[selectedYear]).map(([month, _]) => {
-              return (
-                <ListItemButton 
-                  key={month} 
-                  onClick={() => {handleSelectMonth(month)}}
-                  sx={{ 
-                    border: month === selectedMonth ? "2px solid AccentColor" : "none",
-                    borderRadius: "10px"
-                  }}
-                >
-                  <ListItemText primary={month} />
-                </ListItemButton>
-              )
-            })
-          }
+        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "30%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <List>
+            { selectedYear &&
+              Object.entries(transactions[selectedYear]).map(([month, _]) => {
+                return (
+                  <ListItemButton 
+                    key={month} 
+                    onClick={() => {handleSelectMonth(month)}}
+                    sx={{ 
+                      border: month === selectedMonth ? "2px solid AccentColor" : "none",
+                      borderRadius: "10px"
+                    }}
+                  >
+                    <ListItemText primary={month} />
+                  </ListItemButton>
+                )
+              })
+            }
+        </List>
         </Collapse>
 
-        <Collapse in={expandMonth} timeout="auto" sx={{width: "40%"}} unmountOnExit>
-          { selectedYear && selectedMonth &&
-            transactions[selectedYear]?.[selectedMonth]?.map((details) => {
-              return (
-                <ListItem 
-                  key={details.id}
-                  secondaryAction={
-                    <IconButton 
-                      edge="end"
-                      onClick={
-                        () => {
-                          handleDeleteTransaction(selectedYear, selectedMonth, details.id)
+        <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "40%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+          <List>
+            { selectedYear && selectedMonth &&
+              transactions[selectedYear]?.[selectedMonth]?.map((details) => {
+                return (
+                  <ListItem 
+                    key={details.id}
+                    secondaryAction={
+                      <IconButton 
+                        edge="end"
+                        onClick={
+                          () => {
+                            handleDeleteTransaction(selectedYear, selectedMonth, details.id)
+                          }
                         }
-                      }
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  }
-                >
-                  <ListItemText 
-                    primary={details.category} 
-                    sx={{
-                      width: "50%"
-                    }}
-                  />
-                  <ListItemText 
-                    primary={`$ ${details.amount}`} 
-                    sx={{
-                      width: "50%"
-                    }}
-                  />
-                </ListItem>
-              )
-            })
-          }
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    }
+                  >
+                    <ListItemText 
+                      primary={details.category} 
+                      sx={{
+                        width: "50%"
+                      }}
+                    />
+                    <ListItemText 
+                      primary={`$ ${details.amount}`} 
+                      sx={{
+                        width: "50%"
+                      }}
+                    />
+                  </ListItem>
+                )
+              })
+            }
+          </List>
         </Collapse>
       </Stack>
-    </List>
+
   )
 }
 

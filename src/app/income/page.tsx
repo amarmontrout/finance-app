@@ -56,11 +56,10 @@ const Page = () => {
       width={"100%"}
       padding={"50px"}
     >
-      {/* <Stack direction={"column"} width={"100%"} height={"100%"} spacing={1}> */}
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Income"}>
+        <ShowCaseCard title={"Income"} secondaryTitle={`Total Income ${totalIncome}`}>
           <TransactionsList
             type={INCOME}
             transactions={incomeTransactions}
@@ -72,11 +71,10 @@ const Page = () => {
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Income Trend"}>
-          {totalIncome}
+        <ShowCaseCard title={"Income Trend"} secondaryTitle={""}>
+          Graphs
         </ShowCaseCard>
       </Box>
-      {/* </Stack> */}
     </Box>
   )
 }

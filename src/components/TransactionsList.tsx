@@ -6,6 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -188,6 +189,7 @@ const TransactionsList = ({
                   }}
                 >
                   <ListItemText primary={year}/>
+                  {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
                 </ListItemButton>
               )
             })
@@ -208,6 +210,8 @@ const TransactionsList = ({
                     }}
                   >
                     <ListItemText primary={month} />
+
+                    {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
                   </ListItemButton>
                 )
               })

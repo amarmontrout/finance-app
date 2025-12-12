@@ -1,6 +1,6 @@
-import { Box, Card, CardContent, Typography } from "@mui/material"
+import { Box, Card, CardContent, Stack, Typography } from "@mui/material"
 
-const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: string }) => {
+const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.ReactNode, title: string, secondaryTitle: string }) => {
   return (
     <Card
       style={{
@@ -22,8 +22,14 @@ const ShowCaseCard = ({ children, title }: { children: React.ReactNode, title: s
           py: 3
         }}
       >
-        <Typography>{title}</Typography>
+        <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
+          <Typography variant="h4">{title}</Typography>
+
+          <Typography variant="h5">{secondaryTitle}</Typography>
+        </Stack>
+
         <hr style={{ width: "100%" }}/>
+
         <Box
           sx={{
             flex: 1,

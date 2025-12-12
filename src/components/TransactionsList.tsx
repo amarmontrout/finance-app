@@ -3,6 +3,7 @@ import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButton } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
+import CancelIcon from '@mui/icons-material/Cancel';
 import { darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
 
@@ -16,6 +17,12 @@ type TransactionsListProps = {
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
 }
 
+type Details = {
+  id: string,
+  category: string,
+  amount: string
+}
+
 const TransactionsList = ({
     type, 
     transactions, 
@@ -27,6 +34,7 @@ const TransactionsList = ({
   }: TransactionsListProps) => {
     const [expandYear, setExpandYear] = useState(false)
     const [expandMonth, setExpandMonth] = useState(false)
+    const [confirmChoice, setConfirmChoice] = useState<boolean>(false)
 
     const today = new Date()
     const currentYear = String(today.getFullYear())
@@ -82,6 +90,55 @@ const TransactionsList = ({
     }
   }
 
+  const handleConfirm = () => {
+    setConfirmChoice(true)
+  }
+
+  const DeleteButton = () => {
+    return (
+      <IconButton 
+        edge="end"
+        onClick={
+          () => {
+            handleConfirm()
+          }
+        }
+      >
+        <DeleteIcon />
+      </IconButton>
+    )
+  }
+
+  const ConfirmCancel = (props: { details: Details }) => {
+    const { details } = props
+    return (
+      <Stack direction={"row"} gap={2}>
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setConfirmChoice(false)
+              handleDeleteTransaction(selectedYear, selectedMonth, details.id)
+            }
+          }
+        >
+          <DeleteIcon/>
+        </IconButton>
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setConfirmChoice(false)
+            }
+          }
+        >
+          <CancelIcon/>
+        </IconButton>
+      </Stack>
+    )
+  }
+
   useEffect(() => {
     // If current year exists in data
     if (transactions[currentYear]) {
@@ -121,7 +178,7 @@ const TransactionsList = ({
   return (
 
       <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"}>
-        <List sx={{maxWidth: "30%", flex: 1, minHeight: 0, overflowY: "auto"}}>
+        <List sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}}>
           {
             Object.entries(transactions).map(([year, _]) => {
               return (
@@ -140,9 +197,9 @@ const TransactionsList = ({
           }
         </List>
 
-        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "30%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
         <List>
-            { selectedYear &&
+            { transactions[selectedYear] &&
               Object.entries(transactions[selectedYear]).map(([month, _]) => {
                 return (
                   <ListItemButton 
@@ -161,7 +218,7 @@ const TransactionsList = ({
         </List>
         </Collapse>
 
-        <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "40%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "50%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
           <List>
             { selectedYear && selectedMonth &&
               transactions[selectedYear]?.[selectedMonth]?.map((details) => {
@@ -169,16 +226,7 @@ const TransactionsList = ({
                   <ListItem 
                     key={details.id}
                     secondaryAction={
-                      <IconButton 
-                        edge="end"
-                        onClick={
-                          () => {
-                            handleDeleteTransaction(selectedYear, selectedMonth, details.id)
-                          }
-                        }
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      confirmChoice? <ConfirmCancel details={details}/> : <DeleteButton/>
                     }
                     sx={{
                       margin: "2px auto",

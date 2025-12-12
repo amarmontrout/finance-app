@@ -101,89 +101,85 @@ const TransactionForm = (props: {
 
   return (
     <Box
+      className="flex flex-col xl:flex-row gap-5"
       width={"fit-content"}
       padding={"10px"}
+      margin={"0 auto"}
     >
-      <Stack
-        direction={"row"}
-        gap={2}
-      >
-        <FormControl>
-          <InputLabel>Year</InputLabel>
-          <Select
-            label="Year"
-            value={transaction.year}
-            name={"year"}
-            onChange={e => handleYear(e)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            {YEARS.map((year) => {
-              return <MenuItem value={year}>{year}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Month</InputLabel>
-          <Select
-            label="Month"
-            value={transaction.month}
-            name={"month"}
-            onChange={e => handleMonth(e)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            {MONTHS.map((month) => {
-              return <MenuItem value={month}>{month}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select
-            label="Category"
-            value={transaction.category}
-            name={"category"}
-            onChange={e => handleCategory(e)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            {categories.map((category) => {
-              return <MenuItem value={category}>{category}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Amount</InputLabel>
-          <OutlinedInput
-            label={"Amount"}
-            value={transaction.amount}
-            name={"amount"}
-            onChange={e => handleAmount(e)}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            sx={{
-              width: "175px"
-            }}
-            />
-        </FormControl>
-
-        <Button 
-          variant={"contained"} 
-          disabled={
-            transaction.amount === ""
-          }
-          onClick={save}
+      <FormControl>
+        <InputLabel>Year</InputLabel>
+        <Select
+          label="Year"
+          value={transaction.year}
+          name={"year"}
+          onChange={e => handleYear(e)}
+          sx={{
+            width: "175px"
+          }}
         >
-          {/* <AddIcon/> */}
-          Add
-        </Button>
-      </Stack>
+          {YEARS.map((year) => {
+            return <MenuItem value={year}>{year}</MenuItem>
+          })}
+        </Select>
+      </FormControl>
+
+      <FormControl>
+        <InputLabel>Month</InputLabel>
+        <Select
+          label="Month"
+          value={transaction.month}
+          name={"month"}
+          onChange={e => handleMonth(e)}
+          sx={{
+            width: "175px"
+          }}
+        >
+          {MONTHS.map((month) => {
+            return <MenuItem value={month}>{month}</MenuItem>
+          })}
+        </Select>
+      </FormControl>
+
+      <FormControl>
+        <InputLabel>Category</InputLabel>
+        <Select
+          label="Category"
+          value={transaction.category}
+          name={"category"}
+          onChange={e => handleCategory(e)}
+          sx={{
+            width: "175px"
+          }}
+        >
+          {categories.map((category) => {
+            return <MenuItem value={category}>{category}</MenuItem>
+          })}
+        </Select>
+      </FormControl>
+
+      <FormControl>
+        <InputLabel>Amount</InputLabel>
+        <OutlinedInput
+          label={"Amount"}
+          value={transaction.amount}
+          name={"amount"}
+          onChange={e => handleAmount(e)}
+          startAdornment={<InputAdornment position="start">$</InputAdornment>}
+          sx={{
+            width: "175px"
+          }}
+          />
+      </FormControl>
+
+      <Button 
+        variant={"contained"} 
+        disabled={
+          transaction.amount === ""
+        }
+        onClick={save}
+      >
+        Add
+      </Button>
     </Box>
   )
 }

@@ -5,7 +5,7 @@ import TransactionsList from "@/components/TransactionsList"
 import { EXPENSES } from "@/globals/globals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
-import { Box, Stack } from "@mui/material"
+import { Box } from "@mui/material"
 import { useEffect, useState } from "react"
 
 const Page = () => {
@@ -23,7 +23,7 @@ const Page = () => {
   }
 
   const getTotalExpenses = () => {
-    if (!expenseTransactions[selectedYear][selectedMonth]) {
+    if (!expenseTransactions[selectedYear] || !expenseTransactions[selectedYear][selectedMonth]) {
       setTotalExpenses("$ 0")
       return
     }
@@ -53,13 +53,13 @@ const Page = () => {
 
   return (
     <Box
-      display={"flex"}
-      flex={1}
-      justifyContent={"center"}
-      alignItems={"center"}
+      width={"100%"}
+      height={"100%"}
       padding={"50px"}
     >
-      <Stack direction={"row"} width={"100%"} height={"100%"} spacing={1}>
+      <Box
+        className="flex flex-col xl:flex-row gap-2 h-full"
+      >
         <ShowCaseCard title={"Expenses"}>
           <TransactionsList
             type={EXPENSES}
@@ -75,7 +75,7 @@ const Page = () => {
         <ShowCaseCard title={"Expenses Trend"}>
           {totalExpenses}
         </ShowCaseCard>
-      </Stack>
+      </Box>
     </Box>
   )
 }

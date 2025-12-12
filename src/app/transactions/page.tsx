@@ -3,7 +3,7 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
 import { EXPENSE_CATEGORIES, EXPENSES, INCOME, INCOME_CATEGORIES } from "@/globals/globals"
-import { Box, Stack } from "@mui/material"
+import { Box } from "@mui/material"
 
 const Page = () => {
   return (
@@ -11,7 +11,10 @@ const Page = () => {
       width={"100%"}
       padding={"50px"}
     >
-      <Stack width={"100%"} height={"100%"} gap={2}>
+      <Box
+        className="flex flex-row xl:flex-col gap-2"
+        height={"100%"}
+      >
         <ShowCaseCard title={"Add Income"}>
           <TransactionForm
             categories={INCOME_CATEGORIES}
@@ -25,7 +28,7 @@ const Page = () => {
             type={EXPENSES}
           />
         </ShowCaseCard>
-      </Stack>
+      </Box>
     </Box>
   )
 }

@@ -39,7 +39,7 @@ const Header = () => {
         marginLeft={"50px"}
         marginRight={"25px"}
       >
-        <Typography variant="h4" >
+        <Typography variant="h4" color={"white"}>
           My Budget
         </Typography>
       </Box>

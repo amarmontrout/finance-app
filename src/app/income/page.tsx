@@ -59,7 +59,7 @@ const Page = () => {
       alignItems={"center"}
       padding={"50px"}
     >
-      <Stack direction={"column"} width={"100%"} height={"100%"} spacing={1}>
+      <Stack direction={"row"} width={"100%"} height={"100%"} spacing={1}>
         <ShowCaseCard title={"Income"}>
           <TransactionsList
             type={INCOME}

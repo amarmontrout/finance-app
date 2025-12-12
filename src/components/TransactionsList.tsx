@@ -3,6 +3,8 @@ import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButton } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
+import { darkMode, lightMode } from "@/globals/colors";
+import { useTheme } from "next-themes";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -29,6 +31,9 @@ const TransactionsList = ({
     const today = new Date()
     const currentYear = String(today.getFullYear())
     const currentMonth = MONTHS[today.getMonth()]
+
+    const theme = useTheme()
+    const currentTheme = theme.theme
 
   const handleSelectYear = (year: string) => {
     if (selectedYear === year) {
@@ -109,6 +114,10 @@ const TransactionsList = ({
     }
   }, [transactions])
 
+  useEffect(() => {
+    console.log(theme)
+  }, [theme])
+
   return (
 
       <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"}>
@@ -171,18 +180,14 @@ const TransactionsList = ({
                         <DeleteIcon />
                       </IconButton>
                     }
+                    sx={{
+                      margin: "2px auto",
+                      backgroundColor: currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg,
+                      borderRadius: "10px"
+                    }}
                   >
                     <ListItemText 
-                      primary={details.category} 
-                      sx={{
-                        width: "50%"
-                      }}
-                    />
-                    <ListItemText 
-                      primary={`$ ${details.amount}`} 
-                      sx={{
-                        width: "50%"
-                      }}
+                      primary={`${details.category} $ ${details.amount}`}
                     />
                   </ListItem>
                 )

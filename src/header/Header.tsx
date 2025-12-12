@@ -28,7 +28,7 @@ const Header = () => {
           onClick={() => {setOpen(true)}}
         >
           <MenuIcon
-            className="color: black"
+            sx={{ color: "white" }}
           />
         </IconButton>
         

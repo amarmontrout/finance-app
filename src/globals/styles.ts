@@ -1,4 +1,4 @@
-import { accentColorPrimary } from "./colors";
+import { accentColorPrimaryHover } from "./colors";
 
 export const linkStyle = {
     textDecoration: "none",
@@ -15,17 +15,14 @@ export const navSelection = {
   "&::before": {
     content: '""',
     position: "absolute",
-    top: 0,
     left: 0,
     height: "100%",
-    width: 0,
     borderRadius: "10px",
-    transition: "width 0.25s ease",
     zIndex: 0,
   },
   "&:hover::before": {
     width: "100%",
-    border: `2px solid ${accentColorPrimary}`,
+    backgroundColor: accentColorPrimaryHover,
   },
   "& *": {
     position: "relative",

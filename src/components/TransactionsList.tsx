@@ -4,7 +4,7 @@ import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButt
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { darkMode, lightMode } from "@/globals/colors";
+import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
 
 type TransactionsListProps = {
@@ -34,7 +34,7 @@ const TransactionsList = ({
   }: TransactionsListProps) => {
     const [expandYear, setExpandYear] = useState(false)
     const [expandMonth, setExpandMonth] = useState(false)
-    const [confirmChoice, setConfirmChoice] = useState<boolean>(false)
+    const [confirmId, setConfirmId] = useState<string | null>(null)
 
     const today = new Date()
     const currentYear = String(today.getFullYear())
@@ -90,17 +90,14 @@ const TransactionsList = ({
     }
   }
 
-  const handleConfirm = () => {
-    setConfirmChoice(true)
-  }
-
-  const DeleteButton = () => {
+  const DeleteButton = (props: {id: string}) => {
+    const { id } = props
     return (
       <IconButton 
         edge="end"
         onClick={
           () => {
-            handleConfirm()
+            setConfirmId(id)
           }
         }
       >
@@ -117,7 +114,7 @@ const TransactionsList = ({
           edge="end"
           onClick={
             () => {
-              setConfirmChoice(false)
+              setConfirmId(null)
               handleDeleteTransaction(selectedYear, selectedMonth, details.id)
             }
           }
@@ -129,7 +126,7 @@ const TransactionsList = ({
           edge="end"
           onClick={
             () => {
-              setConfirmChoice(false)
+              setConfirmId(null)
             }
           }
         >
@@ -177,7 +174,7 @@ const TransactionsList = ({
 
   return (
 
-      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"}>
+      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={1}>
         <List sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}}>
           {
             Object.entries(transactions).map(([year, _]) => {
@@ -186,11 +183,11 @@ const TransactionsList = ({
                   key={year} 
                   onClick={() => {handleSelectYear(year)}} 
                   sx={{ 
-                    border: year === selectedYear ? "2px solid AccentColor" : "none",
+                    backgroundColor: year === selectedYear ? accentColorPrimarySelected : "none",
                     borderRadius: "10px"
                   }}
                 >
-                  <ListItemText primary={year} />
+                  <ListItemText primary={year}/>
                 </ListItemButton>
               )
             })
@@ -206,7 +203,7 @@ const TransactionsList = ({
                     key={month} 
                     onClick={() => {handleSelectMonth(month)}}
                     sx={{ 
-                      border: month === selectedMonth ? "2px solid AccentColor" : "none",
+                      backgroundColor: month === selectedMonth ? accentColorPrimarySelected : "none",
                       borderRadius: "10px"
                     }}
                   >
@@ -226,7 +223,9 @@ const TransactionsList = ({
                   <ListItem 
                     key={details.id}
                     secondaryAction={
-                      confirmChoice? <ConfirmCancel details={details}/> : <DeleteButton/>
+                      confirmId === details.id
+                        ? <ConfirmCancel details={details}/> 
+                        : <DeleteButton id={details.id}/>
                     }
                     sx={{
                       margin: "2px auto",
@@ -235,7 +234,8 @@ const TransactionsList = ({
                     }}
                   >
                     <ListItemText 
-                      primary={`${details.category} $ ${details.amount}`}
+                      primary={`$ ${details.amount}`}
+                      secondary={details.category}
                     />
                   </ListItem>
                 )

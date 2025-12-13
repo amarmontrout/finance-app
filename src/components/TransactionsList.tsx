@@ -44,6 +44,8 @@ const TransactionsList = ({
     const theme = useTheme()
     const currentTheme = theme.theme
 
+    const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+
   const handleSelectYear = (year: string) => {
     if (selectedYear === year) {
       setExpandYear(!expandYear)
@@ -176,52 +178,54 @@ const TransactionsList = ({
   return (
 
       <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={1}>
-        <List sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}}>
-          {
-            Object.entries(transactions).map(([year, _]) => {
-              return (
-                <ListItemButton 
-                  key={year} 
-                  onClick={() => {handleSelectYear(year)}} 
-                  sx={{ 
-                    backgroundColor: year === selectedYear ? accentColorPrimarySelected : "none",
-                    borderRadius: "10px"
-                  }}
-                >
-                  <ListItemText primary={year}/>
-                  {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
-                </ListItemButton>
-              )
-            })
-          }
-        </List>
-
-        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
-        <List>
-            { transactions[selectedYear] &&
-              Object.entries(transactions[selectedYear]).map(([month, _]) => {
+        <Collapse in={true} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+          <List className="flex flex-col gap-2">
+            { transactions &&
+              Object.entries(transactions).map(([year, _]) => {
                 return (
                   <ListItemButton 
-                    key={month} 
-                    onClick={() => {handleSelectMonth(month)}}
+                    key={year} 
+                    onClick={() => {handleSelectYear(year)}} 
                     sx={{ 
-                      backgroundColor: month === selectedMonth ? accentColorPrimarySelected : "none",
+                      backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
                       borderRadius: "10px"
                     }}
                   >
-                    <ListItemText primary={month} />
-
-                    {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
+                    <ListItemText primary={year}/>
+                    {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
                   </ListItemButton>
                 )
               })
             }
-        </List>
+          </List>
+        </Collapse>
+
+        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+          <List className="flex flex-col gap-2">
+              { transactions[selectedYear] &&
+                Object.entries(transactions[selectedYear]).map(([month, _]) => {
+                  return (
+                    <ListItemButton 
+                      key={month} 
+                      onClick={() => {handleSelectMonth(month)}}
+                      sx={{ 
+                        backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
+                        borderRadius: "10px"
+                      }}
+                    >
+                      <ListItemText primary={month} />
+
+                      {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
+                    </ListItemButton>
+                  )
+                })
+              }
+          </List>
         </Collapse>
 
         <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "50%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
-          <List>
-            { selectedYear && selectedMonth &&
+          <List className="flex flex-col gap-2">
+            { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
               transactions[selectedYear]?.[selectedMonth]?.map((details) => {
                 return (
                   <ListItem 
@@ -232,8 +236,7 @@ const TransactionsList = ({
                         : <DeleteButton id={details.id}/>
                     }
                     sx={{
-                      margin: "2px auto",
-                      backgroundColor: currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg,
+                      backgroundColor: listItemColor,
                       borderRadius: "10px"
                     }}
                   >

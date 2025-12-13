@@ -15,14 +15,14 @@ const Page = () => {
         className="flex flex-row xl:flex-col gap-2"
         height={"100%"}
       >
-        <ShowCaseCard title={"Add Income"}>
+        <ShowCaseCard title={"Add Income"} secondaryTitle={""}>
           <TransactionForm
             categories={INCOME_CATEGORIES}
             type={INCOME}
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Add Expense"}>
+        <ShowCaseCard title={"Add Expense"} secondaryTitle={""}>
           <TransactionForm
             categories={EXPENSE_CATEGORIES}
             type={EXPENSES}

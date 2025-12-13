@@ -10,7 +10,7 @@ export default function Home() {
       alignItems={"center"}
       padding={"50px"}
     >
-      <ShowCaseCard title={"Overview"}>
+      <ShowCaseCard title={"Overview"} secondaryTitle={""}>
         Content
       </ShowCaseCard>
     </Box>

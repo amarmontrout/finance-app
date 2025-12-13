@@ -1,5 +1,6 @@
 "use client"
 
+import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { INCOME } from "@/globals/globals"
@@ -7,7 +8,6 @@ import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
 import { Box } from "@mui/material"
 import { useState, useEffect } from "react"
-
 
 
 const Page = () => {
@@ -72,7 +72,9 @@ const Page = () => {
         </ShowCaseCard>
 
         <ShowCaseCard title={"Income Trend"} secondaryTitle={""}>
-          Graphs
+          <Box marginTop={"10px"}>
+            <LineChart/>
+          </Box>
         </ShowCaseCard>
       </Box>
     </Box>

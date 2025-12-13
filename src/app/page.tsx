@@ -1,5 +1,6 @@
 import ShowCaseCard from "@/components/ShowCaseCard";
 import { Box } from "@mui/material";
+import OverviewInfo from "./OverviewInfo";
 
 export default function Home() {
   return (
@@ -11,7 +12,9 @@ export default function Home() {
       padding={"50px"}
     >
       <ShowCaseCard title={"Overview"} secondaryTitle={""}>
-        Content
+        <Box marginTop={"10px"}>
+          <OverviewInfo/>
+        </Box>
       </ShowCaseCard>
     </Box>
   );

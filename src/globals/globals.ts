@@ -36,7 +36,6 @@ export const INCOME_CATEGORIES = [
 export const EXPENSE_CATEGORIES = [
   "Mortgage",
   "Electric",
-  "Water",
   "Internet",
   "Water",
   "Trash",

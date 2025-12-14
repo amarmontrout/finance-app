@@ -7,6 +7,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -171,17 +172,14 @@ const TransactionsList = ({
     }
   }, [transactions])
 
-  useEffect(() => {
-    console.log(theme)
-  }, [theme])
-
   return (
-
-      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={1}>
+      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={.5}>
         <Collapse in={true} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
           <List className="flex flex-col gap-2">
             { transactions &&
               Object.entries(transactions).map(([year, _]) => {
+                const yearTotal = getYearTotal(year, transactions)
+                
                 return (
                   <ListItemButton 
                     key={year} 
@@ -191,7 +189,8 @@ const TransactionsList = ({
                       borderRadius: "10px"
                     }}
                   >
-                    <ListItemText primary={year}/>
+                    <ListItemText primary={year} secondary={yearTotal}/>
+
                     {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
                   </ListItemButton>
                 )
@@ -204,6 +203,8 @@ const TransactionsList = ({
           <List className="flex flex-col gap-2">
               { transactions[selectedYear] &&
                 Object.entries(transactions[selectedYear]).map(([month, _]) => {
+                  const monthTotal = getMonthTotal(selectedYear, month, transactions)
+
                   return (
                     <ListItemButton 
                       key={month} 
@@ -213,7 +214,7 @@ const TransactionsList = ({
                         borderRadius: "10px"
                       }}
                     >
-                      <ListItemText primary={month} />
+                      <ListItemText primary={month} secondary={monthTotal}/>
 
                       {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
                     </ListItemButton>

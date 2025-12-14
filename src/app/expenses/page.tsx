@@ -4,6 +4,7 @@ import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { EXPENSES } from "@/globals/globals"
+import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
 import { Box } from "@mui/material"
@@ -24,30 +25,13 @@ const Page = () => {
     setExpenseTransactions(localExpenseData)
   }
 
-  const getTotalExpenses = () => {
-    if (!expenseTransactions[selectedYear] || !expenseTransactions[selectedYear][selectedMonth]) {
-      setTotalExpenses("$ 0")
-      return
-    }
-    if (selectedYear === "" && selectedMonth === "") {
-      return "$ 0"
-    }
-    let total = 0
-    expenseTransactions[selectedYear][selectedMonth].map((detail) => {
-      if (detail.category !== "Water") {
-        total = total + Number(detail.amount)
-      }
-    })
-    return `$ ${total}`
-  }
-
   useEffect(() => {
     refreshTransactions()
   }, [])
 
   useEffect(() => {
     if (selectedMonth !== "" && expenseTransactions) {
-      const total = getTotalExpenses()
+      const total = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
       if (!total) return
       setTotalExpenses(total)
     }

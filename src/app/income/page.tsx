@@ -35,6 +35,9 @@ const Page = () => {
       if (!total) return
       setTotalIncome(total)
     }
+    if (selectedMonth == "") {
+      setTotalIncome("$ 0")
+    }
   }, [selectedMonth, incomeTransactions])
 
   return (
@@ -57,7 +60,7 @@ const Page = () => {
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Income Trend"} secondaryTitle={""}>
+        <ShowCaseCard title={"Income Chart"} secondaryTitle={""}>
           <Box 
             marginTop={"10px"}
             overflow={"hidden"}

@@ -1,6 +1,5 @@
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { TransactionData } from "@/utils/saveTransaction"
-import { colors } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
@@ -18,7 +17,7 @@ const LineChart = (props: {
     type
   } = props
 
-  const [incomeData, setIncomeData] = useState<ChartData>([])
+  const [data, setData] = useState<ChartData>([])
     const theme = useTheme()
     const currentTheme = theme.theme
 
@@ -30,6 +29,7 @@ const LineChart = (props: {
     title: `${type} for year ${selectedYear}`,
     titleTextStyle: { color: textColor },
     colors: [accentColorSecondary],
+    lineWidth: 5,
     chartArea: {
       width: "75%"
     },
@@ -63,19 +63,15 @@ const LineChart = (props: {
       }
     )
 
-    setIncomeData(newData)
+    setData(newData)
   }, [selectedYear, transactions])
-
-  useEffect(() => {
-    console.log(incomeData)
-  }, [incomeData])
 
   return (
     <Chart
-      chartType="ColumnChart"
+      chartType="LineChart"
       width={"100%"}
       height={"100%"}
-      data={incomeData}
+      data={data}
       options={options}
     />
   )

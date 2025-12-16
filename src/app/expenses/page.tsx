@@ -35,6 +35,9 @@ const Page = () => {
       if (!total) return
       setTotalExpenses(total)
     }
+    if (selectedMonth == "") {
+      setTotalExpenses("$ 0")
+    }
   }, [selectedMonth, expenseTransactions])
 
   return (
@@ -58,7 +61,7 @@ const Page = () => {
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Expenses Trend"} secondaryTitle={""}>
+        <ShowCaseCard title={"Expenses Chart"} secondaryTitle={""}>
           <Box 
             marginTop={"10px"}
             overflow={"hidden"}

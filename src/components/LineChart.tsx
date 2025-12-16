@@ -93,10 +93,11 @@ const LineChart = (props: {
 
       Object.entries(comparisonTransactions[selectedYear]).forEach(
         ([month, transactions]) => {
-          expense[month] = transactions.reduce(
-            (sum, t) => sum + Number(t.amount),
-            0
-          )
+          const total = transactions
+            .filter(t => t.category !== "Water")
+            .reduce((sum, t) => sum + Number(t.amount), 0);
+
+          expense[month] = total;
         }
       )
 

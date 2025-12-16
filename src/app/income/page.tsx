@@ -3,11 +3,13 @@
 import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
+import { darkMode, lightMode } from "@/globals/colors"
 import { INCOME } from "@/globals/globals"
 import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
 import { Box } from "@mui/material"
+import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 
 
@@ -16,6 +18,9 @@ const Page = () => {
   const [selectedYear, setSelectedYear] = useState<string>("")
   const [selectedMonth, setSelectedMonth] = useState<string>("")
   const [totalIncome, setTotalIncome] = useState<string>("")
+
+  const theme = useTheme()
+  const currentTheme = theme.theme
 
   const refreshTransactions = () => {
     const localIncomeData = getTransactions({key: INCOME})
@@ -70,6 +75,11 @@ const Page = () => {
               selectedYear={selectedYear}
               transactions={incomeTransactions}
               type={"Income"}
+              lineColors={
+                currentTheme === "light" 
+                ? [lightMode.success] 
+                : [darkMode.success]
+              }
             />
           </Box>
         </ShowCaseCard>

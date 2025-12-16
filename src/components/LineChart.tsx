@@ -1,34 +1,43 @@
-import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { darkMode, lightMode } from "@/globals/colors"
 import { TransactionData } from "@/utils/saveTransaction"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
 
-type ChartData = [string, string | number][]
+type IncomeExpenseChartData = [string, string | number][]
+type ComparisonChartData = [string, string | number, string | number][]
 
 const LineChart = (props: {
   selectedYear: string
   transactions: TransactionData
-  type: "Income" | "Expenses"
+  comparisonTransactions?: TransactionData
+  type: "Income" | "Expenses" | "Income and Expenses"
+  lineColors: string[]
+  height?: string
 }) => {
   const {
     selectedYear,
     transactions,
-    type
+    comparisonTransactions,
+    type,
+    lineColors,
+    height
   } = props
 
-  const [data, setData] = useState<ChartData>([])
-    const theme = useTheme()
-    const currentTheme = theme.theme
+  const [incomeExpenseData, setIncomeExpenseData] = useState<IncomeExpenseChartData>([])
+  const [comparisonData, setComparisonData] = useState<ComparisonChartData>([])
 
-    const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
-    const textColor = currentTheme === "light"? "#000" : "#FFF"
+  const theme = useTheme()
+  const currentTheme = theme.theme
+
+  const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  const textColor = currentTheme === "light"? "#000" : "#FFF"
 
   const options = {
     backgroundColor: backgroundColor,
     title: `${type} for year ${selectedYear}`,
     titleTextStyle: { color: textColor },
-    colors: [accentColorSecondary],
+    colors: lineColors,
     lineWidth: 5,
     chartArea: {
       width: "75%"
@@ -48,30 +57,68 @@ const LineChart = (props: {
 
 
   useEffect(() => {
-    if (!selectedYear || !transactions) return
+    if (!selectedYear) return
 
-    const newData: ChartData = [["Month", "Income"]]
+    if (transactions?.[selectedYear]) {
+      const incomeExpenseData: IncomeExpenseChartData = [["Month", "Income"]]
 
-    Object.entries(transactions[selectedYear]).forEach(
-      ([month, transactions]) => {
-        const total = transactions.reduce(
-          (sum, t) => sum + Number(t.amount),
-          0
-        )
+      Object.entries(transactions[selectedYear]).forEach(
+        ([month, transactions]) => {
+          const total = transactions.reduce(
+            (sum, t) => sum + Number(t.amount),
+            0
+          )
 
-        newData.push([month, Number(total.toFixed(2))])
-      }
-    )
+          incomeExpenseData.push([month, Number(total.toFixed(2))])
+        }
+      )
 
-    setData(newData)
+      setIncomeExpenseData(incomeExpenseData)
+    }
+
+    if (transactions?.[selectedYear] && comparisonTransactions?.[selectedYear]) {
+      const comparisonData: ComparisonChartData = [["Month", "Income", "Expenses"]]
+
+      const income: Record<string, number> = {}
+      const expense: Record<string, number> = {}
+
+      Object.entries(transactions[selectedYear]).forEach(
+        ([month, transactions]) => {
+          income[month] = transactions.reduce(
+            (sum, t) => sum + Number(t.amount),
+            0
+          )
+        }
+      )
+
+      Object.entries(comparisonTransactions[selectedYear]).forEach(
+        ([month, transactions]) => {
+          expense[month] = transactions.reduce(
+            (sum, t) => sum + Number(t.amount),
+            0
+          )
+        }
+      )
+
+      Object.keys(income).forEach((month) => {
+        comparisonData.push([
+          month,
+          Number(income[month].toFixed(2)),
+          Number(expense[month].toFixed(2))
+        ])
+      })
+
+      setComparisonData(comparisonData)
+    }
+    
   }, [selectedYear, transactions])
 
   return (
     <Chart
       chartType="LineChart"
       width={"100%"}
-      height={"100%"}
-      data={data}
+      height={height ? height : "100%"}
+      data={comparisonTransactions? comparisonData : incomeExpenseData}
       options={options}
     />
   )

@@ -9,11 +9,12 @@ import {
   MenuItem, 
   OutlinedInput, 
   Select, 
-  SelectChangeEvent, 
-  Stack } from "@mui/material"
+  SelectChangeEvent 
+} from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
 import { MONTHS, YEARS } from "@/globals/globals";
+import { accentColorSecondary } from "@/globals/colors";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -177,8 +178,11 @@ const TransactionForm = (props: {
           transaction.amount === ""
         }
         onClick={save}
+        sx={{
+          backgroundColor: accentColorSecondary
+        }}
       >
-        Add
+        {`Add ${type}`}
       </Button>
     </Box>
   )

@@ -45,7 +45,7 @@ const Page = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Income"} secondaryTitle={`Total Income ${totalIncome}`}>
+        <ShowCaseCard title={"Income"} secondaryTitle={`Total ${totalIncome}`}>
           <TransactionsList
             type={INCOME}
             transactions={incomeTransactions}
@@ -58,8 +58,16 @@ const Page = () => {
         </ShowCaseCard>
 
         <ShowCaseCard title={"Income Trend"} secondaryTitle={""}>
-          <Box marginTop={"10px"}>
-            <LineChart/>
+          <Box 
+            marginTop={"10px"}
+            overflow={"hidden"}
+            borderRadius={"10px"}
+          >
+            <LineChart
+              selectedYear={selectedYear}
+              transactions={incomeTransactions}
+              type={"Income"}
+            />
           </Box>
         </ShowCaseCard>
       </Box>

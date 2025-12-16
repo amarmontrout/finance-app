@@ -1,21 +1,14 @@
-import ShowCaseCard from "@/components/ShowCaseCard";
 import { Box } from "@mui/material";
-import OverviewInfo from "./OverviewInfo";
+import Overview from "./Overview";
 
 export default function Home() {
   return (
     <Box
-      display={"flex"}
-      flex={1}
-      justifyContent={"center"}
-      alignItems={"center"}
+      width={"100%"}
+      height={"100%"}
       padding={"50px"}
     >
-      <ShowCaseCard title={"Overview"} secondaryTitle={""}>
-        <Box marginTop={"10px"}>
-          <OverviewInfo/>
-        </Box>
-      </ShowCaseCard>
+      <Overview/>
     </Box>
   );
 }

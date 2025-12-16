@@ -53,7 +53,7 @@ const LineChart = (props: {
     legend: {
       textStyle: { color: textColor },
     },
-  };
+  }
 
 
   useEffect(() => {
@@ -76,38 +76,55 @@ const LineChart = (props: {
       setIncomeExpenseData(incomeExpenseData)
     }
 
-    if (transactions?.[selectedYear] && comparisonTransactions?.[selectedYear]) {
+    if (comparisonTransactions?.[selectedYear]) {
       const comparisonData: ComparisonChartData = [["Month", "Income", "Expenses"]]
 
       const income: Record<string, number> = {}
       const expense: Record<string, number> = {}
 
-      Object.entries(transactions[selectedYear]).forEach(
-        ([month, transactions]) => {
-          income[month] = transactions.reduce(
-            (sum, t) => sum + Number(t.amount),
-            0
-          )
-        }
-      )
+      if (!transactions[selectedYear]) {
+        // If no income for selected year, set month totals to 0
+        Object.entries(comparisonTransactions[selectedYear]).forEach(
+          ([month, _]) => {
+            income[month] = 0
+          }
+        )
+      } else {
+        // If income for selected year, get month totals
+        Object.entries(transactions[selectedYear]).forEach(
+          ([month, transactions]) => {
+            income[month] = transactions.reduce(
+              (sum, t) => sum + Number(t.amount),
+              0
+            )
+          }
+        )
+      }
 
+      // Get month totals for expenses
       Object.entries(comparisonTransactions[selectedYear]).forEach(
         ([month, transactions]) => {
           const total = transactions
             .filter(t => t.category !== "Water")
-            .reduce((sum, t) => sum + Number(t.amount), 0);
+            .reduce((sum, t) => sum + Number(t.amount), 0)
 
-          expense[month] = total;
+          expense[month] = total
         }
       )
 
-      Object.keys(income).forEach((month) => {
+      const allMonths = new Set([
+        ...Object.keys(income),
+        ...Object.keys(expense)
+      ])
+
+      allMonths.forEach((month) => {
         comparisonData.push([
           month,
-          Number(income[month].toFixed(2)),
-          Number(expense[month].toFixed(2))
+          Number((income[month] ?? 0).toFixed(2)),
+          Number((expense[month] ?? 0).toFixed(2))
         ])
       })
+
 
       setComparisonData(comparisonData)
     }

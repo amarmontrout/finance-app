@@ -1,6 +1,7 @@
 "use client"
 
 import LineChart from "@/components/LineChart"
+import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { darkMode, lightMode } from "@/globals/colors"
 import { INCOME, EXPENSES, YEARS } from "@/globals/globals"
@@ -62,26 +63,22 @@ const Overview = () => {
           </FormControl>
         </Box>
 
+        <LineChart
+          selectedYear={selectedYear}
+          transactions={incomeTransactions}
+          comparisonTransactions={expenseTransactions}
+          type={"Income and Expenses"}
+          lineColors={
+            currentTheme === "light" 
+            ? [lightMode.success, lightMode.error] 
+            : [darkMode.success, darkMode.error]
+          }
+          height="500px"
+        />        
+      </ShowCaseCard>
 
-        <Box 
-          // This box makes the rounded corners for the chart
-          marginTop={"10px"}
-          overflow={"hidden"}
-          borderRadius={"10px"}
-        >
-          <LineChart
-            selectedYear={selectedYear}
-            transactions={incomeTransactions}
-            comparisonTransactions={expenseTransactions}
-            type={"Income and Expenses"}
-            lineColors={
-              currentTheme === "light" 
-              ? [lightMode.success, lightMode.error] 
-              : [darkMode.success, darkMode.error]
-            }
-            height="500px"
-          />
-        </Box>        
+      <ShowCaseCard title={"Monthly Categories"} secondaryTitle={""}>
+        <PieChart/>
       </ShowCaseCard>
     </Box>
   )

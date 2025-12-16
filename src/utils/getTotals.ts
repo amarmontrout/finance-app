@@ -18,7 +18,7 @@ export const getYearTotal = (year: string, transactions: TransactionData) => {
 export const getMonthTotal = (year: string, month: string, transactions: TransactionData) => {
   let total = 0
 
-  if (transactions[year]) {
+  if (transactions[year] && transactions[year][month]) {
     transactions[year][month].map((detail) => {
       if (detail.category !== "Water") {
         total = total + Number(detail.amount)

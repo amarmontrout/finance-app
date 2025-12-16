@@ -18,6 +18,8 @@ type TransactionsListProps = {
   setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
   selectedYear: string
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
+  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedId: React.Dispatch<React.SetStateAction<string>>
 }
 
 type Details = {
@@ -33,7 +35,9 @@ const TransactionsList = ({
     selectedMonth,
     setSelectedMonth,
     selectedYear,
-    setSelectedYear
+    setSelectedYear,
+    setOpenEditDialog,
+    setSelectedId
   }: TransactionsListProps) => {
     const [expandYear, setExpandYear] = useState(false)
     const [expandMonth, setExpandMonth] = useState(false)
@@ -102,7 +106,8 @@ const TransactionsList = ({
           edge="end"
           onClick={
             () => {
-              alert("TODO: Add edit feature")
+              setOpenEditDialog(true)
+              setSelectedId(id)
             }
           }
         >

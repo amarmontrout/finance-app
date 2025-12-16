@@ -30,14 +30,7 @@ const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.Rea
 
         <hr style={{ width: "100%" }}/>
 
-        <Box
-          sx={{
-            flex: 1,
-            minHeight: 0,
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
+        <Box>
           {children}
         </Box>
       </CardContent>

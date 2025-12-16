@@ -9,7 +9,6 @@ const Page = () => {
   return (
     <Box
       width={"100%"}
-      padding={"50px"}
     >
       <Box
         className="flex flex-row xl:flex-col gap-2"

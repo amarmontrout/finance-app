@@ -59,6 +59,7 @@ const Income = () => {
           setSelectedYear={setSelectedYear}
         />
       </ShowCaseCard>
+      
       <ShowCaseCard title={"Income Chart"} secondaryTitle={""}>
         <Box 
           // This box makes the rounded corners for the chart

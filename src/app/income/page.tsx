@@ -5,8 +5,6 @@ const Page = () => {
   return (
     <Box
       width={"100%"}
-      height={"100%"}
-      padding={"50px"}
     >
       <Income/>
     </Box>

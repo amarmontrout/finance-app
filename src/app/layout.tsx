@@ -30,7 +30,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Box>
 
             {/* Main column */}
-            <Box sx={{ display: "flex", flex: 1, minWidth: 0, flexDirection: "column", width: "100%" }}>
+            <Box 
+              sx={{ 
+                display: "flex", 
+                flex: 1, 
+                minWidth: 0, 
+                flexDirection: "column", 
+                width: "100%"
+              }}
+            >
                 {/* Header */}
                 <Box
                   component="header"
@@ -52,11 +60,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   flex: 1,
                   bgcolor: "background.default",
                   color: "text.primary",
-                  overflow: "hidden",
-                  overflowY: "scroll"
+                  overflow: "hidden"
                 }}
               >
-                {children}
+                {/* Inner scroller */}
+                <Box
+                  sx={{
+                    flex: 1,
+                    overflowY: "auto",
+                    padding: "50px",
+                    boxSizing: "border-box"
+                  }}
+                >
+                  {children}
+                </Box>
               </Box>
             </Box>
           </Box>

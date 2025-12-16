@@ -1,43 +1,75 @@
 "use client"
 
-import { Box, Stack, Typography } from "@mui/material"
+import { Box, IconButton, Stack, Typography } from "@mui/material"
+import MenuIcon from '@mui/icons-material/Menu';
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
 import { NAV_ACTIONS, NAV_MISC, NAV_QUICKINFO } from "@/globals/globals";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 const Navbar = () => {
+  const [open, setOpen] = useState<boolean>(true)
   const pathname = usePathname()
 
   return (
-    <Stack height={"100%"} width={"250px"}>
-      <Box 
-        display={"flex"} 
-        minHeight={"100px"} 
-        bgcolor={"background.default"} 
-        justifyContent={"center"} 
-        alignItems={"center"}
-      >
-        <Logo/>
+    <Stack height={"100%"} width={"100%"}>
+      <Box>
+        <Box
+          className="hidden lg:flex"
+          bgcolor={"background.default"} 
+          minHeight={"100px"} 
+          height={"100%"}
+          width={"100%"}
+          justifyContent={"center"} 
+          alignItems={"center"}
+        >
+          <Logo/>
+        </Box>
+
+        <Box
+          className="flex lg:hidden"
+          bgcolor={"background.default"} 
+          minHeight={"100px"} 
+          height={"100%"}
+          width={"100%"}
+          justifyContent={"center"} 
+          alignItems={"center"}
+        >
+          <IconButton>
+            <MenuIcon fontSize="large"/>
+          </IconButton>
+        </Box>
       </Box>
+
       <Stack
+        className="p-[10px] lg:p-[30px]"
         direction={"column"}
         height={"100%"}
         gap={1}
-        padding={"30px"}
         overflow={"hidden"}
         style={{
           overflowY: "scroll"
         }}
       >
-        <Typography>Quick Info</Typography>
+        <Typography 
+          className="hidden lg:flex" 
+          variant={"h5"}
+        >
+          Quick Info
+        </Typography>
         {NAV_QUICKINFO.map((item) => {
           return (
             <PageLink item={item} active={pathname === item.link} key={item.name} />
           )
         })}
         <hr style={{ width: "100%" }} />
-        <Typography>Actions</Typography>
+        <Typography 
+          className="hidden lg:flex" 
+          variant={"h5"}
+        >
+          Actions
+        </Typography>
         {NAV_ACTIONS.map((item) => {
           return (
             <PageLink item={item} active={pathname === item.link} key={item.name} />

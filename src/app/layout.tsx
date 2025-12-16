@@ -15,13 +15,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <body style={{ margin: 0, padding: 0 }}>
         <Providers>
-          <Box sx={{ display: "flex", flexDirection: "row", height: "100vh" }}>
+          <Box sx={{ display: "flex", flexDirection: "row", flex: 1, minWidth: 0, height: "100vh" }}>
             {/* Nav / Sidebar */}
             <Box
-              className="hidden lg:block"
+              className="w-[80px] lg:min-w-[250px]"
               component="nav"
               sx={{
-                minWidth: 250,
                 bgcolor: "background.paper",
                 borderRight: 2,
                 borderColor: "divider",
@@ -31,7 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </Box>
 
             {/* Main column */}
-            <Box sx={{ display: "flex", flexDirection: "column", width: "100%" }}>
+            <Box sx={{ display: "flex", flex: 1, minWidth: 0, flexDirection: "column", width: "100%" }}>
                 {/* Header */}
                 <Box
                   component="header"

@@ -28,8 +28,11 @@ const PageLink = (props: {item: PageLinkType, active?: boolean}) => {
         gap={1}
         alignItems={"center"}
       >
-        <item.icon />
-        <Typography variant={"h5"} >
+        <item.icon fontSize="large"/>
+        <Typography 
+          className="hidden lg:flex" 
+          variant={"h5"}
+        >
           {item.name}
         </Typography>
       </Box>

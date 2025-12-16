@@ -30,7 +30,10 @@ export const YEARS = [
 export const INCOME_CATEGORIES = [
   "Paycheck",
   "Savings Interest",
-  "Misc"
+  "Misc",
+  "Giselle",
+  "Jalynn",
+  "Kyle"
 ]
 export const EXPENSE_CATEGORIES = [
   "Mortgage",
@@ -40,7 +43,8 @@ export const EXPENSE_CATEGORIES = [
   "Trash",
   "Phone",
   "Credit Card",
-  "Misc"
+  "Misc",
+  "Rent"
 ]
 export const NAV_QUICKINFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: InsightsIcon},

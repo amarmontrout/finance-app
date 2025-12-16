@@ -4,6 +4,7 @@ import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButt
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
+import EditIcon from '@mui/icons-material/Edit';
 import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -44,7 +45,6 @@ const TransactionsList = ({
 
     const theme = useTheme()
     const currentTheme = theme.theme
-
     const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
 
   const handleSelectYear = (year: string) => {
@@ -94,19 +94,32 @@ const TransactionsList = ({
     }
   }
 
-  const DeleteButton = (props: {id: string}) => {
+  const EditDeleteButton = (props: {id: string}) => {
     const { id } = props
     return (
-      <IconButton 
-        edge="end"
-        onClick={
-          () => {
-            setConfirmId(id)
+      <Stack direction={"row"} gap={2}>
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              alert("TODO: Add edit feature")
+            }
           }
-        }
-      >
-        <DeleteIcon />
-      </IconButton>
+        >
+          <EditIcon/>
+        </IconButton>
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setConfirmId(id)
+            }
+          }
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Stack>
     )
   }
 
@@ -172,85 +185,101 @@ const TransactionsList = ({
     }
   }, [transactions])
 
+  const YearList = () => {
+    return (
+      <Collapse in={true} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <List className="flex flex-col gap-2">
+          { transactions &&
+            Object.entries(transactions).map(([year, _]) => {
+              const yearTotal = getYearTotal(year, transactions)
+                
+              return (
+                <ListItemButton 
+                  key={year} 
+                  onClick={() => {handleSelectYear(year)}} 
+                  sx={{ 
+                    backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
+                    borderRadius: "10px"
+                  }}
+                >
+                  <ListItemText primary={year} secondary={yearTotal}/>
+
+                  {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
+                </ListItemButton>
+              )
+            })
+          }
+        </List>
+      </Collapse>
+    )
+  }
+
+  const MonthList = () => {
+    return (
+      <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <List className="flex flex-col gap-2">
+          { transactions[selectedYear] &&
+            Object.entries(transactions[selectedYear]).map(([month, _]) => {
+              const monthTotal = getMonthTotal(selectedYear, month, transactions)
+
+              return (
+                <ListItemButton 
+                  key={month} 
+                  onClick={() => {handleSelectMonth(month)}}
+                  sx={{ 
+                    backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
+                    borderRadius: "10px"
+                  }}
+                >
+                  <ListItemText primary={month} secondary={monthTotal}/>
+
+                  {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
+                </ListItemButton>
+              )
+            })
+          }
+        </List>
+      </Collapse>
+    )
+  }
+
+  const DetailsList = () => {
+    return (
+      <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "50%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+        <List className="flex flex-col gap-2">
+          { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
+            transactions[selectedYear]?.[selectedMonth]?.map((details) => {
+              return (
+                <ListItem 
+                  key={details.id}
+                  secondaryAction={
+                    confirmId === details.id
+                      ? <ConfirmCancel details={details}/> 
+                      : <EditDeleteButton id={details.id}/>
+                  }
+                  sx={{
+                    backgroundColor: listItemColor,
+                    borderRadius: "10px"
+                  }}
+                >
+                  <ListItemText 
+                    primary={`$ ${details.amount}`}
+                    secondary={details.category}
+                  />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      </Collapse>
+    )
+  }
+
   return (
       <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={.5}>
-        <Collapse in={true} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
-          <List className="flex flex-col gap-2">
-            { transactions &&
-              Object.entries(transactions).map(([year, _]) => {
-                const yearTotal = getYearTotal(year, transactions)
-                
-                return (
-                  <ListItemButton 
-                    key={year} 
-                    onClick={() => {handleSelectYear(year)}} 
-                    sx={{ 
-                      backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
-                      borderRadius: "10px"
-                    }}
-                  >
-                    <ListItemText primary={year} secondary={yearTotal}/>
-
-                    {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
-                  </ListItemButton>
-                )
-              })
-            }
-          </List>
-        </Collapse>
-
-        <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
-          <List className="flex flex-col gap-2">
-              { transactions[selectedYear] &&
-                Object.entries(transactions[selectedYear]).map(([month, _]) => {
-                  const monthTotal = getMonthTotal(selectedYear, month, transactions)
-
-                  return (
-                    <ListItemButton 
-                      key={month} 
-                      onClick={() => {handleSelectMonth(month)}}
-                      sx={{ 
-                        backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
-                        borderRadius: "10px"
-                      }}
-                    >
-                      <ListItemText primary={month} secondary={monthTotal}/>
-
-                      {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
-                    </ListItemButton>
-                  )
-                })
-              }
-          </List>
-        </Collapse>
-
-        <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "50%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
-          <List className="flex flex-col gap-2">
-            { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
-              transactions[selectedYear]?.[selectedMonth]?.map((details) => {
-                return (
-                  <ListItem 
-                    key={details.id}
-                    secondaryAction={
-                      confirmId === details.id
-                        ? <ConfirmCancel details={details}/> 
-                        : <DeleteButton id={details.id}/>
-                    }
-                    sx={{
-                      backgroundColor: listItemColor,
-                      borderRadius: "10px"
-                    }}
-                  >
-                    <ListItemText 
-                      primary={`$ ${details.amount}`}
-                      secondary={details.category}
-                    />
-                  </ListItem>
-                )
-              })
-            }
-          </List>
-        </Collapse>
+        <YearList/>
+        <MonthList/>
+        <DetailsList/>
       </Stack>
 
   )

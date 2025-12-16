@@ -154,23 +154,16 @@ const Expenses = () => {
       </ShowCaseCard>
       
       <ShowCaseCard title={"Expenses Chart"} secondaryTitle={""}>
-        <Box 
-          // This box makes the rounded corners for the chart
-          marginTop={"10px"}
-          overflow={"hidden"}
-          borderRadius={"10px"}
-        >
-          <LineChart
-            selectedYear={selectedYear}
-            transactions={expenseTransactions}
-            type={"Expenses"}
-            lineColors={
-              currentTheme === "light" 
-              ? [lightMode.error] 
-              : [darkMode.error]
-            }
-          />
-        </Box>
+        <LineChart
+          selectedYear={selectedYear}
+          transactions={expenseTransactions}
+          type={"Expenses"}
+          lineColors={
+            currentTheme === "light" 
+            ? [lightMode.error] 
+            : [darkMode.error]
+          }
+        />
       </ShowCaseCard>
 
       <Dialog open={openEditDialog}>
@@ -233,7 +226,10 @@ const Expenses = () => {
               disabled={
                 false
               }
-              onClick={() => {setOpenEditDialog(false)}}
+              onClick={() => {
+                setOpenEditDialog(false)
+                setUpdateTransaction(UPDATE_TRANSACTION_INIT)
+              }}
               sx={{
                 backgroundColor: currentTheme === "light" 
                   ? [lightMode.error] 

@@ -159,23 +159,16 @@ const Income = () => {
       </ShowCaseCard>
       
       <ShowCaseCard title={"Income Chart"} secondaryTitle={""}>
-        <Box 
-          // This box makes the rounded corners for the chart
-          marginTop={"10px"}
-          overflow={"hidden"}
-          borderRadius={"10px"}
-        >
-          <LineChart
-            selectedYear={selectedYear}
-            transactions={incomeTransactions}
-            type={"Income"}
-            lineColors={
-              currentTheme === "light" 
-              ? [lightMode.success] 
-              : [darkMode.success]
-            }
-          />
-        </Box>
+        <LineChart
+          selectedYear={selectedYear}
+          transactions={incomeTransactions}
+          type={"Income"}
+          lineColors={
+            currentTheme === "light" 
+            ? [lightMode.success] 
+            : [darkMode.success]
+          }
+        />
       </ShowCaseCard>
 
       <Dialog open={openEditDialog}>
@@ -238,7 +231,10 @@ const Income = () => {
               disabled={
                 false
               }
-              onClick={() => {setOpenEditDialog(false)}}
+              onClick={() => {
+                setOpenEditDialog(false)
+                setUpdateTransaction(UPDATE_TRANSACTION_INIT)
+              }}
               sx={{
                 backgroundColor: currentTheme === "light" 
                   ? [lightMode.error] 

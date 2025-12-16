@@ -1,5 +1,6 @@
 import { darkMode, lightMode } from "@/globals/colors"
 import { TransactionData } from "@/utils/saveTransaction"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
@@ -132,13 +133,20 @@ const LineChart = (props: {
   }, [selectedYear, transactions])
 
   return (
-    <Chart
-      chartType="LineChart"
-      width={"100%"}
-      height={height ? height : "100%"}
-      data={comparisonTransactions? comparisonData : incomeExpenseData}
-      options={options}
-    />
+    <Box
+      // This box makes the rounded corners for the chart
+      marginTop={"10px"}
+      overflow={"hidden"}
+      borderRadius={"10px"}
+    >
+      <Chart
+        chartType={"LineChart"}
+        width={"100%"}
+        height={height ? height : "100%"}
+        data={comparisonTransactions? comparisonData : incomeExpenseData}
+        options={options}
+      />
+    </Box>
   )
 }
 

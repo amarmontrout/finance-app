@@ -163,6 +163,7 @@ const Expenses = () => {
             ? [lightMode.error] 
             : [darkMode.error]
           }
+          height="400px"
         />
       </ShowCaseCard>
 

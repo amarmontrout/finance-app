@@ -39,17 +39,26 @@ const LineChart = (props: {
     title: `${type} for year ${selectedYear}`,
     titleTextStyle: { color: textColor },
     colors: lineColors,
-    lineWidth: 5,
+    lineWidth: 3,
+    pointsVisible: true,
     chartArea: {
       width: "75%"
     },
     hAxis: {
       textStyle: { color: textColor },
       titleTextStyle: { color: textColor },
+      slantedText: true
     },
     vAxis: {
       textStyle: { color: textColor },
       titleTextStyle: { color: textColor },
+      format: "currency",
+      gridlines: {
+        count: 10
+      },
+      minorGridlines: {
+        count: 0
+      }
     },
     legend: {
       textStyle: { color: textColor },

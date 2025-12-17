@@ -73,7 +73,7 @@ const Overview = () => {
             ? [lightMode.success, lightMode.error] 
             : [darkMode.success, darkMode.error]
           }
-          height="500px"
+          height="400px"
         />        
       </ShowCaseCard>
 

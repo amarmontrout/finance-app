@@ -168,6 +168,7 @@ const Income = () => {
             ? [lightMode.success] 
             : [darkMode.success]
           }
+          height="400px"
         />
       </ShowCaseCard>
 

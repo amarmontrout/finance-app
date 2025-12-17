@@ -67,7 +67,7 @@ const Expenses = () => {
           <LineChart
             selectedYear={selectedYear}
             transactions={expenseTransactions}
-            type={"Expenses"}
+            title={"Expenses"}
             lineColors={
               currentTheme === "light" 
               ? expenseLinesLight

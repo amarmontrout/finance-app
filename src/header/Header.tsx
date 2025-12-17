@@ -7,7 +7,7 @@ const Header = () => {
   return (
     <Stack
       direction={"row"}
-      height={"100px"}
+      height={"80px"}
       justifyContent={"space-between"}
     >
       <Box

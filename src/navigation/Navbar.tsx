@@ -18,7 +18,7 @@ const Navbar = () => {
         <Box
           className="hidden lg:flex"
           bgcolor={"background.default"} 
-          minHeight={"100px"} 
+          minHeight={"80px"} 
           height={"100%"}
           width={"100%"}
           justifyContent={"center"} 
@@ -30,7 +30,7 @@ const Navbar = () => {
         <Box
           className="flex lg:hidden"
           bgcolor={"background.default"} 
-          minHeight={"100px"} 
+          minHeight={"80px"} 
           height={"100%"}
           width={"100%"}
           justifyContent={"center"} 

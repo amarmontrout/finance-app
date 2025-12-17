@@ -13,7 +13,7 @@ const LineChart = (props: {
   selectedYear: string
   transactions: TransactionData
   comparisonTransactions?: TransactionData
-  type: "Income" | "Expenses" | "Income and Expenses"
+  title: string
   lineColors: string[]
   height?: string
 }) => {
@@ -21,7 +21,7 @@ const LineChart = (props: {
     selectedYear,
     transactions,
     comparisonTransactions,
-    type,
+    title,
     lineColors,
     height
   } = props
@@ -36,7 +36,7 @@ const LineChart = (props: {
 
   const options = {
     backgroundColor: backgroundColor,
-    title: `${type}`,
+    title: title,
     titleTextStyle: { color: textColor },
     colors: lineColors,
     lineWidth: 3,
@@ -62,6 +62,7 @@ const LineChart = (props: {
     },
     legend: {
       textStyle: { color: textColor },
+      position: "top"
     },
   }
 

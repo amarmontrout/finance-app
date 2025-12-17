@@ -10,6 +10,7 @@ import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
+import TransactionForm from "@/components/TransactionForm"
 
 const Expenses = () => {
   const { 
@@ -35,35 +36,47 @@ const Expenses = () => {
 
   return (
     <Box
-      className="flex flex-col xl:flex-row gap-2 h-full"
+      className="flex flex-col gap-2 h-full"
     >
-      <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total ${monthTotal}`}>
-        <TransactionsList
+      <ShowCaseCard title={"Add Expense"} secondaryTitle={""}>
+        <TransactionForm
+          categories={EXPENSE_CATEGORIES}
           type={EXPENSES}
-          transactions={expenseTransactions}
           refreshTransactions={refreshExpenseTransactions}
-          selectedMonth={selectedMonth}
-          setSelectedMonth={setSelectedMonth}
-          selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
-          setOpenEditDialog={setOpenEditDialog}
-          setSelectedId={setSelectedId}
         />
       </ShowCaseCard>
-      
-      <ShowCaseCard title={"Expenses Chart"} secondaryTitle={""}>
-        <LineChart
-          selectedYear={selectedYear}
-          transactions={expenseTransactions}
-          type={"Expenses"}
-          lineColors={
-            currentTheme === "light" 
-            ? expenseLinesLight
-            : expenseLinesDark
-          }
-          height="400px"
-        />
-      </ShowCaseCard>
+
+      <Box
+        className="flex flex-col xl:flex-row gap-2 h-full"
+      >
+        <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total ${monthTotal}`}>
+          <TransactionsList
+            type={EXPENSES}
+            transactions={expenseTransactions}
+            refreshTransactions={refreshExpenseTransactions}
+            selectedMonth={selectedMonth}
+            setSelectedMonth={setSelectedMonth}
+            selectedYear={selectedYear}
+            setSelectedYear={setSelectedYear}
+            setOpenEditDialog={setOpenEditDialog}
+            setSelectedId={setSelectedId}
+          />
+        </ShowCaseCard>
+        
+        <ShowCaseCard title={"Expenses Chart"} secondaryTitle={""}>
+          <LineChart
+            selectedYear={selectedYear}
+            transactions={expenseTransactions}
+            type={"Expenses"}
+            lineColors={
+              currentTheme === "light" 
+              ? expenseLinesLight
+              : expenseLinesDark
+            }
+            height="400px"
+          />
+        </ShowCaseCard>
+      </Box>
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}

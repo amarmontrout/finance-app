@@ -4,7 +4,7 @@ import { Box, IconButton, Stack, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
-import { NAV_ACTIONS, NAV_MISC, NAV_QUICKINFO } from "@/globals/globals";
+import { NAV_MISC, NAV_TRANSACTIONS } from "@/globals/globals";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -56,26 +56,17 @@ const Navbar = () => {
           className="hidden lg:flex" 
           variant={"h5"}
         >
-          Quick Info
+          Transactions
         </Typography>
-        {NAV_QUICKINFO.map((item) => {
+
+        {NAV_TRANSACTIONS.map((item) => {
           return (
             <PageLink item={item} active={pathname === item.link} key={item.name} />
           )
         })}
+
         <hr style={{ width: "100%" }} />
-        <Typography 
-          className="hidden lg:flex" 
-          variant={"h5"}
-        >
-          Actions
-        </Typography>
-        {NAV_ACTIONS.map((item) => {
-          return (
-            <PageLink item={item} active={pathname === item.link} key={item.name} />
-          )
-        })}
-        <hr style={{ width: "100%" }} />
+
         {NAV_MISC.map((item) => {
           return (
             <PageLink item={item} active={pathname === item.link} key={item.name} />

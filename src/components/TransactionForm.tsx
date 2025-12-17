@@ -30,8 +30,9 @@ export type TransactionType = {
 const TransactionForm = (props: {
   categories: string[],
   type: string,
+  refreshTransactions: () => void
 }) => {
-  const { categories, type } = props
+  const { categories, type, refreshTransactions } = props
 
   const TRANSACTION_INIT: TransactionType = {
     month: MONTHS[currentMonth],
@@ -97,6 +98,7 @@ const TransactionForm = (props: {
 
   const save = () => {
     saveTransaction({key: type, transaction: transaction})
+    refreshTransactions()
     resetFormData()
   }
 
@@ -104,7 +106,7 @@ const TransactionForm = (props: {
     <Box
       className="flex flex-col xl:flex-row gap-5"
       width={"fit-content"}
-      padding={"10px"}
+      paddingTop={"20px"}
       margin={"0 auto"}
     >
       <FormControl>

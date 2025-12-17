@@ -3,7 +3,7 @@
 import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
-import { lightMode, darkMode } from "@/globals/colors"
+import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
 import { EXPENSE_CATEGORIES, EXPENSES } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -58,8 +58,8 @@ const Expenses = () => {
           type={"Expenses"}
           lineColors={
             currentTheme === "light" 
-            ? [lightMode.error] 
-            : [darkMode.error]
+            ? expenseLinesLight
+            : expenseLinesDark
           }
           height="400px"
         />

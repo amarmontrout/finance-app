@@ -5,7 +5,7 @@ import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { lightMode, darkMode } from "@/globals/colors"
+import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -58,8 +58,8 @@ const Income = () => {
           type={"Income"}
           lineColors={
             currentTheme === "light" 
-            ? [lightMode.success] 
-            : [darkMode.success]
+            ? incomeLinesLight
+            : incomeLinesDark
           }
           height="400px"
         />

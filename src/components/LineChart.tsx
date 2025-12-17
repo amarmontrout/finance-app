@@ -1,11 +1,12 @@
 import { darkMode, lightMode } from "@/globals/colors"
+import { MONTHS } from "@/globals/globals"
 import { TransactionData } from "@/utils/saveTransaction"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
 
-type IncomeExpenseChartData = [string, string | number][]
+type IncomeExpenseChartData = (string | number)[][]
 type ComparisonChartData = [string, string | number, string | number][]
 
 const LineChart = (props: {
@@ -30,13 +31,12 @@ const LineChart = (props: {
 
   const theme = useTheme()
   const currentTheme = theme.theme
-
   const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
   const textColor = currentTheme === "light"? "#000" : "#FFF"
 
   const options = {
     backgroundColor: backgroundColor,
-    title: `${type} for year ${selectedYear}`,
+    title: `${type}`,
     titleTextStyle: { color: textColor },
     colors: lineColors,
     lineWidth: 3,
@@ -65,26 +65,30 @@ const LineChart = (props: {
     },
   }
 
+  const buildIncomeExpenseData = () => {
+    const years = Object.keys(transactions).sort()
+    const chartData: IncomeExpenseChartData = [["Month", ...years]]
+
+    for (const month of MONTHS) {
+      const row: (string | number)[] = [month]
+      for (const year of years) {
+        const total = transactions[year]?.[month]?.reduce(
+          (sum, t) => sum + Number(t.amount),
+          0
+        ) || 0
+
+        row.push(Number(total.toFixed(2)))
+      }
+      chartData.push(row)
+    }
+    return chartData
+  }
+
 
   useEffect(() => {
     if (!selectedYear) return
 
-    if (transactions?.[selectedYear]) {
-      const incomeExpenseData: IncomeExpenseChartData = [["Month", "Income"]]
-
-      Object.entries(transactions[selectedYear]).forEach(
-        ([month, transactions]) => {
-          const total = transactions.reduce(
-            (sum, t) => sum + Number(t.amount),
-            0
-          )
-
-          incomeExpenseData.push([month, Number(total.toFixed(2))])
-        }
-      )
-
-      setIncomeExpenseData(incomeExpenseData)
-    }
+    setIncomeExpenseData(buildIncomeExpenseData())
 
     if (comparisonTransactions?.[selectedYear]) {
       const comparisonData: ComparisonChartData = [["Month", "Income", "Expenses"]]
@@ -92,40 +96,25 @@ const LineChart = (props: {
       const income: Record<string, number> = {}
       const expense: Record<string, number> = {}
 
-      if (!transactions[selectedYear]) {
-        // If no income for selected year, set month totals to 0
-        Object.entries(comparisonTransactions[selectedYear]).forEach(
-          ([month, _]) => {
-            income[month] = 0
-          }
-        )
-      } else {
-        // If income for selected year, get month totals
-        Object.entries(transactions[selectedYear]).forEach(
-          ([month, transactions]) => {
-            income[month] = transactions.reduce(
-              (sum, t) => sum + Number(t.amount),
-              0
-            )
-          }
-        )
-      }
+      // Compute income totals, defaulting to 0 if missing
+      Object.entries(comparisonTransactions[selectedYear]).forEach(([month, _]) => {
+        const monthIncome = transactions[selectedYear]?.[month]?.reduce(
+          (sum, t) => sum + Number(t.amount), 0
+        ) ?? 0
 
-      // Get month totals for expenses
-      Object.entries(comparisonTransactions[selectedYear]).forEach(
-        ([month, transactions]) => {
-          const total = transactions
-            .filter(t => t.category !== "Water")
-            .reduce((sum, t) => sum + Number(t.amount), 0)
+        income[month] = monthIncome
+      })
 
-          expense[month] = total
-        }
-      )
+      // Compute expense totals
+      Object.entries(comparisonTransactions[selectedYear]).forEach(([month, transactions]) => {
+        const monthExpense = transactions
+          .filter(t => t.category !== "Water")
+          .reduce((sum, t) => sum + Number(t.amount), 0)
 
-      const allMonths = new Set([
-        ...Object.keys(income),
-        ...Object.keys(expense)
-      ])
+        expense[month] = monthExpense
+      })
+
+      const allMonths = Array.from(new Set([...Object.keys(income), ...Object.keys(expense)]))
 
       allMonths.forEach((month) => {
         comparisonData.push([
@@ -135,10 +124,8 @@ const LineChart = (props: {
         ])
       })
 
-
       setComparisonData(comparisonData)
-    }
-    
+    }    
   }, [selectedYear, transactions])
 
   return (

@@ -5,7 +5,40 @@ export const accentColorPrimaryHover = "#2563EB40"
 // Savings goals, positive cash flow, secondary buttons (CTA), graph comparison lines
 export const accentColorSecondary = "#10B981"
 
+export const incomeLinesLight = [
+    "#16A34A", // green (primary)
+    "#22C55E", // lime green
+    "#047857", // dark teal green
+    "#6EE7B7", // mint green
+    "#166534"  // forest green
+]
+
+export const incomeLinesDark = [
+    "#15803D", // deep green
+    "#22C55E", // bright green
+    "#4ADE80", // soft lime green
+    "#14532D",  // dark forest green
+    "#52B788", // muted green
+]
+
+export const expenseLinesLight = [
+    "#DC2626", // red (primary)
+    "#FCA5A5", // soft pink-red
+    "#B91C1C", // dark red
+    "#EF4444", // bright red
+    "#7F1D1D"  // deep maroon
+]
+
+export const expenseLinesDark = [
+    "#EF4444", // vivid red
+    "#F87171", // soft coral
+    "#991B1B", // dark crimson
+    "#F05545", // muted red
+    "#7F1D1D"  // deep maroon
+]
+
 export enum lightMode {
+    accentColorPrimary = "#2563EB",
     baseBg = "#F9FAFB", // App background
     surfaceBg = "#FFFFFF", // Cards holding content
     elevatedBg = "#F3F4F6", // Modals, sticky headers, input backgrounds
@@ -23,7 +56,7 @@ export enum lightMode {
 }
 
 export enum darkMode {
-    
+    accentColorPrimary = "#3B82F6",
     baseBg = "#0F172A", // App background
     surfaceBg = "#1E293B", // Cards holding content
     elevatedBg = "#334155", // Modals, sticky headers, input backgrounds

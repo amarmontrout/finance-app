@@ -6,6 +6,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { YEARS } from "@/globals/globals"
+import { getCategoryTotals } from "@/utils/getTotals"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
@@ -22,6 +23,8 @@ const Overview = () => {
   } = useTransactionContext()
   
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
+  const [incomeCategoryTotals, setIncomeCategoryTotals] = useState<[string, string | number][]>([])
+  const [expenseCategoryTotals, setExpenseCategoryTotals] = useState<[string, string | number][]>([])
 
   const theme = useTheme()
   const currentTheme = theme.theme
@@ -31,11 +34,20 @@ const Overview = () => {
     refreshExpenseTransactions()
   }, [selectedYear])
 
+  useEffect(() => {
+    if (!selectedYear || !incomeTransactions) return
+    const incomeCategoryTotal = getCategoryTotals(selectedYear, incomeTransactions)
+    const expenseCategoryTotal = getCategoryTotals(selectedYear, expenseTransactions)
+    if (!incomeCategoryTotal || !expenseCategoryTotal) return
+    setIncomeCategoryTotals(incomeCategoryTotal)
+    setExpenseCategoryTotals(expenseCategoryTotal)
+  }, [incomeTransactions])
+
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <ShowCaseCard title={"Overview"} secondaryTitle={""}>
+      <ShowCaseCard title={"Income and Expense Overview"} secondaryTitle={""}>
         <Box
           width={"fit-content"}
           paddingTop={"10px"}
@@ -62,7 +74,7 @@ const Overview = () => {
           selectedYear={selectedYear}
           transactions={incomeTransactions}
           comparisonTransactions={expenseTransactions}
-          type={"Income and Expenses"}
+          title={`Income and Expenses for ${selectedYear}`}
           lineColors={
             currentTheme === "light" 
             ? [lightMode.success, lightMode.error] 
@@ -72,9 +84,23 @@ const Overview = () => {
         />        
       </ShowCaseCard>
 
-      <ShowCaseCard title={"Monthly Categories"} secondaryTitle={""}>
-        <PieChart/>
+      <Box
+        className="flex flex-col xl:flex-row gap-2 h-full"
+      >
+      <ShowCaseCard title={"Monthly Income Categories"} secondaryTitle={""}>
+        <PieChart
+          data={incomeCategoryTotals}
+          year={selectedYear}
+        />
       </ShowCaseCard>
+
+      <ShowCaseCard title={"Monthly Expense Categories"} secondaryTitle={""}>
+        <PieChart
+          data={expenseCategoryTotals}
+          year={selectedYear}
+        />
+      </ShowCaseCard>
+      </Box>
     </Box>
   )
 }

@@ -31,3 +31,29 @@ export const getMonthTotal = (year: string, month: string, transactions: Transac
     maximumFractionDigits: 2,
   })
 }
+
+export const getCategoryTotals = (
+  year: string,
+  transactions: TransactionData
+): [string, string | number][] => {
+  const categoryTotals: Record<string, number> = {}
+
+  if (!transactions[year]) {
+    return [["Category", "Total"]]
+  }
+
+  Object.values(transactions[year]).forEach((monthTransactions) => {
+    monthTransactions.forEach(({ category, amount }) => {
+      categoryTotals[category] =
+        (categoryTotals[category] ?? 0) + Number(amount)
+    })
+  })
+
+  const pieChartData: [string, string | number][] = [["Category", "Total"]]
+
+  Object.entries(categoryTotals).forEach(([category, total]) => {
+    pieChartData.push([category, Number(total.toFixed(2))])
+  })
+
+  return pieChartData
+}

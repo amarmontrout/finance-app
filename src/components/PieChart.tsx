@@ -15,11 +15,18 @@ const PieChart = (props: {
   const textColor = currentTheme === "light"? "#000" : "#FFF"
   
   const options = {
+    is3D: true,
     backgroundColor: backgroundColor,
     title: `Categories for ${year}`,
     titleTextStyle: { color: textColor },
     legend: {
       textStyle: { color: textColor },
+    },
+    chartArea: {
+      top: 50,
+      left: 150,
+      width: "100%",
+      height: "100%"
     }
   }
 

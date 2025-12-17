@@ -3,10 +3,10 @@
 import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
+import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES } from "@/globals/globals"
 import { getMonthTotal } from "@/utils/getTotals"
-import getTransactions from "@/utils/getTransactions"
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { 
   Box, 
@@ -32,9 +32,15 @@ export type UpdateTransactionType = {
 }
 
 const Income = () => {
-  const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
-  const [selectedYear, setSelectedYear] = useState<string>("")
-  const [selectedMonth, setSelectedMonth] = useState<string>("")
+  const { 
+    incomeTransactions, 
+    refreshIncomeTransactions,
+    selectedYear,
+    setSelectedYear,
+    selectedMonth,
+    setSelectedMonth
+  } = useTransactionContext()
+
   const [totalIncome, setTotalIncome] = useState<string>("")
 
   const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
@@ -50,16 +56,8 @@ const Income = () => {
   const theme = useTheme()
   const currentTheme = theme.theme
     
-  const refreshTransactions = () => {
-    const localIncomeData = getTransactions({key: INCOME})
-    if (!localIncomeData) {
-      return
-    }
-    setIncomeTransactions(localIncomeData)
-  }
-    
   useEffect(() => {
-    refreshTransactions()
+    refreshIncomeTransactions()
   }, [])
     
   useEffect(() => {
@@ -137,7 +135,7 @@ const Income = () => {
 
     saveTransaction({key: INCOME, updatedTransactionData: updatedIncomeTransactions})
     setOpenEditDialog(false)
-    refreshTransactions()
+    refreshIncomeTransactions()
   }
 
   return (
@@ -148,7 +146,7 @@ const Income = () => {
         <TransactionsList
           type={INCOME}
           transactions={incomeTransactions}
-          refreshTransactions={refreshTransactions}
+          refreshTransactions={refreshIncomeTransactions}
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
           selectedYear={selectedYear}

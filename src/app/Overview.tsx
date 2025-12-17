@@ -3,10 +3,9 @@
 import LineChart from "@/components/LineChart"
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
+import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { INCOME, EXPENSES, YEARS } from "@/globals/globals"
-import getTransactions from "@/utils/getTransactions"
-import { TransactionData } from "@/utils/saveTransaction"
+import { YEARS } from "@/globals/globals"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
@@ -15,25 +14,21 @@ const Overview = () => {
   const today = new Date()
   const currentYear = today.getFullYear()
 
-  const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
-  const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
+  const { 
+    incomeTransactions, 
+    expenseTransactions, 
+    refreshIncomeTransactions, 
+    refreshExpenseTransactions 
+  } = useTransactionContext()
+  
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
 
   const theme = useTheme()
   const currentTheme = theme.theme
 
-  const getIncomeExpenseTransactions = () => {
-    const localIncomeData = getTransactions({key: INCOME})
-    if (!localIncomeData) return
-    setIncomeTransactions(localIncomeData)
-
-    const localExpenseData = getTransactions({key: EXPENSES})
-    if (!localExpenseData) return
-    setExpenseTransactions(localExpenseData)
-  }
-
   useEffect(() => {
-    getIncomeExpenseTransactions()
+    refreshIncomeTransactions()
+    refreshExpenseTransactions()
   }, [selectedYear])
 
   return (

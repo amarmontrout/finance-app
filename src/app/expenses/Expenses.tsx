@@ -6,7 +6,6 @@ import TransactionsList from "@/components/TransactionsList"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSE_CATEGORIES, EXPENSES } from "@/globals/globals"
 import { getMonthTotal } from "@/utils/getTotals"
-import getTransactions from "@/utils/getTransactions"
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { 
   Box, 
@@ -25,11 +24,18 @@ import {
 import { useTheme } from "next-themes"
 import { useState, useEffect, ChangeEvent } from "react"
 import { UpdateTransactionType } from "../income/Income"
+import { useTransactionContext } from "@/contexts/transactions-context"
 
 const Expenses = () => {
-  const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
-  const [selectedYear, setSelectedYear] = useState<string>("")
-  const [selectedMonth, setSelectedMonth] = useState<string>("")
+  const { 
+    expenseTransactions, 
+    refreshExpenseTransactions,
+    selectedYear,
+    setSelectedYear,
+    selectedMonth,
+    setSelectedMonth
+  } = useTransactionContext()
+
   const [totalExpenses, setTotalExpenses] = useState<string>("")
 
   const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
@@ -45,16 +51,8 @@ const Expenses = () => {
   const theme = useTheme()
   const currentTheme = theme.theme
 
-  const refreshTransactions = () => {
-    const localExpenseData = getTransactions({key: EXPENSES})
-    if (!localExpenseData) {
-      return
-    }
-    setExpenseTransactions(localExpenseData)
-  }
-
   useEffect(() => {
-    refreshTransactions()
+    refreshExpenseTransactions()
   }, [])
 
   useEffect(() => {
@@ -68,7 +66,7 @@ const Expenses = () => {
     }
   }, [selectedMonth, expenseTransactions])
 
-    useEffect(() => {
+  useEffect(() => {
     if (!selectedId || !selectedYear || !selectedMonth) return
 
     const transaction =
@@ -132,7 +130,7 @@ const Expenses = () => {
 
     saveTransaction({key: EXPENSES, updatedTransactionData: updatedExpenseTransactions})
     setOpenEditDialog(false)
-    refreshTransactions()
+    refreshExpenseTransactions()
   }
 
   return (
@@ -143,7 +141,7 @@ const Expenses = () => {
         <TransactionsList
           type={EXPENSES}
           transactions={expenseTransactions}
-          refreshTransactions={refreshTransactions}
+          refreshTransactions={refreshExpenseTransactions}
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
           selectedYear={selectedYear}

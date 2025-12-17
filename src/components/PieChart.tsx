@@ -21,10 +21,11 @@ const PieChart = (props: {
     titleTextStyle: { color: textColor },
     legend: {
       textStyle: { color: textColor },
+      position: "top"
     },
     chartArea: {
       top: 50,
-      left: 150,
+      left: 50,
       width: "100%",
       height: "100%"
     }

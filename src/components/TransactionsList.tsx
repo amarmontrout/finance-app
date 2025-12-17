@@ -1,6 +1,5 @@
-import { MONTHS } from "@/globals/globals"
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
-import { List, Stack, ListItemButton, ListItemText, Collapse, ListItem, IconButton } from "@mui/material"
+import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -9,6 +8,7 @@ import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/color
 import { useTheme } from "next-themes";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
+import { useTransactionContext } from "@/contexts/transactions-context";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -29,53 +29,42 @@ type Details = {
 }
 
 const TransactionsList = ({
-    type, 
-    transactions, 
-    refreshTransactions,
-    selectedMonth,
-    setSelectedMonth,
-    selectedYear,
-    setSelectedYear,
-    setOpenEditDialog,
-    setSelectedId
-  }: TransactionsListProps) => {
-    const [expandYear, setExpandYear] = useState(false)
-    const [expandMonth, setExpandMonth] = useState(false)
-    const [confirmId, setConfirmId] = useState<string | null>(null)
+  type, 
+  transactions, 
+  refreshTransactions,
+  selectedMonth,
+  setSelectedMonth,
+  selectedYear,
+  setSelectedYear,
+  setOpenEditDialog,
+  setSelectedId
+}: TransactionsListProps) => {
 
-    const today = new Date()
-    const currentYear = String(today.getFullYear())
-    const currentMonth = MONTHS[today.getMonth()]
+  const { currentYear, currentMonth } = useTransactionContext()
+  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const theme = useTheme()
+  const currentTheme = theme.theme
+  const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
 
-    const theme = useTheme()
-    const currentTheme = theme.theme
-    const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  useEffect(() => {
+    if (!transactions || Object.keys(transactions).length === 0) return
 
-  const handleSelectYear = (year: string) => {
-    if (selectedYear === year) {
-      setExpandYear(!expandYear)
+    if (transactions[currentYear]) {
+      setSelectedYear(currentYear)
+
+      if (transactions[currentYear][currentMonth]) {
+        setSelectedMonth(currentMonth)
+      } else {
+        setSelectedMonth("")
+      }
+    } else {
       setSelectedYear("")
-    } else {
-      setSelectedYear(year)
-      setExpandYear(true)
-    }
-
-    setSelectedMonth("")
-    setExpandMonth(false)
-  }
-
-  const handleSelectMonth = (month: string) => {
-    if (selectedMonth === month) {
-      setExpandMonth(!expandMonth)
       setSelectedMonth("")
-    } else {
-      setSelectedMonth(month)
-      setExpandMonth(true)
     }
-  }
+  }, [transactions])
 
   const handleDeleteTransaction = (passedYear: string, passedMonth: string, passedId: string) => {
-    const updated = {...transactions}
+    const updated = structuredClone(transactions)
     
     if (updated[passedYear] && updated[passedYear][passedMonth]) {
       updated[passedYear][passedMonth] = updated[passedYear][passedMonth].filter(
@@ -137,6 +126,7 @@ const TransactionsList = ({
           onClick={
             () => {
               setConfirmId(null)
+              if (!selectedYear || !selectedMonth) return
               handleDeleteTransaction(selectedYear, selectedMonth, details.id)
             }
           }
@@ -158,41 +148,9 @@ const TransactionsList = ({
     )
   }
 
-  useEffect(() => {
-    // If current year exists in data
-    if (transactions[currentYear]) {
-      // Set year if not already selected
-      if (selectedYear !== currentYear) {
-        setSelectedYear(currentYear)
-        setExpandYear(true)
-      }
-
-      // And if current month also exists, select it
-      if (transactions[currentYear][currentMonth]) {
-        setSelectedMonth(currentMonth)
-        setExpandMonth(true)
-      }
-    }
-
-    // If selected year got deleted
-    if (selectedYear && !transactions[selectedYear]) {
-      setSelectedYear("")
-      setExpandYear(false)
-      setSelectedMonth("")
-      setExpandMonth(false)
-      return
-    }
-
-    // If selected month got deleted
-    if (selectedMonth && selectedYear && !transactions[selectedYear][selectedMonth]) {
-      setSelectedMonth("")
-      setExpandMonth(false)
-    }
-  }, [transactions])
-
   const YearList = () => {
     return (
-      <Collapse in={true} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+      <Box width={"25%"}>
         <List className="flex flex-col gap-2">
           { transactions &&
             Object.entries(transactions).map(([year, _]) => {
@@ -201,7 +159,10 @@ const TransactionsList = ({
               return (
                 <ListItemButton 
                   key={year} 
-                  onClick={() => {handleSelectYear(year)}} 
+                  onClick={() => {
+                    setSelectedYear(year)
+                    setSelectedMonth("")
+                  }} 
                   sx={{ 
                     backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
                     borderRadius: "10px"
@@ -215,13 +176,13 @@ const TransactionsList = ({
             })
           }
         </List>
-      </Collapse>
+      </Box>
     )
   }
 
   const MonthList = () => {
     return (
-      <Collapse in={expandYear} timeout="auto" sx={{maxWidth: "25%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+      <Box width={"25%"}>
         <List className="flex flex-col gap-2">
           { transactions[selectedYear] &&
             Object.entries(transactions[selectedYear]).map(([month, _]) => {
@@ -230,7 +191,7 @@ const TransactionsList = ({
               return (
                 <ListItemButton 
                   key={month} 
-                  onClick={() => {handleSelectMonth(month)}}
+                  onClick={() => {setSelectedMonth(month)}}
                   sx={{ 
                     backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
                     borderRadius: "10px"
@@ -244,13 +205,13 @@ const TransactionsList = ({
             })
           }
         </List>
-      </Collapse>
+      </Box>
     )
   }
 
   const DetailsList = () => {
     return (
-      <Collapse in={expandMonth} timeout="auto" sx={{maxWidth: "50%", flex: 1, minHeight: 0, overflowY: "auto"}} unmountOnExit>
+      <Box width={"50%"}>
         <List className="flex flex-col gap-2">
           { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
             transactions[selectedYear]?.[selectedMonth]?.map((details) => {
@@ -276,17 +237,16 @@ const TransactionsList = ({
             })
           }
         </List>
-      </Collapse>
+      </Box>
     )
   }
 
   return (
-      <Stack  direction={"row"} width={"100%"} minHeight={0} flex={1} overflow={"hidden"} gap={.5}>
-        <YearList/>
-        <MonthList/>
-        <DetailsList/>
-      </Stack>
-
+    <Stack  direction={"row"} width={"100%"} gap={.5}>
+      <YearList/>
+      <MonthList/>
+      <DetailsList/>
+    </Stack>
   )
 }
 

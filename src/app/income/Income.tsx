@@ -1,35 +1,15 @@
 "use client"
 
+import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES } from "@/globals/globals"
-import { getMonthTotal } from "@/utils/getTotals"
-import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
-import { 
-  Box, 
-  Button, 
-  Dialog, 
-  DialogTitle, 
-  FormControl, 
-  InputAdornment, 
-  InputLabel, 
-  MenuItem, 
-  OutlinedInput, 
-  Select, 
-  SelectChangeEvent, 
-  Stack 
-} from "@mui/material"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useState, useEffect, ChangeEvent } from "react"
-
-export type UpdateTransactionType = {
-  id: string
-  category: string,
-  amount: string
-}
+import { useState, useEffect } from "react"
 
 const Income = () => {
   const { 
@@ -38,111 +18,26 @@ const Income = () => {
     selectedYear,
     setSelectedYear,
     selectedMonth,
-    setSelectedMonth
+    setSelectedMonth,
+    getMonthIncomeTotal
   } = useTransactionContext()
-
-  const [totalIncome, setTotalIncome] = useState<string>("")
-
-  const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
-    id: "",
-    category: INCOME_CATEGORIES[0],
-    amount: ""
-  }
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
-  const [updateTransaction, setUpdateTransaction] = useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
-    
+  
+  const monthTotal = getMonthIncomeTotal()
   const theme = useTheme()
   const currentTheme = theme.theme
     
   useEffect(() => {
     refreshIncomeTransactions()
   }, [])
-    
-  useEffect(() => {
-    if (selectedMonth !== "" && incomeTransactions) {
-      const total = getMonthTotal( selectedYear, selectedMonth, incomeTransactions)
-      if (!total) return
-      setTotalIncome(total)
-    }
-    if (selectedMonth == "") {
-      setTotalIncome("$ 0")
-    }
-  }, [selectedMonth, incomeTransactions])
-
-  useEffect(() => {
-    if (!selectedId || !selectedYear || !selectedMonth) return
-
-    const transaction =
-      incomeTransactions?.[selectedYear]?.[selectedMonth]?.find(
-        (detail) => detail.id === selectedId
-      )
-
-    if (!transaction) return
-
-    setUpdateTransaction({
-      id: transaction.id,
-      category: transaction.category,
-      amount: transaction.amount,
-    })
-  }, [selectedId, selectedYear, selectedMonth, incomeTransactions])
-
-
-  const handleCategory = (e: SelectChangeEvent) => {
-    const { value } = e.target
-
-    setUpdateTransaction(prev => ({
-      ...prev,
-      category: value,
-    }));
-  }
-  
-  const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-
-    if (formatted.length <= 7) {
-      setUpdateTransaction(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
-  }
-
-  const handleUpdateTransactionData = () => {
-    if (!selectedYear || !selectedMonth || !selectedId) return
-
-    const updatedIncomeTransactions: TransactionData = {
-      ...incomeTransactions,
-      [selectedYear]: {
-        ...incomeTransactions[selectedYear],
-        [selectedMonth]: incomeTransactions[selectedYear][selectedMonth].map(
-          (detail) =>
-            detail.id === selectedId
-              ? {
-                  ...detail,
-                  category: updateTransaction.category,
-                  amount: updateTransaction.amount,
-                }
-              : detail
-        ),
-      },
-    }
-
-    saveTransaction({key: INCOME, updatedTransactionData: updatedIncomeTransactions})
-    setOpenEditDialog(false)
-    refreshIncomeTransactions()
-  }
 
   return (
     <Box
       className="flex flex-col xl:flex-row gap-2 h-full"
     >
-      <ShowCaseCard title={"Income"} secondaryTitle={`Total ${totalIncome}`}>
+      <ShowCaseCard title={`Income for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total ${monthTotal}`}>
         <TransactionsList
           type={INCOME}
           transactions={incomeTransactions}
@@ -170,81 +65,15 @@ const Income = () => {
         />
       </ShowCaseCard>
 
-      <Dialog open={openEditDialog}>
-        <DialogTitle>Edit Income Transaction</DialogTitle>
-        <Box
-          className="flex flex-col gap-5"
-          width={"fit-content"}
-          padding={"10px"}
-          margin={"0 auto"}
-        >
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select
-              label="Category"
-              value={updateTransaction.category}
-              name={"category"}
-              onChange={e => handleCategory(e)}
-              sx={{
-                width: "100%"
-              }}
-            >
-              {INCOME_CATEGORIES.map((category) => {
-                return <MenuItem value={category}>{category}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <InputLabel>Amount</InputLabel>
-            <OutlinedInput
-              label={"Amount"}
-              value={updateTransaction.amount}
-              name={"amount"}
-              onChange={e => handleAmount(e)}
-              startAdornment={<InputAdornment position="start">$</InputAdornment>}
-              sx={{
-                width: "100%"
-              }}
-              />
-          </FormControl>
-
-          <Stack direction={"row"} gap={1}>
-            <Button 
-              variant={"contained"} 
-              disabled={
-                false
-              }
-              onClick={handleUpdateTransactionData}
-              sx={{
-                backgroundColor: currentTheme === "light" 
-                  ? [lightMode.success] 
-                  : [darkMode.success]
-              }}
-            >
-              {"Update"}
-            </Button>
-            
-            <Button 
-              variant={"contained"} 
-              disabled={
-                false
-              }
-              onClick={() => {
-                setOpenEditDialog(false)
-                setUpdateTransaction(UPDATE_TRANSACTION_INIT)
-              }}
-              sx={{
-                backgroundColor: currentTheme === "light" 
-                  ? [lightMode.error] 
-                  : [darkMode.error]
-              }}
-            >
-              {"Cancel"}
-            </Button>
-          </Stack>
-        </Box>
-      </Dialog>
+      <EditTransactionDetailDialog
+        openEditDialog={openEditDialog}
+        setOpenEditDialog={setOpenEditDialog}
+        type={INCOME}
+        selectedId={selectedId}
+        transactions={incomeTransactions}
+        categories={INCOME_CATEGORIES}
+        currentTheme={currentTheme}
+      />
     </Box>
   )
 }

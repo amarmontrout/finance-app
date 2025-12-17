@@ -23,7 +23,7 @@ const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.Rea
         }}
       >
         <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
-          <Typography variant="h4">{title}</Typography>
+          <Typography variant="h5">{title}</Typography>
 
           <Typography variant="h5">{secondaryTitle}</Typography>
         </Stack>

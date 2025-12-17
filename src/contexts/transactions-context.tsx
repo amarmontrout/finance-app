@@ -1,4 +1,5 @@
 import { EXPENSES, INCOME, MONTHS } from "@/globals/globals"
+import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
 import { createContext, useContext, useState } from "react"
@@ -14,6 +15,8 @@ type TransactionsContextType = {
   setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
   currentYear: string
   currentMonth: string
+  getMonthExpenseTotal: () => string
+  getMonthIncomeTotal: () => string
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -48,7 +51,6 @@ export const TransactionProvider = (props: {
     setIncomeTransactions(localIncomeData)
   }
 
-
   const refreshExpenseTransactions = () => {
     const localExpenseData = getTransactions({key: EXPENSES})
     if (!localExpenseData) {
@@ -57,6 +59,26 @@ export const TransactionProvider = (props: {
     setExpenseTransactions(localExpenseData)
   }
 
+  const getMonthExpenseTotal = () => {
+    if (selectedMonth !== "" && expenseTransactions) {
+      const total = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
+      if (!total || selectedMonth === "") return "$ 0"
+      return total
+    }
+
+    return "$ 0"
+  }
+
+  const getMonthIncomeTotal = () => {
+    if (selectedMonth !== "" && incomeTransactions) {
+      const total = getMonthTotal( selectedYear, selectedMonth, incomeTransactions)
+      
+      if (!total || selectedMonth === "") return "$ 0"
+      return total
+    }
+
+    return "$ 0"
+  }
 
   return (
     <TransactionContext.Provider value={{
@@ -69,7 +91,9 @@ export const TransactionProvider = (props: {
       selectedMonth,
       setSelectedMonth,
       currentYear,
-      currentMonth
+      currentMonth,
+      getMonthExpenseTotal,
+      getMonthIncomeTotal,
     }}>
       {props.children}
     </TransactionContext.Provider>

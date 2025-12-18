@@ -87,14 +87,14 @@ const Overview = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Monthly Income Categories"} secondaryTitle={""}>
+        <ShowCaseCard title={`${selectedYear} Income Categories`} secondaryTitle={""}>
           <PieChart
             data={incomeCategoryTotals}
             year={selectedYear}
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Monthly Expense Categories"} secondaryTitle={""}>
+        <ShowCaseCard title={`${selectedYear} Expense Categories`} secondaryTitle={""}>
           <PieChart
             data={expenseCategoryTotals}
             year={selectedYear}

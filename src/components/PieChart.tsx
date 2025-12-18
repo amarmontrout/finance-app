@@ -17,7 +17,6 @@ const PieChart = (props: {
   const options = {
     is3D: true,
     backgroundColor: backgroundColor,
-    title: `Categories for ${year}`,
     titleTextStyle: { color: textColor },
     legend: {
       textStyle: { color: textColor },

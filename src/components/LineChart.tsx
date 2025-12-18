@@ -73,10 +73,8 @@ const LineChart = (props: {
     for (const month of MONTHS) {
       const row: (string | number)[] = [month]
       for (const year of years) {
-        const total = transactions[year]?.[month]?.reduce(
-          (sum, t) => sum + Number(t.amount),
-          0
-        ) || 0
+        const total = transactions[year]?.[month]?.filter(t => t.category !== "Water")
+        .reduce( (sum, t) => sum + Number(t.amount), 0 ) || 0
 
         row.push(Number(total.toFixed(2)))
       }

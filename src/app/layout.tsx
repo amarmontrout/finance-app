@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body style={{ margin: 0, padding: 0 }}>
+      <body style={{ margin: 0, padding: 0 }} suppressHydrationWarning>
         <Providers>
           <Box sx={{ display: "flex", flexDirection: "row", flex: 1, minWidth: 0, height: "100vh" }}>
             {/* Nav / Sidebar */}

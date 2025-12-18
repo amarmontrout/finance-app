@@ -1,4 +1,5 @@
 import { EXPENSES, INCOME, MONTHS } from "@/globals/globals"
+import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
@@ -17,6 +18,7 @@ type TransactionsContextType = {
   currentMonth: string
   getMonthExpenseTotal: () => string
   getMonthIncomeTotal: () => string
+  isMockData: boolean
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -42,21 +44,28 @@ export const TransactionProvider = (props: {
   const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
   const [selectedYear, setSelectedYear] = useState<string>("")
   const [selectedMonth, setSelectedMonth] = useState<string>("")
+  const [isMockData, setIsMockData] = useState<boolean>(false)
 
   const refreshIncomeTransactions = () => {
     const localIncomeData = getTransactions({key: INCOME})
-    if (!localIncomeData) {
-      return
+    if (!localIncomeData || Object.keys(localIncomeData).length === 0) {
+      setIsMockData(true)
+      setIncomeTransactions(mockIncomeData)
+    } else {
+      setIsMockData(false)
+      setIncomeTransactions(localIncomeData)
     }
-    setIncomeTransactions(localIncomeData)
   }
 
   const refreshExpenseTransactions = () => {
     const localExpenseData = getTransactions({key: EXPENSES})
-    if (!localExpenseData) {
-      return
+    if (!localExpenseData || Object.keys(localExpenseData).length === 0) {
+      setIsMockData(true)
+      setExpenseTransactions(mockExpenseData)
+    } else {
+      setIsMockData(false)
+      setExpenseTransactions(localExpenseData)
     }
-    setExpenseTransactions(localExpenseData)
   }
 
   const getMonthExpenseTotal = () => {
@@ -94,6 +103,7 @@ export const TransactionProvider = (props: {
       currentMonth,
       getMonthExpenseTotal,
       getMonthIncomeTotal,
+      isMockData
     }}>
       {props.children}
     </TransactionContext.Provider>

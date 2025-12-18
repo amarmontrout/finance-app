@@ -40,7 +40,7 @@ const TransactionsList = ({
   setSelectedId
 }: TransactionsListProps) => {
 
-  const { currentYear, currentMonth } = useTransactionContext()
+  const { currentYear, currentMonth, isMockData } = useTransactionContext()
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const theme = useTheme()
   const currentTheme = theme.theme
@@ -99,6 +99,7 @@ const TransactionsList = ({
               setSelectedId(id)
             }
           }
+          disabled={isMockData}
         >
           <EditIcon/>
         </IconButton>
@@ -110,6 +111,7 @@ const TransactionsList = ({
               setConfirmId(id)
             }
           }
+          disabled={isMockData}
         >
           <DeleteIcon />
         </IconButton>

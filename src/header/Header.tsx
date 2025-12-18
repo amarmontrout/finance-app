@@ -1,9 +1,13 @@
 "use client"
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { Box, Stack, Typography } from "@mui/material";
+import { useTransactionContext } from "@/contexts/transactions-context";
+import { Alert, Box, Stack, Typography } from "@mui/material";
 
 const Header = () => {
+
+  const { isMockData } = useTransactionContext()
+
   return (
     <Stack
       direction={"row"}
@@ -19,6 +23,17 @@ const Header = () => {
         <Typography variant="h4" color={"white"}>
           My Budget
         </Typography>
+      </Box>
+      <Box
+        sx={{
+          display: isMockData? "flex" : "none",
+          height: "100%",
+          alignItems: "center"
+        }}
+      >
+        <Alert severity="warning" sx={{height: "fit-content"}}>
+          This contains mock data. Enter Income and Expenses to get start tracking your finances.
+        </Alert>
       </Box>
       <Box
         alignContent={"center"}

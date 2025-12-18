@@ -15,6 +15,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
 import { MONTHS, YEARS } from "@/globals/globals";
 import { accentColorSecondary } from "@/globals/colors";
+import { useTransactionContext } from "@/contexts/transactions-context";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -33,6 +34,8 @@ const TransactionForm = (props: {
   refreshTransactions: () => void
 }) => {
   const { categories, type, refreshTransactions } = props
+
+  const { isMockData } = useTransactionContext()
 
   const TRANSACTION_INIT: TransactionType = {
     month: MONTHS[currentMonth],

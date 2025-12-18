@@ -1,9 +1,10 @@
-import { EXPENSES, INCOME, MONTHS } from "@/globals/globals"
+import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, MONTHS, YEARS_KEY } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
+import getChoices from "@/utils/getChoices"
 import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
   incomeTransactions: TransactionData
@@ -19,6 +20,12 @@ type TransactionsContextType = {
   getMonthExpenseTotal: () => string
   getMonthIncomeTotal: () => string
   isMockData: boolean
+  refreshYearChoices: () => void
+  years: string[]
+  refreshIncomeCategoryChoices: () => void
+  incomeCategories: string[]
+  refreshExpenseCategoryChoices: () => void
+  expenseCategories: string[]
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -45,6 +52,30 @@ export const TransactionProvider = (props: {
   const [selectedYear, setSelectedYear] = useState<string>("")
   const [selectedMonth, setSelectedMonth] = useState<string>("")
   const [isMockData, setIsMockData] = useState<boolean>(false)
+  const [years, setYears] = useState<string[]>([])
+  const [incomeCategories, setIncomeCategories] = useState<string[]>([])
+  const [expenseCategories, setExpenseCategories] = useState<string[]>([])
+
+  const refreshYearChoices = () => {
+    const yearChoices = getChoices({key: YEARS_KEY})
+    if (yearChoices) setYears(yearChoices)
+  }
+
+  const refreshIncomeCategoryChoices = () => {
+    const incomeChoices = getChoices({key: INCOME_CATEGORIES_KEY})
+    if (incomeChoices) setIncomeCategories(incomeChoices)
+  }
+
+  const refreshExpenseCategoryChoices = () => {
+    const expenseChoices = getChoices({key: EXPENSE_CATEGORIES_KEY})
+    if (expenseChoices) setExpenseCategories(expenseChoices)
+  }
+
+  useEffect(() => {
+    refreshYearChoices()
+    refreshIncomeCategoryChoices()
+    refreshExpenseCategoryChoices()
+  }, [])
 
   const refreshIncomeTransactions = () => {
     const localIncomeData = getTransactions({key: INCOME})
@@ -103,7 +134,13 @@ export const TransactionProvider = (props: {
       currentMonth,
       getMonthExpenseTotal,
       getMonthIncomeTotal,
-      isMockData
+      isMockData,
+      years,
+      incomeCategories,
+      expenseCategories,
+      refreshYearChoices,
+      refreshIncomeCategoryChoices,
+      refreshExpenseCategoryChoices
     }}>
       {props.children}
     </TransactionContext.Provider>

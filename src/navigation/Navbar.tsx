@@ -4,7 +4,7 @@ import { Box, IconButton, Stack, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
-import { NAV_MISC, NAV_TRANSACTIONS } from "@/globals/globals";
+import { NAV_MISC, NAV_SETTINGS, NAV_TRANSACTIONS } from "@/globals/globals";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -68,6 +68,14 @@ const Navbar = () => {
         <hr style={{ width: "100%" }} />
 
         {NAV_MISC.map((item) => {
+          return (
+            <PageLink item={item} active={pathname === item.link} key={item.name} />
+          )
+        })}
+
+        <hr style={{ width: "100%" }} />
+
+        {NAV_SETTINGS.map((item) => {
           return (
             <PageLink item={item} active={pathname === item.link} key={item.name} />
           )

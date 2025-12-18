@@ -7,7 +7,7 @@ import TransactionForm from "@/components/TransactionForm"
 import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
-import { INCOME, INCOME_CATEGORIES } from "@/globals/globals"
+import { INCOME } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
@@ -20,7 +20,8 @@ const Income = () => {
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,
-    getMonthIncomeTotal
+    getMonthIncomeTotal,
+    incomeCategories
   } = useTransactionContext()
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
@@ -40,7 +41,7 @@ const Income = () => {
     >
       <ShowCaseCard title={"Add Income"} secondaryTitle={""}>
         <TransactionForm
-          categories={INCOME_CATEGORIES}
+          categories={incomeCategories}
           type={INCOME}
           refreshTransactions={refreshIncomeTransactions}
         />
@@ -84,7 +85,7 @@ const Income = () => {
         type={INCOME}
         selectedId={selectedId}
         transactions={incomeTransactions}
-        categories={INCOME_CATEGORIES}
+        categories={incomeCategories}
         currentTheme={currentTheme}
       />
     </Box>

@@ -5,7 +5,6 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { YEARS } from "@/globals/globals"
 import { getCategoryTotals } from "@/utils/getTotals"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -19,7 +18,8 @@ const Overview = () => {
     incomeTransactions, 
     expenseTransactions, 
     refreshIncomeTransactions, 
-    refreshExpenseTransactions 
+    refreshExpenseTransactions,
+    years
   } = useTransactionContext()
   
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
@@ -63,7 +63,7 @@ const Overview = () => {
                 width: "175px"
               }}
             >
-              {YEARS.map((year) => {
+              {years.map((year) => {
                 return <MenuItem value={year}>{year}</MenuItem>
               })}
             </Select>

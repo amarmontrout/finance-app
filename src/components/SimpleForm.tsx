@@ -1,0 +1,46 @@
+import { accentColorSecondary } from "@/globals/colors"
+import { Box, FormControl, InputLabel, OutlinedInput, Button } from "@mui/material"
+import { ChangeEvent } from "react"
+
+const SimpleForm = (props: {
+  label: string,
+  value: string
+  onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
+  onSubmit: () => void
+}) => {
+
+  const {
+    label,
+    value,
+    onChange,
+    onSubmit
+  } = props
+
+  return (
+    <Box
+      className="flex flex-col gap-2 mt-5"
+    >
+      <FormControl>
+        <InputLabel>{label}</InputLabel>
+        <OutlinedInput
+          label={label}
+          value={value}
+          name={"year"}
+          onChange={onChange}
+          />
+      </FormControl>
+
+      <Button 
+        variant={"contained"} 
+        onClick={onSubmit}
+        sx={{
+          backgroundColor: accentColorSecondary
+        }}
+      >
+        {`Add`}
+      </Button>
+    </Box>
+  )
+}
+
+export default SimpleForm

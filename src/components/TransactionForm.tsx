@@ -13,7 +13,7 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 import saveTransaction from "@/utils/saveTransaction";
-import { MONTHS, YEARS } from "@/globals/globals";
+import { MONTHS } from "@/globals/globals";
 import { accentColorSecondary } from "@/globals/colors";
 import { useTransactionContext } from "@/contexts/transactions-context";
 
@@ -35,7 +35,9 @@ const TransactionForm = (props: {
 }) => {
   const { categories, type, refreshTransactions } = props
 
-  const { isMockData } = useTransactionContext()
+  const {
+    years
+  } = useTransactionContext()
 
   const TRANSACTION_INIT: TransactionType = {
     month: MONTHS[currentMonth],
@@ -127,7 +129,7 @@ const TransactionForm = (props: {
               minWidth: "fit-content"
             }}
           >
-            {YEARS.map((year) => {
+            {years.map((year) => {
               return <MenuItem value={year}>{year}</MenuItem>
             })}
           </Select>

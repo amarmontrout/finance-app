@@ -4,7 +4,7 @@ import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
-import { EXPENSE_CATEGORIES, EXPENSES } from "@/globals/globals"
+import { EXPENSES } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
@@ -21,6 +21,7 @@ const Expenses = () => {
     selectedMonth,
     setSelectedMonth,
     getMonthExpenseTotal,
+    expenseCategories
   } = useTransactionContext()
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
@@ -40,7 +41,7 @@ const Expenses = () => {
     >
       <ShowCaseCard title={"Add Expense"} secondaryTitle={""}>
         <TransactionForm
-          categories={EXPENSE_CATEGORIES}
+          categories={expenseCategories}
           type={EXPENSES}
           refreshTransactions={refreshExpenseTransactions}
         />
@@ -84,7 +85,7 @@ const Expenses = () => {
         type={EXPENSES}
         selectedId={selectedId}
         transactions={expenseTransactions}
-        categories={EXPENSE_CATEGORIES}
+        categories={expenseCategories}
         currentTheme={currentTheme}
       />
     </Box>

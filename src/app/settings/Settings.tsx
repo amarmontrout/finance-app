@@ -9,6 +9,7 @@ import saveChoices from "@/utils/saveChoices"
 import { saveData } from "@/utils/saveData"
 import { Box, Button, Stack } from "@mui/material"
 import { ChangeEvent, useState } from "react"
+import EditDeleteListItem from "@/components/EditDeleteListItem"
 
 const Settings = () => {
   const [yearsInput, setYearsInput] = useState<string>("")
@@ -18,7 +19,10 @@ const Settings = () => {
   const {
     refreshYearChoices,
     refreshIncomeCategoryChoices,
-    refreshExpenseCategoryChoices
+    refreshExpenseCategoryChoices,
+    years,
+    incomeCategories,
+    expenseCategories,
   } = useTransactionContext()
 
   return (
@@ -62,62 +66,84 @@ const Settings = () => {
       </Stack>
 
       <Box
-        className="flex flex-row gap-2 h-full"
+        className="flex flex-col xl:flex-row gap-2 h-full"
       >
         <ShowCaseCard title={"Add Year"} secondaryTitle={""}>
-            <SimpleForm
-              label={"Year"}
-              value={yearsInput}
-              onChange={
-                (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-                  {setYearsInput(e.target.value)}
+          <SimpleForm
+            label={"Year"}
+            value={yearsInput}
+            onChange={
+              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
+                {setYearsInput(e.target.value)}
+            }
+            onSubmit={
+              () => {
+                saveChoices({key: YEARS_KEY, choice: yearsInput})
+                refreshYearChoices()
+                setYearsInput("")
               }
-              onSubmit={
-                () => {
-                  saveChoices({key: YEARS_KEY, choice: yearsInput})
-                  refreshYearChoices()
-                  setYearsInput("")
-                }
-              }
-            />
+            }
+          />
+
+          <hr style={{ width: "100%" }} />
+
+          <EditDeleteListItem
+            items={years}
+            storageKey={YEARS_KEY}
+            refresh={refreshYearChoices}
+          />
         </ShowCaseCard>
 
         <ShowCaseCard title={"Add Income Category"} secondaryTitle={""}>
-            <SimpleForm
-              label={"Income Category"}
-              value={incomeCategoriesInput}
-              onChange={
-                (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-                  {setIncomeCategoriesInput(e.target.value)}
+          <SimpleForm
+            label={"Income Category"}
+            value={incomeCategoriesInput}
+            onChange={
+              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
+                {setIncomeCategoriesInput(e.target.value)}
+            }
+            onSubmit={
+              () => {
+                saveChoices({key: INCOME_CATEGORIES_KEY, choice: incomeCategoriesInput})
+                refreshIncomeCategoryChoices()
+                setIncomeCategoriesInput("")
               }
-              onSubmit={
-                () => {
-                  saveChoices({key: INCOME_CATEGORIES_KEY, choice: incomeCategoriesInput})
-                  refreshIncomeCategoryChoices()
-                  setIncomeCategoriesInput("")
-                }
-              }
-            />
+            }
+          />
 
+          <hr style={{ width: "100%" }} />
+
+          <EditDeleteListItem
+            items={incomeCategories}
+            storageKey={INCOME_CATEGORIES_KEY}
+            refresh={refreshIncomeCategoryChoices}
+          />
         </ShowCaseCard>
 
         <ShowCaseCard title={"Add Expense Category"} secondaryTitle={""}>
-            <SimpleForm
-              label={"Expense Category"}
-              value={expenseCategoriesInput}
-              onChange={
-                (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-                {setExpenseCategoriesInput(e.target.value)}
+          <SimpleForm
+            label={"Expense Category"}
+            value={expenseCategoriesInput}
+            onChange={
+              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
+              {setExpenseCategoriesInput(e.target.value)}
+            }
+            onSubmit={
+              () => {
+                saveChoices({key: EXPENSE_CATEGORIES_KEY, choice: expenseCategoriesInput})
+                refreshExpenseCategoryChoices
+                setExpenseCategoriesInput("")
               }
-              onSubmit={
-                () => {
-                  saveChoices({key: EXPENSE_CATEGORIES_KEY, choice: expenseCategoriesInput})
-                  refreshExpenseCategoryChoices
-                  setExpenseCategoriesInput("")
-                }
-              }
-            />
+            }
+          />
 
+          <hr style={{ width: "100%" }} />
+
+          <EditDeleteListItem
+            items={expenseCategories}
+            storageKey={EXPENSE_CATEGORIES_KEY}
+            refresh={refreshExpenseCategoryChoices}
+          />
         </ShowCaseCard>      
       </Box>
     </Box>

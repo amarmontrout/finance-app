@@ -1,39 +1,43 @@
-const saveChoices = (props: {
+const saveChoices = ({
+  key,
+  choice,
+  choiceArray,
+}: {
   key: string
-  choice: string
+  choice?: string
+  choiceArray?: string[]
 }) => {
-
-  const {
-    key,
-    choice
-  } = props
-
-  const currentChoiceData = localStorage.getItem(key)
   let choiceData: string[] = []
 
-  if(currentChoiceData) {
+  const stored = localStorage.getItem(key)
+
+  if (stored) {
     try {
-      choiceData = JSON.parse(currentChoiceData) as string[]
+      const parsed = JSON.parse(stored)
+      if (Array.isArray(parsed)) {
+        choiceData = parsed
+      }
     } catch (error) {
       console.error("Failed to parse current choice data", error)
     }
   }
 
-  if (choice) {
-    try {
-      if (!choiceData.includes(choice)) {
-        choiceData.push(choice)        
-      }
+  if (choiceArray && choiceArray.length > 0) {
+    choiceData = [...choiceArray]
+  } 
+  else if (choice && !choiceData.includes(choice)) {
+    choiceData.push(choice)
+  }
 
-      if (key === "years") {
-        choiceData.sort((a, b) => Number(a) - Number(b));
-      }
+  if (key === "years") {
+    choiceData.sort((a, b) => Number(a) - Number(b))
+  }
 
-      localStorage.setItem(key, JSON.stringify(choiceData));
-      console.log("Choice saved");
-    } catch (error) {
-      console.error("Failed to save choice", error)
-    }
+  try {
+    localStorage.setItem(key, JSON.stringify(choiceData))
+    console.log("Choices saved")
+  } catch (error) {
+    console.error("Failed to save choices", error)
   }
 }
 

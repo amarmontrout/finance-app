@@ -6,35 +6,55 @@ export const accentColorPrimaryHover = "#2563EB40"
 export const accentColorSecondary = "#10B981"
 
 export const incomeLinesLight = [
-    "#16A34A", // green (primary)
-    "#22C55E", // lime green
-    "#047857", // dark teal green
-    "#6EE7B7", // mint green
-    "#166534"  // forest green
+    "#0EA5E9",
+    "#14532D",
+    "#22C55E",
+    "#0284C7",
+    "#14B8A6",
+    "#1E40AF",
+    "#16A34A",
+    "#38BDF8",
+    "#0F766E",
+    "#0D9488",
 ]
 
 export const incomeLinesDark = [
-    "#15803D", // deep green
-    "#22C55E", // bright green
-    "#4ADE80", // soft lime green
-    "#14532D",  // dark forest green
-    "#52B788", // muted green
+    "#60A5FA",
+    "#34D399",
+    "#4ADE80",
+    "#22D3EE",
+    "#5EEAD4",
+    "#93C5FD",
+    "#2DD4BF",
+    "#6EE7B7",
+    "#7DD3FC",
+    "#10B981",
 ]
 
 export const expenseLinesLight = [
-    "#DC2626", // red (primary)
-    "#FCA5A5", // soft pink-red
-    "#B91C1C", // dark red
-    "#EF4444", // bright red
-    "#7F1D1D"  // deep maroon
+    "#F97316",
+    "#DC2626",
+    "#FB7185",
+    "#EA580C",
+    "#B91C1C",
+    "#F59E0B",
+    "#EF4444",
+    "#C2410C",
+    "#FCA5A5",
+    "#FDBA74",
 ]
 
 export const expenseLinesDark = [
-    "#EF4444", // vivid red
-    "#F87171", // soft coral
-    "#991B1B", // dark crimson
-    "#F05545", // muted red
-    "#7F1D1D"  // deep maroon
+    "#FDBA74",
+    "#FCA5A5",
+    "#FB923C",
+    "#F87171",
+    "#FCD34D",
+    "#FECDD3",
+    "#FD7E14",
+    "#FF6B6B",
+    "#FBBF24",
+    "#FF9F1C",
 ]
 
 export enum lightMode {

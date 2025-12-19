@@ -18,7 +18,7 @@ const SimpleForm = (props: {
 
   return (
     <Box
-      className="flex flex-col gap-2 mt-5"
+      className="flex flex-col gap-2 mt-5 mb-5"
     >
       <FormControl>
         <InputLabel>{label}</InputLabel>
@@ -36,6 +36,7 @@ const SimpleForm = (props: {
         sx={{
           backgroundColor: accentColorSecondary
         }}
+        disabled={value === ""}
       >
         {`Add`}
       </Button>

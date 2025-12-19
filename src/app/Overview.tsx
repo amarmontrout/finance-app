@@ -6,7 +6,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { getCategoryTotals } from "@/utils/getTotals"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -47,27 +47,37 @@ const Overview = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
+      <Box
+        className="flex flex-row gap-2 h-full"
+        width={"fit-content"}
+        paddingTop={"10px"}
+      >
+        <FormControl>
+          <InputLabel>Year</InputLabel>
+          <Select
+            label="Year"
+            value={selectedYear}
+            name={"year"}
+            onChange={e => setSelectedYear(e.target.value)}
+            sx={{
+              width: "175px"
+            }}
+          >
+            {years.map((year) => {
+              return <MenuItem value={year}>{year}</MenuItem>
+            })}
+          </Select>
+        </FormControl>
+      </Box>
+
+      <hr style={{width: "100%"}}/>
+
       <ShowCaseCard title={"Income and Expense Overview"} secondaryTitle={""}>
         <Box
           width={"fit-content"}
           paddingTop={"10px"}
         >
-          <FormControl>
-            <InputLabel>Year</InputLabel>
-            <Select
-              label="Year"
-              value={selectedYear}
-              name={"year"}
-              onChange={e => setSelectedYear(e.target.value)}
-              sx={{
-                width: "175px"
-              }}
-            >
-              {years.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
-              })}
-            </Select>
-          </FormControl>
+
         </Box>
 
         <LineChart

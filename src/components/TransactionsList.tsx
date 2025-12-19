@@ -170,7 +170,7 @@ const TransactionsList = ({
                     borderRadius: "10px"
                   }}
                 >
-                  <ListItemText primary={year} secondary={yearTotal}/>
+                  <ListItemText primary={year} secondary={`$${yearTotal}`}/>
 
                   {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
                 </ListItemButton>
@@ -199,7 +199,7 @@ const TransactionsList = ({
                     borderRadius: "10px"
                   }}
                 >
-                  <ListItemText primary={month} secondary={monthTotal}/>
+                  <ListItemText primary={month} secondary={`$${monthTotal}`}/>
 
                   {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
                 </ListItemButton>
@@ -231,7 +231,7 @@ const TransactionsList = ({
                   }}
                 >
                   <ListItemText 
-                    primary={`$ ${details.amount}`}
+                    primary={`$${details.amount}`}
                     secondary={details.category}
                   />
                 </ListItem>

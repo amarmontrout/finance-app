@@ -9,7 +9,7 @@ export const getYearTotal = (year: string, transactions: TransactionData) => {
     })
   })
 
-  return "$ " + total.toLocaleString("en-US", {
+  return total.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
@@ -17,6 +17,8 @@ export const getYearTotal = (year: string, transactions: TransactionData) => {
 
 export const getMonthTotal = (year: string, month: string, transactions: TransactionData) => {
   let total = 0
+
+  console.log(transactions)
 
   if (transactions[year] && transactions[year][month]) {
     transactions[year][month].map((detail) => {
@@ -26,7 +28,9 @@ export const getMonthTotal = (year: string, month: string, transactions: Transac
     })
   }
 
-  return "$ " + total.toLocaleString("en-US", {
+  console.log(`getMonthTotal: ${total}`)
+
+  return total.toLocaleString("en-US", {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   })
@@ -56,4 +60,33 @@ export const getCategoryTotals = (
   })
 
   return pieChartData
+}
+
+export const getNetCashFlow = (income: string, expense: string) => {
+  const cleanNumber = (str: string) => {
+    return Number(str.replace(/[^0-9.-]+/g,""))
+  }
+  return (
+    cleanNumber(income)-cleanNumber(expense)
+  ).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+  })
+}
+
+export const getSavingRate = (income: string, expense: string) => {
+  const cleanNumber = (str: string) => {
+    return Number(str.replace(/[^0-9.-]+/g,""))
+  }
+  const incomeNumber = cleanNumber(income)
+  const expenseNumber = cleanNumber(expense)
+  if (incomeNumber === 0) return "0.00"
+  const savingsRate = (incomeNumber - expenseNumber) / incomeNumber
+
+  return (
+    savingsRate * 100
+  ).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+  })
 }

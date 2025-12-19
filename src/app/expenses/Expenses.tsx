@@ -50,7 +50,7 @@ const Expenses = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total ${monthTotal}`}>
+        <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total $${monthTotal}`}>
           <TransactionsList
             type={EXPENSES}
             transactions={expenseTransactions}

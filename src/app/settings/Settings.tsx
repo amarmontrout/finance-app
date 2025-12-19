@@ -31,7 +31,6 @@ const Settings = () => {
           onClick={
             () => {
               saveData({keys: [
-                "theme",
                 YEARS_KEY,
                 INCOME,
                 INCOME_CATEGORIES_KEY,
@@ -41,9 +40,9 @@ const Settings = () => {
             }
           }
         >
-            Save Data
+            Download Data
         </Button>
-        
+
         <input
           type="file"
           accept=".txt"

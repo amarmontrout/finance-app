@@ -5,7 +5,7 @@ type SaveLocalStorageProps = {
 
 export const saveData = ({
   keys,
-  fileName = "financial-budget-app.txt",
+  fileName = "financial-app-data.txt",
 }: SaveLocalStorageProps) => {
   if (typeof window === "undefined") return;
 

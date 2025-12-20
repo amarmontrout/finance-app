@@ -1,4 +1,4 @@
-import { cleanNumber } from "./helperFunctions"
+import { cleanNumber, formattedStringNumber } from "./helperFunctions"
 import { TransactionData } from "./saveTransaction"
 
 export const getYearTotal = (year: string, transactions: TransactionData) => {
@@ -10,10 +10,7 @@ export const getYearTotal = (year: string, transactions: TransactionData) => {
     })
   })
 
-  return total.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+  return formattedStringNumber(total)
 }
 
 export const getMonthTotal = (year: string, month: string, transactions: TransactionData) => {
@@ -27,10 +24,7 @@ export const getMonthTotal = (year: string, month: string, transactions: Transac
     })
   }
 
-  return total.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })
+  return formattedStringNumber(total)
 }
 
 export const getCategoryTotals = (
@@ -60,12 +54,7 @@ export const getCategoryTotals = (
 }
 
 export const getNetCashFlow = (income: string, expense: string) => {
-  return (
-    cleanNumber(income)-cleanNumber(expense)
-  ).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-  })
+  return formattedStringNumber(cleanNumber(income)-cleanNumber(expense))
 }
 
 export const getSavingRate = (income: string, expense: string) => {
@@ -77,10 +66,5 @@ export const getSavingRate = (income: string, expense: string) => {
   if (incomeNumber === 0) return "0.00"
   const savingsRate = (incomeNumber - expenseNumber) / incomeNumber
 
-  return (
-    savingsRate * 100
-  ).toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-  })
+  return formattedStringNumber(savingsRate * 100)
 }

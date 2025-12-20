@@ -80,21 +80,35 @@ export const buildMultiColumnData = (props: {
     const income: Record<string, number> = {}
     const expense: Record<string, number> = {}
 
-    // Compute income totals, defaulting to 0 if missing
-    Object.entries(firstData[selectedYear]).forEach(([month, _]) => {
-      const monthIncome = firstData[selectedYear]?.[month]?.reduce(
-        (sum, t) => sum + Number(t.amount), 0
-      ) ?? 0
-      income[month] = monthIncome
-    })
+    if (firstData[selectedYear]) {
+      // Compute income totals if exists for selected year, defaulting to 0 if missing for month
+      Object.entries(firstData[selectedYear]).forEach(([month, _]) => {
+        const monthIncome = firstData[selectedYear]?.[month]?.reduce(
+          (sum, t) => sum + Number(t.amount), 0
+        ) ?? 0
+        income[month] = monthIncome
+      })
+    } else {
+      // If missing income for selected year, set months as 0
+      MONTHS.forEach((month) => {
+        income[month] = 0
+      })
+    }
 
-    // Compute expense totals
-    Object.entries(secondData[selectedYear]).forEach(([month, transactions]) => {
-      const monthExpense = transactions
-        .filter(t => t.category !== "Water")
-        .reduce((sum, t) => sum + Number(t.amount), 0)
-      expense[month] = monthExpense
-    })
+    if (secondData[selectedYear]) {
+      // Compute expense totals if exists for selected year, defaulting to 0 if missing for month
+      Object.entries(secondData[selectedYear]).forEach(([month, transactions]) => {
+        const monthExpense = transactions
+          .filter(t => t.category !== "Water")
+          .reduce((sum, t) => sum + Number(t.amount), 0)
+        expense[month] = monthExpense
+      })      
+    } else {
+      // If missing expenses for selected year, set months as 0
+      MONTHS.forEach((month) => {
+        expense[month] = 0
+      })
+    }
 
     MONTHS.forEach((month) => {
       compareColumnData.push([

@@ -42,11 +42,14 @@ const LineChart = (props: {
       slantedText: true
     },
     vAxis: {
+      baseline: 0,
+      baselineColor: "red",
       textStyle: { color: textColor },
       titleTextStyle: { color: textColor },
       format: "currency",
       gridlines: {
-        count: 10
+        count: 12,
+        color: textColor
       },
       minorGridlines: {
         count: 0

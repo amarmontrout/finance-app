@@ -1,21 +1,13 @@
-const getChoices = (props: {
-  key: string
-}) => {
-  const { key } = props
-  if (typeof window === "undefined") {
+const getChoices = ({ key }: { key: string }): string[] => {
+  const stored = localStorage.getItem(key)
+  if (!stored) return []
+
+  try {
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
     return []
   }
-  const localData = localStorage.getItem(key)
-  if (localData) {
-    try {
-      return JSON.parse(localData) as string[]
-    } catch (error) {
-      console.log("Could not parse local data", error)
-      return null
-    }
-  }
-  console.log("No local data found")
-  return null
 }
 
 export default getChoices

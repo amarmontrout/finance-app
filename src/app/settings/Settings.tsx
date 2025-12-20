@@ -131,7 +131,7 @@ const Settings = () => {
             onSubmit={
               () => {
                 saveChoices({key: EXPENSE_CATEGORIES_KEY, choice: expenseCategoriesInput})
-                refreshExpenseCategoryChoices
+                refreshExpenseCategoryChoices()
                 setExpenseCategoriesInput("")
               }
             }

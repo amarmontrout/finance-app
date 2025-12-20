@@ -7,10 +7,26 @@ const saveChoices = ({
   choice?: string
   choiceArray?: string[]
 }) => {
+  if (Array.isArray(choiceArray)) {
+    if (choiceArray.length === 0) {
+      localStorage.removeItem(key)
+      console.log("Choices removed")
+      return
+    }
+
+    const sorted =
+      key === "years"
+        ? [...choiceArray].sort((a, b) => Number(a) - Number(b))
+        : choiceArray
+
+    localStorage.setItem(key, JSON.stringify(sorted))
+    console.log("Choices saved")
+    return
+  }
+
   let choiceData: string[] = []
 
   const stored = localStorage.getItem(key)
-
   if (stored) {
     try {
       const parsed = JSON.parse(stored)
@@ -22,10 +38,7 @@ const saveChoices = ({
     }
   }
 
-  if (choiceArray && choiceArray.length > 0) {
-    choiceData = [...choiceArray]
-  } 
-  else if (choice && !choiceData.includes(choice)) {
+  if (choice && !choiceData.includes(choice)) {
     choiceData.push(choice)
   }
 
@@ -33,12 +46,8 @@ const saveChoices = ({
     choiceData.sort((a, b) => Number(a) - Number(b))
   }
 
-  try {
-    localStorage.setItem(key, JSON.stringify(choiceData))
-    console.log("Choices saved")
-  } catch (error) {
-    console.error("Failed to save choices", error)
-  }
+  localStorage.setItem(key, JSON.stringify(choiceData))
+  console.log("Choices saved")
 }
 
 export default saveChoices

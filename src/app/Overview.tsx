@@ -5,9 +5,10 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
+import { mockYears } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getCategoryTotals } from "@/utils/getTotals"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Alert, Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -20,7 +21,8 @@ const Overview = () => {
     expenseTransactions, 
     refreshIncomeTransactions, 
     refreshExpenseTransactions,
-    years
+    years,
+    isMockData
   } = useTransactionContext()
   
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
@@ -72,6 +74,19 @@ const Overview = () => {
       className="flex flex-col gap-2 h-full"
     >
       <Box
+        sx={{
+          display: isMockData? "flex" : "none",
+          height: "100%",
+          alignItems: "center"
+        }}
+      >
+        <Alert severity="error" sx={{width: "100%"}}>
+          This contains mock data for demonstrations purposes.
+          Add your first income and expense transactions to start tracking your finances.
+        </Alert>
+      </Box>
+
+      <Box
         className="flex flex-row gap-2 h-full"
         width={"fit-content"}
         paddingTop={"10px"}
@@ -87,9 +102,14 @@ const Overview = () => {
               width: "175px"
             }}
           >
-            {years.map((year) => {
-              return <MenuItem value={year}>{year}</MenuItem>
-            })}
+            { isMockData ?
+              mockYears.map((year) => {
+                return <MenuItem value={year}>{year}</MenuItem>
+              })
+              : years.map((year) => {
+                return <MenuItem value={year}>{year}</MenuItem>
+              })
+            }
           </Select>
         </FormControl>
       </Box>

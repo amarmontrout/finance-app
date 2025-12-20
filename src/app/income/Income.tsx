@@ -7,9 +7,10 @@ import TransactionForm from "@/components/TransactionForm"
 import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
-import { INCOME } from "@/globals/globals"
+import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
-import { Box } from "@mui/material"
+import getChoices from "@/utils/getChoices"
+import { Alert, Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 
@@ -28,6 +29,7 @@ const Income = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
+  const [hasChoices, setHasChoices] = useState<boolean>(false)
   
   const monthTotal = getMonthIncomeTotal()
   const theme = useTheme()
@@ -35,6 +37,11 @@ const Income = () => {
     
   useEffect(() => {
     refreshIncomeTransactions()
+    const yearsChoices = getChoices({key: YEARS_KEY})
+    const incomeChoices = getChoices({key: INCOME_CATEGORIES_KEY})
+    if (yearsChoices.length !== 0 && incomeChoices.length !== 0) {
+      setHasChoices(true)
+    }
   }, [])
 
   const buildIncomeChartData = () => {
@@ -57,13 +64,28 @@ const Income = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <ShowCaseCard title={"Add Income"} secondaryTitle={""}>
-        <TransactionForm
-          categories={incomeCategories}
-          type={INCOME}
-          refreshTransactions={refreshIncomeTransactions}
-        />
-      </ShowCaseCard>
+      <Box
+        sx={{
+          display: !hasChoices? "flex" : "none",
+          height: "100%",
+          alignItems: "center"
+        }}
+      >
+        <Alert severity="error" sx={{width: "100%"}}>
+          This contains mock data. 
+          Go to settings and add a year and/or an income category. Then come back here to enter your first income transaction.
+        </Alert>
+      </Box>
+
+      <Box display={hasChoices? "flex" : "none"}>
+        <ShowCaseCard title={"Add Income"} secondaryTitle={""}>
+          <TransactionForm
+            categories={incomeCategories}
+            type={INCOME}
+            refreshTransactions={refreshIncomeTransactions}
+          />
+        </ShowCaseCard>
+      </Box>
 
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"

@@ -3,10 +3,11 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { MONTHS } from "@/globals/globals"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Alert, Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useEffect } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
+import { mockYears } from "@/globals/mockData"
 
 const Insights = () => {
   const { 
@@ -18,7 +19,8 @@ const Insights = () => {
     selectedYear,
     setSelectedYear,
     refreshIncomeTransactions,
-    refreshExpenseTransactions
+    refreshExpenseTransactions,
+    isMockData
   } = useTransactionContext()
 
   useEffect(() => {
@@ -32,6 +34,19 @@ const Insights = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
+      <Box
+        sx={{
+          display: isMockData? "flex" : "none",
+          height: "100%",
+          alignItems: "center"
+        }}
+      >
+        <Alert severity="error" sx={{width: "100%"}}>
+          This contains mock data for demonstrations purposes.
+          Add your first income and expense transactions to start tracking your finances.
+        </Alert>
+      </Box>
+
       <Box
         className="flex flex-row gap-2 h-full"
         width={"fit-content"}
@@ -48,9 +63,14 @@ const Insights = () => {
               width: "175px"
             }}
           >
-            {years.map((year) => {
-              return <MenuItem value={year}>{year}</MenuItem>
-            })}
+            { isMockData ?
+              mockYears.map((year) => {
+                return <MenuItem value={year}>{year}</MenuItem>
+              })
+              : years.map((year) => {
+                return <MenuItem value={year}>{year}</MenuItem>
+              })
+            }
           </Select>
         </FormControl>
 
@@ -68,6 +88,22 @@ const Insights = () => {
             {MONTHS.map((month) => {
               return <MenuItem value={month}>{month}</MenuItem>
             })}
+          </Select>
+        </FormControl>
+
+        <FormControl>
+          <InputLabel>Range</InputLabel>
+          <Select
+            label="Range"
+            value={selectedMonth}
+            name={"range"}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            sx={{
+              width: "175px"
+            }}
+          >
+            <MenuItem value={"selectedMonth"}>Selected Month</MenuItem>
+            <MenuItem value={"ytd"}>YTD</MenuItem>
           </Select>
         </FormControl>
       </Box>

@@ -1,5 +1,10 @@
 import { TransactionData } from "@/utils/saveTransaction";
 
+export const mockYears: string[] = [
+  "2024",
+  "2025"
+]
+
 export const mockIncomeData: TransactionData = {
   "2024": {
     January: [
@@ -89,7 +94,6 @@ export const mockIncomeData: TransactionData = {
     ],
   },
 };
-
 
 export const mockExpenseData: TransactionData = {
   "2024": {

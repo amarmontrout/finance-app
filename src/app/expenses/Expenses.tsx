@@ -4,14 +4,15 @@ import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
-import { EXPENSES } from "@/globals/globals"
-import { Box } from "@mui/material"
+import { EXPENSE_CATEGORIES_KEY, EXPENSES, YEARS_KEY } from "@/globals/globals"
+import { Alert, Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import TransactionForm from "@/components/TransactionForm"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
+import getChoices from "@/utils/getChoices"
 
 const Expenses = () => {
   const { 
@@ -28,6 +29,7 @@ const Expenses = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
+  const [hasChoices, setHasChoices] = useState<boolean>(false)
 
   const monthTotal = getMonthExpenseTotal()
   const theme = useTheme()
@@ -35,6 +37,11 @@ const Expenses = () => {
 
   useEffect(() => {
     refreshExpenseTransactions()
+    const yearsChoices = getChoices({key: YEARS_KEY})
+    const expenseChoices = getChoices({key: EXPENSE_CATEGORIES_KEY})
+    if (yearsChoices.length !== 0 && expenseChoices.length !== 0) {
+      setHasChoices(true)
+    }
   }, [])
 
   const buildExpenseChartData = () => {
@@ -57,13 +64,28 @@ const Expenses = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <ShowCaseCard title={"Add Expense"} secondaryTitle={""}>
-        <TransactionForm
-          categories={expenseCategories}
-          type={EXPENSES}
-          refreshTransactions={refreshExpenseTransactions}
-        />
-      </ShowCaseCard>
+      <Box
+        sx={{
+          display: !hasChoices? "flex" : "none",
+          height: "100%",
+          alignItems: "center"
+        }}
+      >
+        <Alert severity="error" sx={{width: "100%"}}>
+          This contains mock data. 
+          Go to settings and add a year and/or an expense category. Then come back here to enter your first expense transaction.
+        </Alert>
+      </Box>
+
+      <Box display={hasChoices? "flex" : "none"}>
+        <ShowCaseCard title={"Add Expense"} secondaryTitle={""}>
+          <TransactionForm
+            categories={expenseCategories}
+            type={EXPENSES}
+            refreshTransactions={refreshExpenseTransactions}
+          />
+        </ShowCaseCard>
+      </Box>
 
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"

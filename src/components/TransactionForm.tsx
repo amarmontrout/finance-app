@@ -126,7 +126,6 @@ const TransactionForm = (props: {
             onChange={e => handleYear(e)}
             sx={{
               width: "175px",
-              minWidth: "fit-content"
             }}
           >
             {years.map((year) => {
@@ -144,7 +143,6 @@ const TransactionForm = (props: {
             onChange={e => handleMonth(e)}
             sx={{
               width: "175px",
-              minWidth: "fit-content"
             }}
           >
             {MONTHS.map((month) => {
@@ -166,7 +164,6 @@ const TransactionForm = (props: {
             onChange={e => handleCategory(e)}
             sx={{
               width: "175px",
-              minWidth: "fit-content"
             }}
           >
             {categories.map((category) => {
@@ -185,7 +182,6 @@ const TransactionForm = (props: {
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
             sx={{
               width: "175px",
-              minWidth: "fit-content"
             }}
             />
         </FormControl>        

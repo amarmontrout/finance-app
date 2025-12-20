@@ -2,7 +2,7 @@
 
 import LineChart from "@/components/LineChart"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorPrimary, darkMode, lightMode } from "@/globals/colors"
+import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getMonthTotal, getNetCashFlow } from "@/utils/getTotals"
@@ -88,9 +88,11 @@ const NetCashFlow = () => {
       <LineChart
         twoColumnData={lineChartData}
         title={`Net Cash Flow ${selectedYear}`}
-        lineColors={[accentColorPrimary]}
+        lineColors={[accentColorSecondary]}
         height={"400px"}
       />
+
+      <hr style={{width: "100%"}}/>
       
       <Box
         className="flex flex-col gap-2 h-full"

@@ -4,6 +4,7 @@ import LineChart from "@/components/LineChart"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { accentColorPrimary, accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
+import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getMonthTotal, getNetCashFlow } from "@/utils/getTotals"
 import { Box, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
@@ -25,7 +26,7 @@ const NetCashFlow = () => {
   // Gets net cash flow for selected month
   const netIncome = getNetCashFlow(income, expense)
   const [annualNetCashFlow, setAnnualNetCashFlow] = useState<[string, string][]>([])
-
+  const [lineChartData, setLineChartData] = useState<TwoColumnDataType>([])
 
   const getAnnualNetCashFlow = () => {
     const incomeExpenseTotals: Record<string, [string, string]> = {}
@@ -49,18 +50,34 @@ const NetCashFlow = () => {
     setAnnualNetCashFlow(totalNetCashFlow)
   }
 
+  const buildNetCashFlowChartData = () => {
+    const chartData = buildTwoColumnData({
+      data: annualNetCashFlow, 
+      firstColumnTitle: "Month", 
+      secondColumnTitle: "Net Cash Flow"
+    })
+
+    if (!chartData) return
+
+    setLineChartData(chartData)
+  }
+
   useEffect(() => {
     if (!selectedYear) return
+
     getAnnualNetCashFlow()
   }, [selectedYear])
+
+  useEffect(() => {
+    buildNetCashFlowChartData()
+  }, [annualNetCashFlow])
   
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >  
       <LineChart
-        selectedYear={selectedYear}
-        netCashFlowData={annualNetCashFlow}
+        twoColumnData={lineChartData}
         title={`Net Cash Flow ${selectedYear}`}
         lineColors={[accentColorPrimary]}
       />

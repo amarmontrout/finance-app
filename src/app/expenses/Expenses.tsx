@@ -11,6 +11,7 @@ import { useState, useEffect } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import TransactionForm from "@/components/TransactionForm"
+import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 
 const Expenses = () => {
   const { 
@@ -26,6 +27,7 @@ const Expenses = () => {
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
+  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
   const monthTotal = getMonthExpenseTotal()
   const theme = useTheme()
@@ -34,6 +36,22 @@ const Expenses = () => {
   useEffect(() => {
     refreshExpenseTransactions()
   }, [])
+
+  const buildExpenseChartData = () => {
+    const chartData = buildMultiColumnData({
+      firstData: expenseTransactions,
+      firstColumnTitle: "Month",
+      method: "self"
+    })
+  
+    if (!chartData) return
+  
+    setLineChartData(chartData)
+  }
+  
+  useEffect(() => {
+    buildExpenseChartData()
+  }, [expenseTransactions])
 
   return (
     <Box
@@ -66,8 +84,7 @@ const Expenses = () => {
         
         <ShowCaseCard title={"Expenses Chart"} secondaryTitle={""}>
           <LineChart
-            selectedYear={selectedYear}
-            transactions={expenseTransactions}
+            multiColumnData={lineChartData}
             title={"Expenses"}
             lineColors={
               currentTheme === "light" 

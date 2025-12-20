@@ -5,8 +5,9 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
+import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getCategoryTotals } from "@/utils/getTotals"
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -25,6 +26,7 @@ const Overview = () => {
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
   const [incomeCategoryTotals, setIncomeCategoryTotals] = useState<[string, string | number][]>([])
   const [expenseCategoryTotals, setExpenseCategoryTotals] = useState<[string, string | number][]>([])
+  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
   const theme = useTheme()
   const currentTheme = theme.theme
@@ -42,6 +44,28 @@ const Overview = () => {
     setIncomeCategoryTotals(incomeCategoryTotal)
     setExpenseCategoryTotals(expenseCategoryTotal)
   }, [incomeTransactions])
+
+  const buildCompareChartData = () => {
+    const chartData = buildMultiColumnData({
+      firstData: incomeTransactions,
+      secondData: expenseTransactions,
+      selectedYear: selectedYear,
+      firstColumnTitle: "Month",
+      method: "compare"
+    })
+    
+    if (!chartData) return
+    
+    setLineChartData(chartData)
+  }
+    
+  useEffect(() => {
+    const hasIncomeData = incomeTransactions && Object.keys(incomeTransactions).length > 0
+    const hasExpenseData = expenseTransactions && Object.keys(expenseTransactions).length > 0
+    if (hasIncomeData && hasExpenseData) {
+      buildCompareChartData()
+    }
+  }, [incomeTransactions, expenseTransactions])
 
   return (
     <Box
@@ -73,17 +97,8 @@ const Overview = () => {
       <hr style={{width: "100%"}}/>
 
       <ShowCaseCard title={"Income and Expense Overview"} secondaryTitle={""}>
-        <Box
-          width={"fit-content"}
-          paddingTop={"10px"}
-        >
-
-        </Box>
-
         <LineChart
-          selectedYear={selectedYear}
-          transactions={incomeTransactions}
-          comparisonTransactions={expenseTransactions}
+          multiColumnData={lineChartData}
           title={`Income and Expenses for ${selectedYear}`}
           lineColors={
             currentTheme === "light" 

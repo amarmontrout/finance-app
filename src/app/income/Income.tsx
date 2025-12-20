@@ -8,6 +8,7 @@ import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME } from "@/globals/globals"
+import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
@@ -26,6 +27,7 @@ const Income = () => {
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
+  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
   
   const monthTotal = getMonthIncomeTotal()
   const theme = useTheme()
@@ -34,6 +36,22 @@ const Income = () => {
   useEffect(() => {
     refreshIncomeTransactions()
   }, [])
+
+  const buildIncomeChartData = () => {
+    const chartData = buildMultiColumnData({
+      firstData: incomeTransactions,
+      firstColumnTitle: "Month",
+      method: "self"
+    })
+
+    if (!chartData) return
+
+    setLineChartData(chartData)
+  }
+
+  useEffect(() => {
+    buildIncomeChartData()
+  }, [incomeTransactions])
 
   return (
     <Box
@@ -66,8 +84,7 @@ const Income = () => {
         
         <ShowCaseCard title={"Income Chart"} secondaryTitle={""}>
           <LineChart
-            selectedYear={selectedYear}
-            transactions={incomeTransactions}
+            multiColumnData={lineChartData}
             title={"Income"}
             lineColors={
               currentTheme === "light" 

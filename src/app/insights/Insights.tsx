@@ -118,10 +118,7 @@ const Insights = () => {
         </ShowCaseCard>
 
         <ShowCaseCard title={"Savings Rate"} secondaryTitle={""}>
-          {"YTD average, current month badge, color coded - green good and red bad"}
-          <Box>
-            <SavingsRate/>
-          </Box>
+          <SavingsRate/>
         </ShowCaseCard>
       </Box>
 

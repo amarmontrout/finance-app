@@ -66,7 +66,6 @@ const NetCashFlow = () => {
   const getTotalAnnualNetCashflow = () => {
     let total = 0
     annualNetCashFlow.forEach(([month, amount]) => {
-      console.log(`Amount: ${amount}`)
       total += Number(amount)
     })
     setTotalAnnualNetCashFlow(formattedStringNumber(total))

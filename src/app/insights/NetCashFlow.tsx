@@ -6,7 +6,7 @@ import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getMonthTotal, getNetCashFlow } from "@/utils/getTotals"
-import { cleanNumber } from "@/utils/helperFunctions"
+import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
@@ -28,14 +28,18 @@ const NetCashFlow = () => {
   // Gets net cash flow for selected month
   const netIncome = getNetCashFlow(income, expense)
   const netIncomeNumber = cleanNumber(netIncome)
+
   const [annualNetCashFlow, setAnnualNetCashFlow] = useState<[string, string][]>([])
+  const [totalAnnualNetCashFlow, setTotalAnnualNetCashFlow] = useState<string>("")
+  const totalAnnualNetCashFlowNumber = cleanNumber(totalAnnualNetCashFlow)
   const [lineChartData, setLineChartData] = useState<TwoColumnDataType>([])
 
   const theme = useTheme()
   const currentTheme = theme.theme
   const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
   const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
-  const textAndBorderColor = netIncomeNumber > 0 ? positiveNet : negativeNet
+  const monthNetIncomeColor = netIncomeNumber > 0 ? positiveNet : negativeNet
+  const annualNetIncomeColor = totalAnnualNetCashFlowNumber > 0 ? positiveNet : negativeNet
 
   const getAnnualNetCashFlow = () => {
     const incomeExpenseTotals: Record<string, [string, string]> = {}
@@ -59,6 +63,15 @@ const NetCashFlow = () => {
     setAnnualNetCashFlow(totalNetCashFlow)
   }
 
+  const getTotalAnnualNetCashflow = () => {
+    let total = 0
+    annualNetCashFlow.forEach(([month, amount]) => {
+      console.log(`Amount: ${amount}`)
+      total += Number(amount)
+    })
+    setTotalAnnualNetCashFlow(formattedStringNumber(total))
+  }
+
   const buildNetCashFlowChartData = () => {
     const chartData = buildTwoColumnData({
       data: annualNetCashFlow, 
@@ -79,6 +92,7 @@ const NetCashFlow = () => {
 
   useEffect(() => {
     buildNetCashFlowChartData()
+    getTotalAnnualNetCashflow()
   }, [annualNetCashFlow])
   
   return (
@@ -93,22 +107,43 @@ const NetCashFlow = () => {
       />
 
       <hr style={{width: "100%"}}/>
-      
+
       <Box
-        className="flex flex-col gap-2 h-full"
-        border={`2px solid ${textAndBorderColor}`} 
-        borderRadius={"10px"} 
-        padding={"15px"} 
-        margin={"0 auto"} 
-        width={"fit-content"}
-        alignItems={"center"}
+        className="flex flex-row gap-2 h-full"
       >
-        <Typography color={textAndBorderColor}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
+        <Box
+          className="flex flex-col gap-2 h-full"
+          border={`2px solid ${monthNetIncomeColor}`} 
+          borderRadius={"10px"} 
+          padding={"15px"} 
+          margin={"0 auto"} 
+          width={"fit-content"}
+          alignItems={"center"}
+        >
+          <Typography color={monthNetIncomeColor}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
 
-        <hr style={{ width: "100%", borderColor: textAndBorderColor}}/>
+          <hr style={{ width: "100%", borderColor: monthNetIncomeColor}}/>
 
-        <Typography variant="h3" color={textAndBorderColor}>${netIncome}</Typography>
+          <Typography variant="h3" color={monthNetIncomeColor}>${netIncome}</Typography>
+        </Box>
+
+        <Box
+          className="flex flex-col gap-2 h-full"
+          border={`2px solid ${annualNetIncomeColor}`} 
+          borderRadius={"10px"} 
+          padding={"15px"} 
+          margin={"0 auto"} 
+          width={"fit-content"}
+          alignItems={"center"}
+        >
+          <Typography color={annualNetIncomeColor}>{`Total Net Cash Flow for ${selectedYear}`}</Typography>
+
+          <hr style={{ width: "100%", borderColor: annualNetIncomeColor}}/>
+
+          <Typography variant="h3" color={annualNetIncomeColor}>${totalAnnualNetCashFlow}</Typography>
+        </Box>        
       </Box>
+
     </Box>
   )
 }

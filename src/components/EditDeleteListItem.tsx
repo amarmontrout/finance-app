@@ -13,14 +13,14 @@ const EditDeleteListItem = (props: {
     items: string[]
     storageKey: string
     refresh: () => void
-    // setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
+    setOpenEditDialog?: React.Dispatch<React.SetStateAction<boolean>>
   }) => {
 
   const { 
     items,
     storageKey,
     refresh,
-    // setOpenEditDialog 
+    setOpenEditDialog 
   } = props
     
   const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
@@ -47,7 +47,7 @@ const EditDeleteListItem = (props: {
           edge="end"
           onClick={
             () => {
-              // setOpenEditDialog(true)
+              if (setOpenEditDialog) setOpenEditDialog(true)
             }
           }
         >

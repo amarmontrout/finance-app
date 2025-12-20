@@ -119,8 +119,8 @@ const TransactionsList = ({
     )
   }
 
-  const ConfirmCancel = (props: { details: Details }) => {
-    const { details } = props
+  const ConfirmCancel = (props: { id: string }) => {
+    const { id } = props
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 
@@ -129,7 +129,7 @@ const TransactionsList = ({
             () => {
               setConfirmId(null)
               if (!selectedYear || !selectedMonth) return
-              handleDeleteTransaction(selectedYear, selectedMonth, details.id)
+              handleDeleteTransaction(selectedYear, selectedMonth, id)
             }
           }
         >
@@ -222,7 +222,7 @@ const TransactionsList = ({
                   key={details.id}
                   secondaryAction={
                     confirmId === details.id
-                      ? <ConfirmCancel details={details}/> 
+                      ? <ConfirmCancel id={details.id}/> 
                       : <EditDeleteButton id={details.id}/>
                   }
                   sx={{

@@ -110,8 +110,6 @@ export const TransactionProvider = (props: {
   }
 
   const getMonthIncomeTotal = () => {
-    console.log(selectedMonth)
-    console.log(expenseTransactions)
     if (selectedMonth !== "" && incomeTransactions) {
       const total = getMonthTotal( selectedYear, selectedMonth, incomeTransactions)
       

@@ -54,7 +54,7 @@ const LineChart = (props: {
     },
     legend: {
       textStyle: { color: textColor },
-      position: "top"
+      position: "right"
     },
   }
 

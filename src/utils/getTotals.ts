@@ -1,3 +1,4 @@
+import { cleanNumber } from "./helperFunctions"
 import { TransactionData } from "./saveTransaction"
 
 export const getYearTotal = (year: string, transactions: TransactionData) => {
@@ -59,9 +60,6 @@ export const getCategoryTotals = (
 }
 
 export const getNetCashFlow = (income: string, expense: string) => {
-  const cleanNumber = (str: string) => {
-    return Number(str.replace(/[^0-9.-]+/g,""))
-  }
   return (
     cleanNumber(income)-cleanNumber(expense)
   ).toLocaleString(undefined, {

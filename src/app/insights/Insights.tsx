@@ -2,12 +2,11 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
-import { getSavingRate } from "@/utils/getTotals"
-import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useEffect } from "react"
 import NetCashFlow from "./NetCashFlow"
+import SavingsRate from "./SavingsRate"
 
 const Insights = () => {
   const { 
@@ -18,8 +17,6 @@ const Insights = () => {
     setSelectedMonth,
     selectedYear,
     setSelectedYear,
-    getMonthIncomeTotal,
-    getMonthExpenseTotal,
     refreshIncomeTransactions,
     refreshExpenseTransactions
   } = useTransactionContext()
@@ -30,30 +27,6 @@ const Insights = () => {
     refreshIncomeTransactions()
     refreshExpenseTransactions()
   }, [])
-
-  const SavingsRate = () => {
-    const monthIncomeTotal = getMonthIncomeTotal()
-    const monthExpenseTotal = getMonthExpenseTotal()
-    const savingsRate = getSavingRate(monthIncomeTotal, monthExpenseTotal)
-
-    return (
-      <Box 
-        className="flex flex-col gap-2 h-full"
-        border={`2px solid ${accentColorSecondary}`} 
-        borderRadius={"10px"} 
-        padding={"15px"} 
-        margin={"0 auto"} 
-        width={"fit-content"}
-        alignItems={"center"}
-      >
-        <Typography>{`${selectedMonth} ${selectedYear}`}</Typography>
-
-        <hr style={{ width: "100%"}}/>
-
-        <Typography variant="h3">{savingsRate}%</Typography>
-      </Box>
-    )
-  }
 
   return (
     <Box

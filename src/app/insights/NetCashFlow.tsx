@@ -2,11 +2,13 @@
 
 import LineChart from "@/components/LineChart"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorPrimary, accentColorSecondary } from "@/globals/colors"
+import { accentColorPrimary, darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getMonthTotal, getNetCashFlow } from "@/utils/getTotals"
+import { cleanNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
+import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 const NetCashFlow = () => {
@@ -25,8 +27,15 @@ const NetCashFlow = () => {
   const expense = getMonthExpenseTotal()
   // Gets net cash flow for selected month
   const netIncome = getNetCashFlow(income, expense)
+  const netIncomeNumber = cleanNumber(netIncome)
   const [annualNetCashFlow, setAnnualNetCashFlow] = useState<[string, string][]>([])
   const [lineChartData, setLineChartData] = useState<TwoColumnDataType>([])
+
+  const theme = useTheme()
+  const currentTheme = theme.theme
+  const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
+  const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
+  const textAndBorderColor = netIncomeNumber > 0 ? positiveNet : negativeNet
 
   const getAnnualNetCashFlow = () => {
     const incomeExpenseTotals: Record<string, [string, string]> = {}
@@ -80,22 +89,23 @@ const NetCashFlow = () => {
         twoColumnData={lineChartData}
         title={`Net Cash Flow ${selectedYear}`}
         lineColors={[accentColorPrimary]}
+        height={"400px"}
       />
       
       <Box
         className="flex flex-col gap-2 h-full"
-        border={`2px solid ${accentColorSecondary}`} 
+        border={`2px solid ${textAndBorderColor}`} 
         borderRadius={"10px"} 
         padding={"15px"} 
         margin={"0 auto"} 
         width={"fit-content"}
         alignItems={"center"}
       >
-        <Typography>{`${selectedMonth} ${selectedYear}`}</Typography>
+        <Typography color={textAndBorderColor}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
 
-        <hr style={{ width: "100%"}}/>
+        <hr style={{ width: "100%", borderColor: textAndBorderColor}}/>
 
-        <Typography variant="h3">${netIncome}</Typography>
+        <Typography variant="h3" color={textAndBorderColor}>${netIncome}</Typography>
       </Box>
     </Box>
   )

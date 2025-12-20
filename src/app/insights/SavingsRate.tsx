@@ -1,7 +1,7 @@
 "use client"
 
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { darkMode, lightMode } from "@/globals/colors"
 import { getNetCashFlow, getSavingRate } from "@/utils/getTotals"
 import { cleanNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"

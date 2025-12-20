@@ -9,6 +9,7 @@ import { useTheme } from "next-themes";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
 import { useTransactionContext } from "@/contexts/transactions-context";
+import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -231,7 +232,7 @@ const TransactionsList = ({
                   }}
                 >
                   <ListItemText 
-                    primary={`$${details.amount}`}
+                    primary={`$${formattedStringNumber(cleanNumber(details.amount))}`}
                     secondary={details.category}
                   />
                 </ListItem>

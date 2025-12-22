@@ -91,7 +91,7 @@ const Insights = () => {
           </Select>
         </FormControl>
 
-        <FormControl>
+        {/* <FormControl>
           <InputLabel>Range</InputLabel>
           <Select
             label="Range"
@@ -105,7 +105,7 @@ const Insights = () => {
             <MenuItem value={"selectedMonth"}>Selected Month</MenuItem>
             <MenuItem value={"ytd"}>YTD</MenuItem>
           </Select>
-        </FormControl>
+        </FormControl> */}
       </Box>
 
       <hr style={{width: "100%"}}/>
@@ -122,9 +122,9 @@ const Insights = () => {
         </ShowCaseCard>
       </Box>
 
-      <ShowCaseCard title={"Top 3 Expense Categories"} secondaryTitle={""}>
+      {/* <ShowCaseCard title={"Top 3 Expense Categories"} secondaryTitle={""}>
         {"% of total expenses, change from previous month, small bar chart or cards"}
-      </ShowCaseCard>        
+      </ShowCaseCard>         */}
     </Box>
   )
 }

@@ -33,8 +33,7 @@ const NetCashFlow = () => {
   const totalAnnualNetCashFlowNumber = cleanNumber(totalAnnualNetCashFlow)
   const [lineChartData, setLineChartData] = useState<TwoColumnDataType>([])
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
   const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
   const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
   const monthNetIncomeColor = netIncomeNumber > 0 ? positiveNet : negativeNet
@@ -101,7 +100,6 @@ const NetCashFlow = () => {
         twoColumnData={lineChartData}
         title={`Net Cash Flow ${selectedYear}`}
         lineColors={[accentColorSecondary]}
-        height={"400px"}
       />
 
       <Box

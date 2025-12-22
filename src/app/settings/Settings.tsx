@@ -28,8 +28,7 @@ const Settings = () => {
   const [expenseCategoriesInput, setExpenseCategoriesInput] = useState<string>("")
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
 
   return (
     <Box

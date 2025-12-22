@@ -27,8 +27,7 @@ const Overview = () => {
   const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
 
   useEffect(() => {
     refreshIncomeTransactions()
@@ -96,7 +95,6 @@ const Overview = () => {
             ? [lightMode.success, lightMode.error] 
             : [darkMode.success, darkMode.error]
           }
-          height="400px"
         />        
       </ShowCaseCard>
     </Box>

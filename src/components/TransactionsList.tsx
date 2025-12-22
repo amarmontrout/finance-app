@@ -43,8 +43,7 @@ const TransactionsList = ({
 
   const { currentYear, currentMonth, isMockData } = useTransactionContext()
   const [confirmId, setConfirmId] = useState<string | null>(null)
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
 
   useEffect(() => {

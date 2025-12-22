@@ -9,13 +9,13 @@ import TransactionsList from "@/components/TransactionsList"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
+import { buildMultiColumnData } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
 import { getMonthTotal } from "@/utils/getTotals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 
 const Income = () => {
   const { 
@@ -32,37 +32,29 @@ const Income = () => {
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
-  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
   const [hasChoices, setHasChoices] = useState<boolean>(false)
   
-  const monthTotal = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
-  const theme = useTheme()
-  const currentTheme = theme.theme
-    
-  useEffect(() => {
-    refreshIncomeTransactions()
-    const yearsChoices = getChoices({key: YEARS_KEY})
-    const incomeChoices = getChoices({key: INCOME_CATEGORIES_KEY})
-    if (yearsChoices.length !== 0 && incomeChoices.length !== 0) {
-      setHasChoices(true)
-    }
-  }, [])
+  const monthTotal = useMemo(() => {
+    return getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
+  }, [selectedYear, selectedMonth, incomeTransactions])
 
-  const buildIncomeChartData = () => {
-    const chartData = buildMultiColumnData({
+  const { theme: currentTheme } = useTheme()
+
+  const lineChartData = useMemo(() => {
+    return buildMultiColumnData({
       firstData: incomeTransactions,
       firstColumnTitle: "Month",
       method: "self"
-    })
-
-    if (!chartData) return
-
-    setLineChartData(chartData)
-  }
-
-  useEffect(() => {
-    buildIncomeChartData()
+    }) ?? []
   }, [incomeTransactions])
+  
+  useEffect(() => {
+    refreshIncomeTransactions()
+
+    const hasData = getChoices({key: YEARS_KEY}).length !== 0
+      && getChoices({key: INCOME_CATEGORIES_KEY}).length !== 0
+    setHasChoices(hasData)
+  }, [])
 
   return (
     <Box
@@ -83,7 +75,10 @@ const Income = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={`Income for ${selectedMonth} ${selectedYear}`} secondaryTitle={`Total $${monthTotal}`}>
+        <ShowCaseCard 
+          title={`Income for ${selectedMonth} ${selectedYear}`} 
+          secondaryTitle={`Total $${monthTotal}`}
+        >
           <TransactionsList
             type={INCOME}
             transactions={incomeTransactions}
@@ -106,7 +101,6 @@ const Income = () => {
               ? incomeLinesLight
               : incomeLinesDark
             }
-            height="400px"
           />
         </ShowCaseCard>
       </Box>

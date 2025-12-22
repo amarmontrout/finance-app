@@ -25,8 +25,7 @@ const EditDeleteListItem = (props: {
     
   const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
 
   const handleDeleteItem = () => {

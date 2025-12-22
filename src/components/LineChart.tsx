@@ -10,19 +10,16 @@ const LineChart = (props: {
   multiColumnData?: MultiColumnDataType
   title: string
   lineColors: string[]
-  height?: string
 }) => {
   const {
     twoColumnData,
     multiColumnData,
     title,
-    lineColors,
-    height
+    lineColors
   } = props
   const [chartData, setChartData] = useState<TwoColumnDataType | MultiColumnDataType>([])
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
   const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
   const textColor = currentTheme === "light"? "#000" : "#FFF"
 
@@ -76,7 +73,7 @@ const LineChart = (props: {
       <Chart
         chartType={"LineChart"}
         width={"100%"}
-        height={height ? height : "100%"}
+        height={"400px"}
         data={chartData}
         options={options}
       />

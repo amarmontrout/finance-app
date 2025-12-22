@@ -25,8 +25,7 @@ const SavingsRate = () => {
   const [totalAnnualSavingsRate, setTotalAnnualSavingsRate] = useState<string>("")
   const totalAnnualSavingsRateNumber = cleanNumber(totalAnnualSavingsRate)
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const { theme: currentTheme } = useTheme()
   const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
   const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
   const monthNetIncomeColor = savingsRateNumber > 0 ? positiveNet : negativeNet

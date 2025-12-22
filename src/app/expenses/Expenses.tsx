@@ -7,11 +7,11 @@ import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, YEARS_KEY } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import TransactionForm from "@/components/TransactionForm"
-import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
+import { buildMultiColumnData } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
 import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
@@ -32,37 +32,29 @@ const Expenses = () => {
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
-  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
   const [hasChoices, setHasChoices] = useState<boolean>(false)
 
-  const monthTotal = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const monthTotal = useMemo(() => {
+    return getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
+  }, [selectedYear, selectedMonth, expenseTransactions])
+  
+  const { theme: currentTheme } = useTheme()
 
-  useEffect(() => {
-    refreshExpenseTransactions()
-    const yearsChoices = getChoices({key: YEARS_KEY})
-    const expenseChoices = getChoices({key: EXPENSE_CATEGORIES_KEY})
-    if (yearsChoices.length !== 0 && expenseChoices.length !== 0) {
-      setHasChoices(true)
-    }
-  }, [])
-
-  const buildExpenseChartData = () => {
-    const chartData = buildMultiColumnData({
+  const lineChartData = useMemo(() => {
+    return buildMultiColumnData({
       firstData: expenseTransactions,
       firstColumnTitle: "Month",
       method: "self"
-    })
-  
-    if (!chartData) return
-  
-    setLineChartData(chartData)
-  }
-  
-  useEffect(() => {
-    buildExpenseChartData()
+    }) ?? []
   }, [expenseTransactions])
+
+  useEffect(() => {
+    refreshExpenseTransactions()
+
+    const hasData = getChoices({key: YEARS_KEY}).length !== 0
+      && getChoices({key: EXPENSE_CATEGORIES_KEY}).length !== 0
+    setHasChoices(hasData)
+  }, [])
 
   return (
     <Box
@@ -106,7 +98,6 @@ const Expenses = () => {
               ? expenseLinesLight
               : expenseLinesDark
             }
-            height="400px"
           />
         </ShowCaseCard>
       </Box>

@@ -5,9 +5,8 @@ import Chart from "react-google-charts"
 
 const PieChart = (props: {
   data: [string, string | number][]
-  year: string
 }) => {
-  const { data, year } = props
+  const { data } = props
 
   const theme = useTheme()
   const currentTheme = theme.theme
@@ -20,7 +19,7 @@ const PieChart = (props: {
     titleTextStyle: { color: textColor },
     legend: {
       textStyle: { color: textColor },
-      position: "top"
+      position: "right"
     },
     chartArea: {
       top: 50,

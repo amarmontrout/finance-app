@@ -113,7 +113,7 @@ const Overview = () => {
 
       <hr style={{width: "100%"}}/>
 
-      <ShowCaseCard title={"Income and Expense Overview"} secondaryTitle={""}>
+      <ShowCaseCard title={`${selectedYear} Income and Expense Overview`} secondaryTitle={""}>
         <LineChart
           multiColumnData={lineChartData}
           title={`Income and Expenses for ${selectedYear}`}
@@ -132,14 +132,12 @@ const Overview = () => {
         <ShowCaseCard title={`${selectedYear} Income Categories`} secondaryTitle={""}>
           <PieChart
             data={incomeCategoryTotals}
-            year={selectedYear}
           />
         </ShowCaseCard>
 
         <ShowCaseCard title={`${selectedYear} Expense Categories`} secondaryTitle={""}>
           <PieChart
             data={expenseCategoryTotals}
-            year={selectedYear}
           />
         </ShowCaseCard>
       </Box>

@@ -64,10 +64,6 @@ const Expenses = () => {
     buildExpenseChartData()
   }, [expenseTransactions])
 
-  useEffect(() => {
-    console.log(pathname)
-  }, [pathname])
-
   return (
     <Box
       className="flex flex-col gap-2 h-full"

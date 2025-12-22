@@ -12,6 +12,7 @@ import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
 import { getMonthTotal } from "@/utils/getTotals"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
@@ -21,15 +22,15 @@ const Income = () => {
   const { 
     incomeTransactions, 
     refreshIncomeTransactions,
-    selectedYear,
-    setSelectedYear,
-    selectedMonth,
-    setSelectedMonth,
     incomeCategories
   } = useTransactionContext()
 
   const pathname = usePathname()
 
+  const { currentYear, currentMonth } = getCurrentDateInfo()
+
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
   const [hasChoices, setHasChoices] = useState<boolean>(false)
@@ -113,6 +114,8 @@ const Income = () => {
         transactions={incomeTransactions}
         categories={incomeCategories}
         currentTheme={currentTheme}
+        selectedYear={selectedYear}
+        selectedMonth={selectedMonth}
       />
     </Box>
   )

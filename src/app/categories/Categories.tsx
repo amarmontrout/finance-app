@@ -6,6 +6,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
 import { getCategoryTotals } from "@/utils/getTotals"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useEffect, useState } from "react"
 
@@ -16,11 +17,12 @@ const Categories = () => {
     expenseTransactions, 
     refreshExpenseTransactions,
     years,
-    currentYear,
     isMockData,
   } = useTransactionContext()
 
-  const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
+  const { currentYear } = getCurrentDateInfo()
+
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [incomeCategoryTotals, setIncomeCategoryTotals] = useState<[string, string | number][]>([])
   const [expenseCategoryTotals, setExpenseCategoryTotals] = useState<[string, string | number][]>([])
 

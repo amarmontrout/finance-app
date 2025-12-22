@@ -1,3 +1,17 @@
+import { MONTHS } from "@/globals/globals"
+
+/**
+ * This helper function gets the current year and month.
+ * 
+ * @returns The current year and current month
+ */
+export const getCurrentDateInfo = () => {
+  const today = new Date()
+  return {
+    currentYear: String(today.getFullYear()),
+    currentMonth: MONTHS[today.getMonth()]
+  }
+}
 
 /**
  * This helper function converts a string number to a number.

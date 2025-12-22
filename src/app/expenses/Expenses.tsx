@@ -16,20 +16,21 @@ import getChoices from "@/utils/getChoices"
 import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
 import { getMonthTotal } from "@/utils/getTotals"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 
 const Expenses = () => {
   const { 
     expenseTransactions, 
     refreshExpenseTransactions,
-    selectedYear,
-    setSelectedYear,
-    selectedMonth,
-    setSelectedMonth,
     expenseCategories
   } = useTransactionContext()
 
   const pathname = usePathname()
 
+  const { currentYear, currentMonth } = getCurrentDateInfo()
+
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
   const [hasChoices, setHasChoices] = useState<boolean>(false)
@@ -110,6 +111,8 @@ const Expenses = () => {
         transactions={expenseTransactions}
         categories={expenseCategories}
         currentTheme={currentTheme}
+        selectedYear={selectedYear}
+        selectedMonth={selectedMonth}
       />
     </Box>
   )

@@ -12,12 +12,18 @@ import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
-const NetCashFlow = () => {
+const NetCashFlow = (props: {
+  selectedYear: string
+  selectedMonth: string
+}) => {
   const {
-    incomeTransactions,
-    expenseTransactions,
     selectedYear,
     selectedMonth
+  } = props
+
+  const {
+    incomeTransactions,
+    expenseTransactions
   } = useTransactionContext()
 
   // Gets income total for selected month

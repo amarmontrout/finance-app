@@ -1,4 +1,4 @@
-import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, MONTHS, YEARS_KEY } from "@/globals/globals"
+import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import getChoices from "@/utils/getChoices"
 import getTransactions from "@/utils/getTransactions"
@@ -10,12 +10,6 @@ type TransactionsContextType = {
   expenseTransactions: TransactionData
   refreshIncomeTransactions: () => void
   refreshExpenseTransactions: () => void
-  selectedYear: string
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
-  selectedMonth: string
-  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
-  currentYear: string
-  currentMonth: string
   isMockData: boolean
   refreshYearChoices: () => void
   years: string[]
@@ -40,14 +34,8 @@ export const useTransactionContext = () => {
 export const TransactionProvider = (props: {
   children: React.ReactNode
 }) => {
-  const today = new Date()
-  const currentYear = String(today.getFullYear())
-  const currentMonth = MONTHS[today.getMonth()]
-
   const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
   const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
-  const [selectedYear, setSelectedYear] = useState<string>("")
-  const [selectedMonth, setSelectedMonth] = useState<string>("")
   const [isMockData, setIsMockData] = useState<boolean>(false)
   const [years, setYears] = useState<string[]>([])
   const [incomeCategories, setIncomeCategories] = useState<string[]>([])
@@ -102,12 +90,6 @@ export const TransactionProvider = (props: {
       expenseTransactions,
       refreshIncomeTransactions,
       refreshExpenseTransactions,
-      selectedYear,
-      setSelectedYear,
-      selectedMonth,
-      setSelectedMonth,
-      currentYear,
-      currentMonth,
       isMockData,
       years,
       incomeCategories,

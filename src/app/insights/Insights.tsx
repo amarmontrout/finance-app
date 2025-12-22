@@ -4,29 +4,27 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { MONTHS } from "@/globals/globals"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
 import { mockYears } from "@/globals/mockData"
 import MockDataWarning from "@/components/MockDataWarning"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 
 const Insights = () => {
   const { 
     years,
-    currentYear,
-    currentMonth,
-    selectedMonth,
-    setSelectedMonth,
-    selectedYear,
-    setSelectedYear,
     refreshIncomeTransactions,
     refreshExpenseTransactions,
     isMockData
   } = useTransactionContext()
 
+  const { currentYear, currentMonth } = getCurrentDateInfo()
+
+  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)  
+
   useEffect(() => {
-    setSelectedYear(String(currentYear))
-    setSelectedMonth(String(currentMonth))
     refreshIncomeTransactions()
     refreshExpenseTransactions()
   }, [])
@@ -107,7 +105,10 @@ const Insights = () => {
           className="flex flex-1 min-w-0"
         >
           <ShowCaseCard title={"Net Cash Flow"}>
-            <NetCashFlow/>
+            <NetCashFlow
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
           </ShowCaseCard>
         </Box>
 
@@ -115,7 +116,10 @@ const Insights = () => {
           className="flex flex-1 flex-col gap-2 h-full"
         >
           <ShowCaseCard title={"Savings Rate"}>
-            <SavingsRate/>
+            <SavingsRate
+              selectedYear={selectedYear}
+              selectedMonth={selectedMonth}
+            />
           </ShowCaseCard>
 
           {/* <ShowCaseCard title={"Top 3 Expense Categories"}>

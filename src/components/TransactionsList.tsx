@@ -9,7 +9,7 @@ import { useTheme } from "next-themes";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
 import { useTransactionContext } from "@/contexts/transactions-context";
-import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions";
+import { cleanNumber, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -21,12 +21,6 @@ type TransactionsListProps = {
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedId: React.Dispatch<React.SetStateAction<string>>
-}
-
-type Details = {
-  id: string,
-  category: string,
-  amount: string
 }
 
 const TransactionsList = ({
@@ -41,7 +35,7 @@ const TransactionsList = ({
   setSelectedId
 }: TransactionsListProps) => {
 
-  const { currentYear, currentMonth, isMockData } = useTransactionContext()
+  const { isMockData } = useTransactionContext()
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
@@ -49,11 +43,11 @@ const TransactionsList = ({
   useEffect(() => {
     if (!transactions || Object.keys(transactions).length === 0) return
 
-    if (transactions[currentYear]) {
-      setSelectedYear(currentYear)
+    if (transactions[selectedYear]) {
+      setSelectedYear(selectedYear)
 
-      if (transactions[currentYear][currentMonth]) {
-        setSelectedMonth(currentMonth)
+      if (transactions[selectedYear][selectedMonth]) {
+        setSelectedMonth(selectedMonth)
       } else {
         setSelectedMonth("")
       }

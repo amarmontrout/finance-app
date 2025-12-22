@@ -1,6 +1,7 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSES, INCOME } from "@/globals/globals"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { 
   Dialog, 
@@ -32,6 +33,8 @@ const EditTransactionDetailDialog = (props: {
   transactions: TransactionData
   categories: string[]
   currentTheme: string | undefined
+  selectedYear: string
+  selectedMonth: string
 }) => {
 
   const {
@@ -41,7 +44,9 @@ const EditTransactionDetailDialog = (props: {
     selectedId,
     transactions,
     categories,
-    currentTheme
+    currentTheme,
+    selectedYear,
+    selectedMonth
   } = props
 
   const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
@@ -51,12 +56,10 @@ const EditTransactionDetailDialog = (props: {
   }
 
   const {
-    selectedYear,
-    selectedMonth,
     refreshIncomeTransactions,
     refreshExpenseTransactions,
   } =useTransactionContext()
-
+ 
   const [updateTransaction, setUpdateTransaction] = useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
 
   useEffect(() => {

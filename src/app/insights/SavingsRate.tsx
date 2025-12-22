@@ -9,10 +9,16 @@ import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
-const SavingsRate = () => {
+const SavingsRate = (props: {
+  selectedYear: string
+  selectedMonth: string
+}) => {
   const {
-    selectedMonth,
     selectedYear,
+    selectedMonth
+  } = props
+
+  const {
     incomeTransactions,
     expenseTransactions
   } = useTransactionContext()

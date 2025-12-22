@@ -111,20 +111,28 @@ const Insights = () => {
       <hr style={{width: "100%"}}/>
       
       <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
+        className="flex flex-col 2xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Net Cash Flow"} secondaryTitle={""}>
-          <NetCashFlow/>
-        </ShowCaseCard>
+        <Box
+          className="flex flex-1 min-w-0"
+        >
+          <ShowCaseCard title={"Net Cash Flow"} secondaryTitle={""}>
+            <NetCashFlow/>
+          </ShowCaseCard>
+        </Box>
 
-        <ShowCaseCard title={"Savings Rate"} secondaryTitle={""}>
-          <SavingsRate/>
-        </ShowCaseCard>
+        <Box
+          className="flex flex-1 flex-col gap-2 h-full"
+        >
+          <ShowCaseCard title={"Savings Rate"} secondaryTitle={""}>
+            <SavingsRate/>
+          </ShowCaseCard>
+
+          {/* <ShowCaseCard title={"Top 3 Expense Categories"} secondaryTitle={""}>
+            {"% of total expenses, change from previous month, small bar chart or cards"}
+          </ShowCaseCard>          */}
+        </Box>
       </Box>
-
-      {/* <ShowCaseCard title={"Top 3 Expense Categories"} secondaryTitle={""}>
-        {"% of total expenses, change from previous month, small bar chart or cards"}
-      </ShowCaseCard>         */}
     </Box>
   )
 }

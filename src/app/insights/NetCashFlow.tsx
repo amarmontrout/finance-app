@@ -96,7 +96,7 @@ const NetCashFlow = () => {
   
   return (
     <Box
-      className="flex flex-col gap-2 h-full"
+      className="flex flex-col gap-4 h-full"
     >  
       <LineChart
         twoColumnData={lineChartData}
@@ -105,10 +105,8 @@ const NetCashFlow = () => {
         height={"400px"}
       />
 
-      <hr style={{width: "100%"}}/>
-
       <Box
-        className="flex flex-row gap-2 h-full"
+        className="flex flex-row gap-2"
       >
         <Box
           className="flex flex-col gap-2 h-full"
@@ -127,7 +125,7 @@ const NetCashFlow = () => {
         </Box>
 
         <Box
-          className="flex flex-col gap-2 h-full"
+          className="flex flex-col gap-2"
           border={`2px solid ${annualNetIncomeColor}`} 
           borderRadius={"10px"} 
           padding={"15px"} 
@@ -142,7 +140,6 @@ const NetCashFlow = () => {
           <Typography variant="h3" color={annualNetIncomeColor}>${totalAnnualNetCashFlow}</Typography>
         </Box>        
       </Box>
-
     </Box>
   )
 }

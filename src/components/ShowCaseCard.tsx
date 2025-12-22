@@ -9,7 +9,8 @@ const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.Rea
         display: "flex",
         flexDirection: "column",
         borderRadius: "15px",
-        minHeight: 0
+        minHeight: 0,
+        minWidth: 0
       }}
     >
       <CardContent

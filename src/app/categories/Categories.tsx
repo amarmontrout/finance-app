@@ -7,8 +7,8 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { MONTHS } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
 import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
-import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { flattenTransactions, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
+import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 
 const Categories = () => {
@@ -44,6 +44,7 @@ const Categories = () => {
       flattenedIncomeData)
     ,[flattenedIncomeData, selectedYear]
   )
+
   const annualExpenseCategoryTotals = useMemo(
     () => getAnnualCategoryTotals(
       selectedYear, 
@@ -59,13 +60,27 @@ const Categories = () => {
     ,[selectedYear, selectedMonth, flattenedIncomeData]
   )
 
-    const monthExpenseCategoryTotals = useMemo(
+  const monthExpenseCategoryTotals = useMemo(
     () => getMonthCategoryTotals(
       selectedYear, 
       selectedMonth, 
       flattenedExpenseData)
     ,[selectedYear, selectedMonth, flattenedExpenseData]
   )
+
+  const topThreeExpenses = useMemo(() => {
+    if (view !== "month") return []
+
+    if (!monthExpenseCategoryTotals || monthExpenseCategoryTotals.length <= 1) {
+      return []
+    }
+
+    return monthExpenseCategoryTotals
+      .slice(1)
+      .sort((a, b) => Number(b[1]) - Number(a[1]))
+      .slice(0, 3)
+  }, [monthExpenseCategoryTotals, view])
+
 
   return (
     <Box
@@ -160,19 +175,36 @@ const Categories = () => {
       
       {view === "month" &&
         <Box
-          className="flex flex-col xl:flex-row gap-2 h-full"
+          className="flex flex-col gap-2 h-full"
         >
-          <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Categories`}>
-            <PieChart
-              data={monthIncomeCategoryTotals}
-            />
+          <ShowCaseCard title="Top 3 Expense Categories">
+            <ul className="flex flex-col mt-[10px] gap-1">
+              {topThreeExpenses.map(([category, amount]) => (
+                <li
+                  key={category}
+                  className="flex items-center"
+                >
+                  <Typography variant="h6">{`${category} $${formattedStringNumber(Number(amount))}`}</Typography>
+                </li>
+              ))}
+            </ul>
           </ShowCaseCard>
 
-          <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Categories`}>
-            <PieChart
-              data={monthExpenseCategoryTotals}
-            />
-          </ShowCaseCard>
+          <Box
+            className="flex flex-col xl:flex-row gap-2 h-full"
+          >
+            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Categories`}>
+              <PieChart
+                data={monthIncomeCategoryTotals}
+              />
+            </ShowCaseCard>
+
+            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Categories`}>
+              <PieChart
+                data={monthExpenseCategoryTotals}
+              />
+            </ShowCaseCard>
+          </Box>
         </Box>
       }
     </Box>

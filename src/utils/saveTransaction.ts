@@ -1,6 +1,6 @@
 import { TransactionType } from "@/components/TransactionForm"
 import { MONTHS } from "@/globals/globals"
-import makeId from "./makeId"
+import { makeId } from "./helperFunctions"
 
 export type TransactionData = {[year: string]: {[month: string]: Array<{id: string, category: string, amount: string}>}}
 

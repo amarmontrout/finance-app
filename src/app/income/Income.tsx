@@ -11,6 +11,7 @@ import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
+import { getMonthTotal } from "@/utils/getTotals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
@@ -24,7 +25,6 @@ const Income = () => {
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,
-    getMonthIncomeTotal,
     incomeCategories
   } = useTransactionContext()
 
@@ -35,7 +35,7 @@ const Income = () => {
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
   const [hasChoices, setHasChoices] = useState<boolean>(false)
   
-  const monthTotal = getMonthIncomeTotal()
+  const monthTotal = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
   const theme = useTheme()
   const currentTheme = theme.theme
     

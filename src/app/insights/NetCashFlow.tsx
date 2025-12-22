@@ -5,7 +5,8 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
-import { getMonthTotal, getNetCashFlow } from "@/utils/getTotals"
+import { getNetCashFlow } from "@/utils/financialFunctions"
+import { getMonthTotal } from "@/utils/getTotals"
 import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -15,16 +16,14 @@ const NetCashFlow = () => {
   const {
     incomeTransactions,
     expenseTransactions,
-    getMonthIncomeTotal,
-    getMonthExpenseTotal,
     selectedYear,
     selectedMonth
   } = useTransactionContext()
 
   // Gets income total for selected month
-  const income = getMonthIncomeTotal()
+  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
   // Gets expense total for selected month
-  const expense = getMonthExpenseTotal()
+  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
   // Gets net cash flow for selected month
   const netIncome = getNetCashFlow(income, expense)
   const netIncomeNumber = cleanNumber(netIncome)

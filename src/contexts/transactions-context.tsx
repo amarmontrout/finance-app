@@ -1,7 +1,6 @@
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, MONTHS, YEARS_KEY } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import getChoices from "@/utils/getChoices"
-import { getMonthTotal } from "@/utils/getTotals"
 import getTransactions from "@/utils/getTransactions"
 import { TransactionData } from "@/utils/saveTransaction"
 import { createContext, useContext, useEffect, useState } from "react"
@@ -17,8 +16,6 @@ type TransactionsContextType = {
   setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
   currentYear: string
   currentMonth: string
-  getMonthExpenseTotal: () => string
-  getMonthIncomeTotal: () => string
   isMockData: boolean
   refreshYearChoices: () => void
   years: string[]
@@ -99,27 +96,6 @@ export const TransactionProvider = (props: {
     }
   }
 
-  const getMonthExpenseTotal = () => {
-    if (selectedMonth !== "" && expenseTransactions) {
-      const total = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
-      if (!total || selectedMonth === "") return "0"
-      return total
-    }
-
-    return "0"
-  }
-
-  const getMonthIncomeTotal = () => {
-    if (selectedMonth !== "" && incomeTransactions) {
-      const total = getMonthTotal( selectedYear, selectedMonth, incomeTransactions)
-      
-      if (!total || selectedMonth === "") return "0"
-      return total
-    }
-
-    return "0"
-  }
-
   return (
     <TransactionContext.Provider value={{
       incomeTransactions,
@@ -132,8 +108,6 @@ export const TransactionProvider = (props: {
       setSelectedMonth,
       currentYear,
       currentMonth,
-      getMonthExpenseTotal,
-      getMonthIncomeTotal,
       isMockData,
       years,
       incomeCategories,

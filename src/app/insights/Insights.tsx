@@ -3,7 +3,7 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { MONTHS } from "@/globals/globals"
-import { Alert, Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 import { useEffect } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"

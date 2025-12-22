@@ -23,3 +23,19 @@ export const formattedStringNumber = (num: number) => {
       maximumFractionDigits: 2,
   })
 }
+
+/**
+ * This helper function creates a random string id.
+ * 
+ * @param length
+ * @returns A randomized string of given length.
+ */
+export const makeId = (length: number) => {
+    let result = ""
+    const characters = "0123456789"
+    const charLength = characters.length
+    for (var i = 0; i < length; i++) {
+        result += characters.charAt(Math.floor(Math.random() * charLength))
+    }
+    return result
+}

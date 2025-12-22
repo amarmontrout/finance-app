@@ -2,7 +2,8 @@
 
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { getSavingRate, getYearTotal } from "@/utils/getTotals"
+import { getSavingRate } from "@/utils/financialFunctions"
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -12,14 +13,12 @@ const SavingsRate = () => {
   const {
     selectedMonth,
     selectedYear,
-    getMonthIncomeTotal,
-    getMonthExpenseTotal,
     incomeTransactions,
     expenseTransactions
   } = useTransactionContext()
 
-  const income = getMonthIncomeTotal()
-  const expense = getMonthExpenseTotal()
+  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
+  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
   const savingsRate = getSavingRate(income, expense)
   const savingsRateNumber = cleanNumber(savingsRate)
 

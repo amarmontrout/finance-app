@@ -15,6 +15,7 @@ import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartDat
 import getChoices from "@/utils/getChoices"
 import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
+import { getMonthTotal } from "@/utils/getTotals"
 
 const Expenses = () => {
   const { 
@@ -24,7 +25,6 @@ const Expenses = () => {
     setSelectedYear,
     selectedMonth,
     setSelectedMonth,
-    getMonthExpenseTotal,
     expenseCategories
   } = useTransactionContext()
 
@@ -35,7 +35,7 @@ const Expenses = () => {
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
   const [hasChoices, setHasChoices] = useState<boolean>(false)
 
-  const monthTotal = getMonthExpenseTotal()
+  const monthTotal = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
   const theme = useTheme()
   const currentTheme = theme.theme
 

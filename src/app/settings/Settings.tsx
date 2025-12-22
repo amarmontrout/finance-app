@@ -7,15 +7,13 @@ import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_
 import { loadData } from "@/utils/loadData"
 import saveChoices from "@/utils/saveChoices"
 import { saveData } from "@/utils/saveData"
-import { Box, Button, Stack } from "@mui/material"
+import { Box, Button, Dialog, DialogActions, DialogContent, Stack } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
+import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { useTheme } from "next-themes"
 
 const Settings = () => {
-  const [yearsInput, setYearsInput] = useState<string>("")
-  const [incomeCategoriesInput, setIncomeCategoriesInput] = useState<string>("")
-  const [expenseCategoriesInput, setExpenseCategoriesInput] = useState<string>("")
-
   const {
     refreshYearChoices,
     refreshIncomeCategoryChoices,
@@ -25,13 +23,24 @@ const Settings = () => {
     expenseCategories,
   } = useTransactionContext()
 
+  const [yearsInput, setYearsInput] = useState<string>("")
+  const [incomeCategoriesInput, setIncomeCategoriesInput] = useState<string>("")
+  const [expenseCategoriesInput, setExpenseCategoriesInput] = useState<string>("")
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+
+  const theme = useTheme()
+  const currentTheme = theme.theme
+
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <Stack direction={"row"} gap={3} width={"fit-content"}>
+      <Stack direction={"row"} gap={1} width={"fit-content"}>
         <Button 
           variant="contained"
+          sx={{
+            backgroundColor: accentColorSecondary
+          }}
           onClick={
             () => {
               saveData({keys: [
@@ -47,22 +56,17 @@ const Settings = () => {
             Download Data
         </Button>
 
-        <input
-          type="file"
-          accept=".txt"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (!file) return;
-            loadData(file)
-              .then(() => {
-                console.log("Data restored");
-                window.location.reload(); // optional, but practical
-              })
-              .catch((err) => {
-                console.error("Failed to load backup", err);
-              });
+        <Button 
+          variant="contained"
+          sx={{
+            backgroundColor: accentColorSecondary
           }}
-        />
+          onClick={
+            () => {setDialogOpen(true)}
+          }
+        >
+            Upload Data
+        </Button>
       </Stack>
 
       <Box
@@ -146,6 +150,45 @@ const Settings = () => {
           />
         </ShowCaseCard>      
       </Box>
+
+      <Dialog open={dialogOpen}>
+        <DialogContent 
+          sx={{
+            backgroundColor: currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg,
+          }}
+        >
+          <input
+            type="file"
+            accept=".txt"
+            onChange={(e) => {
+              const file = e.target.files?.[0]
+              if (!file) return
+              loadData(file)
+                .then(() => {
+                  console.log("Data restored")
+                  window.location.reload()
+                })
+                .catch((err) => {
+                  console.error("Failed to load backup", err)
+                })
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button 
+            variant="contained"
+            sx={{
+              backgroundColor: currentTheme === "light" ? lightMode.error : darkMode.error
+            }}
+            onClick={
+              () => {setDialogOpen(false)}
+            }
+          >
+              Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>      
     </Box>
   )
 }

@@ -114,7 +114,7 @@ const NetCashFlow = () => {
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
-          width={"fit-content"}
+          width={"100%"}
           alignItems={"center"}
         >
           <Typography color={monthNetIncomeColor}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
@@ -130,7 +130,7 @@ const NetCashFlow = () => {
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
-          width={"fit-content"}
+          width={"100%"}
           alignItems={"center"}
         >
           <Typography color={annualNetIncomeColor}>{`Total Net Cash Flow for ${selectedYear}`}</Typography>

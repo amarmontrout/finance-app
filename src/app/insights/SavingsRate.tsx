@@ -46,35 +46,41 @@ const SavingsRate = () => {
 
   return (
      <Box
-      className="flex flex-row gap-2 h-full"
+      className="flex flex-col gap-3 h-full"
       marginTop={"10px"}
     >
-      <Box 
-        className="flex flex-col gap-2 h-full"
-        border={`2px solid ${monthNetIncomeColor}`}
-        borderRadius={"10px"} 
-        padding={"15px"} 
-        margin={"0 auto"} 
-        width={"fit-content"}
-        alignItems={"center"}
-      >
-        <Typography color={monthNetIncomeColor}>{`Savings Rate for ${selectedMonth} ${selectedYear}`}</Typography>
-        <hr style={{ width: "100%", borderColor: monthNetIncomeColor}}/>
-        <Typography variant="h3" color={monthNetIncomeColor}>{savingsRate}%</Typography>
-      </Box>
+      <Typography variant="h6">A 20% savings rate is suggested</Typography>
 
       <Box
-        className="flex flex-col gap-2 h-full"
-        border={`2px solid ${annualSavingsRateColor}`} 
-        borderRadius={"10px"} 
-        padding={"15px"} 
-        margin={"0 auto"} 
-        width={"fit-content"}
-        alignItems={"center"}
+        className="flex flex-row gap-2 h-full"
       >
-        <Typography color={annualSavingsRateColor}>{`Total Savings Rate for ${selectedYear}`}</Typography>
-        <hr style={{ width: "100%", borderColor: annualSavingsRateColor}}/>
-        <Typography variant="h3" color={annualSavingsRateColor}>{totalAnnualSavingsRate}%</Typography>
+        <Box 
+          className="flex flex-col gap-2 h-full"
+          border={`2px solid ${monthNetIncomeColor}`}
+          borderRadius={"10px"} 
+          padding={"15px"} 
+          margin={"0 auto"} 
+          width={"100%"}
+          alignItems={"center"}
+        >
+          <Typography color={monthNetIncomeColor}>{`Savings Rate for ${selectedMonth} ${selectedYear}`}</Typography>
+          <hr style={{ width: "100%", borderColor: monthNetIncomeColor}}/>
+          <Typography variant="h3" color={monthNetIncomeColor}>{savingsRate}%</Typography>
+        </Box>
+
+        <Box
+          className="flex flex-col gap-2 h-full"
+          border={`2px solid ${annualSavingsRateColor}`} 
+          borderRadius={"10px"} 
+          padding={"15px"} 
+          margin={"0 auto"} 
+          width={"100%"}
+          alignItems={"center"}
+        >
+          <Typography color={annualSavingsRateColor}>{`Total Savings Rate for ${selectedYear}`}</Typography>
+          <hr style={{ width: "100%", borderColor: annualSavingsRateColor}}/>
+          <Typography variant="h3" color={annualSavingsRateColor}>{totalAnnualSavingsRate}%</Typography>
+        </Box>
       </Box>
     </Box>
   )

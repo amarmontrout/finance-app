@@ -116,7 +116,7 @@ const Insights = () => {
         <Box
           className="flex flex-1 min-w-0"
         >
-          <ShowCaseCard title={"Net Cash Flow"} secondaryTitle={""}>
+          <ShowCaseCard title={"Net Cash Flow"}>
             <NetCashFlow/>
           </ShowCaseCard>
         </Box>
@@ -124,11 +124,11 @@ const Insights = () => {
         <Box
           className="flex flex-1 flex-col gap-2 h-full"
         >
-          <ShowCaseCard title={"Savings Rate"} secondaryTitle={""}>
+          <ShowCaseCard title={"Savings Rate"}>
             <SavingsRate/>
           </ShowCaseCard>
 
-          {/* <ShowCaseCard title={"Top 3 Expense Categories"} secondaryTitle={""}>
+          {/* <ShowCaseCard title={"Top 3 Expense Categories"}>
             {"% of total expenses, change from previous month, small bar chart or cards"}
           </ShowCaseCard>          */}
         </Box>

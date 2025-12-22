@@ -68,7 +68,7 @@ const Settings = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Add Year"} secondaryTitle={""}>
+        <ShowCaseCard title={"Add Year"}>
           <SimpleForm
             label={"Year"}
             value={yearsInput}
@@ -94,7 +94,7 @@ const Settings = () => {
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Add Income Category"} secondaryTitle={""}>
+        <ShowCaseCard title={"Add Income Category"}>
           <SimpleForm
             label={"Income Category"}
             value={incomeCategoriesInput}
@@ -120,7 +120,7 @@ const Settings = () => {
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={"Add Expense Category"} secondaryTitle={""}>
+        <ShowCaseCard title={"Add Expense Category"}>
           <SimpleForm
             label={"Expense Category"}
             value={expenseCategoriesInput}

@@ -9,7 +9,7 @@ const Page = () => {
       <Box
         className="flex flex-col gap-2 h-full"
       >
-        <ShowCaseCard title={"Categories"} secondaryTitle={""}>
+        <ShowCaseCard title={"Categories"}>
           In progress...
         </ShowCaseCard>
       </Box>

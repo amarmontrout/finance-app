@@ -78,7 +78,7 @@ const Income = () => {
       </Box>
 
       <Box display={hasChoices? "flex" : "none"}>
-        <ShowCaseCard title={"Add Income"} secondaryTitle={""}>
+        <ShowCaseCard title={"Add Income"}>
           <TransactionForm
             categories={incomeCategories}
             type={INCOME}
@@ -104,7 +104,7 @@ const Income = () => {
           />
         </ShowCaseCard>
         
-        <ShowCaseCard title={"Income Chart"} secondaryTitle={""}>
+        <ShowCaseCard title={"Income Chart"}>
           <LineChart
             multiColumnData={lineChartData}
             title={"Income"}

@@ -1,6 +1,6 @@
 import { Box, Card, CardContent, Stack, Typography } from "@mui/material"
 
-const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.ReactNode, title: string, secondaryTitle: string }) => {
+const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.ReactNode, title: string, secondaryTitle?: string }) => {
   return (
     <Card
       style={{

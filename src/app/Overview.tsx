@@ -113,7 +113,7 @@ const Overview = () => {
 
       <hr style={{width: "100%"}}/>
 
-      <ShowCaseCard title={`${selectedYear} Income and Expense Overview`} secondaryTitle={""}>
+      <ShowCaseCard title={`${selectedYear} Income and Expense Overview`}>
         <LineChart
           multiColumnData={lineChartData}
           title={`Income and Expenses for ${selectedYear}`}
@@ -129,13 +129,13 @@ const Overview = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={`${selectedYear} Income Categories`} secondaryTitle={""}>
+        <ShowCaseCard title={`${selectedYear} Income Categories`}>
           <PieChart
             data={incomeCategoryTotals}
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={`${selectedYear} Expense Categories`} secondaryTitle={""}>
+        <ShowCaseCard title={`${selectedYear} Expense Categories`}>
           <PieChart
             data={expenseCategoryTotals}
           />

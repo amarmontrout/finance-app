@@ -25,7 +25,12 @@ const Expenses = () => {
     expenseCategories
   } = useTransactionContext()
 
+  useEffect(() => {
+    refreshExpenseTransactions()
+  }, [])
+  
   const pathname = usePathname()
+  const { theme: currentTheme } = useTheme()
 
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
@@ -33,13 +38,17 @@ const Expenses = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
-  const [hasChoices, setHasChoices] = useState<boolean>(false)
+
+  const hasChoices = useMemo(() => {
+    return (
+      getChoices({ key: YEARS_KEY }).length !== 0 &&
+      getChoices({ key: EXPENSE_CATEGORIES_KEY }).length !== 0
+    )
+  }, [])
 
   const monthTotal = useMemo(() => {
     return getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
   }, [selectedYear, selectedMonth, expenseTransactions])
-  
-  const { theme: currentTheme } = useTheme()
 
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
@@ -49,29 +58,23 @@ const Expenses = () => {
     }) ?? []
   }, [expenseTransactions])
 
-  useEffect(() => {
-    refreshExpenseTransactions()
-
-    const hasData = getChoices({key: YEARS_KEY}).length !== 0
-      && getChoices({key: EXPENSE_CATEGORIES_KEY}).length !== 0
-    setHasChoices(hasData)
-  }, [])
-
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >
       <MockDataWarning pathname={pathname}/>
 
-      <Box display={hasChoices? "flex" : "none"}>
-        <ShowCaseCard title={"Add Expense"}>
-          <TransactionForm
-            categories={expenseCategories}
-            type={EXPENSES}
-            refreshTransactions={refreshExpenseTransactions}
-          />
-        </ShowCaseCard>
-      </Box>
+      {hasChoices &&
+        <Box display={hasChoices? "flex" : "none"}>
+          <ShowCaseCard title={"Add Expense"}>
+            <TransactionForm
+              categories={expenseCategories}
+              type={EXPENSES}
+              refreshTransactions={refreshExpenseTransactions}
+            />
+          </ShowCaseCard>
+        </Box>
+      }
 
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"

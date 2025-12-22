@@ -12,7 +12,7 @@ import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
 import { getMonthTotal } from "@/utils/getTotals"
-import { getCurrentDateInfo } from "@/utils/helperFunctions"
+import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
@@ -25,7 +25,12 @@ const Income = () => {
     incomeCategories
   } = useTransactionContext()
 
+  useEffect(() => {
+    refreshIncomeTransactions()
+  }, [])
+
   const pathname = usePathname()
+  const { theme: currentTheme } = useTheme()
 
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
@@ -33,13 +38,17 @@ const Income = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
-  const [hasChoices, setHasChoices] = useState<boolean>(false)
+
+  const hasChoices = useMemo(() => {
+    return (
+      getChoices({ key: YEARS_KEY }).length !== 0 &&
+      getChoices({ key: INCOME_CATEGORIES_KEY }).length !== 0
+    )
+  }, [])
   
   const monthTotal = useMemo(() => {
     return getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
   }, [selectedYear, selectedMonth, incomeTransactions])
-
-  const { theme: currentTheme } = useTheme()
 
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
@@ -48,14 +57,6 @@ const Income = () => {
       method: "self"
     }) ?? []
   }, [incomeTransactions])
-  
-  useEffect(() => {
-    refreshIncomeTransactions()
-
-    const hasData = getChoices({key: YEARS_KEY}).length !== 0
-      && getChoices({key: INCOME_CATEGORIES_KEY}).length !== 0
-    setHasChoices(hasData)
-  }, [])
 
   return (
     <Box
@@ -63,15 +64,17 @@ const Income = () => {
     >
       <MockDataWarning pathname={pathname}/>
 
-      <Box display={hasChoices? "flex" : "none"}>
-        <ShowCaseCard title={"Add Income"}>
-          <TransactionForm
-            categories={incomeCategories}
-            type={INCOME}
-            refreshTransactions={refreshIncomeTransactions}
-          />
-        </ShowCaseCard>
-      </Box>
+      {hasChoices &&
+        <Box>
+          <ShowCaseCard title={"Add Income"}>
+            <TransactionForm
+              categories={incomeCategories}
+              type={INCOME}
+              refreshTransactions={refreshIncomeTransactions}
+            />
+          </ShowCaseCard>
+        </Box>
+      }
 
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"

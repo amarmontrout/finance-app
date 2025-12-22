@@ -1,4 +1,5 @@
 import { MONTHS } from "@/globals/globals"
+import { TransactionData } from "./saveTransaction"
 
 /**
  * This helper function gets the current year and month.
@@ -52,4 +53,40 @@ export const makeId = (length: number) => {
         result += characters.charAt(Math.floor(Math.random() * charLength))
     }
     return result
+}
+
+export type FlatTransaction = {
+  id: string
+  year: string
+  month: string
+  category: string
+  amount: string
+}
+
+/**
+ * This helper function makes the TransactionData more manageable.
+ * 
+ * @param data
+ * @returns An array for better manipulation of TransactionData
+ */
+export const flattenTransactions = (
+  data: TransactionData
+): FlatTransaction[] => {
+  const result: FlatTransaction[] = []
+
+  for (const year in data) {
+    for (const month in data[year]) {
+      for (const tx of data[year][month]) {
+        result.push({
+          id: tx.id,
+          year,
+          month,
+          category: tx.category,
+          amount: tx.amount
+        })
+      }
+    }
+  }
+
+  return result
 }

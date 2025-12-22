@@ -5,7 +5,7 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { mockYears } from "@/globals/mockData"
+import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getCategoryTotals } from "@/utils/getTotals"
 import { Alert, Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
@@ -39,18 +39,19 @@ const Overview = () => {
   }, [selectedYear])
 
   useEffect(() => {
-    if (!selectedYear || !incomeTransactions) return
-    const incomeCategoryTotal = getCategoryTotals(selectedYear, incomeTransactions)
-    const expenseCategoryTotal = getCategoryTotals(selectedYear, expenseTransactions)
+    const incomeCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockIncomeData : incomeTransactions)
+    const expenseCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockExpenseData : expenseTransactions)
+
     if (!incomeCategoryTotal || !expenseCategoryTotal) return
+    
     setIncomeCategoryTotals(incomeCategoryTotal)
     setExpenseCategoryTotals(expenseCategoryTotal)
-  }, [incomeTransactions])
+  }, [incomeTransactions, expenseTransactions, selectedYear])
 
   const buildCompareChartData = () => {
     const chartData = buildMultiColumnData({
-      firstData: incomeTransactions,
-      secondData: expenseTransactions,
+      firstData: isMockData ? mockIncomeData : incomeTransactions,
+      secondData: isMockData ? mockExpenseData : expenseTransactions,
       selectedYear: selectedYear,
       firstColumnTitle: "Month",
       method: "compare"
@@ -62,12 +63,8 @@ const Overview = () => {
   }
     
   useEffect(() => {
-    const hasIncomeData = incomeTransactions && Object.keys(incomeTransactions).length > 0
-    const hasExpenseData = expenseTransactions && Object.keys(expenseTransactions).length > 0
-    if (hasIncomeData && hasExpenseData) {
-      buildCompareChartData()
-    }
-  }, [incomeTransactions, expenseTransactions])
+    buildCompareChartData()
+  }, [incomeTransactions, expenseTransactions, selectedYear])
 
   return (
     <Box

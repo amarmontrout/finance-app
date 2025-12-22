@@ -2,6 +2,7 @@
 
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
+import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
 import TransactionsList from "@/components/TransactionsList"
@@ -10,8 +11,9 @@ import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
-import { Alert, Box } from "@mui/material"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 
 const Income = () => {
@@ -25,6 +27,8 @@ const Income = () => {
     getMonthIncomeTotal,
     incomeCategories
   } = useTransactionContext()
+
+  const pathname = usePathname()
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
@@ -64,18 +68,7 @@ const Income = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <Box
-        sx={{
-          display: !hasChoices? "flex" : "none",
-          height: "100%",
-          alignItems: "center"
-        }}
-      >
-        <Alert severity="error" sx={{width: "100%"}}>
-          This contains mock data. 
-          Go to settings and add a year and/or an income category. Then come back here to enter your first income transaction.
-        </Alert>
-      </Box>
+      <MockDataWarning pathname={pathname}/>
 
       <Box display={hasChoices? "flex" : "none"}>
         <ShowCaseCard title={"Add Income"}>

@@ -5,7 +5,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, YEARS_KEY } from "@/globals/globals"
-import { Alert, Box } from "@mui/material"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -13,6 +13,8 @@ import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialo
 import TransactionForm from "@/components/TransactionForm"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import getChoices from "@/utils/getChoices"
+import MockDataWarning from "@/components/MockDataWarning"
+import { usePathname } from "next/navigation"
 
 const Expenses = () => {
   const { 
@@ -25,6 +27,8 @@ const Expenses = () => {
     getMonthExpenseTotal,
     expenseCategories
   } = useTransactionContext()
+
+  const pathname = usePathname()
 
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<string>("")
@@ -60,22 +64,15 @@ const Expenses = () => {
     buildExpenseChartData()
   }, [expenseTransactions])
 
+  useEffect(() => {
+    console.log(pathname)
+  }, [pathname])
+
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <Box
-        sx={{
-          display: !hasChoices? "flex" : "none",
-          height: "100%",
-          alignItems: "center"
-        }}
-      >
-        <Alert severity="error" sx={{width: "100%"}}>
-          This contains mock data. 
-          Go to settings and add a year and/or an expense category. Then come back here to enter your first expense transaction.
-        </Alert>
-      </Box>
+      <MockDataWarning pathname={pathname}/>
 
       <Box display={hasChoices? "flex" : "none"}>
         <ShowCaseCard title={"Add Expense"}>

@@ -8,6 +8,7 @@ import { useEffect } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
 import { mockYears } from "@/globals/mockData"
+import MockDataWarning from "@/components/MockDataWarning"
 
 const Insights = () => {
   const { 
@@ -34,18 +35,7 @@ const Insights = () => {
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <Box
-        sx={{
-          display: isMockData? "flex" : "none",
-          height: "100%",
-          alignItems: "center"
-        }}
-      >
-        <Alert severity="error" sx={{width: "100%"}}>
-          This contains mock data for demonstrations purposes.
-          Add your first income and expense transactions to start tracking your finances.
-        </Alert>
-      </Box>
+      <MockDataWarning/>
 
       <Box
         className="flex flex-row gap-2 h-full"

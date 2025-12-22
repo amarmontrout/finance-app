@@ -1,4 +1,4 @@
-import { cleanNumber, formattedStringNumber } from "./helperFunctions"
+import { FlatTransaction, formattedStringNumber } from "./helperFunctions"
 import { TransactionData } from "./saveTransaction"
 
 export const getYearTotal = (year: string, transactions: TransactionData) => {
@@ -31,21 +31,46 @@ export const getMonthTotal = (year: string, month: string, transactions: Transac
   return formattedStringNumber(total)
 }
 
-export const getCategoryTotals = (
+export const getAnnualCategoryTotals = (
   year: string,
-  transactions: TransactionData
+  transactions: FlatTransaction[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
 
-  if (!transactions[year]) {
+  if (!transactions) {
     return [["Category", "Total"]]
   }
 
-  Object.values(transactions[year]).forEach((monthTransactions) => {
-    monthTransactions.forEach(({ category, amount }) => {
-      categoryTotals[category] =
-        (categoryTotals[category] ?? 0) + Number(amount)
-    })
+  transactions.map((entry) => {
+    if (entry.year === year) {
+      categoryTotals[entry.category] = 
+      (categoryTotals[entry.category] ?? 0) + Number(entry.amount)
+    }
+  })
+
+  const pieChartData: [string, string | number][] = [["Category", "Total"]]
+
+  Object.entries(categoryTotals).forEach(([category, total]) => {
+    pieChartData.push([category, Number(total.toFixed(2))])
+  })
+
+  return pieChartData
+}
+
+export const getMonthCategoryTotals = (
+  year: string, 
+  month: string, 
+  transactions: FlatTransaction[]
+): [string, string | number][] => {
+  const categoryTotals: Record<string, number> = {}
+
+  if (!transactions) return [["Category", "Total"]]
+
+  transactions.map((entry) => {
+    if (entry.year === year && entry.month === month) {
+      categoryTotals[entry.category] = 
+      (categoryTotals[entry.category] ?? 0) + Number(entry.amount)
+    }
   })
 
   const pieChartData: [string, string | number][] = [["Category", "Total"]]

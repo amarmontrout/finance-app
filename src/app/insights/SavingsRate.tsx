@@ -53,7 +53,7 @@ const SavingsRate = (props: {
       className="flex flex-col gap-3 h-full"
       marginTop={"10px"}
     >
-      <Typography variant="h6">A 20% savings rate is suggested</Typography>
+      <Typography variant="h6">A savings rate of over 20% is considered excellent.</Typography>
 
       <Box
         className="flex flex-row gap-2 h-full"

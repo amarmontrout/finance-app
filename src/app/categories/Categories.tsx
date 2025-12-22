@@ -4,11 +4,12 @@ import MockDataWarning from "@/components/MockDataWarning"
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
+import { MONTHS } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
-import { getCategoryTotals } from "@/utils/getTotals"
-import { getCurrentDateInfo } from "@/utils/helperFunctions"
+import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
+import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 const Categories = () => {
   const { 
@@ -20,24 +21,51 @@ const Categories = () => {
     isMockData,
   } = useTransactionContext()
 
-  const { currentYear } = getCurrentDateInfo()
+  const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
-  const [incomeCategoryTotals, setIncomeCategoryTotals] = useState<[string, string | number][]>([])
-  const [expenseCategoryTotals, setExpenseCategoryTotals] = useState<[string, string | number][]>([])
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
+  const [view, setView] = useState<"annual" | "month">("month")
 
   useEffect(() => {
     refreshIncomeTransactions()
     refreshExpenseTransactions()
   }, [selectedYear])
 
-  useEffect(() => {
-    const incomeCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockIncomeData : incomeTransactions)
-    const expenseCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockExpenseData : expenseTransactions)
-    if (!incomeCategoryTotal || !expenseCategoryTotal) return
-    setIncomeCategoryTotals(incomeCategoryTotal)
-    setExpenseCategoryTotals(expenseCategoryTotal)
-  }, [incomeTransactions, expenseTransactions, selectedYear])
+  const incomeSource = isMockData ? mockIncomeData : incomeTransactions
+  const expenseSource = isMockData ? mockExpenseData : expenseTransactions
+
+  const flattenedIncomeData = useMemo(() => flattenTransactions(incomeSource),[incomeSource])
+  const flattenedExpenseData = useMemo(() => flattenTransactions(expenseSource),[expenseSource])
+
+  const annualIncomeCategoryTotals = useMemo(
+    () => getAnnualCategoryTotals(
+      selectedYear, 
+      flattenedIncomeData)
+    ,[flattenedIncomeData, selectedYear]
+  )
+  const annualExpenseCategoryTotals = useMemo(
+    () => getAnnualCategoryTotals(
+      selectedYear, 
+      flattenedExpenseData)
+    ,[flattenedExpenseData, selectedYear]
+  )
+
+  const monthIncomeCategoryTotals = useMemo(
+    () => getMonthCategoryTotals(
+      selectedYear, 
+      selectedMonth, 
+      flattenedIncomeData)
+    ,[selectedYear, selectedMonth, flattenedIncomeData]
+  )
+
+    const monthExpenseCategoryTotals = useMemo(
+    () => getMonthCategoryTotals(
+      selectedYear, 
+      selectedMonth, 
+      flattenedExpenseData)
+    ,[selectedYear, selectedMonth, flattenedExpenseData]
+  )
 
   return (
     <Box
@@ -51,6 +79,22 @@ const Categories = () => {
         paddingTop={"10px"}
       >
         <FormControl>
+          <InputLabel>View</InputLabel>
+          <Select
+            label="View"
+            value={view}
+            name={"view"}
+            onChange={e => setView(e.target.value)}
+            sx={{
+              width: "175px"
+            }}
+          >
+            <MenuItem key={"annual"} value={"annual"}>By Year</MenuItem>
+            <MenuItem key={"month"} value={"month"}>By Month</MenuItem>
+          </Select>
+        </FormControl>
+
+        <FormControl>
           <InputLabel>Year</InputLabel>
           <Select
             label="Year"
@@ -63,33 +107,74 @@ const Categories = () => {
           >
             { isMockData ?
               mockYears.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
+                return <MenuItem key={year} value={year}>{year}</MenuItem>
               })
               : years.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
+                return <MenuItem key={year} value={year}>{year}</MenuItem>
               })
             }
           </Select>
         </FormControl>
+
+        {view === "month" &&
+          <FormControl>
+            <InputLabel>Month</InputLabel>
+            <Select
+              label="Month"
+              value={selectedMonth}
+              name={"month"}
+              onChange={e => setSelectedMonth(e.target.value)}
+              sx={{
+                width: "175px"
+              }}
+            >
+              {
+              MONTHS.map((month) => {
+                  return <MenuItem key={month} value={month}>{month}</MenuItem>
+                })
+              }
+            </Select>
+          </FormControl>
+        }
       </Box>
 
       <hr style={{width: "100%"}}/>
 
-      <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
-      >
-        <ShowCaseCard title={`${selectedYear} Income Categories`}>
-          <PieChart
-            data={incomeCategoryTotals}
-          />
-        </ShowCaseCard>
+      {view === "annual" &&
+        <Box
+          className="flex flex-col xl:flex-row gap-2 h-full"
+        >
+          <ShowCaseCard title={`${selectedYear} Income Categories`}>
+            <PieChart
+              data={annualIncomeCategoryTotals}
+            />
+          </ShowCaseCard>
 
-        <ShowCaseCard title={`${selectedYear} Expense Categories`}>
-          <PieChart
-            data={expenseCategoryTotals}
-          />
-        </ShowCaseCard>
-      </Box>
+          <ShowCaseCard title={`${selectedYear} Expense Categories`}>
+            <PieChart
+              data={annualExpenseCategoryTotals}
+            />
+          </ShowCaseCard>
+        </Box>
+      }
+      
+      {view === "month" &&
+        <Box
+          className="flex flex-col xl:flex-row gap-2 h-full"
+        >
+          <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Categories`}>
+            <PieChart
+              data={monthIncomeCategoryTotals}
+            />
+          </ShowCaseCard>
+
+          <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Categories`}>
+            <PieChart
+              data={monthExpenseCategoryTotals}
+            />
+          </ShowCaseCard>
+        </Box>
+      }
     </Box>
   )
 }

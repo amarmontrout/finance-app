@@ -1,54 +1,40 @@
 "use client"
 
-import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
+import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { darkMode, lightMode } from "@/globals/colors"
 import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
-import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
+import { getCategoryTotals } from "@/utils/getTotals"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
-import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
-const Overview = () => {
-  const today = new Date()
-  const currentYear = today.getFullYear()
-
+const Categories = () => {
   const { 
     incomeTransactions, 
+    refreshIncomeTransactions,
     expenseTransactions, 
-    refreshIncomeTransactions, 
     refreshExpenseTransactions,
     years,
-    isMockData
+    currentYear,
+    isMockData,
   } = useTransactionContext()
-  
-  const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
-  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
-  const theme = useTheme()
-  const currentTheme = theme.theme
+  const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
+  const [incomeCategoryTotals, setIncomeCategoryTotals] = useState<[string, string | number][]>([])
+  const [expenseCategoryTotals, setExpenseCategoryTotals] = useState<[string, string | number][]>([])
 
   useEffect(() => {
     refreshIncomeTransactions()
     refreshExpenseTransactions()
   }, [selectedYear])
 
-  const buildCompareChartData = () => {
-    const chartData = buildMultiColumnData({
-      firstData: isMockData ? mockIncomeData : incomeTransactions,
-      secondData: isMockData ? mockExpenseData : expenseTransactions,
-      selectedYear: selectedYear,
-      firstColumnTitle: "Month",
-      method: "compare"
-    })
-    if (!chartData) return
-    setLineChartData(chartData)
-  }
-    
   useEffect(() => {
-    buildCompareChartData()
+    const incomeCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockIncomeData : incomeTransactions)
+    const expenseCategoryTotal = getCategoryTotals(selectedYear, isMockData ? mockExpenseData : expenseTransactions)
+    if (!incomeCategoryTotal || !expenseCategoryTotal) return
+    setIncomeCategoryTotals(incomeCategoryTotal)
+    setExpenseCategoryTotals(expenseCategoryTotal)
   }, [incomeTransactions, expenseTransactions, selectedYear])
 
   return (
@@ -87,20 +73,23 @@ const Overview = () => {
 
       <hr style={{width: "100%"}}/>
 
-      <ShowCaseCard title={`${selectedYear} Income and Expense Overview`}>
-        <LineChart
-          multiColumnData={lineChartData}
-          title={`Income and Expenses for ${selectedYear}`}
-          lineColors={
-            currentTheme === "light" 
-            ? [lightMode.success, lightMode.error] 
-            : [darkMode.success, darkMode.error]
-          }
-          height="400px"
-        />        
-      </ShowCaseCard>
+      <Box
+        className="flex flex-col xl:flex-row gap-2 h-full"
+      >
+        <ShowCaseCard title={`${selectedYear} Income Categories`}>
+          <PieChart
+            data={incomeCategoryTotals}
+          />
+        </ShowCaseCard>
+
+        <ShowCaseCard title={`${selectedYear} Expense Categories`}>
+          <PieChart
+            data={expenseCategoryTotals}
+          />
+        </ShowCaseCard>
+      </Box>
     </Box>
   )
 }
 
-export default Overview
+export default Categories

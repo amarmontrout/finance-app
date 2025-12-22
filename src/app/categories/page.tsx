@@ -1,18 +1,12 @@
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { Box } from "@mui/material"
+import Categories from "./Categories"
 
 const Page = () => {
   return (
     <Box
       width={"100%"}
     >
-      <Box
-        className="flex flex-col gap-2 h-full"
-      >
-        <ShowCaseCard title={"Categories"}>
-          In progress...
-        </ShowCaseCard>
-      </Box>
+      <Categories/>
     </Box>
   )
 }

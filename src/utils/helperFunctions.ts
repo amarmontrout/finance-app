@@ -26,6 +26,14 @@ export const cleanNumber = (str: string) => {
 }
 
 /**
+ * This helper function removes commas from a string.
+ * 
+ * @param value 
+ * @returns A string without the commas
+ */
+export const removeCommas = (value: string) => value.replace(/,/g, "")
+
+/**
  * This helper function converts a number to a formatted string.
  * It adds commas.
  * 

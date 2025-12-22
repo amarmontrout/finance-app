@@ -1,13 +1,13 @@
 "use client"
 
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { darkMode, lightMode } from "@/globals/colors"
+import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { getSavingRate } from "@/utils/financialFunctions"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 const SavingsRate = (props: {
   selectedYear: string
@@ -23,30 +23,30 @@ const SavingsRate = (props: {
     expenseTransactions
   } = useTransactionContext()
 
-  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
-  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
-  const savingsRate = getSavingRate(income, expense)
+  const { theme: currentTheme } = useTheme()
+
+  const income = useMemo(() => getMonthTotal(selectedYear, selectedMonth, incomeTransactions), [selectedYear, selectedMonth, incomeTransactions])
+  const expense = useMemo(() => getMonthTotal(selectedYear, selectedMonth, expenseTransactions), [selectedYear, selectedMonth, expenseTransactions])
+  const savingsRate = useMemo(() => getSavingRate(income, expense), [income, expense])
   const savingsRateNumber = cleanNumber(savingsRate)
 
-  const [totalAnnualSavingsRate, setTotalAnnualSavingsRate] = useState<string>("")
-  const totalAnnualSavingsRateNumber = cleanNumber(totalAnnualSavingsRate)
+  const annualIncome = useMemo(() => getYearTotal(selectedYear, incomeTransactions), [selectedYear, incomeTransactions])
+  const annualExpense = useMemo(() => getYearTotal(selectedYear, expenseTransactions), [selectedYear, expenseTransactions])
+  const annualSavingsRate = useMemo(() => getSavingRate(annualIncome, annualExpense), [annualIncome, annualExpense])
+  const annualSavingsRateNumber = cleanNumber(annualSavingsRate)
 
-  const { theme: currentTheme } = useTheme()
-  const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
-  const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
-  const monthNetIncomeColor = savingsRateNumber > 0 ? positiveNet : negativeNet
-  const annualSavingsRateColor = totalAnnualSavingsRateNumber > 0 ? positiveNet : negativeNet
-
-  const getAnnualSavingsRate = () => {
-    const incomeYearTotal = getYearTotal(selectedYear, incomeTransactions)
-    const expenseYearTotal = getYearTotal(selectedYear, expenseTransactions)
-    const annualSavingsRate = getSavingRate(incomeYearTotal, expenseYearTotal)
-    setTotalAnnualSavingsRate(annualSavingsRate)
+  const getHealthState = (rate: number) => {
+    if (rate <= 0) return "mayday"
+    if (rate < 5) return "improvement"
+    if (rate < 20) return "good"
+    return "excellent"
   }
 
-  useEffect(() => {
-    getAnnualSavingsRate()
-  }, [savingsRate])
+  const monthState = getHealthState(savingsRateNumber)
+  const annualState = getHealthState(annualSavingsRateNumber)
+
+  const monthResult = currentTheme === "light" ? healthStateLightMode[monthState] : healthStateDarkMode[monthState]
+  const annualResult = currentTheme === "light" ? healthStateLightMode[annualState] : healthStateDarkMode[annualState]
 
   return (
      <Box
@@ -60,30 +60,36 @@ const SavingsRate = (props: {
       >
         <Box 
           className="flex flex-col gap-2 h-full"
-          border={`2px solid ${monthNetIncomeColor}`}
+          border={`2px solid ${monthResult.border}`}
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
           width={"100%"}
           alignItems={"center"}
+          sx={{
+            backgroundColor: monthResult.background
+          }}
         >
-          <Typography color={monthNetIncomeColor}>{`Savings Rate for ${selectedMonth} ${selectedYear}`}</Typography>
-          <hr style={{ width: "100%", borderColor: monthNetIncomeColor}}/>
-          <Typography variant="h3" color={monthNetIncomeColor}>{savingsRate}%</Typography>
+          <Typography color={monthResult.textIcon}>{`Savings Rate for ${selectedMonth} ${selectedYear}`}</Typography>
+          <hr style={{ width: "100%", borderColor: monthResult.border}}/>
+          <Typography variant="h3" color={monthResult.textIcon}>{savingsRate}%</Typography>
         </Box>
 
         <Box
           className="flex flex-col gap-2 h-full"
-          border={`2px solid ${annualSavingsRateColor}`} 
+          border={`2px solid ${annualResult.border}`} 
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
           width={"100%"}
           alignItems={"center"}
+          sx={{
+            backgroundColor: annualResult.background
+          }}
         >
-          <Typography color={annualSavingsRateColor}>{`Total Savings Rate for ${selectedYear}`}</Typography>
-          <hr style={{ width: "100%", borderColor: annualSavingsRateColor}}/>
-          <Typography variant="h3" color={annualSavingsRateColor}>{totalAnnualSavingsRate}%</Typography>
+          <Typography color={annualResult.textIcon}>{`Total Savings Rate for ${selectedYear}`}</Typography>
+          <hr style={{ width: "100%", borderColor: annualResult.border}}/>
+          <Typography variant="h3" color={annualResult.textIcon}>{annualSavingsRate}%</Typography>
         </Box>
       </Box>
     </Box>

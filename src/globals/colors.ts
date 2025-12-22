@@ -92,3 +92,49 @@ export enum darkMode {
     graph2 = "#94A3B8", 
     graph3 = "#475569", 
 }
+
+export const healthStateLightMode = {
+    mayday: {
+        background: "#FDECEC",
+        textIcon: "#B42318",
+        border: "#F04438", 
+    },
+    improvement: {
+        background: "#FFF7ED",
+        textIcon: "#9A3412",
+        border: "#F97316",
+    },
+    good: {
+        background: "#ECFDF3",
+        textIcon : "#027A48",
+        border: "#12B76A",
+    },
+    excellent: {
+        background: "#F0F9FF",
+        textIcon: "#075985",
+        border: "#0284C7"        
+    }
+} as const
+
+export const healthStateDarkMode = {
+    mayday: {
+        background: "#3A0F0F",
+        textIcon: "#FCA5A5",
+        border: "#EF4444",
+    },
+    improvement: {
+        background: "#3A1F0B",
+        textIcon: "#FDBA74",
+        border: "#FB923C",
+    },
+    good: { 
+        background: "#06281B",
+        textIcon : "#6EE7B7",
+        border: "#34D399",
+    },
+    excellent: {
+        background: "#041C2C",
+        textIcon: "#7DD3FC",
+        border: "#38BDF8"
+    }
+} as const

@@ -2,15 +2,15 @@
 
 import LineChart from "@/components/LineChart"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { accentColorSecondary, healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getMonthTotal } from "@/utils/getTotals"
-import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
+import { cleanNumber, formattedStringNumber, removeCommas } from "@/utils/helperFunctions"
 import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useMemo } from "react"
 
 const NetCashFlow = (props: {
   selectedYear: string
@@ -26,77 +26,54 @@ const NetCashFlow = (props: {
     expenseTransactions
   } = useTransactionContext()
 
-  // Gets income total for selected month
-  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
-  // Gets expense total for selected month
-  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
-  // Gets net cash flow for selected month
-  const netIncome = getNetCashFlow(income, expense)
-  const netIncomeNumber = cleanNumber(netIncome)
-
-  const [annualNetCashFlow, setAnnualNetCashFlow] = useState<[string, string][]>([])
-  const [totalAnnualNetCashFlow, setTotalAnnualNetCashFlow] = useState<string>("")
-  const totalAnnualNetCashFlowNumber = cleanNumber(totalAnnualNetCashFlow)
-  const [lineChartData, setLineChartData] = useState<TwoColumnDataType>([])
-
   const { theme: currentTheme } = useTheme()
-  const positiveNet = currentTheme === "light" ? lightMode.success : darkMode.success
-  const negativeNet = currentTheme === "light" ? lightMode.error : darkMode.error
-  const monthNetIncomeColor = netIncomeNumber > 0 ? positiveNet : negativeNet
-  const annualNetIncomeColor = totalAnnualNetCashFlowNumber > 0 ? positiveNet : negativeNet
 
-  const getAnnualNetCashFlow = () => {
-    const incomeExpenseTotals: Record<string, [string, string]> = {}
-    const totalNetCashFlow: [string, string][] = []
+  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
+  const annualIncome = getYearTotal(selectedYear, incomeTransactions)
+  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
+  const netIncome = getNetCashFlow(income, expense)
 
-    const removeCommas = (value: string): string =>
-      value.replace(/,/g, "")
-
-
-    MONTHS.map((month) => {
+  const annualNet: [string, string][] = useMemo(() => {
+    return MONTHS.map(month => {
       const incomeTotal = getMonthTotal(selectedYear, month, incomeTransactions)
       const expenseTotal = getMonthTotal(selectedYear, month, expenseTransactions)
-      incomeExpenseTotals[month] = [incomeTotal, expenseTotal]
+      const net = getNetCashFlow(incomeTotal, expenseTotal)
+      return [month, removeCommas(net)]
     })
+  }, [selectedYear, incomeTransactions, expenseTransactions])
 
-    Object.entries(incomeExpenseTotals).forEach(([month, array]) => {
-      const netCashflow = getNetCashFlow(array[0], array[1])
-      totalNetCashFlow.push([month, removeCommas(netCashflow)])
-    })
+  const annualNetIncome = useMemo(() => {
+    return formattedStringNumber(
+      annualNet.reduce((acc, [, amount]) => acc + Number(amount), 0)
+    )
+  }, [annualNet])
 
-    setAnnualNetCashFlow(totalNetCashFlow)
+  const getHealthColor = (net: number, total: number) => {
+    const percent = total === 0 ? -1 : net / total
+    if (percent < 0) return "mayday"
+    if (percent < 0.05) return "improvement"
+    if (percent < 0.2) return "good"
+    return "excellent"
   }
 
-  const getTotalAnnualNetCashflow = () => {
-    let total = 0
-    annualNetCashFlow.forEach(([month, amount]) => {
-      total += Number(amount)
-    })
-    setTotalAnnualNetCashFlow(formattedStringNumber(total))
-  }
+  const monthState = getHealthColor(cleanNumber(netIncome), cleanNumber(income))
+  const annualState = getHealthColor(Number(annualNetIncome.replace(/,/g, '')), cleanNumber(annualIncome))
 
-  const buildNetCashFlowChartData = () => {
-    const chartData = buildTwoColumnData({
-      data: annualNetCashFlow, 
-      firstColumnTitle: "Month", 
+  const monthResult = currentTheme === "light"
+    ? healthStateLightMode[monthState]
+    : healthStateDarkMode[monthState]
+
+  const annualResult = currentTheme === "light"
+    ? healthStateLightMode[annualState]
+    : healthStateDarkMode[annualState]
+
+  const lineChartData: TwoColumnDataType = useMemo(() => {
+    return buildTwoColumnData({
+      data: annualNet,
+      firstColumnTitle: "Month",
       secondColumnTitle: "Net Cash Flow"
-    })
-
-    if (!chartData) return
-
-    setLineChartData(chartData)
-  }
-
-  useEffect(() => {
-    if (!selectedYear) return
-
-    getAnnualNetCashFlow()
-  }, [selectedYear])
-
-  useEffect(() => {
-    buildNetCashFlowChartData()
-    getTotalAnnualNetCashflow()
-  }, [annualNetCashFlow])
+    }) || []
+  }, [annualNet])
   
   return (
     <Box
@@ -113,34 +90,40 @@ const NetCashFlow = (props: {
       >
         <Box
           className="flex flex-col gap-2 h-full"
-          border={`2px solid ${monthNetIncomeColor}`} 
+          border={`2px solid ${monthResult.border}`} 
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
           width={"100%"}
           alignItems={"center"}
+          sx={{
+            backgroundColor: monthResult.background
+          }}
         >
-          <Typography color={monthNetIncomeColor}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
+          <Typography color={monthResult.textIcon}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
 
-          <hr style={{ width: "100%", borderColor: monthNetIncomeColor}}/>
+          <hr style={{ width: "100%", borderColor: monthResult.border}}/>
 
-          <Typography variant="h3" color={monthNetIncomeColor}>${netIncome}</Typography>
+          <Typography variant="h3" color={monthResult.textIcon}>${netIncome}</Typography>
         </Box>
 
         <Box
           className="flex flex-col gap-2"
-          border={`2px solid ${annualNetIncomeColor}`} 
+          border={`2px solid ${annualResult.border}`} 
           borderRadius={"10px"} 
           padding={"15px"} 
           margin={"0 auto"} 
           width={"100%"}
           alignItems={"center"}
+          sx={{
+            backgroundColor: annualResult.background
+          }}
         >
-          <Typography color={annualNetIncomeColor}>{`Total Net Cash Flow for ${selectedYear}`}</Typography>
+          <Typography color={annualResult.textIcon}>{`Total Net Cash Flow for ${selectedYear}`}</Typography>
 
-          <hr style={{ width: "100%", borderColor: annualNetIncomeColor}}/>
+          <hr style={{ width: "100%", borderColor: annualResult.border}}/>
 
-          <Typography variant="h3" color={annualNetIncomeColor}>${totalAnnualNetCashFlow}</Typography>
+          <Typography variant="h3" color={annualResult.textIcon}>${annualNetIncome}</Typography>
         </Box>        
       </Box>
     </Box>

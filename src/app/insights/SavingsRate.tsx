@@ -51,7 +51,6 @@ const SavingsRate = (props: {
   return (
      <Box
       className="flex flex-col gap-3 h-full"
-      marginTop={"10px"}
     >
       <Typography variant="h6">A savings rate of over 20% is considered excellent.</Typography>
 

@@ -43,7 +43,7 @@ const ShowCaseCard = ({ children, title, secondaryTitle }: { children: React.Rea
 
         <hr style={{ width: "100%" }}/>
 
-        <Box>
+        <Box paddingTop={"10px"}>
           {children}
         </Box>
       </CardContent>

@@ -31,7 +31,6 @@ const PieChart = (props: {
   return (
     <Box
       // This box makes the rounded corners for the chart
-      marginTop={"10px"}
       overflow={"hidden"}
       borderRadius={"10px"}
     >

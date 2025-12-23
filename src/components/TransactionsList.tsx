@@ -259,7 +259,7 @@ const TransactionsList = ({
     >
       <YearList/>
       <Box 
-        className="flex flex-row gap-2 w-full pt-0 md:w-[70%]"
+        className="flex flex-row gap-2 w-full md:w-[70%]"
       >
         <MonthList/>
         <DetailsList/>        

@@ -178,13 +178,21 @@ const Categories = () => {
           className="flex flex-col gap-2 h-full"
         >
           <ShowCaseCard title="Top 3 Expense Categories">
-            <ul className="flex flex-col mt-[10px] gap-1">
+            <Typography>
+              {`${selectedMonth} ${selectedYear}`}
+            </Typography>
+            <ul 
+              className="flex flex-col gap-1"
+              style={{
+                alignItems: "center"
+              }}
+            >
               {topThreeExpenses.map(([category, amount]) => (
                 <li
                   key={category}
                   className="flex items-center"
                 >
-                  <Typography variant="h6">{`${category} $${formattedStringNumber(Number(amount))}`}</Typography>
+                  <Typography variant="h6">{`${category} -  $${formattedStringNumber(Number(amount))}`}</Typography>
                 </li>
               ))}
             </ul>

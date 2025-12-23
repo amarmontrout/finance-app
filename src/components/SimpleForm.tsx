@@ -18,7 +18,7 @@ const SimpleForm = (props: {
 
   return (
     <Box
-      className="flex flex-col gap-2 mt-5 mb-5"
+      className="flex flex-col gap-2 mt-1 mb-3"
     >
       <FormControl>
         <InputLabel>{label}</InputLabel>

@@ -17,3 +17,13 @@ export const getSavingRate = (income: string, expense: string) => {
 export const getAnnualProjection = (ytdTotal: number, ytdMonths: number) => {
   return formattedStringNumber((ytdTotal/ytdMonths)*12)
 }
+
+export const getAverage = (data: number[]): number => {
+  let total = 0
+
+  data.map((amount) => {
+    total += amount
+  })
+
+  return total/12
+}

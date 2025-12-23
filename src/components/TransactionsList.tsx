@@ -1,16 +1,16 @@
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box, useMediaQuery } from "@mui/material"
 import { useState, useEffect } from "react"
-import DeleteIcon from '@mui/icons-material/Delete';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
-import { useTheme } from "next-themes";
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
-import { useTransactionContext } from "@/contexts/transactions-context";
-import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions";
+import DeleteIcon from '@mui/icons-material/Delete'
+import CancelIcon from '@mui/icons-material/Cancel'
+import EditIcon from '@mui/icons-material/Edit'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors"
+import { useTheme } from "next-themes"
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
+import { useTransactionContext } from "@/contexts/transactions-context"
+import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -60,25 +60,32 @@ const TransactionsList = ({
 
   const handleDeleteTransaction = (passedYear: string, passedMonth: string, passedId: string) => {
     const updated = structuredClone(transactions)
-    
+
     if (updated[passedYear] && updated[passedYear][passedMonth]) {
       updated[passedYear][passedMonth] = updated[passedYear][passedMonth].filter(
         (transaction) => transaction.id !== passedId
       )
 
+      // Remove month if empty
       if (updated[passedYear][passedMonth].length === 0) {
-        delete updated[passedYear][passedMonth];
+        delete updated[passedYear][passedMonth]
       }
 
+      // Remove year if empty
       if (Object.keys(updated[passedYear]).length === 0) {
-        delete updated[passedYear];
+        delete updated[passedYear]
       }
 
-      console.log("Updated:", updated);
-      saveTransaction({key: type, updatedTransactionData: updated})
+      // Check if the **entire object is empty**
+      if (Object.keys(updated).length === 0) {
+        localStorage.removeItem(type) // fully clean
+      } else {
+        saveTransaction({ key: type, updatedTransactionData: updated })
+      }
+
       refreshTransactions()
     } else {
-      console.warn("Year or month not found in records.");
+      console.warn("Year or month not found in records.")
     }
   }
 
@@ -146,7 +153,7 @@ const TransactionsList = ({
   }
 
   const YearList = () => {
-    const isMdUp = useMediaQuery("(min-width: 768px)");
+    const isMdUp = useMediaQuery("(min-width: 768px)")
 
     return (
       <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">

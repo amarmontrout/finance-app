@@ -36,7 +36,7 @@ const Insights = () => {
       <MockDataWarning/>
 
       <Box
-        className="flex flex-row gap-2 h-full"
+        className="flex flex-col sm:flex-row gap-3 h-full"
         width={"fit-content"}
         paddingTop={"10px"}
       >

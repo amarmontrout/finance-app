@@ -86,7 +86,7 @@ const NetCashFlow = (props: {
       />
 
       <Box
-        className="flex flex-row gap-2"
+        className="flex flex-col sm:flex-row gap-3"
       >
         <Box
           className="flex flex-col gap-2 h-full"

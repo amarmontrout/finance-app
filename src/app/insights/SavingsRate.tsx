@@ -56,7 +56,7 @@ const SavingsRate = (props: {
       <Typography variant="h6">A savings rate of over 20% is considered excellent.</Typography>
 
       <Box
-        className="flex flex-row gap-2 h-full"
+        className="flex flex-col sm:flex-row  gap-3"
       >
         <Box 
           className="flex flex-col gap-2 h-full"

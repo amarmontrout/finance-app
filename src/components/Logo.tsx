@@ -12,7 +12,7 @@ const Logo = () => {
       borderRadius={"15px"} 
       width={"fit-content"} 
       height={"fit-content"} 
-      padding={"15px 25px 15px 25px"}
+      padding={"10px 20px 10px 20px"}
     >
       <PaidIcon fontSize={"large"} />
       <SavingsIcon fontSize={"large"} />

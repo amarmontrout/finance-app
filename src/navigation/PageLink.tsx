@@ -30,12 +30,9 @@ const PageLink = (props: {item: PageLinkType, active?: boolean}) => {
       >
         <item.icon 
           fontSize="large"
-          sx={{
-            marginLeft: "2px"
-          }}
         />
         <Typography 
-          className="hidden lg:flex" 
+          className="hidden md:flex" 
           variant={"h6"}
         >
           {item.name}

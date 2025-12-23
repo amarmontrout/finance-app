@@ -8,24 +8,27 @@ const Header = () => {
   return (
     <Stack
       direction={"row"}
-      height={"80px"}
+      height={"100%"}
       justifyContent={"space-between"}
     >
       <Box
-        minWidth={"165px"}
+        minWidth={"fit-content"}
         alignContent={"center"}
-        marginLeft={"50px"}
-        marginRight={"25px"}
+        marginLeft={"1.5rem"}
+        marginRight={"5px"}
       >
-        <Typography variant="h4" color={"white"}>
-          My Budget
+        <Typography
+          variant="h5" 
+          color={"white"}
+        >
+          Finance Tracker
         </Typography>
       </Box>
 
       <Box
         alignContent={"center"}
-        marginLeft={"25px"}
-        marginRight={"50px"}
+        marginLeft={"5px"}
+        marginRight={"1.5rem"}
       >
         <ThemeToggle />
       </Box>

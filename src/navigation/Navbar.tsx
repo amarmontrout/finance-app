@@ -16,9 +16,9 @@ const Navbar = () => {
     <Stack height={"100%"} width={"100%"}>
       <Box>
         <Box
-          className="hidden lg:flex"
+          className="hidden md:flex"
           bgcolor={"background.default"} 
-          minHeight={"80px"} 
+          minHeight={"70px"} 
           height={"100%"}
           width={"100%"}
           justifyContent={"center"} 
@@ -28,9 +28,9 @@ const Navbar = () => {
         </Box>
 
         <Box
-          className="flex lg:hidden"
+          className="flex md:hidden"
           bgcolor={"background.default"} 
-          minHeight={"80px"} 
+          minHeight={"70px"} 
           height={"100%"}
           width={"100%"}
           justifyContent={"center"} 
@@ -43,7 +43,7 @@ const Navbar = () => {
       </Box>
 
       <Stack
-        className="p-[10px] lg:p-[30px]"
+        className="p-[.75rem] md:p-[1.25rem]"
         direction={"column"}
         height={"100%"}
         gap={1}
@@ -53,7 +53,7 @@ const Navbar = () => {
         }}
       >
         <Typography 
-          className="hidden lg:flex" 
+          className="hidden md:flex" 
           variant={"h5"}
         >
           Quick Info
@@ -67,7 +67,7 @@ const Navbar = () => {
         <hr style={{ width: "100%" }} />
 
         <Typography 
-          className="hidden lg:flex" 
+          className="hidden md:flex" 
           variant={"h5"}
         >
           Transactions

@@ -1,44 +1,60 @@
 "use client"
 
+import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { darkMode, lightMode } from "@/globals/colors"
-import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
+import { darkMode, healthStateDarkMode, healthStateLightMode, lightMode } from "@/globals/colors"
+import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { getNetCashFlow } from "@/utils/financialFunctions"
+import { getMonthTotal } from "@/utils/getTotals"
+import { cleanNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 const Overview = () => {
-  const today = new Date()
-  const currentYear = today.getFullYear()
+  const { currentMonth, currentYear} = getCurrentDateInfo()
 
   const { 
     incomeTransactions, 
     expenseTransactions, 
     refreshIncomeTransactions, 
     refreshExpenseTransactions,
-    years,
     isMockData
   } = useTransactionContext()
   
-  const [selectedYear, setSelectedYear] = useState<string>(String(currentYear))
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
   const { theme: currentTheme } = useTheme()
 
+  const income = getMonthTotal(currentYear, currentMonth, incomeTransactions)
+  const expense = getMonthTotal(currentYear, currentMonth, expenseTransactions)
+  const netIncome = getNetCashFlow(income, expense)
+  const getHealthColor = (net: number, total: number) => {
+    const percent = total === 0 ? -1 : net / total
+    if (percent < 0) return "mayday"
+    if (percent < 0.05) return "improvement"
+    if (percent < 0.2) return "good"
+    return "excellent"
+  }
+  const monthState = getHealthColor(cleanNumber(netIncome), cleanNumber(income))
+  const monthResult = currentTheme === "light"
+    ? healthStateLightMode[monthState]
+    : healthStateDarkMode[monthState]
+
   useEffect(() => {
     refreshIncomeTransactions()
     refreshExpenseTransactions()
-  }, [selectedYear])
+  }, [])
 
   const buildCompareChartData = () => {
     const chartData = buildMultiColumnData({
       firstData: isMockData ? mockIncomeData : incomeTransactions,
       secondData: isMockData ? mockExpenseData : expenseTransactions,
-      selectedYear: selectedYear,
+      selectedYear: currentYear,
       firstColumnTitle: "Month",
       method: "compare"
     })
@@ -48,54 +64,33 @@ const Overview = () => {
     
   useEffect(() => {
     buildCompareChartData()
-  }, [incomeTransactions, expenseTransactions, selectedYear])
+  }, [incomeTransactions, expenseTransactions])
 
   return (
     <Box
-      className="flex flex-col gap-2 h-full"
+      className="flex flex-col gap-2"
     >
       <MockDataWarning/>
 
-      <Box
-        className="flex flex-row gap-2 h-full"
-        width={"fit-content"}
-        paddingTop={"10px"}
-      >
-        <FormControl>
-          <InputLabel>Year</InputLabel>
-          <Select
-            label="Year"
-            value={selectedYear}
-            name={"year"}
-            onChange={e => setSelectedYear(e.target.value)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            { isMockData ?
-              mockYears.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
-              })
-              : years.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
-              })
-            }
-          </Select>
-        </FormControl>
-      </Box>
-
-      <hr style={{width: "100%"}}/>
-
-      <ShowCaseCard title={`${selectedYear} Income and Expense Overview`}>
+      <ShowCaseCard title={`${currentYear} Overview`}>
         <LineChart
           multiColumnData={lineChartData}
-          title={`Income and Expenses for ${selectedYear}`}
+          title={``}
           lineColors={
             currentTheme === "light" 
             ? [lightMode.success, lightMode.error] 
             : [darkMode.success, darkMode.error]
           }
         />        
+      </ShowCaseCard>
+
+      <ShowCaseCard title={`Net Cash Flow for ${currentMonth}`}>
+          <ColoredInfoCard
+            resultColors={monthResult}
+            selectedMonth={currentMonth}
+            selectedYear={currentYear}
+            data={`$${netIncome}`}
+          />
       </ShowCaseCard>
     </Box>
   )

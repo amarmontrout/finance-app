@@ -1,5 +1,6 @@
 "use client"
 
+import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { accentColorSecondary, healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
@@ -88,83 +89,19 @@ const NetCashFlow = (props: {
       <Box
         className="flex flex-col sm:flex-row gap-3"
       >
-        <Box
-          className="flex flex-col gap-2 h-full"
-          border={`2px solid ${monthResult.border}`} 
-          borderRadius={"10px"} 
-          padding={"15px"} 
-          margin={"0 auto"} 
-          width={"100%"}
-          alignItems={"center"}
-          sx={{
-            backgroundColor: monthResult.background
-          }}
-        >
-          <Typography 
-            color={monthResult.textIcon}
-            sx={{
-              fontSize: {
-                xs: ".75rem",
-                md: "1rem"
-              }
-            }}
-          >
-            {`Net Cash Flow for ${selectedMonth} ${selectedYear}`}
-          </Typography>
+        <ColoredInfoCard
+          resultColors={monthResult}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          data={`$${netIncome}`}
+        />
 
-          <hr style={{ width: "100%", borderColor: monthResult.border}}/>
-
-          <Typography 
-            color={monthResult.textIcon}
-            sx={{
-              fontSize: {
-                xs: "2rem",
-                md: "3rem"
-              }
-            }}
-          >
-            ${netIncome}
-          </Typography>
-        </Box>
-
-        <Box
-          className="flex flex-col gap-2"
-          border={`2px solid ${annualResult.border}`} 
-          borderRadius={"10px"} 
-          padding={"15px"} 
-          margin={"0 auto"} 
-          width={"100%"}
-          alignItems={"center"}
-          sx={{
-            backgroundColor: annualResult.background
-          }}
-        >
-          <Typography 
-            color={annualResult.textIcon}
-            sx={{
-              fontSize: {
-                xs: ".75rem",
-                md: "1rem"
-              }
-            }}
-          >
-            {`Total Net Cash Flow for ${selectedYear}`}
-          </Typography>
-
-          <hr style={{ width: "100%", borderColor: annualResult.border}}/>
-
-          <Typography 
-            color={annualResult.textIcon}
-            sx={{
-              fontSize: {
-                xs: "2rem",
-                md: "3rem"
-              }
-            }}            
-          >
-            ${annualNetIncome}
-          </Typography>
-        </Box>        
+        <ColoredInfoCard
+          resultColors={annualResult}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          data={`$${annualNetIncome}`}
+        />      
       </Box>
     </Box>
   )

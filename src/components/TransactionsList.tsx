@@ -146,8 +146,8 @@ const TransactionsList = ({
 
   const YearList = () => {
     return (
-      <Box width={"25%"}>
-        <List className="flex flex-col gap-2">
+      <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">
+        <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
           { transactions &&
             Object.entries(transactions).map(([year, _]) => {
               const yearTotal = getYearTotal(year, transactions)
@@ -161,7 +161,8 @@ const TransactionsList = ({
                   }} 
                   sx={{ 
                     backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
-                    borderRadius: "10px"
+                    borderRadius: "10px",
+                    minWidth: "fit-content"
                   }}
                 >
                   <ListItemText primary={year} secondary={`$${yearTotal}`}/>
@@ -178,7 +179,7 @@ const TransactionsList = ({
 
   const MonthList = () => {
     return (
-      <Box width={"25%"}>
+      <Box className="flex-[2]">
         <List className="flex flex-col gap-2">
           { transactions[selectedYear] &&
             Object.entries(transactions[selectedYear]).map(([month, _]) => {
@@ -190,7 +191,8 @@ const TransactionsList = ({
                   onClick={() => {setSelectedMonth(month)}}
                   sx={{ 
                     backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
-                    borderRadius: "10px"
+                    borderRadius: "10px",
+                    minWidth: "fit-content"
                   }}
                 >
                   <ListItemText primary={month} secondary={`$${monthTotal}`}/>
@@ -207,7 +209,7 @@ const TransactionsList = ({
 
   const DetailsList = () => {
     return (
-      <Box width={"50%"}>
+      <Box className="flex-[3]">
         <List className="flex flex-col gap-2">
           { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
             transactions[selectedYear]?.[selectedMonth]?.map((details) => {
@@ -221,7 +223,8 @@ const TransactionsList = ({
                   }
                   sx={{
                     backgroundColor: listItemColor,
-                    borderRadius: "10px"
+                    borderRadius: "10px",
+                    minWidth: "fit-content"
                   }}
                 >
                   <ListItemText 
@@ -238,11 +241,17 @@ const TransactionsList = ({
   }
 
   return (
-    <Stack  direction={"row"} width={"100%"} gap={.5}>
+    <Box
+      className="flex flex-col md:flex-row sm:gap-2"
+    >
       <YearList/>
-      <MonthList/>
-      <DetailsList/>
-    </Stack>
+      <Box 
+        className="flex flex-row gap-2 w-full pt-0 md:w-[70%]"
+      >
+        <MonthList/>
+        <DetailsList/>        
+      </Box>
+    </Box>
   )
 }
 

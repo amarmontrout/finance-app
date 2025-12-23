@@ -81,7 +81,7 @@ const Income = () => {
       >
         <ShowCaseCard 
           title={`Income for ${selectedMonth} ${selectedYear}`} 
-          secondaryTitle={`Total $${monthTotal}`}
+          secondaryTitle={`$${monthTotal}`}
         >
           <TransactionsList
             type={INCOME}

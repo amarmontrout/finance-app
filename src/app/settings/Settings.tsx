@@ -158,7 +158,7 @@ const Settings = () => {
         >
           <input
             type="file"
-            accept=".txt"
+            accept=".json,application/json"
             onChange={(e) => {
               const file = e.target.files?.[0]
               if (!file) return

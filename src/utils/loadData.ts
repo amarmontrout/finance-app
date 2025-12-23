@@ -1,31 +1,30 @@
-export const loadData = (
-  file: File
-): Promise<void> => {
+export const loadData = (file: File): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
+    const reader = new FileReader()
 
     reader.onload = () => {
       try {
-        const parsed = JSON.parse(reader.result as string);
+        const text = reader.result as string
+        const parsed = JSON.parse(text)
 
-        if (typeof parsed !== "object" || parsed === null) {
-          throw new Error("Invalid backup file format");
+        if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+          throw new Error("Invalid backup file format")
         }
 
         Object.entries(parsed).forEach(([key, value]) => {
-          localStorage.setItem(key, JSON.stringify(value));
-        });
+          localStorage.setItem(key, JSON.stringify(value))
+        })
 
-        resolve();
+        resolve()
       } catch (error) {
-        reject(error);
+        reject(error)
       }
-    };
+    }
 
     reader.onerror = () => {
-      reject(reader.error);
-    };
+      reject(reader.error)
+    }
 
-    reader.readAsText(file);
-  });
-};
+    reader.readAsText(file)
+  })
+}

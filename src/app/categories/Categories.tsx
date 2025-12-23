@@ -89,7 +89,7 @@ const Categories = () => {
       <MockDataWarning/>
 
       <Box
-        className="flex flex-col smflex-row gap-3 h-full"
+        className="flex flex-col sm:flex-row gap-3 h-full"
         width={"fit-content"}
         paddingTop={"10px"}
       >

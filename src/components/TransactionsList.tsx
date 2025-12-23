@@ -1,15 +1,16 @@
 import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
-import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box } from "@mui/material"
+import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box, useMediaQuery } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors";
 import { useTheme } from "next-themes";
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals";
 import { useTransactionContext } from "@/contexts/transactions-context";
-import { cleanNumber, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions";
+import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions";
 
 type TransactionsListProps = {
   type: "income" | "expenses"
@@ -145,6 +146,8 @@ const TransactionsList = ({
   }
 
   const YearList = () => {
+    const isMdUp = useMediaQuery("(min-width: 768px)");
+
     return (
       <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">
         <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
@@ -154,6 +157,7 @@ const TransactionsList = ({
                 
               return (
                 <ListItemButton 
+                  className="flex flex-col md:flex-row"
                   key={year} 
                   onClick={() => {
                     setSelectedYear(year)
@@ -167,7 +171,12 @@ const TransactionsList = ({
                 >
                   <ListItemText primary={year} secondary={`$${yearTotal}`}/>
 
-                  {year === selectedYear ? <ArrowForwardIosIcon/> : <></>}
+                  {year === selectedYear &&
+                    (isMdUp ? (
+                      <KeyboardArrowRightIcon />
+                    ) : (
+                      <KeyboardArrowDownIcon />
+                    ))}
                 </ListItemButton>
               )
             })
@@ -197,7 +206,11 @@ const TransactionsList = ({
                 >
                   <ListItemText primary={month} secondary={`$${monthTotal}`}/>
 
-                  {month === selectedMonth ? <ArrowForwardIosIcon/> : <></>}
+                  {
+                    month === selectedMonth ?
+                      <KeyboardArrowRightIcon/> 
+                      : <></>
+                  }
                 </ListItemButton>
               )
             })

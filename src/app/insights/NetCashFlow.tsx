@@ -100,11 +100,31 @@ const NetCashFlow = (props: {
             backgroundColor: monthResult.background
           }}
         >
-          <Typography color={monthResult.textIcon}>{`Net Cash Flow for ${selectedMonth} ${selectedYear}`}</Typography>
+          <Typography 
+            color={monthResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: ".75rem",
+                md: "1rem"
+              }
+            }}
+          >
+            {`Net Cash Flow for ${selectedMonth} ${selectedYear}`}
+          </Typography>
 
           <hr style={{ width: "100%", borderColor: monthResult.border}}/>
 
-          <Typography variant="h3" color={monthResult.textIcon}>${netIncome}</Typography>
+          <Typography 
+            color={monthResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: "2rem",
+                md: "3rem"
+              }
+            }}
+          >
+            ${netIncome}
+          </Typography>
         </Box>
 
         <Box
@@ -119,11 +139,31 @@ const NetCashFlow = (props: {
             backgroundColor: annualResult.background
           }}
         >
-          <Typography color={annualResult.textIcon}>{`Total Net Cash Flow for ${selectedYear}`}</Typography>
+          <Typography 
+            color={annualResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: ".75rem",
+                md: "1rem"
+              }
+            }}
+          >
+            {`Total Net Cash Flow for ${selectedYear}`}
+          </Typography>
 
           <hr style={{ width: "100%", borderColor: annualResult.border}}/>
 
-          <Typography variant="h3" color={annualResult.textIcon}>${annualNetIncome}</Typography>
+          <Typography 
+            color={annualResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: "2rem",
+                md: "3rem"
+              }
+            }}            
+          >
+            ${annualNetIncome}
+          </Typography>
         </Box>        
       </Box>
     </Box>

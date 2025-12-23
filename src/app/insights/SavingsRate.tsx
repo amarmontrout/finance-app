@@ -70,9 +70,31 @@ const SavingsRate = (props: {
             backgroundColor: monthResult.background
           }}
         >
-          <Typography color={monthResult.textIcon}>{`Savings Rate for ${selectedMonth} ${selectedYear}`}</Typography>
+          <Typography 
+            color={monthResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: ".75rem",
+                md: "1rem"
+              }
+            }}          
+          >
+            {`Savings Rate for ${selectedMonth} ${selectedYear}`}
+          </Typography>
+          
           <hr style={{ width: "100%", borderColor: monthResult.border}}/>
-          <Typography variant="h3" color={monthResult.textIcon}>{savingsRate}%</Typography>
+          
+          <Typography 
+            color={monthResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: "2rem",
+                md: "3rem"
+              }
+            }}          
+          >
+            {savingsRate}%
+          </Typography>
         </Box>
 
         <Box
@@ -87,9 +109,31 @@ const SavingsRate = (props: {
             backgroundColor: annualResult.background
           }}
         >
-          <Typography color={annualResult.textIcon}>{`Total Savings Rate for ${selectedYear}`}</Typography>
+          <Typography 
+            color={annualResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: ".75rem",
+                md: "1rem"
+              }
+            }}
+          >
+            {`Total Savings Rate for ${selectedYear}`}
+          </Typography>
+
           <hr style={{ width: "100%", borderColor: annualResult.border}}/>
-          <Typography variant="h3" color={annualResult.textIcon}>{annualSavingsRate}%</Typography>
+
+          <Typography 
+            color={annualResult.textIcon}
+            sx={{
+              fontSize: {
+                xs: "2rem",
+                md: "3rem"
+              }
+            }}  
+          >
+            {annualSavingsRate}%
+          </Typography>
         </Box>
       </Box>
     </Box>

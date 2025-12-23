@@ -109,13 +109,13 @@ const TransactionForm = (props: {
 
   return (
     <Box
-      className="flex flex-col :flex-row gap-5"
+      className="flex flex-col xl:flex-row gap-5"
       width={"fit-content"}
       paddingTop={"20px"}
       margin={"0 auto"}
     >
       <Box
-        className="flex flex-row gap-5"
+        className="flex flex-col sm:flex-row gap-5"
       >
         <FormControl>
           <InputLabel>Year</InputLabel>
@@ -153,7 +153,7 @@ const TransactionForm = (props: {
       </Box>
           
       <Box
-        className="flex flex-row gap-5"
+        className="flex flex-col sm:flex-row gap-5"
       >
         <FormControl>
           <InputLabel>Category</InputLabel>

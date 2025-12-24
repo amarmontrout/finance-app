@@ -18,12 +18,16 @@ export const getAnnualProjection = (ytdTotal: number, ytdMonths: number) => {
   return formattedStringNumber((ytdTotal/ytdMonths)*12)
 }
 
-export const getAverage = (data: number[]): number => {
+export const getAverage = (data: number[], month: number): number => {
   let total = 0
 
   data.map((amount) => {
     total += amount
   })
 
-  return total/12
+  return total/month
+}
+
+export const getDifference = (prev: number, current: number) => {
+  return current-prev
 }

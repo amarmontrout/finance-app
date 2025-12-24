@@ -63,6 +63,7 @@ const SavingsRate = (props: {
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           data={`${savingsRate}%`}
+          title={`Savings Rate for ${selectedMonth} ${selectedYear}`}
         />          
 
         <ColoredInfoCard
@@ -70,6 +71,7 @@ const SavingsRate = (props: {
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           data={`${annualSavingsRate}%`}
+          title={`Savings Rate for ${selectedYear}`}
         />  
       </Box>
     </Box>

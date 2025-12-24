@@ -9,9 +9,9 @@ import { darkMode, healthStateDarkMode, healthStateLightMode, lightMode } from "
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getMonthTotal } from "@/utils/getTotals"
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -68,7 +68,7 @@ const Overview = () => {
 
   return (
     <Box
-      className="flex flex-col gap-2"
+      className="flex flex-col gap-2 h-full"
     >
       <MockDataWarning/>
 
@@ -84,14 +84,87 @@ const Overview = () => {
         />        
       </ShowCaseCard>
 
-      <ShowCaseCard title={`Net Cash Flow for ${currentMonth}`}>
-          <ColoredInfoCard
-            resultColors={monthResult}
-            selectedMonth={currentMonth}
-            selectedYear={currentYear}
-            data={`$${netIncome}`}
-          />
-      </ShowCaseCard>
+      <Box
+        className="flex flex-col 2xl:flex-row gap-2 h-full"
+      >
+        <ShowCaseCard title={`${currentYear} Totals`}>
+          <Box
+            className="flex flex-row gap-2"
+          >
+            <Box
+              className="flex flex-col gap-2"
+              borderRadius={"10px"} 
+              padding={"15px"} 
+              margin={"0 auto"} 
+              width={"100%"}
+              alignItems={"center"}
+            >
+              <Typography 
+                sx={{
+                  fontSize: {
+                    xs: "1.5rem",
+                    md: "1.75rem"
+                  }
+                }}
+              >
+                {"Total Income"}
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: "2.5rem",
+                    md: "2.75rem"
+                  }
+                }}
+              >
+                ${getYearTotal(currentYear, incomeTransactions)}
+              </Typography>
+            </Box>
+
+            <Box
+              className="flex flex-col gap-2"
+              borderRadius={"10px"} 
+              padding={"15px"} 
+              margin={"0 auto"} 
+              width={"100%"}
+              alignItems={"center"}
+            >
+              <Typography 
+                sx={{
+                  fontSize: {
+                    xs: "1.5rem",
+                    md: "1.75rem"
+                  }
+                }}
+              >
+                {"Total Expenses"}
+              </Typography>
+
+              <Typography
+                sx={{
+                  fontSize: {
+                    xs: "2.5rem",
+                    md: "2.75rem"
+                  }
+                }}
+              >
+                ${getYearTotal(currentYear, expenseTransactions)}
+              </Typography>
+            </Box>
+          </Box>
+        </ShowCaseCard>
+
+        <ShowCaseCard title={`Net Cash Flow for ${currentMonth}`}>
+            <ColoredInfoCard
+              resultColors={monthResult}
+              selectedMonth={currentMonth}
+              selectedYear={currentYear}
+              data={`$${netIncome}`}
+              title={`Net Cash Flow for ${currentMonth}`}
+            />
+        </ShowCaseCard>
+      </Box>
     </Box>
   )
 }

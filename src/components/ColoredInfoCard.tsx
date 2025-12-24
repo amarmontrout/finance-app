@@ -9,12 +9,12 @@ const ColoredInfoCard = (props: {
   selectedMonth: string
   selectedYear: string
   data: string
+  title: string
 }) => {
   const {
     resultColors,
-    selectedMonth,
-    selectedYear,
-    data
+    data,
+    title
   }= props
 
   return (
@@ -39,7 +39,7 @@ const ColoredInfoCard = (props: {
           }
         }}
       >
-        {`Net Cash Flow for ${selectedMonth} ${selectedYear}`}
+        {title}
       </Typography>
       <hr style={{ width: "100%", borderColor: resultColors.border}}/>
       <Typography 

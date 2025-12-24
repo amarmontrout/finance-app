@@ -94,6 +94,7 @@ const NetCashFlow = (props: {
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           data={`$${netIncome}`}
+          title={`Net Cash Flow for ${selectedMonth} ${selectedYear}`}
         />
 
         <ColoredInfoCard
@@ -101,6 +102,7 @@ const NetCashFlow = (props: {
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
           data={`$${annualNetIncome}`}
+          title={`Net Cash Flow for ${selectedYear}`}
         />      
       </Box>
     </Box>

@@ -1,4 +1,16 @@
-const saveChoices = ({
+export const getChoices = ({ key }: { key: string }): string[] => {
+  const stored = localStorage.getItem(key)
+  if (!stored) return []
+
+  try {
+    const parsed = JSON.parse(stored)
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
+  }
+}
+
+export const saveChoices = ({
   key,
   choice,
   choiceArray,
@@ -49,5 +61,3 @@ const saveChoices = ({
   localStorage.setItem(key, JSON.stringify(choiceData))
   console.log("Choices saved")
 }
-
-export default saveChoices

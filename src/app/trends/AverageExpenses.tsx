@@ -65,7 +65,7 @@ const AverageExpenses = () => {
   }, [expenseTransactions, expenseCategories, currentYear])
 
   return (
-    <ShowCaseCard title={"Average Monthly Expenses"}>
+    <ShowCaseCard title={"Expense Averages"}>
       <Box
         className="flex flex-col sm:flex-row gap-5"
       >

@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionData } from "./saveTransaction"
+import { TransactionData } from "./transactionStorage"
 
 export type TwoColumnDataType = [string, string | number][]
 export type MultiColumnDataType = (string | number)[][]

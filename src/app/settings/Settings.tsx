@@ -4,14 +4,14 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import saveChoices from "@/utils/saveChoices"
-import { saveData } from "@/utils/saveData"
 import { Box, Button, Stack } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
 import { accentColorSecondary } from "@/globals/colors"
 import { useTheme } from "next-themes"
 import FileUploadDialog from "./FileUploadDialog"
+import { saveChoices } from "@/utils/choiceStorage"
+import { saveData } from "@/utils/appDataStorage"
 
 const Settings = () => {
   const {

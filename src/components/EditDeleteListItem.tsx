@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import EditIcon from '@mui/icons-material/Edit';
 import { useState } from "react";
-import saveChoices from "@/utils/saveChoices";
+import { saveChoices } from "@/utils/choiceStorage";
 
 const EditDeleteListItem = (props: {
     items: string[]

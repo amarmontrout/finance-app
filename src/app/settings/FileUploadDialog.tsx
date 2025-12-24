@@ -1,5 +1,5 @@
 import { darkMode, lightMode } from "@/globals/colors"
-import { loadData } from "@/utils/loadData"
+import { loadData } from "@/utils/appDataStorage"
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material"
 
 const FileUploadDialog = (props: {

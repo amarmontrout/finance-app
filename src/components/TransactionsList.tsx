@@ -1,4 +1,3 @@
-import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
 import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box, useMediaQuery } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -11,6 +10,7 @@ import { useTheme } from "next-themes"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
+import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
 
 type TransactionsListProps = {
   type: "income" | "expenses"

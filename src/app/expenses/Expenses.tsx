@@ -12,11 +12,11 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import TransactionForm from "@/components/TransactionForm"
 import { buildMultiColumnData } from "@/utils/buildChartData"
-import getChoices from "@/utils/getChoices"
 import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
 import { getMonthTotal } from "@/utils/getTotals"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
+import { getChoices } from "@/utils/choiceStorage"
 
 const Expenses = () => {
   const { 

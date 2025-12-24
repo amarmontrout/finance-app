@@ -1,8 +1,7 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSES, INCOME } from "@/globals/globals"
-import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import saveTransaction, { TransactionData } from "@/utils/saveTransaction"
+import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
 import { 
   Dialog, 
   DialogTitle, 

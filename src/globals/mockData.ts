@@ -1,4 +1,4 @@
-import { TransactionData } from "@/utils/saveTransaction";
+import { TransactionData } from "@/utils/transactionStorage";
 
 export const mockYears: string[] = [
   "2024",

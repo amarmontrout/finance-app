@@ -1,8 +1,7 @@
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
-import getChoices from "@/utils/getChoices"
-import getTransactions from "@/utils/getTransactions"
-import { TransactionData } from "@/utils/saveTransaction"
+import { getChoices } from "@/utils/choiceStorage"
+import { getTransactions, TransactionData } from "@/utils/transactionStorage"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {

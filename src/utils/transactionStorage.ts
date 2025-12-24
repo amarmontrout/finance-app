@@ -4,7 +4,7 @@ import { makeId } from "./helperFunctions"
 
 export type TransactionData = {[year: string]: {[month: string]: Array<{id: string, category: string, amount: string}>}}
 
-const saveTransaction = (props: {
+export const saveTransaction = (props: {
   key: string
   transaction?: TransactionType
   updatedTransactionData?: TransactionData
@@ -79,4 +79,20 @@ const saveTransaction = (props: {
   return null
 }
 
-export default saveTransaction
+export const getTransactions = (props: {
+  key: string
+}) => {
+  const { key } = props
+  const localData = localStorage.getItem(key)
+
+  if (localData) {
+    try {
+      return JSON.parse(localData) as TransactionData
+    } catch (error) {
+      console.log("Could not parse local data", error)
+      return null
+    }
+  }
+  console.log("No local data found")
+  return null
+}

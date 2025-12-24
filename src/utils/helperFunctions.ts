@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionData } from "./saveTransaction"
+import { TransactionData } from "./transactionStorage"
 
 /**
  * This helper function gets the current year and month.
@@ -21,7 +21,9 @@ export const getCurrentDateInfo = () => {
  * @param str 
  * @returns A number without the commas
  */
-export const cleanNumber = (str: string) => {
+export const cleanNumber = (
+  str: string
+): number => {
   return Number(str.replace(/[^0-9.-]+/g,""))
 }
 
@@ -40,7 +42,9 @@ export const removeCommas = (value: string) => value.replace(/,/g, "")
  * @param num
  * @returns A formatted number string
  */
-export const formattedStringNumber = (num: number) => {
+export const formattedStringNumber = (
+  num: number
+): string => {
   return num.toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
@@ -53,7 +57,9 @@ export const formattedStringNumber = (num: number) => {
  * @param length
  * @returns A randomized string of given length.
  */
-export const makeId = (length: number) => {
+export const makeId = (
+  length: number
+): string => {
     let result = ""
     const characters = "0123456789"
     const charLength = characters.length
@@ -81,7 +87,6 @@ export const flattenTransactions = (
   data: TransactionData
 ): FlatTransaction[] => {
   const result: FlatTransaction[] = []
-
   for (const year in data) {
     for (const month in data[year]) {
       for (const tx of data[year][month]) {
@@ -95,6 +100,5 @@ export const flattenTransactions = (
       }
     }
   }
-
   return result
 }

@@ -1,14 +1,17 @@
 "use client"
 
+import ColoredInfoCard from "@/components/ColoredInfoCard"
 import MockDataWarning from "@/components/MockDataWarning"
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
+import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData, mockYears } from "@/globals/mockData"
 import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
 import { flattenTransactions, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box, FormControl, InputLabel, MenuItem, Select, Typography } from "@mui/material"
+import { useTheme } from "next-themes"
 import { useEffect, useMemo, useState } from "react"
 
 const Categories = () => {
@@ -20,7 +23,7 @@ const Categories = () => {
     years,
     isMockData,
   } = useTransactionContext()
-
+  const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
@@ -81,6 +84,9 @@ const Categories = () => {
       .slice(0, 3)
   }, [monthExpenseCategoryTotals, view])
 
+  const defaultCardColor = (currentTheme === "light" 
+    ? healthStateLightMode
+    : healthStateDarkMode)["default"]
 
   return (
     <Box
@@ -159,13 +165,13 @@ const Categories = () => {
         <Box
           className="flex flex-col xl:flex-row gap-2 h-full"
         >
-          <ShowCaseCard title={`${selectedYear} Income Categories`}>
+          <ShowCaseCard title={`${selectedYear} Income Category Breakdown`}>
             <PieChart
               data={annualIncomeCategoryTotals}
             />
           </ShowCaseCard>
 
-          <ShowCaseCard title={`${selectedYear} Expense Categories`}>
+          <ShowCaseCard title={`${selectedYear} Expense Category Breakdown`}>
             <PieChart
               data={annualExpenseCategoryTotals}
             />
@@ -177,37 +183,31 @@ const Categories = () => {
         <Box
           className="flex flex-col gap-2 h-full"
         >
-          <ShowCaseCard title="Top 3 Expense Categories">
-            <Typography>
-              {`${selectedMonth} ${selectedYear}`}
-            </Typography>
-            <ul 
-              className="flex flex-col gap-1"
-              style={{
-                alignItems: "center"
-              }}
+          <ShowCaseCard title={`Top 3 Expenses for ${selectedMonth} ${selectedYear}`}>
+            <Box
+              className="flex flex-col lg:flex-row gap-2 h-full"
             >
-              {topThreeExpenses.map(([category, amount]) => (
-                <li
+              {topThreeExpenses.map(([category, amount], idx) => (
+                <ColoredInfoCard
                   key={category}
-                  className="flex items-center"
-                >
-                  <Typography variant="h6">{`${category} -  $${formattedStringNumber(Number(amount))}`}</Typography>
-                </li>
+                  cardColors={defaultCardColor}
+                  info={`$${formattedStringNumber(Number(amount))}`}
+                  title={`${idx+1}) ${category}`}
+                />
               ))}
-            </ul>
+            </Box>
           </ShowCaseCard>
 
           <Box
             className="flex flex-col xl:flex-row gap-2 h-full"
           >
-            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Categories`}>
+            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}>
               <PieChart
                 data={monthIncomeCategoryTotals}
               />
             </ShowCaseCard>
 
-            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Categories`}>
+            <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Category Breakdown`}>
               <PieChart
                 data={monthExpenseCategoryTotals}
               />

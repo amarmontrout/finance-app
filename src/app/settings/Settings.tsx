@@ -4,14 +4,14 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import { loadData } from "@/utils/loadData"
 import saveChoices from "@/utils/saveChoices"
 import { saveData } from "@/utils/saveData"
-import { Box, Button, Dialog, DialogActions, DialogContent, Stack } from "@mui/material"
+import { Box, Button, Stack } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
-import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { accentColorSecondary } from "@/globals/colors"
 import { useTheme } from "next-themes"
+import FileUploadDialog from "./FileUploadDialog"
 
 const Settings = () => {
   const {
@@ -150,44 +150,11 @@ const Settings = () => {
         </ShowCaseCard>      
       </Box>
 
-      <Dialog open={dialogOpen}>
-        <DialogContent 
-          sx={{
-            backgroundColor: currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg,
-          }}
-        >
-          <input
-            type="file"
-            accept=".json,application/json"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              loadData(file)
-                .then(() => {
-                  console.log("Data restored")
-                  window.location.reload()
-                })
-                .catch((err) => {
-                  console.error("Failed to load backup", err)
-                })
-            }}
-          />
-        </DialogContent>
-
-        <DialogActions>
-          <Button 
-            variant="contained"
-            sx={{
-              backgroundColor: currentTheme === "light" ? lightMode.error : darkMode.error
-            }}
-            onClick={
-              () => {setDialogOpen(false)}
-            }
-          >
-              Cancel
-          </Button>
-        </DialogActions>
-      </Dialog>      
+      <FileUploadDialog
+        dialogOpen={dialogOpen}
+        currentTheme={currentTheme}
+        setDialogOpen={setDialogOpen}
+      />
     </Box>
   )
 }

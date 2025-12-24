@@ -9,14 +9,14 @@ import { darkMode, healthStateDarkMode, healthStateLightMode, lightMode } from "
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box, Typography } from "@mui/material"
+import { getYearTotal } from "@/utils/getTotals"
+import { cleanNumber, getCurrentDateInfo, getSavingsHealthState } from "@/utils/helperFunctions"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 const Overview = () => {
-  const { currentMonth, currentYear} = getCurrentDateInfo()
+  const { currentYear} = getCurrentDateInfo()
 
   const { 
     incomeTransactions, 
@@ -25,25 +25,21 @@ const Overview = () => {
     refreshExpenseTransactions,
     isMockData
   } = useTransactionContext()
+  const { theme: currentTheme } = useTheme()
   
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
-  const { theme: currentTheme } = useTheme()
-
-  const income = getMonthTotal(currentYear, currentMonth, incomeTransactions)
-  const expense = getMonthTotal(currentYear, currentMonth, expenseTransactions)
-  const netIncome = getNetCashFlow(income, expense)
-  const getHealthColor = (net: number, total: number) => {
-    const percent = total === 0 ? -1 : net / total
-    if (percent < 0) return "mayday"
-    if (percent < 0.05) return "improvement"
-    if (percent < 0.2) return "good"
-    return "excellent"
-  }
-  const monthState = getHealthColor(cleanNumber(netIncome), cleanNumber(income))
-  const monthResult = currentTheme === "light"
-    ? healthStateLightMode[monthState]
-    : healthStateDarkMode[monthState]
+  const annualIncome = getYearTotal(currentYear, incomeTransactions)
+  const annualExpense = getYearTotal(currentYear, expenseTransactions)
+  const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
+  
+  const savingsHealthState = getSavingsHealthState(cleanNumber(annualNetIncome), cleanNumber(annualIncome))
+  const savingsColor = (currentTheme === "light" 
+    ? healthStateLightMode 
+    : healthStateDarkMode)[savingsHealthState]
+  const defaultCardColor = (currentTheme === "light" 
+    ? healthStateLightMode 
+    : healthStateDarkMode)["default"]
 
   useEffect(() => {
     refreshIncomeTransactions()
@@ -72,6 +68,36 @@ const Overview = () => {
     >
       <MockDataWarning/>
 
+      <Box
+        className="flex flex-col 2xl:flex-row gap-2 h-full"
+      >
+        <ShowCaseCard title={`YTD Totals for ${currentYear}`}>
+          <Box
+            className="flex flex-col md:flex-row gap-2"
+          >
+            <ColoredInfoCard
+              cardColors={defaultCardColor}
+              info={`$${getYearTotal(currentYear, incomeTransactions)}`}
+              title={"Total Income"}
+            />
+
+            <ColoredInfoCard
+              cardColors={defaultCardColor}
+              info={`$${getYearTotal(currentYear, expenseTransactions)}`}
+              title={"Total Expenses"}
+            />            
+          </Box>
+        </ShowCaseCard>
+
+        <ShowCaseCard title={`YTD Net Cash Flow for ${currentYear}`}>
+            <ColoredInfoCard
+              cardColors={savingsColor}
+              info={`$${annualNetIncome}`}
+              title={`${currentYear} State: ${savingsHealthState}`}
+            />
+        </ShowCaseCard>
+      </Box>
+
       <ShowCaseCard title={`${currentYear} Overview`}>
         <LineChart
           multiColumnData={lineChartData}
@@ -82,89 +108,7 @@ const Overview = () => {
             : [darkMode.success, darkMode.error]
           }
         />        
-      </ShowCaseCard>
-
-      <Box
-        className="flex flex-col 2xl:flex-row gap-2 h-full"
-      >
-        <ShowCaseCard title={`${currentYear} Totals`}>
-          <Box
-            className="flex flex-row gap-2"
-          >
-            <Box
-              className="flex flex-col gap-2"
-              borderRadius={"10px"} 
-              padding={"15px"} 
-              margin={"0 auto"} 
-              width={"100%"}
-              alignItems={"center"}
-            >
-              <Typography 
-                sx={{
-                  fontSize: {
-                    xs: "1.5rem",
-                    md: "1.75rem"
-                  }
-                }}
-              >
-                {"Total Income"}
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontSize: {
-                    xs: "2.5rem",
-                    md: "2.75rem"
-                  }
-                }}
-              >
-                ${getYearTotal(currentYear, incomeTransactions)}
-              </Typography>
-            </Box>
-
-            <Box
-              className="flex flex-col gap-2"
-              borderRadius={"10px"} 
-              padding={"15px"} 
-              margin={"0 auto"} 
-              width={"100%"}
-              alignItems={"center"}
-            >
-              <Typography 
-                sx={{
-                  fontSize: {
-                    xs: "1.5rem",
-                    md: "1.75rem"
-                  }
-                }}
-              >
-                {"Total Expenses"}
-              </Typography>
-
-              <Typography
-                sx={{
-                  fontSize: {
-                    xs: "2.5rem",
-                    md: "2.75rem"
-                  }
-                }}
-              >
-                ${getYearTotal(currentYear, expenseTransactions)}
-              </Typography>
-            </Box>
-          </Box>
-        </ShowCaseCard>
-
-        <ShowCaseCard title={`Net Cash Flow for ${currentMonth}`}>
-            <ColoredInfoCard
-              resultColors={monthResult}
-              selectedMonth={currentMonth}
-              selectedYear={currentYear}
-              data={`$${netIncome}`}
-              title={`Net Cash Flow for ${currentMonth}`}
-            />
-        </ShowCaseCard>
-      </Box>
+      </ShowCaseCard>      
     </Box>
   )
 }

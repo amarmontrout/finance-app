@@ -1,57 +1,55 @@
 import { Box, Typography } from "@mui/material"
 
 const ColoredInfoCard = (props: {
-  resultColors: {
+  cardColors: {
     background: string,
     textIcon: string,
     border: string
   }
-  selectedMonth: string
-  selectedYear: string
-  data: string
+  info: string
   title: string
 }) => {
   const {
-    resultColors,
-    data,
+    cardColors,
+    info,
     title
   }= props
 
   return (
     <Box
-      className="flex flex-col gap-2 h-full"
-      border={`2px solid ${resultColors.border}`} 
+      className="flex flex-col"
+      border={`2px solid ${cardColors.border}`} 
       borderRadius={"10px"} 
-      padding={"15px"} 
-      margin={"0 auto"} 
+      padding={"15px"}
+      minWidth={"fit-content"}
       width={"100%"}
-      alignItems={"center"}
       sx={{
-        backgroundColor: resultColors.background
+        backgroundColor: cardColors.background
       }}
     >
       <Typography 
-        color={resultColors.textIcon}
+        color={cardColors.textIcon}
         sx={{
           fontSize: {
-            xs: ".75rem",
-            md: "1rem"
+            xs: "1rem",
+            md: "1.25rem"
           }
         }}
       >
         {title}
       </Typography>
-      <hr style={{ width: "100%", borderColor: resultColors.border}}/>
+
       <Typography 
-        color={resultColors.textIcon}
+        color={cardColors.textIcon}
         sx={{
           fontSize: {
             xs: "2rem",
-            md: "3rem"
-          }
+            md: "2.25rem"
+          },
+          textAlign: "right"
         }}
       >
-        {data}
+        {info}
       </Typography>
     </Box>    
   )

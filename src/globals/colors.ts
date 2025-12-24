@@ -94,47 +94,68 @@ export enum darkMode {
 }
 
 export const healthStateLightMode = {
-    mayday: {
-        background: "#FDECEC",
-        textIcon: "#B42318",
-        border: "#F04438", 
-    },
-    improvement: {
-        background: "#FFF7ED",
-        textIcon: "#9A3412",
-        border: "#F97316",
-    },
-    good: {
-        background: "#ECFDF3",
-        textIcon : "#027A48",
-        border: "#12B76A",
-    },
-    excellent: {
-        background: "#F0F9FF",
-        textIcon: "#075985",
-        border: "#0284C7"        
-    }
+  concerning: {
+    background: "#FDEAEA",
+    textIcon: "#991B1B",
+    border: "#DC2626",
+  },
+  ok: {
+    background: "#FFF4E5",
+    textIcon: "#9A3412",
+    border: "#EA580C",
+  },
+  average: {
+    background: "#FFFBEB",
+    textIcon: "#92400E",
+    border: "#F59E0B",
+  },
+  great: {
+    background: "#ECFDF3",
+    textIcon: "#027A48",
+    border: "#22C55E",
+  },
+  excellent: {
+    background: "#EFF6FF",
+    textIcon: "#1D4ED8",
+    border: "#3B82F6",
+  },
+  default: {
+    background: lightMode.elevatedBg,
+    textIcon: lightMode.primaryText,
+    border: lightMode.borderStrong
+  }
 } as const
 
+
 export const healthStateDarkMode = {
-    mayday: {
-        background: "#3A0F0F",
-        textIcon: "#FCA5A5",
-        border: "#EF4444",
-    },
-    improvement: {
-        background: "#3A1F0B",
-        textIcon: "#FDBA74",
-        border: "#FB923C",
-    },
-    good: { 
-        background: "#06281B",
-        textIcon : "#6EE7B7",
-        border: "#34D399",
-    },
-    excellent: {
-        background: "#041C2C",
-        textIcon: "#7DD3FC",
-        border: "#38BDF8"
-    }
+  concerning: {
+    background: "#3A0F0F",
+    textIcon: "#FCA5A5",
+    border: "#EF4444",
+  },
+  ok: {
+    background: "#3A1F0B",
+    textIcon: "#FDBA74",
+    border: "#FB923C",
+  },
+  average: {
+    background: "#3A2A0B",
+    textIcon: "#FCD34D",
+    border: "#FBBF24",
+  },
+  great: {
+    background: "#06281B",
+    textIcon: "#6EE7B7",
+    border: "#22C55E",
+  },
+  excellent: {
+    background: "#0B1E3A",
+    textIcon: "#93C5FD",
+    border: "#3B82F6",
+  },
+  default: {
+    background: darkMode.elevatedBg,
+    textIcon: darkMode.primaryText,
+    border: darkMode.borderStrong
+  }
 } as const

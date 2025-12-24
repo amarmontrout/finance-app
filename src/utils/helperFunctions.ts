@@ -28,14 +28,6 @@ export const cleanNumber = (
 }
 
 /**
- * This helper function removes commas from a string.
- * 
- * @param value 
- * @returns A string without the commas
- */
-export const removeCommas = (value: string) => value.replace(/,/g, "")
-
-/**
  * This helper function converts a number to a formatted string.
  * It adds commas.
  * 
@@ -50,6 +42,14 @@ export const formattedStringNumber = (
       maximumFractionDigits: 2,
   })
 }
+
+/**
+ * This helper function removes commas from a string.
+ * 
+ * @param value 
+ * @returns A string without the commas
+ */
+export const removeCommas = (value: string) => value.replace(/,/g, "")
 
 /**
  * This helper function creates a random string id.
@@ -76,7 +76,6 @@ export type FlatTransaction = {
   category: string
   amount: string
 }
-
 /**
  * This helper function makes the TransactionData more manageable.
  * 
@@ -101,4 +100,15 @@ export const flattenTransactions = (
     }
   }
   return result
+}
+
+export const getSavingsHealthState = (net: number, total: number) => {
+  if (total === 0) return "concerning"
+
+  const percent = net / total
+  if (percent < 0) return "concerning"
+  if (percent <= 0.05) return "ok"
+  if (percent <= 0.1) return "average"
+  if (percent <= 0.15) return "great"
+  return "excellent"
 }

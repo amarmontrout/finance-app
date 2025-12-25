@@ -25,7 +25,7 @@ const MonthlyCategoryBreakdown = ({
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <ShowCaseCard title={`Top 3 Expenses for ${selectedMonth} ${selectedYear}`}>
+      <ShowCaseCard title={`Top Expenses for ${selectedMonth} ${selectedYear}`}>
         <Box
           className="flex flex-col lg:flex-row gap-2 h-full"
         >

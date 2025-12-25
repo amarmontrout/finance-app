@@ -2,14 +2,13 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { MONTHS } from "@/globals/globals"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { Box } from "@mui/material"
 import { useEffect, useState } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
-import { mockYears } from "@/globals/mockData"
 import MockDataWarning from "@/components/MockDataWarning"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
+import DateSelector from "@/components/DateSelector"
 
 const Insights = () => {
   const { 
@@ -22,7 +21,8 @@ const Insights = () => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
-  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)  
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
+  const [view, setView] = useState<"annual" | "month">("month")
 
   useEffect(() => {
     refreshIncomeTransactions()
@@ -35,66 +35,16 @@ const Insights = () => {
     >
       <MockDataWarning/>
 
-      <Box
-        className="flex flex-col sm:flex-row gap-3 h-full"
-        width={"fit-content"}
-        paddingTop={"10px"}
-      >
-        <FormControl>
-          <InputLabel>Year</InputLabel>
-          <Select
-            label="Year"
-            value={selectedYear}
-            name={"year"}
-            onChange={(e) => setSelectedYear(e.target.value)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            { isMockData ?
-              mockYears.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
-              })
-              : years.map((year) => {
-                return <MenuItem value={year}>{year}</MenuItem>
-              })
-            }
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Month</InputLabel>
-          <Select
-            label="Month"
-            value={selectedMonth}
-            name={"month"}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            {MONTHS.map((month) => {
-              return <MenuItem value={month}>{month}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-
-        {/* <FormControl>
-          <InputLabel>Range</InputLabel>
-          <Select
-            label="Range"
-            value={selectedMonth}
-            name={"range"}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            sx={{
-              width: "175px"
-            }}
-          >
-            <MenuItem value={"selectedMonth"}>Selected Month</MenuItem>
-            <MenuItem value={"ytd"}>YTD</MenuItem>
-          </Select>
-        </FormControl> */}
-      </Box>
+      <DateSelector
+        view={view}
+        setView={setView}
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        selectedMonth={selectedMonth}
+        setSelectedMonth={setSelectedMonth}
+        years={years}
+        isMockData={isMockData}
+      />
 
       <hr style={{width: "100%"}}/>
       
@@ -108,6 +58,7 @@ const Insights = () => {
             <NetCashFlow
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
+              view={view}
             />
           </ShowCaseCard>
         </Box>
@@ -119,12 +70,9 @@ const Insights = () => {
             <SavingsRate
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
+              view={view}
             />
           </ShowCaseCard>
-
-          {/* <ShowCaseCard title={"Top 3 Expense Categories"}>
-            {"% of total expenses, change from previous month, small bar chart or cards"}
-          </ShowCaseCard>          */}
         </Box>
       </Box>
     </Box>

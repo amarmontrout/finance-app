@@ -13,8 +13,9 @@ import { useMemo } from "react"
 const SavingsRate = (props: {
   selectedYear: string
   selectedMonth: string
+  view: "annual" | "month"
 }) => {
-  const { selectedYear, selectedMonth } = props
+  const { selectedYear, selectedMonth, view } = props
 
   const {
     incomeTransactions,
@@ -45,17 +46,21 @@ const SavingsRate = (props: {
       <Box
         className="flex flex-col sm:flex-row  gap-3"
       >
-        <ColoredInfoCard
-          cardColors={monthSavingsColor}
-          info={`${savingsRate}%`}
-          title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
-        />          
+        {view === "month" &&       
+          <ColoredInfoCard
+            cardColors={monthSavingsColor}
+            info={`${savingsRate}%`}
+            title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
+          />          
+        }
 
-        <ColoredInfoCard
-          cardColors={annualSavingsColor}
-          info={`${annualSavingsRate}%`}
-          title={`${selectedYear} State: ${annualSavingsHealthState}`}
-        />  
+        {view === "annual" &&        
+          <ColoredInfoCard
+            cardColors={annualSavingsColor}
+            info={`${annualSavingsRate}%`}
+            title={`${selectedYear} State: ${annualSavingsHealthState}`}
+          />  
+        }
       </Box>
     </Box>
   )

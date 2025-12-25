@@ -1,6 +1,6 @@
 import { darkMode, lightMode } from "@/globals/colors"
 import { MultiColumnDataType, TwoColumnDataType } from "@/utils/buildChartData"
-import { Box } from "@mui/material"
+import { Box, responsiveFontSizes } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
@@ -31,7 +31,10 @@ const LineChart = (props: {
     lineWidth: 3,
     pointsVisible: true,
     chartArea: {
-      width: "75%"
+      left: 95,
+      right:10,
+      width: "90%",
+      height: "65%"
     },
     hAxis: {
       textStyle: { color: textColor },

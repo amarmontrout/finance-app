@@ -26,19 +26,16 @@ const DateSelector = ({
   return (
     <Box
       className="flex flex-col sm:flex-row gap-3 h-full"
-      width={"fit-content"}
       paddingTop={"10px"}
     >
       <FormControl>
         <InputLabel>View</InputLabel>
         <Select
+          className="w-full md:w-[175px]"
           label="View"
           value={view}
           name={"view"}
           onChange={e => setView(e.target.value)}
-          sx={{
-            width: "175px"
-          }}
         >
           <MenuItem key={"annual"} value={"annual"}>By Year</MenuItem>
           <MenuItem key={"month"} value={"month"}>By Month</MenuItem>
@@ -48,13 +45,11 @@ const DateSelector = ({
       <FormControl>
         <InputLabel>Year</InputLabel>
         <Select
+          className="w-full md:w-[175px]"
           label="Year"
           value={selectedYear}
           name={"year"}
           onChange={e => setSelectedYear(e.target.value)}
-          sx={{
-            width: "175px"
-          }}
         >
           { isMockData ?
             mockYears.map((year) => {
@@ -71,13 +66,11 @@ const DateSelector = ({
         <FormControl>
           <InputLabel>Month</InputLabel>
           <Select
+            className="w-full md:w-[175px]"
             label="Month"
             value={selectedMonth}
             name={"month"}
             onChange={e => setSelectedMonth(e.target.value)}
-            sx={{
-              width: "175px"
-            }}
           >
             {
             MONTHS.map((month) => {

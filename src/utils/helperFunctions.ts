@@ -106,7 +106,9 @@ export const getSavingsHealthState = (net: number, total: number) => {
   if (total === 0) return "concerning"
 
   const percent = net / total
-  if (percent < 0) return "concerning"
+
+  // '<= 0' becaue total = 100 when calculated by the savings rate percent
+  if (percent <= 0) return "concerning"
   if (percent <= 0.05) return "ok"
   if (percent <= 0.1) return "average"
   if (percent <= 0.15) return "great"

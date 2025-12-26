@@ -2,6 +2,7 @@
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { accentColorSecondary, healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
@@ -9,7 +10,6 @@ import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber, formattedStringNumber, getSavingsHealthState, removeCommas } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
 
@@ -62,18 +62,12 @@ const NetCashFlow = (props: {
   }, [annualNet])
   
   return (
-    <Box
-      className="flex flex-col gap-4 h-full"
-    >  
+    <FlexColWrapper gap={4}> 
       <LineChart
         twoColumnData={lineChartData}
         title={`Net Cash Flow ${selectedYear}`}
         lineColors={[accentColorSecondary]}
       />
-
-      <Box
-        className="flex flex-col sm:flex-row gap-3"
-      >
         {view === "month" &&
           <ColoredInfoCard
             cardColors={monthSavingsColor}
@@ -89,8 +83,7 @@ const NetCashFlow = (props: {
             title={`${selectedYear} State: ${annualSavingsHealthState}`}
           />      
         }
-      </Box>
-    </Box>
+    </FlexColWrapper>
   )
 }
 

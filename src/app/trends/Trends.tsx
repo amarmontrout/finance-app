@@ -1,13 +1,11 @@
-import { Box } from "@mui/material"
 import AverageExpenses from "./AverageExpenses"
+import { FlexColWrapper } from "@/components/Wrappers"
 
 const Trends =() => {
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <AverageExpenses/>
-    </Box>
+    </FlexColWrapper>
   )
 }
 

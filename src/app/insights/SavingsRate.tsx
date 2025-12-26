@@ -1,12 +1,12 @@
 "use client"
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { getSavingRate } from "@/utils/financialFunctions"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber, getSavingsHealthState } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
 
@@ -40,29 +40,23 @@ const SavingsRate = (props: {
     : healthStateDarkMode)[annualSavingsHealthState]
 
   return (
-     <Box
-      className="flex flex-col gap-3 h-full"
-    >
-      <Box
-        className="flex flex-col sm:flex-row  gap-3"
-      >
-        {view === "month" &&       
-          <ColoredInfoCard
-            cardColors={monthSavingsColor}
-            info={`${savingsRate}%`}
-            title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
-          />          
-        }
+    <FlexColWrapper gap={3}>
+      {view === "month" &&       
+        <ColoredInfoCard
+          cardColors={monthSavingsColor}
+          info={`${savingsRate}%`}
+          title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
+        />          
+      }
 
-        {view === "annual" &&        
-          <ColoredInfoCard
-            cardColors={annualSavingsColor}
-            info={`${annualSavingsRate}%`}
-            title={`${selectedYear} State: ${annualSavingsHealthState}`}
-          />  
-        }
-      </Box>
-    </Box>
+      {view === "annual" &&        
+        <ColoredInfoCard
+          cardColors={annualSavingsColor}
+          info={`${annualSavingsRate}%`}
+          title={`${selectedYear} State: ${annualSavingsHealthState}`}
+        />  
+      }
+    </FlexColWrapper>
   )
 }
 

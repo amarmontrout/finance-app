@@ -17,6 +17,7 @@ import { usePathname } from "next/navigation"
 import { getMonthTotal } from "@/utils/getTotals"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { getChoices } from "@/utils/choiceStorage"
+import { FlexColWrapper } from "@/components/Wrappers"
 
 const Expenses = () => {
   const { 
@@ -59,9 +60,7 @@ const Expenses = () => {
   }, [expenseTransactions])
 
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <MockDataWarning pathname={pathname}/>
 
       {hasChoices &&
@@ -76,9 +75,7 @@ const Expenses = () => {
         </Box>
       }
 
-      <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
-      >
+      <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`$${monthTotal}`}>
           <TransactionsList
             type={EXPENSES}
@@ -104,7 +101,7 @@ const Expenses = () => {
             }
           />
         </ShowCaseCard>
-      </Box>
+      </FlexColWrapper>
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
@@ -117,7 +114,7 @@ const Expenses = () => {
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
       />
-    </Box>
+    </FlexColWrapper>
   )
 }
 

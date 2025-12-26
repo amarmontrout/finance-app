@@ -1,6 +1,6 @@
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { Box } from "@mui/material"
+import { FlexColWrapper } from "@/components/Wrappers"
 
 type Props = {
   selectedYear: string
@@ -14,20 +14,19 @@ const AnnualCategoryBreakdown = ({
   annualExpenseCategoryTotals,
 }: Props) => {
   return (
-    <Box
-      className="flex flex-col xl:flex-row gap-2 h-full"
-    >
+    <FlexColWrapper gap={2} toRowBreak={"xl"}>
       <ShowCaseCard title={`${selectedYear} Income Category Breakdown`}>
         <PieChart
           data={annualIncomeCategoryTotals}
         />
       </ShowCaseCard>
+      
       <ShowCaseCard title={`${selectedYear} Expense Category Breakdown`}>
         <PieChart
           data={annualExpenseCategoryTotals}
         />
       </ShowCaseCard>
-    </Box>    
+    </FlexColWrapper>  
   )
 }
 

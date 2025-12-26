@@ -6,6 +6,7 @@ import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
 import TransactionsList from "@/components/TransactionsList"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
@@ -59,9 +60,7 @@ const Income = () => {
   }, [incomeTransactions])
 
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <MockDataWarning pathname={pathname}/>
 
       {hasChoices &&
@@ -76,9 +75,7 @@ const Income = () => {
         </Box>
       }
 
-      <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
-      >
+      <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ShowCaseCard 
           title={`Income for ${selectedMonth} ${selectedYear}`} 
           secondaryTitle={`$${monthTotal}`}
@@ -107,7 +104,7 @@ const Income = () => {
             }
           />
         </ShowCaseCard>
-      </Box>
+      </FlexColWrapper>
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
@@ -120,7 +117,7 @@ const Income = () => {
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
       />
-    </Box>
+    </FlexColWrapper>
   )
 }
 

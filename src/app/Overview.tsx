@@ -4,6 +4,7 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, healthStateDarkMode, healthStateLightMode, lightMode } from "@/globals/colors"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
@@ -11,7 +12,6 @@ import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartDat
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getYearTotal } from "@/utils/getTotals"
 import { cleanNumber, getCurrentDateInfo, getSavingsHealthState } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
@@ -63,18 +63,12 @@ const Overview = () => {
   }, [incomeTransactions, expenseTransactions])
 
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <MockDataWarning/>
 
-      <Box
-        className="flex flex-col 2xl:flex-row gap-2 h-full"
-      >
+      <FlexColWrapper gap={2} toRowBreak={"2xl"}>
         <ShowCaseCard title={`YTD Totals for ${currentYear}`}>
-          <Box
-            className="flex flex-col md:flex-row gap-2"
-          >
+          <FlexColWrapper gap={2} toRowBreak={"md"}>
             <ColoredInfoCard
               cardColors={defaultCardColor}
               info={`$${getYearTotal(currentYear, incomeTransactions)}`}
@@ -85,8 +79,8 @@ const Overview = () => {
               cardColors={defaultCardColor}
               info={`$${getYearTotal(currentYear, expenseTransactions)}`}
               title={"Total Expenses"}
-            />            
-          </Box>
+            />
+          </FlexColWrapper>
         </ShowCaseCard>
 
         <ShowCaseCard title={`YTD Net Cash Flow for ${currentYear}`}>
@@ -96,7 +90,7 @@ const Overview = () => {
               title={`${currentYear} State: ${savingsHealthState}`}
             />
         </ShowCaseCard>
-      </Box>
+      </FlexColWrapper>
 
       <ShowCaseCard title={`${currentYear} Overview`}>
         <LineChart
@@ -109,7 +103,7 @@ const Overview = () => {
           }
         />        
       </ShowCaseCard>      
-    </Box>
+    </FlexColWrapper>
   )
 }
 

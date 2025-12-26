@@ -7,11 +7,11 @@ import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
 import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useMemo, useState } from "react"
 import MonthlyCategoryBreakdown from "./MonthlyCategoryBreakdown"
 import AnnualCategoryBreakdown from "./AnnualCategoryBreakdown"
+import { FlexColWrapper } from "@/components/Wrappers"
 
 const Categories = () => {
   const { 
@@ -88,9 +88,7 @@ const Categories = () => {
     : healthStateDarkMode)["default"]
 
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <MockDataWarning/>
 
       <DateSelector
@@ -124,7 +122,7 @@ const Categories = () => {
           defaultCardColor={defaultCardColor}
         />
       }
-    </Box>
+    </FlexColWrapper>
   )
 }
 

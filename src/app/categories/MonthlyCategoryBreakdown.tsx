@@ -1,8 +1,8 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
 
 type Props = {
   selectedMonth: string
@@ -22,13 +22,9 @@ const MonthlyCategoryBreakdown = ({
   defaultCardColor,
 }: Props) => {
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
+    <FlexColWrapper gap={2}>
       <ShowCaseCard title={`Top Expenses for ${selectedMonth} ${selectedYear}`}>
-        <Box
-          className="flex flex-col lg:flex-row gap-2 h-full"
-        >
+        <FlexColWrapper gap={2} toRowBreak={"lg"}>
           {topThreeExpenses.map(([category, amount], idx) => (
             <ColoredInfoCard
               key={category}
@@ -37,23 +33,23 @@ const MonthlyCategoryBreakdown = ({
               title={`${idx+1}) ${category}`}
             />
           ))}
-        </Box>
+        </FlexColWrapper>
       </ShowCaseCard>
-      <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
-      >
+
+      <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}>
           <PieChart
             data={monthIncomeCategoryTotals}
           />
         </ShowCaseCard>
+
         <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Category Breakdown`}>
           <PieChart
             data={monthExpenseCategoryTotals}
           />
         </ShowCaseCard>
-      </Box>
-    </Box>    
+      </FlexColWrapper>
+    </FlexColWrapper>
   )
 }
 

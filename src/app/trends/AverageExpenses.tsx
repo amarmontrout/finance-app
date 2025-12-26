@@ -1,12 +1,13 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
+import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage, getDifference } from "@/utils/financialFunctions"
 import { cleanNumber, flattenTransactions, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box, Typography } from "@mui/material"
+import { Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useMemo } from "react"
 
@@ -66,11 +67,12 @@ const AverageExpenses = () => {
 
   return (
     <ShowCaseCard title={"Expense Averages"}>
-      <Box
-        className="flex flex-col sm:flex-row gap-5"
-      >
-        <Box
-          className="hidden sm:flex flex-col gap-1 sm:w-[50%]"
+      <FlexColWrapper gap={5} toRowBreak={"sm"}>
+
+
+        <FlexChildWrapper
+          gap={1}
+          hiddenToVisibleBp={"sm"}
         >
           <Typography
             textAlign={"center"}
@@ -94,11 +96,12 @@ const AverageExpenses = () => {
                 </Typography>
               </li>
             ))}
-          </ul>      
-        </Box>
+          </ul>
+        </FlexChildWrapper>
 
-        <Box
-          className="flex flex-col gap-1 sm:w-[50%]"
+
+        <FlexChildWrapper
+          gap={1}
         >
           <Typography
             textAlign={"center"}
@@ -123,11 +126,13 @@ const AverageExpenses = () => {
                 <Typography variant="h6">{`$${formattedStringNumber(amount)}`}</Typography>
               </li>
             ))}
-          </ul>      
-        </Box>
+          </ul>
+        </FlexChildWrapper>
 
-        <Box
-          className="flex flex-col gap-1 sm:w-[50%]"
+
+
+        <FlexChildWrapper
+          gap={1}
         >
           <Typography
             textAlign={"center"}
@@ -160,10 +165,11 @@ const AverageExpenses = () => {
               )
             })}
           </ul>
-        </Box>
+        </FlexChildWrapper>
 
-        <Box
-          className="flex flex-col gap-1 sm:w-[50%]"
+
+        <FlexChildWrapper
+          gap={1}
         >
           <Typography
             textAlign={"center"}
@@ -200,8 +206,8 @@ const AverageExpenses = () => {
               )
             })}
           </ul>
-        </Box>        
-      </Box>
+        </FlexChildWrapper>
+      </FlexColWrapper>
     </ShowCaseCard>
   )
 }

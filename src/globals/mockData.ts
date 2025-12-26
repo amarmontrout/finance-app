@@ -172,41 +172,33 @@ export const mockExpenseData: TransactionData = {
     ],
     May: [
       { id: "exp-2024-05-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-05-2", category: "Groceries", amount: "445.00" },
-      { id: "exp-2024-05-3", category: "Vacation", amount: "1200.00" },
+      { id: "exp-2024-05-2", category: "Groceries", amount: "525.00" },
+      { id: "exp-2024-05-3", category: "Vacation", amount: "1800.00" },
+      { id: "exp-2024-05-4", category: "Dining Out", amount: "450.00" },
     ],
     June: [
       { id: "exp-2024-06-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-06-2", category: "Water", amount: "50.10" },
-      { id: "exp-2024-06-3", category: "Electric", amount: "240.00" },
+      { id: "exp-2024-06-2", category: "Water", amount: "75.50" },
+      { id: "exp-2024-06-3", category: "Electric", amount: "310.00" },
+      { id: "exp-2024-06-4", category: "Medical", amount: "680.00" },
     ],
     July: [
       { id: "exp-2024-07-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-07-2", category: "Electric", amount: "230.45" },
-      { id: "exp-2024-07-3", category: "Entertainment", amount: "410.00" },
-    ],
-    August: [
-      { id: "exp-2024-08-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-08-2", category: "Groceries", amount: "480.90" },
-      { id: "exp-2024-08-3", category: "Travel", amount: "900.00" },
-    ],
-    September: [
-      { id: "exp-2024-09-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-09-2", category: "Utilities", amount: "195.30" },
+      { id: "exp-2024-07-2", category: "Electric", amount: "345.00" },
+      { id: "exp-2024-07-3", category: "Entertainment", amount: "620.00" },
+      { id: "exp-2024-07-4", category: "Car Repair", amount: "950.00" },
     ],
     October: [
       { id: "exp-2024-10-1", category: "Rent", amount: "1650.00" },
       { id: "exp-2024-10-2", category: "Internet", amount: "89.99" },
-      { id: "exp-2024-10-3", category: "Medical", amount: "600.00" },
-    ],
-    November: [
-      { id: "exp-2024-11-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-11-2", category: "Groceries", amount: "510.00" },
+      { id: "exp-2024-10-3", category: "Medical", amount: "1200.00" },
+      { id: "exp-2024-10-4", category: "Groceries", amount: "560.00" },
     ],
     December: [
       { id: "exp-2024-12-1", category: "Rent", amount: "1650.00" },
-      { id: "exp-2024-12-2", category: "Gifts", amount: "600.00" },
-      { id: "exp-2024-12-3", category: "Travel", amount: "850.00" },
+      { id: "exp-2024-12-2", category: "Gifts", amount: "1100.00" },
+      { id: "exp-2024-12-3", category: "Travel", amount: "1600.00" },
+      { id: "exp-2024-12-4", category: "Dining Out", amount: "480.00" },
     ],
   },
 
@@ -218,7 +210,8 @@ export const mockExpenseData: TransactionData = {
     ],
     February: [
       { id: "exp-2025-02-1", category: "Rent", amount: "1700.00" },
-      { id: "exp-2025-02-2", category: "Medical", amount: "900.00" },
+      { id: "exp-2025-02-2", category: "Medical", amount: "1400.00" },
+      { id: "exp-2025-02-3", category: "Groceries", amount: "490.00" },
     ],
     March: [
       { id: "exp-2025-03-1", category: "Rent", amount: "1700.00" },
@@ -230,8 +223,9 @@ export const mockExpenseData: TransactionData = {
     ],
     May: [
       { id: "exp-2025-05-1", category: "Rent", amount: "1700.00" },
-      { id: "exp-2025-05-2", category: "Electric", amount: "245.60" },
-      { id: "exp-2025-05-3", category: "Car Repair", amount: "1200.00" },
+      { id: "exp-2025-05-2", category: "Electric", amount: "295.60" },
+      { id: "exp-2025-05-3", category: "Car Repair", amount: "1850.00" },
+      { id: "exp-2025-05-4", category: "Rental Car", amount: "420.00" },
     ],
     June: [
       { id: "exp-2025-06-1", category: "Rent", amount: "1700.00" },
@@ -239,7 +233,8 @@ export const mockExpenseData: TransactionData = {
     ],
     July: [
       { id: "exp-2025-07-1", category: "Rent", amount: "1700.00" },
-      { id: "exp-2025-07-2", category: "Vacation", amount: "1800.00" },
+      { id: "exp-2025-07-2", category: "Vacation", amount: "2600.00" },
+      { id: "exp-2025-07-3", category: "Dining Out", amount: "540.00" },
     ],
     August: [
       { id: "exp-2025-08-1", category: "Rent", amount: "1700.00" },
@@ -255,7 +250,8 @@ export const mockExpenseData: TransactionData = {
     ],
     November: [
       { id: "exp-2025-11-1", category: "Rent", amount: "1700.00" },
-      { id: "exp-2025-11-2", category: "Groceries", amount: "520.00" },
+      { id: "exp-2025-11-2", category: "Groceries", amount: "610.00" },
+      { id: "exp-2025-11-3", category: "Gifts", amount: "850.00" },
     ],
     December: [
       { id: "exp-2025-12-1", category: "Rent", amount: "1700.00" },
@@ -281,4 +277,5 @@ export const mockExpenseCategories: string[] = [
   "Travel",
   "Gifts",
   "Gym",
+  "Rental Car",
 ]

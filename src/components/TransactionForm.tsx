@@ -112,7 +112,6 @@ const TransactionForm = (props: {
       className="flex flex-col xl:flex-row gap-5 sm:w-fit"
       paddingTop={"10px"}
       margin={"0 auto"}
-      border={"1px solid red"}
     >
       <Box
         className="flex flex-col sm:flex-row gap-5"

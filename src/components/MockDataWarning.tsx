@@ -48,7 +48,11 @@ const MockDataWarning = (props: {
     return (     
       <Box
         sx={{
-          display: isMockData.income || isMockData.expenses || isMockData.years? "flex" : "none",
+          display: isMockData.income 
+            || isMockData.expenses 
+            || isMockData.years ?
+                "flex" 
+                : "none",
           height: "100%",
           alignItems: "center"
         }}

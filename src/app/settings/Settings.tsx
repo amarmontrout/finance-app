@@ -3,7 +3,13 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
+import { 
+  EXPENSE_CATEGORIES_KEY, 
+  EXPENSES, 
+  INCOME, 
+  INCOME_CATEGORIES_KEY, 
+  YEARS_KEY 
+} from "@/globals/globals"
 import { Box, Button, Stack } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
@@ -23,13 +29,14 @@ const Settings = () => {
     expenseCategories,
     isMockData,
   } = useTransactionContext()
+  const { theme: currentTheme } = useTheme()
 
   const [yearsInput, setYearsInput] = useState<string>("")
-  const [incomeCategoriesInput, setIncomeCategoriesInput] = useState<string>("")
-  const [expenseCategoriesInput, setExpenseCategoriesInput] = useState<string>("")
+  const [incomeCategoriesInput, setIncomeCategoriesInput] = 
+    useState<string>("")
+  const [expenseCategoriesInput, setExpenseCategoriesInput] = 
+    useState<string>("")
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
-
-  const { theme: currentTheme } = useTheme()
 
   return (
     <Box
@@ -108,7 +115,10 @@ const Settings = () => {
             }
             onSubmit={
               () => {
-                saveChoices({key: INCOME_CATEGORIES_KEY, choice: incomeCategoriesInput})
+                saveChoices({
+                  key: INCOME_CATEGORIES_KEY, 
+                  choice: incomeCategoriesInput
+                })
                 refreshIncomeCategoryChoices()
                 setIncomeCategoriesInput("")
               }
@@ -134,7 +144,10 @@ const Settings = () => {
             }
             onSubmit={
               () => {
-                saveChoices({key: EXPENSE_CATEGORIES_KEY, choice: expenseCategoriesInput})
+                saveChoices({
+                  key: EXPENSE_CATEGORIES_KEY, 
+                  choice: expenseCategoriesInput
+                })
                 refreshExpenseCategoryChoices()
                 setExpenseCategoriesInput("")
               }

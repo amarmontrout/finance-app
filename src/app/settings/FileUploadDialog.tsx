@@ -18,7 +18,9 @@ const FileUploadDialog = (props: {
     <Dialog open={dialogOpen}>
       <DialogContent 
         sx={{
-          backgroundColor: currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg,
+          backgroundColor: currentTheme === "light" ?
+           lightMode.elevatedBg 
+           : darkMode.elevatedBg,
         }}
       >
         <input
@@ -42,7 +44,9 @@ const FileUploadDialog = (props: {
         <Button 
           variant="contained"
           sx={{
-            backgroundColor: currentTheme === "light" ? lightMode.error : darkMode.error
+            backgroundColor: currentTheme === "light" ?
+             lightMode.error 
+             : darkMode.error
           }}
           onClick={
             () => {setDialogOpen(false)}

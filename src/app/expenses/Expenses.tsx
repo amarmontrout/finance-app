@@ -9,7 +9,9 @@ import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useEffect, useMemo } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
+import 
+  EditTransactionDetailDialog 
+from "@/components/EditTransactionDetailDialog"
 import TransactionForm from "@/components/TransactionForm"
 import { buildMultiColumnData } from "@/utils/buildChartData"
 import MockDataWarning from "@/components/MockDataWarning"
@@ -32,7 +34,6 @@ const Expenses = () => {
   
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
-
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
@@ -46,11 +47,9 @@ const Expenses = () => {
       getChoices({ key: EXPENSE_CATEGORIES_KEY }).length !== 0
     )
   }, [])
-
-  const monthTotal = useMemo(() => {
+  const monthExpense = useMemo(() => {
     return getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
   }, [selectedYear, selectedMonth, expenseTransactions])
-
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
       firstData: expenseTransactions,
@@ -76,7 +75,10 @@ const Expenses = () => {
       }
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        <ShowCaseCard title={`Expenses for ${selectedMonth} ${selectedYear}`} secondaryTitle={`$${monthTotal}`}>
+        <ShowCaseCard 
+          title={`Expenses for ${selectedMonth} ${selectedYear}`} 
+          secondaryTitle={`$${monthExpense}`}
+        >
           <TransactionsList
             type={EXPENSES}
             transactions={expenseTransactions}

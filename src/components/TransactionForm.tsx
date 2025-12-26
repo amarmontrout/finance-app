@@ -46,7 +46,8 @@ const TransactionForm = (props: {
     amount: ""
   }
 
-  const [transaction, setTransaction] = useState<TransactionType>(TRANSACTION_INIT)
+  const [transaction, setTransaction] = 
+    useState<TransactionType>(TRANSACTION_INIT)
 
   useEffect(() => {
     setTransaction(prev => ({
@@ -82,7 +83,9 @@ const TransactionForm = (props: {
     }));
   }
 
-  const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleAmount = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     let digits = e.target.value.replace(/\D/g, "");
     const cents = digits.slice(-2);
     let dollars = digits.slice(0, -2);

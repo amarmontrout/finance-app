@@ -2,7 +2,11 @@ import { TransactionType } from "@/components/TransactionForm"
 import { MONTHS } from "@/globals/globals"
 import { makeId } from "./helperFunctions"
 
-export type TransactionData = {[year: string]: {[month: string]: Array<{id: string, category: string, amount: string}>}}
+export type TransactionData = {
+  [year: string]: {
+    [month: string]: Array<{id: string, category: string, amount: string}>
+  }
+}
 
 export const saveTransaction = (props: {
   key: string

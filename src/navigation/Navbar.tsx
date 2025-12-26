@@ -4,7 +4,11 @@ import { Box, IconButton, Stack, Typography } from "@mui/material"
 import MenuIcon from '@mui/icons-material/Menu';
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
-import { NAV_QUICK_INFO, NAV_SETTINGS, NAV_TRANSACTIONS } from "@/globals/globals";
+import { 
+  NAV_QUICK_INFO, 
+  NAV_SETTINGS, 
+  NAV_TRANSACTIONS 
+} from "@/globals/globals";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
@@ -60,7 +64,11 @@ const Navbar = () => {
         </Typography>
         {NAV_QUICK_INFO.map((item) => {
           return (
-            <PageLink item={item} active={pathname === item.link} key={item.name} />
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
           )
         })}
 
@@ -74,7 +82,11 @@ const Navbar = () => {
         </Typography>
         {NAV_TRANSACTIONS.map((item) => {
           return (
-            <PageLink item={item} active={pathname === item.link} key={item.name} />
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
           )
         })}
 
@@ -82,7 +94,11 @@ const Navbar = () => {
 
         {NAV_SETTINGS.map((item) => {
           return (
-            <PageLink item={item} active={pathname === item.link} key={item.name} />
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
           )
         })}
       </Stack>

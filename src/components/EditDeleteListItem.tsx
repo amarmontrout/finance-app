@@ -26,10 +26,14 @@ const EditDeleteListItem = (props: {
   const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
 
   const { theme: currentTheme } = useTheme()
-  const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  const listItemColor = currentTheme === "light" ?
+    lightMode.elevatedBg 
+    : darkMode.elevatedBg
 
   const handleDeleteItem = () => {
-    const newItemList = items.filter((selection) => {return selection !== confirmSelection})
+    const newItemList = items.filter(
+      (selection) => {return selection !== confirmSelection}
+    )
     saveChoices({key: storageKey, choiceArray: newItemList})
     refresh()
   }

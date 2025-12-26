@@ -1,14 +1,27 @@
-import { List, Stack, ListItemButton, ListItemText, ListItem, IconButton, Box, useMediaQuery } from "@mui/material"
+import { 
+  List, 
+  Stack, 
+  ListItemButton, 
+  ListItemText, 
+  ListItem, 
+  IconButton, 
+  Box, 
+  useMediaQuery 
+
+} from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { accentColorPrimarySelected, darkMode, lightMode } from "@/globals/colors"
+import { 
+  accentColorPrimarySelected, 
+  darkMode, 
+  lightMode 
+} from "@/globals/colors"
 import { useTheme } from "next-themes"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
 import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
 
@@ -38,7 +51,9 @@ const TransactionsList = ({
 
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const { theme: currentTheme } = useTheme()
-  const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  const listItemColor = currentTheme === "light" ?
+    lightMode.elevatedBg 
+    : darkMode.elevatedBg
 
   useEffect(() => {
     if (!transactions || Object.keys(transactions).length === 0) return
@@ -57,13 +72,18 @@ const TransactionsList = ({
     }
   }, [transactions])
 
-  const handleDeleteTransaction = (passedYear: string, passedMonth: string, passedId: string) => {
+  const handleDeleteTransaction = (
+    passedYear: string, 
+    passedMonth: string, 
+    passedId: string
+  ) => {
     const updated = structuredClone(transactions)
 
     if (updated[passedYear] && updated[passedYear][passedMonth]) {
-      updated[passedYear][passedMonth] = updated[passedYear][passedMonth].filter(
-        (transaction) => transaction.id !== passedId
-      )
+      updated[passedYear][passedMonth] = 
+        updated[passedYear][passedMonth].filter(
+          (transaction) => transaction.id !== passedId
+        )
 
       // Remove month if empty
       if (updated[passedYear][passedMonth].length === 0) {
@@ -168,7 +188,9 @@ const TransactionsList = ({
                     setSelectedMonth("")
                   }} 
                   sx={{ 
-                    backgroundColor: year === selectedYear ? accentColorPrimarySelected : listItemColor,
+                    backgroundColor: year === selectedYear ?
+                      accentColorPrimarySelected 
+                      : listItemColor,
                     borderRadius: "10px",
                     minWidth: "fit-content"
                   }}
@@ -196,14 +218,20 @@ const TransactionsList = ({
         <List className="flex flex-col gap-2">
           { transactions[selectedYear] &&
             Object.entries(transactions[selectedYear]).map(([month, _]) => {
-              const monthTotal = getMonthTotal(selectedYear, month, transactions)
+              const monthTotal = getMonthTotal(
+                selectedYear, 
+                month, 
+                transactions
+              )
 
               return (
                 <ListItemButton 
                   key={month} 
                   onClick={() => {setSelectedMonth(month)}}
                   sx={{ 
-                    backgroundColor: month === selectedMonth ? accentColorPrimarySelected : listItemColor,
+                    backgroundColor: month === selectedMonth ?
+                      accentColorPrimarySelected 
+                      : listItemColor,
                     borderRadius: "10px",
                     minWidth: "fit-content"
                   }}
@@ -228,8 +256,9 @@ const TransactionsList = ({
     return (
       <Box className="flex-[3]">
         <List className="flex flex-col gap-2">
-          { transactions[selectedYear] && transactions[selectedYear][selectedMonth] &&
-            transactions[selectedYear]?.[selectedMonth]?.map((details) => {
+          { transactions[selectedYear] 
+            && transactions[selectedYear][selectedMonth] 
+            && transactions[selectedYear]?.[selectedMonth]?.map((details) => {
               return (
                 <ListItem 
                   key={details.id}
@@ -245,7 +274,13 @@ const TransactionsList = ({
                   }}
                 >
                   <ListItemText 
-                    primary={`$${formattedStringNumber(cleanNumber(details.amount))}`}
+                    primary={`$${
+                      formattedStringNumber(
+                        cleanNumber(
+                          details.amount
+                        )
+                      )
+                    }`}
                     secondary={details.category}
                   />
                 </ListItem>

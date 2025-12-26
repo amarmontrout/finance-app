@@ -37,13 +37,17 @@ const MonthlyCategoryBreakdown = ({
       </ShowCaseCard>
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        <ShowCaseCard title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}>
+        <ShowCaseCard 
+          title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}
+        >
           <PieChart
             data={monthIncomeCategoryTotals}
           />
         </ShowCaseCard>
 
-        <ShowCaseCard title={`${selectedMonth} ${selectedYear} Expense Category Breakdown`}>
+        <ShowCaseCard 
+          title={`${selectedMonth} ${selectedYear} Expense Category Breakdown`}
+        >
           <PieChart
             data={monthExpenseCategoryTotals}
           />

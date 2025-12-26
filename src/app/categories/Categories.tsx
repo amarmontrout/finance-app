@@ -4,8 +4,14 @@ import DateSelector from "@/components/DateSelector"
 import MockDataWarning from "@/components/MockDataWarning"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
-import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
+import { 
+  getAnnualCategoryTotals, 
+  getMonthCategoryTotals 
+} from "@/utils/getTotals"
+import { 
+  flattenTransactions, 
+  getCurrentDateInfo 
+} from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useEffect, useMemo, useState } from "react"
 import MonthlyCategoryBreakdown from "./MonthlyCategoryBreakdown"
@@ -35,37 +41,43 @@ const Categories = () => {
   const incomeSource = incomeTransactions
   const expenseSource = expenseTransactions
 
-  const flattenedIncomeData = useMemo(() => flattenTransactions(incomeSource),[incomeSource])
-  const flattenedExpenseData = useMemo(() => flattenTransactions(expenseSource),[expenseSource])
+  const flattenedIncomeData = useMemo(
+    () => flattenTransactions(
+      incomeSource
+    ),[incomeSource]
+  )
+  const flattenedExpenseData = useMemo(
+    () => flattenTransactions(
+      expenseSource
+    ),[expenseSource]
+  )
 
   const annualIncomeCategoryTotals = useMemo(
     () => getAnnualCategoryTotals(
       selectedYear, 
-      flattenedIncomeData)
-    ,[flattenedIncomeData, selectedYear]
+      flattenedIncomeData
+    ),[flattenedIncomeData, selectedYear]
   )
-
   const annualExpenseCategoryTotals = useMemo(
     () => getAnnualCategoryTotals(
       selectedYear, 
-      flattenedExpenseData)
-    ,[flattenedExpenseData, selectedYear]
+      flattenedExpenseData
+    ),[flattenedExpenseData, selectedYear]
   )
 
   const monthIncomeCategoryTotals = useMemo(
     () => getMonthCategoryTotals(
       selectedYear, 
       selectedMonth, 
-      flattenedIncomeData)
-    ,[selectedYear, selectedMonth, flattenedIncomeData]
+      flattenedIncomeData
+    ),[selectedYear, selectedMonth, flattenedIncomeData]
   )
-
   const monthExpenseCategoryTotals = useMemo(
     () => getMonthCategoryTotals(
       selectedYear, 
       selectedMonth, 
-      flattenedExpenseData)
-    ,[selectedYear, selectedMonth, flattenedExpenseData]
+      flattenedExpenseData
+    ),[selectedYear, selectedMonth, flattenedExpenseData]
   )
 
   const topThreeExpenses = useMemo(() => {

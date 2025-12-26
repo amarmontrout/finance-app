@@ -23,15 +23,52 @@ const SavingsRate = (props: {
   } = useTransactionContext()
   const { theme: currentTheme } = useTheme()
 
-  const income = useMemo(() => getMonthTotal(selectedYear, selectedMonth, incomeTransactions), [selectedYear, selectedMonth, incomeTransactions])
-  const expense = useMemo(() => getMonthTotal(selectedYear, selectedMonth, expenseTransactions), [selectedYear, selectedMonth, expenseTransactions])
-  const savingsRate = useMemo(() => getSavingRate(income, expense), [income, expense])
-  const annualIncome = useMemo(() => getYearTotal(selectedYear, incomeTransactions), [selectedYear, incomeTransactions])
-  const annualExpense = useMemo(() => getYearTotal(selectedYear, expenseTransactions), [selectedYear, expenseTransactions])
-  const annualSavingsRate = useMemo(() => getSavingRate(annualIncome, annualExpense), [annualIncome, annualExpense])
-
-  const monthSavingsHealthState = getSavingsHealthState(cleanNumber(savingsRate), 100)
-  const annualSavingsHealthState = getSavingsHealthState(cleanNumber(annualSavingsRate), 100)
+  const monthIncome = useMemo(
+    () => getMonthTotal(
+      selectedYear, 
+      selectedMonth, 
+      incomeTransactions
+    ), [selectedYear, selectedMonth, incomeTransactions]
+  )
+  const monthExpense = useMemo(
+    () => getMonthTotal(
+      selectedYear, 
+      selectedMonth, 
+      expenseTransactions
+    ), [selectedYear, selectedMonth, expenseTransactions]
+  )
+  const monthSavingsRate = useMemo(
+    () => getSavingRate(
+      monthIncome, 
+      monthExpense
+    ), [monthIncome, monthExpense]
+  )
+  const annualIncome = useMemo(
+    () => getYearTotal(
+      selectedYear, 
+      incomeTransactions
+    ), [selectedYear, incomeTransactions]
+  )
+  const annualExpense = useMemo(
+    () => getYearTotal(
+      selectedYear, 
+      expenseTransactions
+    ), [selectedYear, expenseTransactions]
+  )
+  const annualSavingsRate = useMemo(
+    () => getSavingRate(
+      annualIncome, 
+      annualExpense
+    ), [annualIncome, annualExpense]
+  )
+  const monthSavingsHealthState = getSavingsHealthState(
+    cleanNumber(monthSavingsRate), 
+    100
+  )
+  const annualSavingsHealthState = getSavingsHealthState(
+    cleanNumber(annualSavingsRate), 
+    100
+  )
   const monthSavingsColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)[monthSavingsHealthState]
@@ -44,8 +81,9 @@ const SavingsRate = (props: {
       {view === "month" &&       
         <ColoredInfoCard
           cardColors={monthSavingsColor}
-          info={`${savingsRate}%`}
-          title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
+          info={`${monthSavingsRate}%`}
+          title={`${selectedMonth} ${selectedYear} 
+            State: ${monthSavingsHealthState}`}
         />          
       }
 

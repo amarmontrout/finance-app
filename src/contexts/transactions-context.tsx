@@ -1,5 +1,17 @@
-import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import { mockExpenseCategories, mockExpenseData, mockIncomeCategories, mockIncomeData, mockYears } from "@/globals/mockData"
+import { 
+  EXPENSE_CATEGORIES_KEY, 
+  EXPENSES, 
+  INCOME, 
+  INCOME_CATEGORIES_KEY, 
+  YEARS_KEY 
+} from "@/globals/globals"
+import { 
+  mockExpenseCategories,
+  mockExpenseData, 
+  mockIncomeCategories,
+  mockIncomeData, 
+  mockYears 
+} from "@/globals/mockData"
 import { getChoices } from "@/utils/choiceStorage"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
 import { createContext, useContext, useEffect, useState } from "react"
@@ -40,7 +52,7 @@ export const useTransactionContext = () => {
   const context = useContext(TransactionContext)
 
   if (!context) {
-      throw new Error("useTransactionContext must be used within a TransactionProvider")
+    throw new Error("useTransactionContext must be used within a TransactionProvider")
   }
 
   return context
@@ -49,12 +61,13 @@ export const useTransactionContext = () => {
 export const TransactionProvider = (props: {
   children: React.ReactNode
 }) => {
-  const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
-  const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
+  const [incomeTransactions, setIncomeTransactions] = 
+    useState<TransactionData>({})
+  const [expenseTransactions, setExpenseTransactions] = 
+    useState<TransactionData>({})
   const [years, setYears] = useState<string[]>([])
   const [incomeCategories, setIncomeCategories] = useState<string[]>([])
   const [expenseCategories, setExpenseCategories] = useState<string[]>([])
-
   const [isMockData, setIsMockData] = useState<MockDataType>(mockDataInit)
 
   const refreshYearChoices = () => {

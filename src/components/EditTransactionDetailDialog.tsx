@@ -59,7 +59,8 @@ const EditTransactionDetailDialog = (props: {
     refreshExpenseTransactions,
   } =useTransactionContext()
  
-  const [updateTransaction, setUpdateTransaction] = useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
+  const [updateTransaction, setUpdateTransaction] = 
+    useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
 
   useEffect(() => {
     if (!selectedId || !selectedYear || !selectedMonth) return
@@ -87,7 +88,9 @@ const EditTransactionDetailDialog = (props: {
     }));
   }
     
-  const handleAmount = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleAmount = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     let digits = e.target.value.replace(/\D/g, "");
     const cents = digits.slice(-2);
     let dollars = digits.slice(0, -2);
@@ -134,7 +137,9 @@ const EditTransactionDetailDialog = (props: {
 
   return (
     <Dialog open={openEditDialog}>
-      <DialogTitle>{`Edit ${type === INCOME ? "Income" : "Expense"} Detail`}</DialogTitle>
+      <DialogTitle>
+        {`Edit ${type === INCOME ? "Income" : "Expense"} Detail`}
+      </DialogTitle>
 
       <Box
         className="flex flex-col gap-5"

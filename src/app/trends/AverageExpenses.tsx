@@ -6,7 +6,12 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage, getDifference } from "@/utils/financialFunctions"
-import { cleanNumber, flattenTransactions, formattedStringNumber, getCurrentDateInfo } from "@/utils/helperFunctions"
+import { 
+  cleanNumber, 
+  flattenTransactions, 
+  formattedStringNumber, 
+  getCurrentDateInfo 
+} from "@/utils/helperFunctions"
 import { Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useMemo } from "react"
@@ -16,8 +21,12 @@ const AverageExpenses = () => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
-  const badColor = currentTheme === "light" ? lightMode.error : darkMode.error
-  const goodColor = currentTheme === "light" ? lightMode.success : darkMode.success
+  const badColor = currentTheme === "light" ?
+   lightMode.error 
+   : darkMode.error
+  const goodColor = currentTheme === "light" ?
+   lightMode.success 
+   : darkMode.success
 
   const {
     refreshExpenseTransactions,
@@ -30,11 +39,6 @@ const AverageExpenses = () => {
     refreshExpenseTransactions()
     refreshExpenseCategoryChoices()
   }, [])
-
-  useEffect(() => {
-    console.log(expenseTransactions)
-    console.log(expenseCategories)
-  },[expenseTransactions, expenseCategories])
 
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)
@@ -59,12 +63,18 @@ const AverageExpenses = () => {
         }
       })
 
-      const currentAverage = getAverage(currentAmounts, MONTHS.indexOf(currentMonth)+1)
+      const currentAverage = getAverage(
+        currentAmounts, 
+        MONTHS.indexOf(currentMonth)+1
+      )
       const prevAverage = getAverage(prevAmounts, 12)
 
       currentAvg.push([category, currentAverage])
       prevAvg.push([category, prevAverage])
-      percentChangeAvg.push([category, getDifference(prevAverage, currentAverage)])
+      percentChangeAvg.push([
+        category, 
+        getDifference(prevAverage, currentAverage)
+      ])
     })
 
     return { currentAvg, prevAvg, percentChangeAvg }
@@ -73,8 +83,6 @@ const AverageExpenses = () => {
   return (
     <ShowCaseCard title={"Expense Averages"}>
       <FlexColWrapper gap={5} toRowBreak={"sm"}>
-
-
         <FlexChildWrapper
           gap={1}
           hiddenToVisibleBp={"sm"}
@@ -104,7 +112,6 @@ const AverageExpenses = () => {
           </ul>
         </FlexChildWrapper>
 
-
         <FlexChildWrapper
           gap={1}
         >
@@ -133,8 +140,6 @@ const AverageExpenses = () => {
             ))}
           </ul>
         </FlexChildWrapper>
-
-
 
         <FlexChildWrapper
           gap={1}
@@ -171,7 +176,6 @@ const AverageExpenses = () => {
             })}
           </ul>
         </FlexChildWrapper>
-
 
         <FlexChildWrapper
           gap={1}

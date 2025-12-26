@@ -41,7 +41,9 @@ export const FlexChildWrapper = (props: {
 }) => {
   const { children, gap, hiddenToVisibleBp } = props
   const hasGap = gap ? `gap-${gap}` : ""
-  const hiddenToVisible = hiddenToVisibleBp ? `hidden ${hiddenToVisibleBp}:flex` : "flex"
+  const hiddenToVisible = hiddenToVisibleBp ?
+    `hidden ${hiddenToVisibleBp}:flex` 
+    : "flex"
   return (
     <Box
       className={`${hiddenToVisible} flex-1 flex-col ${hasGap} min-w-0 h-full`}

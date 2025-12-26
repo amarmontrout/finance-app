@@ -9,7 +9,9 @@ const PieChart = (props: {
   const { data } = props
 
   const { theme: currentTheme } = useTheme()
-  const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  const backgroundColor = currentTheme === "light" ?
+    lightMode.elevatedBg 
+    : darkMode.elevatedBg
   const textColor = currentTheme === "light"? "#000" : "#FFF"
   
   const options = {

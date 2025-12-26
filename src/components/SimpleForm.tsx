@@ -1,5 +1,11 @@
 import { accentColorSecondary } from "@/globals/colors"
-import { Box, FormControl, InputLabel, OutlinedInput, Button } from "@mui/material"
+import { 
+  Box, 
+  FormControl, 
+  InputLabel, 
+  OutlinedInput, 
+  Button 
+} from "@mui/material"
 import { ChangeEvent } from "react"
 
 const SimpleForm = (props: {

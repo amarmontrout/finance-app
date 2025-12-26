@@ -4,12 +4,21 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { accentColorSecondary, healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
+import { 
+  accentColorSecondary, 
+  healthStateDarkMode, 
+  healthStateLightMode 
+} from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, formattedStringNumber, getSavingsHealthState, removeCommas } from "@/utils/helperFunctions"
+import { 
+  cleanNumber, 
+  formattedStringNumber, 
+  getSavingsHealthState, 
+  removeCommas 
+} from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
 
@@ -26,26 +35,45 @@ const NetCashFlow = (props: {
   } = useTransactionContext()
   const { theme: currentTheme } = useTheme()
 
-  const income = getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
+  const monthIncome = getMonthTotal(
+    selectedYear, 
+    selectedMonth, 
+    incomeTransactions
+  )
+  const monthExpense = getMonthTotal(
+    selectedYear, 
+    selectedMonth, 
+    expenseTransactions
+  )
+  const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
   const annualIncome = getYearTotal(selectedYear, incomeTransactions)
-  const expense = getMonthTotal(selectedYear, selectedMonth, expenseTransactions)
-  const netIncome = getNetCashFlow(income, expense)
-
-  const annualNet: [string, string][] = useMemo(() => {
+  const eachMonthNetIncome: [string, string][] = useMemo(() => {
     return MONTHS.map(month => {
       const incomeTotal = getMonthTotal(selectedYear, month, incomeTransactions)
-      const expenseTotal = getMonthTotal(selectedYear, month, expenseTransactions)
+      const expenseTotal = getMonthTotal(
+        selectedYear, 
+        month, 
+        expenseTransactions
+      )
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, removeCommas(net)]
     })
   }, [selectedYear, incomeTransactions, expenseTransactions])
-
   const annualNetIncome = useMemo(() => {
-    return annualNet.reduce((acc, [, amount]) => acc + Number(amount), 0)
-  }, [annualNet])
+    return eachMonthNetIncome.reduce(
+      (acc, [, amount]) => acc + Number(amount), 
+      0
+    )
+  }, [eachMonthNetIncome])
 
-  const monthSavingsHealthState = getSavingsHealthState(cleanNumber(netIncome), cleanNumber(income))
-  const annualSavingsHealthState = getSavingsHealthState(annualNetIncome, cleanNumber(annualIncome))
+  const monthSavingsHealthState = getSavingsHealthState(
+    cleanNumber(monthNetIncome), 
+    cleanNumber(monthIncome)
+  )
+  const annualSavingsHealthState = getSavingsHealthState(
+    annualNetIncome, 
+    cleanNumber(annualIncome)
+  )
   const monthSavingsColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)[monthSavingsHealthState]
@@ -55,11 +83,11 @@ const NetCashFlow = (props: {
 
   const lineChartData: TwoColumnDataType = useMemo(() => {
     return buildTwoColumnData({
-      data: annualNet,
+      data: eachMonthNetIncome,
       firstColumnTitle: "Month",
       secondColumnTitle: "Net Cash Flow"
     }) || []
-  }, [annualNet])
+  }, [eachMonthNetIncome])
   
   return (
     <FlexColWrapper gap={4}> 
@@ -71,8 +99,9 @@ const NetCashFlow = (props: {
         {view === "month" &&
           <ColoredInfoCard
             cardColors={monthSavingsColor}
-            info={`$${netIncome}`}
-            title={`${selectedMonth} ${selectedYear} State: ${monthSavingsHealthState}`}
+            info={`$${monthNetIncome}`}
+            title={`${selectedMonth} ${selectedYear} 
+              State: ${monthSavingsHealthState}`}
           />
         }
 

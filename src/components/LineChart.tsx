@@ -17,10 +17,13 @@ const LineChart = (props: {
     title,
     lineColors
   } = props
-  const [chartData, setChartData] = useState<TwoColumnDataType | MultiColumnDataType>([])
+  const [chartData, setChartData] = 
+    useState<TwoColumnDataType | MultiColumnDataType>([])
 
   const { theme: currentTheme } = useTheme()
-  const backgroundColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
+  const backgroundColor = currentTheme === "light" ? 
+    lightMode.elevatedBg 
+    : darkMode.elevatedBg
   const textColor = currentTheme === "light"? "#000" : "#FFF"
 
   const options = {

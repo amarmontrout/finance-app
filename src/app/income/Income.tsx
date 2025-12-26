@@ -1,6 +1,8 @@
 "use client"
 
-import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
+import 
+  EditTransactionDetailDialog 
+from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
@@ -32,7 +34,6 @@ const Income = () => {
 
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
-
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
@@ -46,11 +47,9 @@ const Income = () => {
       getChoices({ key: INCOME_CATEGORIES_KEY }).length !== 0
     )
   }, [])
-  
-  const monthTotal = useMemo(() => {
+  const monthIncome = useMemo(() => {
     return getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
   }, [selectedYear, selectedMonth, incomeTransactions])
-
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
       firstData: incomeTransactions,
@@ -78,7 +77,7 @@ const Income = () => {
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ShowCaseCard 
           title={`Income for ${selectedMonth} ${selectedYear}`} 
-          secondaryTitle={`$${monthTotal}`}
+          secondaryTitle={`$${monthIncome}`}
         >
           <TransactionsList
             type={INCOME}

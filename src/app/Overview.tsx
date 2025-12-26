@@ -7,7 +7,6 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, healthStateDarkMode, healthStateLightMode, lightMode } from "@/globals/colors"
-import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { buildMultiColumnData, MultiColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getYearTotal } from "@/utils/getTotals"
@@ -16,15 +15,13 @@ import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 
 const Overview = () => {
-  const { currentYear} = getCurrentDateInfo()
-
   const { 
     incomeTransactions, 
     expenseTransactions, 
     refreshIncomeTransactions, 
-    refreshExpenseTransactions,
-    isMockData
+    refreshExpenseTransactions
   } = useTransactionContext()
+  const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
   
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
@@ -48,8 +45,8 @@ const Overview = () => {
 
   const buildCompareChartData = () => {
     const chartData = buildMultiColumnData({
-      firstData: isMockData ? mockIncomeData : incomeTransactions,
-      secondData: isMockData ? mockExpenseData : expenseTransactions,
+      firstData: incomeTransactions,
+      secondData: expenseTransactions,
       selectedYear: currentYear,
       firstColumnTitle: "Month",
       method: "compare"

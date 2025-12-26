@@ -31,6 +31,11 @@ const AverageExpenses = () => {
     refreshExpenseCategoryChoices()
   }, [])
 
+  useEffect(() => {
+    console.log(expenseTransactions)
+    console.log(expenseCategories)
+  },[expenseTransactions, expenseCategories])
+
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)
 

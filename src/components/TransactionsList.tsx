@@ -36,7 +36,6 @@ const TransactionsList = ({
   setSelectedId
 }: TransactionsListProps) => {
 
-  const { isMockData } = useTransactionContext()
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light"? lightMode.elevatedBg : darkMode.elevatedBg
@@ -101,7 +100,6 @@ const TransactionsList = ({
               setSelectedId(id)
             }
           }
-          disabled={isMockData}
         >
           <EditIcon/>
         </IconButton>
@@ -113,7 +111,6 @@ const TransactionsList = ({
               setConfirmId(id)
             }
           }
-          disabled={isMockData}
         >
           <DeleteIcon />
         </IconButton>

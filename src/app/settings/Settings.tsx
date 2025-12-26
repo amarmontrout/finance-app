@@ -21,6 +21,7 @@ const Settings = () => {
     years,
     incomeCategories,
     expenseCategories,
+    isMockData,
   } = useTransactionContext()
 
   const [yearsInput, setYearsInput] = useState<string>("")
@@ -91,7 +92,7 @@ const Settings = () => {
           <hr style={{ width: "100%" }} />
 
           <EditDeleteListItem
-            items={years}
+            items={!isMockData.years? years : []}
             storageKey={YEARS_KEY}
             refresh={refreshYearChoices}
           />
@@ -117,7 +118,7 @@ const Settings = () => {
           <hr style={{ width: "100%" }} />
 
           <EditDeleteListItem
-            items={incomeCategories}
+            items={!isMockData.incomeCategories? incomeCategories : []}
             storageKey={INCOME_CATEGORIES_KEY}
             refresh={refreshIncomeCategoryChoices}
           />
@@ -143,7 +144,7 @@ const Settings = () => {
           <hr style={{ width: "100%" }} />
 
           <EditDeleteListItem
-            items={expenseCategories}
+            items={!isMockData.expensesCategories? expenseCategories : []}
             storageKey={EXPENSE_CATEGORIES_KEY}
             refresh={refreshExpenseCategoryChoices}
           />

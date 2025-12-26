@@ -1,5 +1,4 @@
 import { MONTHS } from "@/globals/globals"
-import { mockYears } from "@/globals/mockData"
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 
 type Props = {
@@ -10,7 +9,6 @@ type Props = {
   selectedMonth: string
   setSelectedMonth: (m: string) => void
   years: string[]
-  isMockData: boolean
 }
 
 const DateSelector = ({
@@ -20,8 +18,7 @@ const DateSelector = ({
   setSelectedYear,
   selectedMonth,
   setSelectedMonth,
-  years,
-  isMockData
+  years
 }: Props) => {
   return (
     <Box
@@ -51,11 +48,8 @@ const DateSelector = ({
           name={"year"}
           onChange={e => setSelectedYear(e.target.value)}
         >
-          { isMockData ?
-            mockYears.map((year) => {
-              return <MenuItem key={year} value={year}>{year}</MenuItem>
-            })
-            : years.map((year) => {
+          { 
+            years.map((year) => {
               return <MenuItem key={year} value={year}>{year}</MenuItem>
             })
           }

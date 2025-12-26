@@ -1,5 +1,5 @@
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
+import { mockExpenseCategories, mockExpenseData, mockIncomeCategories, mockIncomeData, mockYears } from "@/globals/mockData"
 import { getChoices } from "@/utils/choiceStorage"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
 import { createContext, useContext, useEffect, useState } from "react"
@@ -9,13 +9,29 @@ type TransactionsContextType = {
   expenseTransactions: TransactionData
   refreshIncomeTransactions: () => void
   refreshExpenseTransactions: () => void
-  isMockData: boolean
   refreshYearChoices: () => void
   years: string[]
   refreshIncomeCategoryChoices: () => void
   incomeCategories: string[]
   refreshExpenseCategoryChoices: () => void
   expenseCategories: string[]
+  isMockData: MockDataType
+}
+
+type MockDataType = {
+  years: boolean
+  income: boolean
+  incomeCategories: boolean
+  expenses: boolean
+  expensesCategories: boolean
+}
+
+const mockDataInit = {
+  years: false,
+  income: false,
+  incomeCategories: false,
+  expenses: false,
+  expensesCategories: false
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -35,24 +51,43 @@ export const TransactionProvider = (props: {
 }) => {
   const [incomeTransactions, setIncomeTransactions] = useState<TransactionData>({})
   const [expenseTransactions, setExpenseTransactions] = useState<TransactionData>({})
-  const [isMockData, setIsMockData] = useState<boolean>(false)
   const [years, setYears] = useState<string[]>([])
   const [incomeCategories, setIncomeCategories] = useState<string[]>([])
   const [expenseCategories, setExpenseCategories] = useState<string[]>([])
 
+  const [isMockData, setIsMockData] = useState<MockDataType>(mockDataInit)
+
   const refreshYearChoices = () => {
     const yearChoices = getChoices({key: YEARS_KEY})
-    if (yearChoices) setYears(yearChoices)
+    if (!yearChoices || yearChoices.length === 0) {
+      setIsMockData(prev => ({...prev, years: true}))
+      setYears(mockYears)
+    } else {
+      setIsMockData(prev => ({...prev, years: false}))
+      setYears(yearChoices)
+    }
   }
 
   const refreshIncomeCategoryChoices = () => {
     const incomeChoices = getChoices({key: INCOME_CATEGORIES_KEY})
-    if (incomeChoices) setIncomeCategories(incomeChoices)
+    if (!incomeChoices || incomeChoices.length === 0) {
+      setIsMockData(prev => ({...prev, incomeCategories: true}))
+      setIncomeCategories(mockIncomeCategories)
+    } else {
+      setIsMockData(prev => ({...prev, incomeCategories: false}))
+      setIncomeCategories(incomeChoices)
+    }
   }
 
   const refreshExpenseCategoryChoices = () => {
     const expenseChoices = getChoices({key: EXPENSE_CATEGORIES_KEY})
-    if (expenseChoices) setExpenseCategories(expenseChoices)
+    if (!expenseChoices || expenseChoices.length === 0) {
+      setIsMockData(prev => ({...prev, expensesCategories: true}))
+      setExpenseCategories(mockExpenseCategories)
+    } else {
+      setIsMockData(prev => ({...prev, expensesCategories: false}))
+      setExpenseCategories(expenseChoices)
+    }
   }
 
   useEffect(() => {
@@ -64,10 +99,10 @@ export const TransactionProvider = (props: {
   const refreshIncomeTransactions = () => {
     const localIncomeData = getTransactions({key: INCOME})
     if (!localIncomeData || Object.keys(localIncomeData).length === 0) {
-      setIsMockData(true)
+      setIsMockData(prev => ({...prev, income: true}))
       setIncomeTransactions(mockIncomeData)
     } else {
-      setIsMockData(false)
+      setIsMockData(prev => ({...prev, income: false}))
       setIncomeTransactions(localIncomeData)
     }
   }
@@ -75,10 +110,10 @@ export const TransactionProvider = (props: {
   const refreshExpenseTransactions = () => {
     const localExpenseData = getTransactions({key: EXPENSES})
     if (!localExpenseData || Object.keys(localExpenseData).length === 0) {
-      setIsMockData(true)
+      setIsMockData(prev => ({...prev, expenses: true}))
       setExpenseTransactions(mockExpenseData)
     } else {
-      setIsMockData(false)
+      setIsMockData(prev => ({...prev, expenses: false}))
       setExpenseTransactions(localExpenseData)
     }
   }
@@ -89,13 +124,13 @@ export const TransactionProvider = (props: {
       expenseTransactions,
       refreshIncomeTransactions,
       refreshExpenseTransactions,
-      isMockData,
       years,
       incomeCategories,
       expenseCategories,
       refreshYearChoices,
       refreshIncomeCategoryChoices,
-      refreshExpenseCategoryChoices
+      refreshExpenseCategoryChoices,
+      isMockData
     }}>
       {props.children}
     </TransactionContext.Provider>

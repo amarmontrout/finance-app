@@ -4,7 +4,6 @@ import DateSelector from "@/components/DateSelector"
 import MockDataWarning from "@/components/MockDataWarning"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { getAnnualCategoryTotals, getMonthCategoryTotals } from "@/utils/getTotals"
 import { flattenTransactions, getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
@@ -19,8 +18,7 @@ const Categories = () => {
     refreshIncomeTransactions,
     expenseTransactions, 
     refreshExpenseTransactions,
-    years,
-    isMockData,
+    years
   } = useTransactionContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -34,8 +32,8 @@ const Categories = () => {
     refreshExpenseTransactions()
   }, [selectedYear])
 
-  const incomeSource = isMockData ? mockIncomeData : incomeTransactions
-  const expenseSource = isMockData ? mockExpenseData : expenseTransactions
+  const incomeSource = incomeTransactions
+  const expenseSource = expenseTransactions
 
   const flattenedIncomeData = useMemo(() => flattenTransactions(incomeSource),[incomeSource])
   const flattenedExpenseData = useMemo(() => flattenTransactions(expenseSource),[expenseSource])
@@ -99,7 +97,6 @@ const Categories = () => {
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         years={years}
-        isMockData={isMockData}
       />
 
       <hr style={{width: "100%"}}/>

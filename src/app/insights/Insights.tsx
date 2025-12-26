@@ -14,8 +14,7 @@ const Insights = () => {
   const { 
     years,
     refreshIncomeTransactions,
-    refreshExpenseTransactions,
-    isMockData
+    refreshExpenseTransactions
   } = useTransactionContext()
 
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -41,7 +40,6 @@ const Insights = () => {
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         years={years}
-        isMockData={isMockData}
       />
 
       <hr style={{width: "100%"}}/>

@@ -73,7 +73,7 @@ const SavingsRate = (props: {
 
             <ColoredInfoCard
               cardColors={defaultColor}
-              title={`Compared to ${previousYear}:`}
+              title={`Compared to ${prevMonthYear}:`}
               info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
             />            
           </FlexRowWrapper>

@@ -109,10 +109,10 @@ const TransactionForm = (props: {
 
   return (
     <Box
-      className="flex flex-col xl:flex-row gap-5"
-      width={"fit-content"}
+      className="flex flex-col xl:flex-row gap-5 sm:w-fit"
       paddingTop={"10px"}
       margin={"0 auto"}
+      border={"1px solid red"}
     >
       <Box
         className="flex flex-col sm:flex-row gap-5"
@@ -120,13 +120,11 @@ const TransactionForm = (props: {
         <FormControl>
           <InputLabel>Year</InputLabel>
           <Select
+            className="w-full sm:w-[175px]"
             label="Year"
             value={transaction.year}
             name={"year"}
             onChange={e => handleYear(e)}
-            sx={{
-              width: "175px",
-            }}
           >
             {years.map((year) => {
               return <MenuItem value={year}>{year}</MenuItem>
@@ -137,13 +135,11 @@ const TransactionForm = (props: {
         <FormControl>
           <InputLabel>Month</InputLabel>
           <Select
+            className="w-full sm:w-[175px]"
             label="Month"
             value={transaction.month}
             name={"month"}
             onChange={e => handleMonth(e)}
-            sx={{
-              width: "175px",
-            }}
           >
             {MONTHS.map((month) => {
               return <MenuItem value={month}>{month}</MenuItem>
@@ -158,13 +154,11 @@ const TransactionForm = (props: {
         <FormControl>
           <InputLabel>Category</InputLabel>
           <Select
+            className="w-full sm:w-[175px]"
             label="Category"
             value={transaction.category}
             name={"category"}
             onChange={e => handleCategory(e)}
-            sx={{
-              width: "175px",
-            }}
           >
             {categories.map((category) => {
               return <MenuItem value={category}>{category}</MenuItem>
@@ -175,14 +169,12 @@ const TransactionForm = (props: {
         <FormControl>
           <InputLabel>Amount</InputLabel>
           <OutlinedInput
+            className="w-full sm:w-[175px]"
             label={"Amount"}
             value={transaction.amount}
             name={"amount"}
             onChange={e => handleAmount(e)}
             startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            sx={{
-              width: "175px",
-            }}
             />
         </FormControl>        
       </Box>

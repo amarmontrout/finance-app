@@ -102,6 +102,11 @@ export const flattenTransactions = (
   return result
 }
 
+/**
+ * This helper function gets the state of the current savings rate.
+ * 
+ * @returns A string depicting the health state
+ */
 export const getSavingsHealthState = (net: number, total: number) => {
   if (total === 0) return "concerning"
 
@@ -113,4 +118,25 @@ export const getSavingsHealthState = (net: number, total: number) => {
   if (percent <= 0.1) return "average"
   if (percent <= 0.15) return "great"
   return "excellent"
+}
+
+/**
+ * This helper function gets the previous month info for comparison
+ * 
+ * @returns An object with the previous month's year and month.
+ */
+export const getPreviousMonthInfo = (year: string, month: string) => {
+  const monthIndex = MONTHS.indexOf(month)
+
+  if (monthIndex > 0) {
+    return {
+      year,
+      month: MONTHS[monthIndex - 1]
+    }
+  }
+
+  return {
+    year: String(Number(year) - 1),
+    month: MONTHS[11]
+  }
 }

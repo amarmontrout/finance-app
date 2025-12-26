@@ -1,14 +1,16 @@
 "use client"
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
-import { FlexColWrapper } from "@/components/Wrappers"
+import { FlexColWrapper, FlexRowWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { getSavingRate } from "@/utils/financialFunctions"
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, getSavingsHealthState } from "@/utils/helperFunctions"
+import { useSavingsRateData } from "@/hooks/useSavingsRateData"
+import {
+  formattedStringNumber, 
+  getPreviousMonthInfo, 
+  getSavingsHealthState 
+} from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useMemo } from "react"
 
 const SavingsRate = (props: {
   selectedYear: string
@@ -22,77 +24,76 @@ const SavingsRate = (props: {
     expenseTransactions
   } = useTransactionContext()
   const { theme: currentTheme } = useTheme()
+  const { year: prevMonthYear, month: prevMonth } =
+    getPreviousMonthInfo(selectedYear, selectedMonth)
+  const previousYear = String(Number(selectedYear) - 1)
+  const {
+    monthRate,
+    annualRate,
+    diffs
+  } = useSavingsRateData(
+    selectedYear,
+    selectedMonth,
+    incomeTransactions,
+    expenseTransactions,
+    prevMonthYear,
+    prevMonth
+  )
 
-  const monthIncome = useMemo(
-    () => getMonthTotal(
-      selectedYear, 
-      selectedMonth, 
-      incomeTransactions
-    ), [selectedYear, selectedMonth, incomeTransactions]
-  )
-  const monthExpense = useMemo(
-    () => getMonthTotal(
-      selectedYear, 
-      selectedMonth, 
-      expenseTransactions
-    ), [selectedYear, selectedMonth, expenseTransactions]
-  )
-  const monthSavingsRate = useMemo(
-    () => getSavingRate(
-      monthIncome, 
-      monthExpense
-    ), [monthIncome, monthExpense]
-  )
-  const annualIncome = useMemo(
-    () => getYearTotal(
-      selectedYear, 
-      incomeTransactions
-    ), [selectedYear, incomeTransactions]
-  )
-  const annualExpense = useMemo(
-    () => getYearTotal(
-      selectedYear, 
-      expenseTransactions
-    ), [selectedYear, expenseTransactions]
-  )
-  const annualSavingsRate = useMemo(
-    () => getSavingRate(
-      annualIncome, 
-      annualExpense
-    ), [annualIncome, annualExpense]
-  )
-  const monthSavingsHealthState = getSavingsHealthState(
-    cleanNumber(monthSavingsRate), 
-    100
-  )
-  const annualSavingsHealthState = getSavingsHealthState(
-    cleanNumber(annualSavingsRate), 
-    100
-  )
+  const monthSavingsHealthState = getSavingsHealthState(monthRate, 100)
+  const annualSavingsHealthState = getSavingsHealthState(annualRate, 100)
+
   const monthSavingsColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)[monthSavingsHealthState]
   const annualSavingsColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)[annualSavingsHealthState]
+  const defaultColor = (currentTheme === "light"
+    ? healthStateLightMode
+    : healthStateDarkMode)["default"]
 
   return (
     <FlexColWrapper gap={3}>
-      {view === "month" &&       
-        <ColoredInfoCard
-          cardColors={monthSavingsColor}
-          info={`${monthSavingsRate}%`}
-          title={`${selectedMonth} ${selectedYear} 
-            State: ${monthSavingsHealthState}`}
-        />          
+      {view === "month" &&
+        <FlexColWrapper gap={3}>
+          <ColoredInfoCard
+            cardColors={monthSavingsColor}
+            title={`${selectedMonth} ${selectedYear} 
+              State: ${monthSavingsHealthState}`}
+            info={`${formattedStringNumber(monthRate)}%`}
+          />
+
+          <FlexRowWrapper gap={3}>
+            <ColoredInfoCard
+              cardColors={defaultColor}
+              title={`Compared to last month:`}
+              info={`${formattedStringNumber(diffs.monthOverMonth)}%`}
+            />
+
+            <ColoredInfoCard
+              cardColors={defaultColor}
+              title={`Compared to ${previousYear}:`}
+              info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
+            />            
+          </FlexRowWrapper>
+        </FlexColWrapper>
       }
 
-      {view === "annual" &&        
+      {view === "annual" &&
+      <FlexColWrapper gap={3}>
         <ColoredInfoCard
           cardColors={annualSavingsColor}
-          info={`${annualSavingsRate}%`}
           title={`${selectedYear} State: ${annualSavingsHealthState}`}
-        />  
+          info={`${formattedStringNumber(annualRate)}%`}
+        />
+
+        <ColoredInfoCard
+          cardColors={defaultColor}
+          title={`Compared to ${previousYear}:`}
+          info={`${formattedStringNumber(diffs.yearOverYear)}%`}
+        />
+      </FlexColWrapper>
       }
     </FlexColWrapper>
   )

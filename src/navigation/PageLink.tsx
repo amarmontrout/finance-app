@@ -13,7 +13,7 @@ export type PageLinkType = {
 const PageLink = (props: {item: PageLinkType, active?: boolean}) => {
   const { item, active } = props
   return (
-    <Link style={linkStyle} href={item.link} >
+    <Link style={linkStyle} href={item.link}>
       <Box 
         sx={{
           ...navSelection,

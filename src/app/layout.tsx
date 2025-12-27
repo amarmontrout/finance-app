@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next"
 import Providers from "./providers";
 import { Box } from "@mui/material";
-import Navbar from "../navigation/Navbar";
 import Header from "@/header/Header";
 import "../globals.css"
+import { HorizontalNavbar, Navbar } from "@/navigation/Navbar";
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           >
             {/* Nav / Sidebar */}
             <Box
-              className="w-[80px] md:min-w-[210px]"
+              className="hidden md:flex md:min-w-[210px]"
               component="nav"
               sx={{
                 bgcolor: "background.paper",
@@ -57,18 +57,30 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 flexDirection: "column"
               }}
             >
-                {/* Header */}
-                <Box
-                  component="header"
-                  sx={{
-                    height: "70px",
-                    bgcolor: "primary.main",
-                    borderBottom: 2,
-                    borderColor: "divider",
-                  }}
-                >
-                  <Header />
-                </Box>
+              {/* Header */}
+              <Box
+                component="header"
+                sx={{
+                  height: "70px",
+                  bgcolor: "primary.main",
+                  borderBottom: 2,
+                  borderColor: "divider",
+                }}
+              >
+                <Header />
+              </Box>
+
+              <Box
+                className="flex md:hidden"
+                component="nav"
+                sx={{
+                  bgcolor: "background.paper",
+                  borderBottom: 2,
+                  borderColor: "divider",
+                }}
+              >
+                <HorizontalNavbar/>
+              </Box>
 
               {/* Main content */}
               <Box

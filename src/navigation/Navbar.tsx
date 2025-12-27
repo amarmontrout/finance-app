@@ -1,7 +1,6 @@
 "use client"
 
-import { Box, IconButton, Stack, Typography } from "@mui/material"
-import MenuIcon from '@mui/icons-material/Menu';
+import { Box, Divider, Stack, Typography } from "@mui/material"
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
 import { 
@@ -10,11 +9,12 @@ import {
   NAV_TRANSACTIONS 
 } from "@/globals/globals";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useTheme } from "next-themes";
+import { darkMode, lightMode } from "@/globals/colors";
 
-const Navbar = () => {
-  const [open, setOpen] = useState<boolean>(true)
+export const Navbar = () => {
   const pathname = usePathname()
+  const { theme: currentTheme } = useTheme()
 
   return (
     <Stack height={"100%"} width={"100%"}>
@@ -29,20 +29,6 @@ const Navbar = () => {
           alignItems={"center"}
         >
           <Logo/>
-        </Box>
-
-        <Box
-          className="flex md:hidden"
-          bgcolor={"background.default"} 
-          minHeight={"70px"} 
-          height={"100%"}
-          width={"100%"}
-          justifyContent={"center"} 
-          alignItems={"center"}
-        >
-          <IconButton>
-            <MenuIcon fontSize="large"/>
-          </IconButton>
         </Box>
       </Box>
 
@@ -72,7 +58,15 @@ const Navbar = () => {
           )
         })}
 
-        <hr style={{ width: "100%" }} />
+        <Divider 
+          orientation="horizontal" 
+          sx={{ 
+            borderColor: currentTheme === "light" ?
+              lightMode.borderStrong 
+              : darkMode.borderStrong,
+            borderRightWidth: 2
+          }}
+        />
 
         <Typography 
           className="hidden md:flex" 
@@ -90,7 +84,15 @@ const Navbar = () => {
           )
         })}
 
-        <hr style={{ width: "100%" }} />
+        <Divider 
+          orientation="horizontal" 
+          sx={{ 
+            borderColor: currentTheme === "light" ?
+              lightMode.borderStrong 
+              : darkMode.borderStrong,
+            borderRightWidth: 2
+          }}
+        />
 
         {NAV_SETTINGS.map((item) => {
           return (
@@ -106,4 +108,82 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export const HorizontalNavbar = () => {
+  const pathname = usePathname()
+  const { theme: currentTheme } = useTheme()
+
+  return (
+    <Stack
+      className="p-[.75rem] md:p-[1.25rem]"
+      direction={"row"}
+      width={"100%"}
+      gap={1}
+      overflow={"hidden"}
+      style={{
+        overflowX: "scroll"
+      }}
+    >
+      <Typography 
+        className="hidden md:flex" 
+        variant={"h5"}
+      >
+        Quick Info
+      </Typography>
+      {NAV_QUICK_INFO.map((item) => {
+        return (
+          <PageLink 
+            item={item} 
+            active={pathname === item.link} 
+            key={item.name}
+          />
+        )
+      })}
+
+      <Divider 
+        orientation="vertical" 
+        sx={{ 
+          borderColor: currentTheme === "light" ?
+            lightMode.borderStrong 
+            : darkMode.borderStrong,
+          borderRightWidth: 2
+        }}
+      />
+
+      <Typography 
+        className="hidden md:flex" 
+        variant={"h5"}
+      >
+        Transactions
+      </Typography>
+      {NAV_TRANSACTIONS.map((item) => {
+        return (
+          <PageLink 
+            item={item} 
+            active={pathname === item.link} 
+            key={item.name}
+          />
+        )
+      })}
+
+      <Divider 
+        orientation="vertical" 
+        sx={{ 
+          borderColor: currentTheme === "light" ?
+            lightMode.borderStrong 
+            : darkMode.borderStrong,
+          borderRightWidth: 2
+        }}
+      />
+      
+      {NAV_SETTINGS.map((item) => {
+        return (
+          <PageLink 
+            item={item} 
+            active={pathname === item.link} 
+            key={item.name}
+          />
+        )
+      })}
+    </Stack>
+  )
+}

@@ -95,7 +95,6 @@ const Expenses = () => {
         <ShowCaseCard title={"Expenses Chart"}>
           <LineChart
             multiColumnData={lineChartData}
-            title={"Expenses"}
             lineColors={
               currentTheme === "light" 
               ? expenseLinesLight

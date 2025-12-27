@@ -1,6 +1,6 @@
 import { darkMode, lightMode } from "@/globals/colors"
 import { MultiColumnDataType, TwoColumnDataType } from "@/utils/buildChartData"
-import { Box, responsiveFontSizes } from "@mui/material"
+import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
@@ -8,13 +8,11 @@ import { Chart } from "react-google-charts"
 const LineChart = (props: {
   twoColumnData?: TwoColumnDataType
   multiColumnData?: MultiColumnDataType
-  title: string
   lineColors: string[]
 }) => {
   const {
     twoColumnData,
     multiColumnData,
-    title,
     lineColors
   } = props
   const [chartData, setChartData] = 
@@ -27,14 +25,14 @@ const LineChart = (props: {
   const textColor = currentTheme === "light"? "#000" : "#FFF"
 
   const options = {
+    curveType: 'function',
     backgroundColor: backgroundColor,
-    title: title,
     titleTextStyle: { color: textColor },
     colors: lineColors,
     lineWidth: 3,
     pointsVisible: true,
     chartArea: {
-      left: 95,
+      left: 30,
       right:10,
       width: "90%",
       height: "65%"
@@ -49,9 +47,10 @@ const LineChart = (props: {
       baselineColor: "red",
       textStyle: { color: textColor },
       titleTextStyle: { color: textColor },
+      textPosition: "in",
       format: "currency",
       gridlines: {
-        count: 12,
+        count: 10,
         color: textColor
       },
       minorGridlines: {

@@ -107,7 +107,6 @@ const Overview = () => {
       <ShowCaseCard title={`${currentYear} Overview`}>
         <LineChart
           multiColumnData={lineChartData}
-          title={``}
           lineColors={
             currentTheme === "light" 
             ? [lightMode.success, lightMode.error] 

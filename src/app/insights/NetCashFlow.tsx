@@ -93,7 +93,6 @@ const NetCashFlow = (props: {
     <FlexColWrapper gap={4}> 
       <LineChart
         twoColumnData={lineChartData}
-        title={`Net Cash Flow ${selectedYear}`}
         lineColors={[accentColorSecondary]}
       />
         {view === "month" &&

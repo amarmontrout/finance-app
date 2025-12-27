@@ -28,7 +28,7 @@ const DateSelector = ({
       <FormControl>
         <InputLabel>View</InputLabel>
         <Select
-          className="w-full md:w-[175px]"
+          className="w-full sm:w-[175px]"
           label="View"
           value={view}
           name={"view"}
@@ -42,7 +42,7 @@ const DateSelector = ({
       <FormControl>
         <InputLabel>Year</InputLabel>
         <Select
-          className="w-full md:w-[175px]"
+          className="w-full sm:w-[175px]"
           label="Year"
           value={selectedYear}
           name={"year"}
@@ -60,7 +60,7 @@ const DateSelector = ({
         <FormControl>
           <InputLabel>Month</InputLabel>
           <Select
-            className="w-full md:w-[175px]"
+            className="w-full sm:w-[175px]"
             label="Month"
             value={selectedMonth}
             name={"month"}

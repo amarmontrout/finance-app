@@ -1,5 +1,10 @@
 import { createTheme } from "@mui/material";
-import { lightMode, darkMode, accentColorPrimary, accentColorSecondary } from "@/globals/colors";
+import { 
+  lightMode, 
+  darkMode, 
+  accentColorPrimary, 
+  accentColorSecondary 
+} from "@/globals/colors";
 
 export const lightTheme = createTheme({
   palette: {

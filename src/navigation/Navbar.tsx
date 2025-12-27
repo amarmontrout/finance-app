@@ -11,6 +11,7 @@ import {
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { darkMode, lightMode } from "@/globals/colors";
+import { useMemo } from "react";
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -112,78 +113,97 @@ export const HorizontalNavbar = () => {
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
 
+  const ALL_NAV_ITEMS = [
+    ...NAV_QUICK_INFO,
+    ...NAV_TRANSACTIONS,
+    ...NAV_SETTINGS
+  ]
+
+  const activeTab = useMemo(() => {
+    return ALL_NAV_ITEMS.find(item => item.link === pathname)?.name ?? ""
+  }, [pathname])
+
   return (
     <Stack
-      className="p-[.75rem] md:p-[1.25rem]"
-      direction={"row"}
+      direction={"column"}
       width={"100%"}
-      gap={1}
-      overflow={"hidden"}
-      style={{
-        overflowX: "scroll"
-      }}
     >
-      <Typography 
-        className="hidden md:flex" 
-        variant={"h5"}
-      >
-        Quick Info
-      </Typography>
-      {NAV_QUICK_INFO.map((item) => {
-        return (
-          <PageLink 
-            item={item} 
-            active={pathname === item.link} 
-            key={item.name}
-          />
-        )
-      })}
-
-      <Divider 
-        orientation="vertical" 
-        sx={{ 
-          borderColor: currentTheme === "light" ?
-            lightMode.borderStrong 
-            : darkMode.borderStrong,
-          borderRightWidth: 2
+      <Stack
+        className="p-[.5rem] md:p-[1.25rem]"
+        direction={"row"}
+        width={"100%"}
+        gap={1}
+        overflow={"hidden"}
+        style={{
+          overflowX: "scroll"
         }}
-      />
-
-      <Typography 
-        className="hidden md:flex" 
-        variant={"h5"}
       >
-        Transactions
-      </Typography>
-      {NAV_TRANSACTIONS.map((item) => {
-        return (
-          <PageLink 
-            item={item} 
-            active={pathname === item.link} 
-            key={item.name}
-          />
-        )
-      })}
+        <Typography 
+          className="hidden md:flex" 
+          variant={"h5"}
+        >
+          Quick Info
+        </Typography>
+        {NAV_QUICK_INFO.map((item) => {
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}
 
-      <Divider 
-        orientation="vertical" 
-        sx={{ 
-          borderColor: currentTheme === "light" ?
-            lightMode.borderStrong 
-            : darkMode.borderStrong,
-          borderRightWidth: 2
-        }}
-      />
-      
-      {NAV_SETTINGS.map((item) => {
-        return (
-          <PageLink 
-            item={item} 
-            active={pathname === item.link} 
-            key={item.name}
-          />
-        )
-      })}
+        <Divider 
+          orientation="vertical" 
+          sx={{ 
+            borderColor: currentTheme === "light" ?
+              lightMode.borderStrong 
+              : darkMode.borderStrong,
+            borderRightWidth: 2
+          }}
+        />
+
+        <Typography 
+          className="hidden md:flex" 
+          variant={"h5"}
+        >
+          Transactions
+        </Typography>
+        {NAV_TRANSACTIONS.map((item) => {
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}
+
+        <Divider 
+          orientation="vertical" 
+          sx={{ 
+            borderColor: currentTheme === "light" ?
+              lightMode.borderStrong 
+              : darkMode.borderStrong,
+            borderRightWidth: 2
+          }}
+        />
+        
+        {NAV_SETTINGS.map((item) => {
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}
+      </Stack>
+
+      <Box textAlign={"center"}>
+        <Typography variant="h5" gutterBottom>{activeTab}</Typography>
+      </Box>
     </Stack>
   )
 }

@@ -10,8 +10,12 @@ export type PageLinkType = {
   icon: SvgIconComponent
 }
 
-const PageLink = (props: {item: PageLinkType, active?: boolean}) => {
+const PageLink = (props: {
+  item: PageLinkType
+  active: boolean
+}) => {
   const { item, active } = props
+
   return (
     <Link style={linkStyle} href={item.link}>
       <Box 
@@ -27,6 +31,7 @@ const PageLink = (props: {item: PageLinkType, active?: boolean}) => {
         flexDirection={"row"}
         gap={1}
         alignItems={"center"}
+        height={"100%"}
       >
         <item.icon 
           fontSize="large"

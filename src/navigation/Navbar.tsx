@@ -134,16 +134,11 @@ export const HorizontalNavbar = () => {
         width={"100%"}
         gap={1}
         overflow={"hidden"}
+        justifyContent={"center"}
         style={{
           overflowX: "scroll"
         }}
       >
-        <Typography 
-          className="hidden md:flex" 
-          variant={"h5"}
-        >
-          Quick Info
-        </Typography>
         {NAV_QUICK_INFO.map((item) => {
           return (
             <PageLink 
@@ -164,12 +159,6 @@ export const HorizontalNavbar = () => {
           }}
         />
 
-        <Typography 
-          className="hidden md:flex" 
-          variant={"h5"}
-        >
-          Transactions
-        </Typography>
         {NAV_TRANSACTIONS.map((item) => {
           return (
             <PageLink 

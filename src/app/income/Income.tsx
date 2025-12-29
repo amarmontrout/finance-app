@@ -9,6 +9,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
 import TransactionsList from "@/components/TransactionsList"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
@@ -25,8 +26,8 @@ const Income = () => {
   const { 
     incomeTransactions, 
     refreshIncomeTransactions,
-    incomeCategories
   } = useTransactionContext()
+  const { incomeCategories, years } = useCategoryContext()
 
   useEffect(() => {
     refreshIncomeTransactions()
@@ -69,6 +70,7 @@ const Income = () => {
               categories={incomeCategories}
               type={INCOME}
               refreshTransactions={refreshIncomeTransactions}
+              years={years}
             />
           </ShowCaseCard>
         </Box>

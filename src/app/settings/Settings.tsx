@@ -2,7 +2,6 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
   EXPENSE_CATEGORIES_KEY, 
   EXPENSES, 
@@ -18,6 +17,7 @@ import { useTheme } from "next-themes"
 import FileUploadDialog from "./FileUploadDialog"
 import { saveChoices } from "@/utils/choiceStorage"
 import { saveData } from "@/utils/appDataStorage"
+import { useCategoryContext } from "@/contexts/categories-context"
 
 const Settings = () => {
   const {
@@ -28,7 +28,7 @@ const Settings = () => {
     incomeCategories,
     expenseCategories,
     isMockData,
-  } = useTransactionContext()
+  } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
 
   const [yearsInput, setYearsInput] = useState<string>("")

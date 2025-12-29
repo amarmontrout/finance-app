@@ -2,6 +2,7 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
@@ -31,9 +32,8 @@ const AverageExpenses = () => {
   const {
     refreshExpenseTransactions,
     expenseTransactions,
-    expenseCategories,
-    refreshExpenseCategoryChoices
   } = useTransactionContext()
+  const { expenseCategories, refreshExpenseCategoryChoices } = useCategoryContext()
 
   useEffect(() => {
     refreshExpenseTransactions()

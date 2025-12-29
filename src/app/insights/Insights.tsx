@@ -9,13 +9,14 @@ import MockDataWarning from "@/components/MockDataWarning"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import DateSelector from "@/components/DateSelector"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 
 const Insights = () => {
   const { 
-    years,
     refreshIncomeTransactions,
     refreshExpenseTransactions
   } = useTransactionContext()
+  const { years } = useCategoryContext()
 
   const { currentYear, currentMonth } = getCurrentDateInfo()
 

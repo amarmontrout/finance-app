@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState } from "react"
 import MonthlyCategoryBreakdown from "./MonthlyCategoryBreakdown"
 import AnnualCategoryBreakdown from "./AnnualCategoryBreakdown"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 
 const Categories = () => {
   const { 
@@ -24,8 +25,8 @@ const Categories = () => {
     refreshIncomeTransactions,
     expenseTransactions, 
     refreshExpenseTransactions,
-    years
   } = useTransactionContext()
+  const { years } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 

@@ -20,13 +20,14 @@ import { getMonthTotal } from "@/utils/getTotals"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { getChoices } from "@/utils/choiceStorage"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 
 const Expenses = () => {
   const { 
     expenseTransactions, 
     refreshExpenseTransactions,
-    expenseCategories
   } = useTransactionContext()
+  const { expenseCategories, years } = useCategoryContext()
 
   useEffect(() => {
     refreshExpenseTransactions()
@@ -69,6 +70,7 @@ const Expenses = () => {
               categories={expenseCategories}
               type={EXPENSES}
               refreshTransactions={refreshExpenseTransactions}
+              years={years}
             />
           </ShowCaseCard>
         </Box>

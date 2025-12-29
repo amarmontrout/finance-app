@@ -70,3 +70,16 @@ export const saveChoices = ({
   localStorage.setItem(key, JSON.stringify(choiceData))
   console.log("Choices saved")
 }
+
+export const updateChoice = (
+  key: string,
+  updatedChoice: Choice
+) => {
+  const choices = getChoices({ key })
+
+  const updated = choices.map((c) =>
+    c.name === updatedChoice.name ? updatedChoice : c
+  )
+
+  saveChoices({ key, choiceArray: updated })
+}

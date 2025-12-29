@@ -3,6 +3,7 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
   accentColorSecondary, 
@@ -33,27 +34,40 @@ const NetCashFlow = (props: {
     incomeTransactions,
     expenseTransactions
   } = useTransactionContext()
+  const { excludedSet } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
 
   const monthIncome = getMonthTotal(
     selectedYear, 
     selectedMonth, 
-    incomeTransactions
+    incomeTransactions,
+    excludedSet
   )
   const monthExpense = getMonthTotal(
     selectedYear, 
     selectedMonth, 
-    expenseTransactions
+    expenseTransactions,
+    excludedSet
   )
   const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
-  const annualIncome = getYearTotal(selectedYear, incomeTransactions)
+  const annualIncome = getYearTotal(
+    selectedYear, 
+    incomeTransactions,
+    excludedSet
+  )
   const eachMonthNetIncome: [string, string][] = useMemo(() => {
     return MONTHS.map(month => {
-      const incomeTotal = getMonthTotal(selectedYear, month, incomeTransactions)
+      const incomeTotal = getMonthTotal(
+        selectedYear, 
+        month, 
+        incomeTransactions,
+        excludedSet
+      )
       const expenseTotal = getMonthTotal(
         selectedYear, 
         month, 
-        expenseTransactions
+        expenseTransactions,
+        excludedSet
       )
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, removeCommas(net)]

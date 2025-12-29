@@ -5,6 +5,7 @@ import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
   darkMode, 
@@ -21,6 +22,7 @@ import { getYearTotal } from "@/utils/getTotals"
 import { 
   cleanNumber, 
   getCurrentDateInfo, 
+  getExcludedCategorySet, 
   getSavingsHealthState 
 } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
@@ -33,13 +35,14 @@ const Overview = () => {
     refreshIncomeTransactions, 
     refreshExpenseTransactions
   } = useTransactionContext()
+  const { excludedSet } = useCategoryContext()
   const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
   
   const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
-  const annualIncome = getYearTotal(currentYear, incomeTransactions)
-  const annualExpense = getYearTotal(currentYear, expenseTransactions)
+  const annualIncome = getYearTotal(currentYear, incomeTransactions, excludedSet)
+  const annualExpense = getYearTotal(currentYear, expenseTransactions, excludedSet)
   const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
   
   const savingsHealthState = getSavingsHealthState(
@@ -83,13 +86,13 @@ const Overview = () => {
           <FlexColWrapper gap={2} toRowBreak={"md"}>
             <ColoredInfoCard
               cardColors={defaultCardColor}
-              info={`$${getYearTotal(currentYear, incomeTransactions)}`}
+              info={`$${getYearTotal(currentYear, incomeTransactions, excludedSet)}`}
               title={`${currentYear} Total Income`}
             />
 
             <ColoredInfoCard
               cardColors={defaultCardColor}
-              info={`$${getYearTotal(currentYear, expenseTransactions)}`}
+              info={`$${getYearTotal(currentYear, expenseTransactions, excludedSet)}`}
               title={`${currentYear} Total Expenses`}
             />
           </FlexColWrapper>

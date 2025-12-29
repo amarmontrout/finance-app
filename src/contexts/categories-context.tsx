@@ -9,6 +9,7 @@ import {
   mockYears 
 } from "@/globals/mockData"
 import { getChoices } from "@/utils/choiceStorage"
+import { getExcludedCategorySet } from "@/utils/helperFunctions"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type CategoryContextType = {
@@ -19,6 +20,7 @@ type CategoryContextType = {
   refreshExpenseCategoryChoices: () => void
   expenseCategories: Choice[]
   isMockData: MockDataType
+  excludedSet: Set<string>
 }
 
 type MockDataType = {
@@ -62,6 +64,7 @@ export const CategoryProvider = (props: {
   const [incomeCategories, setIncomeCategories] = useState<Choice[]>([])
   const [expenseCategories, setExpenseCategories] = useState<Choice[]>([])
   const [isMockData, setIsMockData] = useState<MockDataType>(mockDataInit)
+  const excludedSet = getExcludedCategorySet(expenseCategories)
 
   const refreshYearChoices = () => {
     const yearChoices = getChoices({key: YEARS_KEY})
@@ -110,7 +113,8 @@ export const CategoryProvider = (props: {
       refreshYearChoices,
       refreshIncomeCategoryChoices,
       refreshExpenseCategoryChoices,
-      isMockData
+      isMockData,
+      excludedSet
     }}>
       {props.children}
     </CategoryContext.Provider>

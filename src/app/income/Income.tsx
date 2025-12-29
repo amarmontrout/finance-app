@@ -27,7 +27,7 @@ const Income = () => {
     incomeTransactions, 
     refreshIncomeTransactions,
   } = useTransactionContext()
-  const { incomeCategories, years } = useCategoryContext()
+  const { incomeCategories, years, excludedSet } = useCategoryContext()
 
   useEffect(() => {
     refreshIncomeTransactions()
@@ -49,7 +49,12 @@ const Income = () => {
     )
   }, [])
   const monthIncome = useMemo(() => {
-    return getMonthTotal(selectedYear, selectedMonth, incomeTransactions)
+    return getMonthTotal(
+      selectedYear, 
+      selectedMonth, 
+      incomeTransactions, 
+      excludedSet
+    )
   }, [selectedYear, selectedMonth, incomeTransactions])
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
@@ -91,6 +96,7 @@ const Income = () => {
             setSelectedYear={setSelectedYear}
             setOpenEditDialog={setOpenEditDialog}
             setSelectedId={setSelectedId}
+            excludedSet={excludedSet}
           />
         </ShowCaseCard>
         

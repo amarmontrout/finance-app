@@ -1,5 +1,6 @@
 import { MONTHS } from "@/globals/globals"
 import { TransactionData } from "./transactionStorage"
+import { Choice } from "@/contexts/categories-context"
 
 /**
  * This helper function gets the current year and month.
@@ -140,3 +141,12 @@ export const getPreviousMonthInfo = (year: string, month: string) => {
     month: MONTHS[11]
   }
 }
+
+export const getExcludedCategorySet = (
+  categories: Choice[]
+): Set<string> =>
+  new Set(
+    categories
+      .filter((c) => c.isExcluded)
+      .map((c) => c.name)
+  )

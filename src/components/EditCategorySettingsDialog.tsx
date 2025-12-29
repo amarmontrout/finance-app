@@ -1,5 +1,6 @@
 import { Choice } from "@/contexts/categories-context"
 import { darkMode, lightMode } from "@/globals/colors"
+import { updateChoice } from "@/utils/choiceStorage"
 import { 
   Button, 
   Dialog, 
@@ -13,15 +14,48 @@ import {
   Typography
 } from "@mui/material"
 import { useTheme } from "next-themes"
-import React from "react"
+import React, { useEffect } from "react"
 
 const EditCategorySettingsDialog = (props: {
   categoryDialogOpen: boolean
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   choice: Choice
+  storageKey: string
+  refresh: () => void
 }) => {
-  const { categoryDialogOpen, setCategoryDialogOpen, choice } = props
+  const { 
+    categoryDialogOpen, 
+    setCategoryDialogOpen, 
+    choice, 
+    storageKey, 
+    refresh 
+  } = props
   const {theme: currentTheme} = useTheme()
+
+  const [localChoice, setLocalChoice] = React.useState<Choice>(choice)
+
+  useEffect(() => {
+    setLocalChoice(choice)
+  }, [choice])
+
+  const handleChangeRecurring = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLocalChoice((prev) => ({
+      ...prev,
+      isRecurring: event.target.checked,
+    }))
+  }
+
+  
+  const handleChangeExclude = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setLocalChoice((prev) => ({
+      ...prev,
+      isExcluded: event.target.checked,
+    }))
+  }
 
   return (
     <Dialog open={categoryDialogOpen}>
@@ -30,18 +64,24 @@ const EditCategorySettingsDialog = (props: {
       </DialogTitle>
 
       <DialogContent>
-        <Typography>{choice.name}</Typography>
+        <Typography>{localChoice.name}</Typography>
         <FormGroup>
           <FormControlLabel 
             control={
-              <Switch checked={choice.isRecurring} />
+              <Switch 
+                checked={localChoice.isRecurring}
+                onChange={handleChangeRecurring}
+              />
             } 
             label="Recurring"
           />
 
           <FormControlLabel 
             control={
-              <Switch checked={choice.isExcluded} />
+              <Switch 
+                checked={localChoice.isExcluded}
+                onChange={handleChangeExclude}
+              />
             } 
             label="Exclude from Calculations"
           />
@@ -52,7 +92,11 @@ const EditCategorySettingsDialog = (props: {
         <Stack direction={"row"} gap={1} justifyContent={"right"}>
           <Button 
             variant={"contained"} 
-            onClick={() => {}}
+            onClick={() => {
+              updateChoice(storageKey, localChoice)
+              refresh()
+              setCategoryDialogOpen(false)
+            }}
             sx={{
               backgroundColor: currentTheme === "light" 
                 ? [lightMode.success] 

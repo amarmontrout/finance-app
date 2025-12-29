@@ -3,14 +3,15 @@ import { TransactionData } from "./transactionStorage"
 
 export const getYearTotal = (
   year: string, 
-  transactions: TransactionData
+  transactions: TransactionData,
+  excludedCategories: Set<string>
 ): string => {
   let total = 0
   if (transactions[year]) {
     Object.entries(transactions[year]).map(([month, _]) => {
       transactions[year][month].map((detail) => {
-        if (detail.category !== "Water") {
-          total = total + Number(detail.amount)
+        if (!excludedCategories.has(detail.category)) {
+          total += Number(detail.amount)
         }
       })
     })    
@@ -21,13 +22,14 @@ export const getYearTotal = (
 export const getMonthTotal = (
   year: string, 
   month: string, 
-  transactions: TransactionData
+  transactions: TransactionData,
+  excludedCategories: Set<string>
 ): string => {
   let total = 0
   if (transactions[year] && transactions[year][month]) {
     transactions[year][month].map((detail) => {
-      if (detail.category !== "Water") {
-        total = total + Number(detail.amount)
+      if (!excludedCategories.has(detail.category)) {
+        total += Number(detail.amount)
       }
     })
   }

@@ -7,7 +7,6 @@ import {
   IconButton, 
   Box, 
   useMediaQuery 
-
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -35,6 +34,7 @@ type TransactionsListProps = {
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedId: React.Dispatch<React.SetStateAction<string>>
+  excludedSet: Set<string>
 }
 
 const TransactionsList = ({
@@ -46,7 +46,8 @@ const TransactionsList = ({
   selectedYear,
   setSelectedYear,
   setOpenEditDialog,
-  setSelectedId
+  setSelectedId,
+  excludedSet
 }: TransactionsListProps) => {
 
   const [confirmId, setConfirmId] = useState<string | null>(null)
@@ -177,7 +178,11 @@ const TransactionsList = ({
         <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
           { transactions &&
             Object.entries(transactions).map(([year, _]) => {
-              const yearTotal = getYearTotal(year, transactions)
+              const yearTotal = getYearTotal(
+                year, 
+                transactions,
+                excludedSet
+              )
                 
               return (
                 <ListItemButton 
@@ -221,7 +226,8 @@ const TransactionsList = ({
               const monthTotal = getMonthTotal(
                 selectedYear, 
                 month, 
-                transactions
+                transactions,
+                excludedSet
               )
 
               return (

@@ -180,6 +180,8 @@ const Settings = () => {
         categoryDialogOpen={categoryDialogOpen}
         setCategoryDialogOpen={setCategoryDialogOpen}
         choice={choice}
+        storageKey={EXPENSE_CATEGORIES_KEY}
+        refresh={refreshExpenseCategoryChoices}
       />
     </Box>
   )

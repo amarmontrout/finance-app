@@ -15,6 +15,7 @@ import { ChangeEvent, useEffect, useState } from "react"
 import { MONTHS } from "@/globals/globals";
 import { accentColorSecondary } from "@/globals/colors";
 import { saveTransaction } from "@/utils/transactionStorage";
+import { Choice } from "@/contexts/categories-context";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -28,17 +29,17 @@ export type TransactionType = {
 }
 
 const TransactionForm = (props: {
-  categories: string[],
+  categories: Choice[],
   type: string,
   refreshTransactions: () => void
-  years: string[]
+  years: Choice[]
 }) => {
   const { categories, type, refreshTransactions, years } = props
 
   const TRANSACTION_INIT: TransactionType = {
     month: MONTHS[currentMonth],
     year: String(currentYear),
-    category: categories[0],
+    category: categories[0].name,
     amount: ""
   }
 
@@ -125,7 +126,13 @@ const TransactionForm = (props: {
             onChange={e => handleYear(e)}
           >
             {years.map((year) => {
-              return <MenuItem value={year}>{year}</MenuItem>
+              return (
+              <MenuItem 
+                value={year.name}
+              >
+                {year.name}
+              </MenuItem>
+            )
             })}
           </Select>
         </FormControl>
@@ -159,7 +166,13 @@ const TransactionForm = (props: {
             onChange={e => handleCategory(e)}
           >
             {categories.map((category) => {
-              return <MenuItem value={category}>{category}</MenuItem>
+              return (
+                <MenuItem 
+                  value={category.name}
+                >
+                  {category.name}
+                </MenuItem>
+              )
             })}
           </Select>
         </FormControl>

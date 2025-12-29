@@ -17,7 +17,8 @@ import { useTheme } from "next-themes"
 import FileUploadDialog from "./FileUploadDialog"
 import { saveChoices } from "@/utils/choiceStorage"
 import { saveData } from "@/utils/appDataStorage"
-import { useCategoryContext } from "@/contexts/categories-context"
+import { Choice, useCategoryContext } from "@/contexts/categories-context"
+import EditCategorySettingsDialog from "@/components/EditCategorySettingsDialog"
 
 const Settings = () => {
   const {
@@ -36,7 +37,10 @@ const Settings = () => {
     useState<string>("")
   const [expenseCategoriesInput, setExpenseCategoriesInput] = 
     useState<string>("")
+  const [choice, setChoice] = 
+    useState<Choice>({name: "", isExcluded: false, isRecurring: false})
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
 
   return (
     <Box
@@ -160,6 +164,8 @@ const Settings = () => {
             items={!isMockData.expensesCategories? expenseCategories : []}
             storageKey={EXPENSE_CATEGORIES_KEY}
             refresh={refreshExpenseCategoryChoices}
+            setCategoryDialogOpen={setCategoryDialogOpen}
+            setChoice={setChoice}
           />
         </ShowCaseCard>      
       </Box>
@@ -168,6 +174,12 @@ const Settings = () => {
         dialogOpen={dialogOpen}
         currentTheme={currentTheme}
         setDialogOpen={setDialogOpen}
+      />
+
+      <EditCategorySettingsDialog
+        categoryDialogOpen={categoryDialogOpen}
+        setCategoryDialogOpen={setCategoryDialogOpen}
+        choice={choice}
       />
     </Box>
   )

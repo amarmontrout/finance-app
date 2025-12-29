@@ -1,3 +1,4 @@
+import { Choice } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSES, INCOME } from "@/globals/globals"
@@ -11,10 +12,10 @@ import {
   Select, 
   MenuItem, 
   OutlinedInput, 
-  InputAdornment, 
-  Stack, 
+  InputAdornment,  
   Button, 
-  SelectChangeEvent
+  SelectChangeEvent,
+  DialogActions
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -30,7 +31,7 @@ const EditTransactionDetailDialog = (props: {
   type: string
   selectedId: string,
   transactions: TransactionData
-  categories: string[]
+  categories: Choice[]
   currentTheme: string | undefined
   selectedYear: string
   selectedMonth: string
@@ -50,7 +51,7 @@ const EditTransactionDetailDialog = (props: {
 
   const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
     id: "",
-    category: categories[0],
+    category: categories[0].name,
     amount: ""
   }
 
@@ -159,7 +160,13 @@ const EditTransactionDetailDialog = (props: {
             }}
           >
             {categories.map((category) => {
-              return <MenuItem value={category}>{category}</MenuItem>
+              return (
+              <MenuItem 
+                value={category.name}
+              >
+                {category.name}
+              </MenuItem>
+            )
             })}
           </Select>
         </FormControl>
@@ -178,7 +185,7 @@ const EditTransactionDetailDialog = (props: {
             />
         </FormControl>
 
-        <Stack direction={"row"} gap={1} justifyContent={"right"}>
+        <DialogActions>
           <Button 
             variant={"contained"} 
             disabled={
@@ -210,7 +217,7 @@ const EditTransactionDetailDialog = (props: {
           >
             {"Cancel"}
           </Button>
-        </Stack>
+        </DialogActions>
       </Box>
     </Dialog>
   )

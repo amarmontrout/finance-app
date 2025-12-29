@@ -1,10 +1,18 @@
-export const getChoices = ({ key }: { key: string }): string[] => {
+import { Choice } from "@/contexts/categories-context"
+
+export const getChoices = ({ key }: { key: string }): Choice[] => {
   const stored = localStorage.getItem(key)
   if (!stored) return []
 
   try {
     const parsed = JSON.parse(stored)
-    return Array.isArray(parsed) ? parsed : []
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (item): item is Choice =>
+        typeof item?.name === "string" &&
+        typeof item?.isExcluded === "boolean" &&
+        typeof item?.isRecurring === "boolean"
+    )
   } catch {
     return []
   }
@@ -17,7 +25,7 @@ export const saveChoices = ({
 }: {
   key: string
   choice?: string
-  choiceArray?: string[]
+  choiceArray?: Choice[]
 }) => {
   if (Array.isArray(choiceArray)) {
     if (choiceArray.length === 0) {
@@ -28,34 +36,35 @@ export const saveChoices = ({
 
     const sorted =
       key === "years"
-        ? [...choiceArray].sort((a, b) => Number(a) - Number(b))
-        : choiceArray
+        ? [...choiceArray].sort(
+            (a, b) => Number(a.name) - Number(b.name)
+          )
+        : [...choiceArray].sort((a, b) =>
+            a.name.localeCompare(b.name)
+          )
 
     localStorage.setItem(key, JSON.stringify(sorted))
     console.log("Choices saved")
     return
   }
 
-  let choiceData: string[] = []
+  let choiceData: Choice[] = getChoices({ key })
 
-  const stored = localStorage.getItem(key)
-  if (stored) {
-    try {
-      const parsed = JSON.parse(stored)
-      if (Array.isArray(parsed)) {
-        choiceData = parsed
-      }
-    } catch (error) {
-      console.error("Failed to parse current choice data", error)
-    }
-  }
-
-  if (choice && !choiceData.includes(choice)) {
-    choiceData.push(choice)
+  if (
+    choice &&
+    !choiceData.some((c) => c.name === choice)
+  ) {
+    choiceData.push({
+      name: choice,
+      isExcluded: false,
+      isRecurring: false,
+    })
   }
 
   if (key === "years") {
-    choiceData.sort((a, b) => Number(a) - Number(b))
+    choiceData.sort((a, b) => Number(a.name) - Number(b.name))
+  } else {
+    choiceData.sort((a, b) => a.name.localeCompare(b.name))
   }
 
   localStorage.setItem(key, JSON.stringify(choiceData))

@@ -13,11 +13,11 @@ import { createContext, useContext, useEffect, useState } from "react"
 
 type CategoryContextType = {
   refreshYearChoices: () => void
-  years: string[]
+  years: Choice[]
   refreshIncomeCategoryChoices: () => void
-  incomeCategories: string[]
+  incomeCategories: Choice[]
   refreshExpenseCategoryChoices: () => void
-  expenseCategories: string[]
+  expenseCategories: Choice[]
   isMockData: MockDataType
 }
 
@@ -27,6 +27,12 @@ type MockDataType = {
   incomeCategories: boolean
   expenses: boolean
   expensesCategories: boolean
+}
+
+export type Choice = {
+  name: string
+  isExcluded: boolean
+  isRecurring: boolean
 }
 
 const mockDataInit = {
@@ -52,9 +58,9 @@ export const useCategoryContext = () => {
 export const CategoryProvider = (props: {
   children: React.ReactNode
 }) => {
-  const [years, setYears] = useState<string[]>([])
-  const [incomeCategories, setIncomeCategories] = useState<string[]>([])
-  const [expenseCategories, setExpenseCategories] = useState<string[]>([])
+  const [years, setYears] = useState<Choice[]>([])
+  const [incomeCategories, setIncomeCategories] = useState<Choice[]>([])
+  const [expenseCategories, setExpenseCategories] = useState<Choice[]>([])
   const [isMockData, setIsMockData] = useState<MockDataType>(mockDataInit)
 
   const refreshYearChoices = () => {

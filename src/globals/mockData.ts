@@ -1,7 +1,10 @@
+import { Choice } from "@/contexts/categories-context"
 import { TransactionData } from "@/utils/transactionStorage"
 
-export const mockYears: string[] = [
-  "2024", "2025", "2026"
+export const mockYears: Choice[] = [
+  {name: "2024", isExcluded: false, isRecurring: false},
+  {name: "2025", isExcluded: false, isRecurring: false},
+  {name: "2026", isExcluded: false, isRecurring: false}
 ]
 
 export const mockIncomeData: TransactionData = {
@@ -139,11 +142,11 @@ export const mockIncomeData: TransactionData = {
   },
 }
 
-export const mockIncomeCategories: string[] = [
-  "Salary",
-  "Freelance",
-  "Bonus",
-  "Side Hustle"
+export const mockIncomeCategories: Choice[] = [
+  {name: "Salary", isExcluded: false, isRecurring: false},
+  {name: "Freelance", isExcluded: false, isRecurring: false},
+  {name: "Bonus", isExcluded: false, isRecurring: false},
+  {name: "Side Hustle", isExcluded: false, isRecurring: false}
 ]
 
 export const mockExpenseData: TransactionData = {
@@ -261,21 +264,21 @@ export const mockExpenseData: TransactionData = {
   },
 }
 
-export const mockExpenseCategories: string[] = [
-  "Rent",
-  "Groceries",
-  "Utilities",
-  "Car Insurance",
-  "Medical",
-  "Internet",
-  "Car Repair",
-  "Dining Out",
-  "Vacation",
-  "Water",
-  "Electric",
-  "Entertainment",
-  "Travel",
-  "Gifts",
-  "Gym",
-  "Rental Car",
+export const mockExpenseCategories: Choice[] = [
+  {name: "Rent", isExcluded: false, isRecurring: false},
+  {name: "Groceries", isExcluded: false, isRecurring: false},
+  {name: "Utilities", isExcluded: false, isRecurring: false},
+  {name: "Car Insurance", isExcluded: false, isRecurring: false},
+  {name: "Medical", isExcluded: false, isRecurring: false},
+  {name: "Internet", isExcluded: false, isRecurring: false},
+  {name: "Car Repair", isExcluded: false, isRecurring: false},
+  {name: "Dining Out", isExcluded: false, isRecurring: false},
+  {name: "Vacation", isExcluded: false, isRecurring: false},
+  {name: "Water", isExcluded: false, isRecurring: false},
+  {name: "Electric", isExcluded: false, isRecurring: false},
+  {name: "Entertainment", isExcluded: false, isRecurring: false},
+  {name: "Travel", isExcluded: false, isRecurring: false},
+  {name: "Gifts", isExcluded: false, isRecurring: false},
+  {name: "Gym", isExcluded: false, isRecurring: false},
+  {name: "Rental Car", isExcluded: false, isRecurring: false}
 ]

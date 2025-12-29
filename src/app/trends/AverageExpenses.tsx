@@ -33,7 +33,10 @@ const AverageExpenses = () => {
     refreshExpenseTransactions,
     expenseTransactions,
   } = useTransactionContext()
-  const { expenseCategories, refreshExpenseCategoryChoices } = useCategoryContext()
+  const { 
+    expenseCategories, 
+    refreshExpenseCategoryChoices 
+  } = useCategoryContext()
 
   useEffect(() => {
     refreshExpenseTransactions()
@@ -52,7 +55,7 @@ const AverageExpenses = () => {
       const prevAmounts: number[] = []
 
       flattenedData.forEach((t) => {
-        if (t.category !== category) return
+        if (t.category !== category.name) return
 
         if (t.year === currentYear) {
           currentAmounts.push(cleanNumber(t.amount))
@@ -69,10 +72,10 @@ const AverageExpenses = () => {
       )
       const prevAverage = getAverage(prevAmounts, 12)
 
-      currentAvg.push([category, currentAverage])
-      prevAvg.push([category, prevAverage])
+      currentAvg.push([category.name, currentAverage])
+      prevAvg.push([category.name, prevAverage])
       percentChangeAvg.push([
-        category, 
+        category.name, 
         getDifference(prevAverage, currentAverage)
       ])
     })
@@ -98,14 +101,14 @@ const AverageExpenses = () => {
           <ul>
             {expenseCategories.map((category) => (
               <li
-                key={category}
+                key={category.name}
                 className="flex items-center justify-between"
               >
                 <Typography 
                   className="hidden sm:flex"
                   variant="h6"
                 >
-                  {`${category}`}
+                  {`${category.name}`}
                 </Typography>
               </li>
             ))}

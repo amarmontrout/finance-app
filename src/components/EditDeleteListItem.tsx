@@ -5,22 +5,26 @@ import { Stack, IconButton, List, ListItem, ListItemText } from "@mui/material"
 import { useTheme } from "next-themes"
 import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from "react";
 import { saveChoices } from "@/utils/choiceStorage";
+import { EXPENSE_CATEGORIES_KEY } from "@/globals/globals";
+import { Choice } from "@/contexts/categories-context";
 
 const EditDeleteListItem = (props: {
-    items: string[]
+    items: Choice[]
     storageKey: string
     refresh: () => void
-    setOpenEditDialog?: React.Dispatch<React.SetStateAction<boolean>>
+    setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
+    setChoice?: React.Dispatch<React.SetStateAction<Choice>>
   }) => {
 
   const { 
     items,
     storageKey,
     refresh,
-    setOpenEditDialog 
+    setCategoryDialogOpen,
+    setChoice
   } = props
     
   const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
@@ -32,36 +36,41 @@ const EditDeleteListItem = (props: {
 
   const handleDeleteItem = () => {
     const newItemList = items.filter(
-      (selection) => {return selection !== confirmSelection}
+      (selection) => {return selection.name !== confirmSelection}
     )
     saveChoices({key: storageKey, choiceArray: newItemList})
     refresh()
   }
 
   const EditDeleteButton = (props: {
-    selection: string
+    selection: Choice
   }) => {
 
     const { selection } = props
 
     return (
       <Stack direction={"row"} gap={2}>
-        <IconButton 
-          edge="end"
-          onClick={
-            () => {
-              if (setOpenEditDialog) setOpenEditDialog(true)
+        {storageKey === EXPENSE_CATEGORIES_KEY &&
+          <IconButton 
+            edge="end"
+            onClick={
+              () => {
+                if (setCategoryDialogOpen && setChoice) {
+                  setCategoryDialogOpen(true)
+                  setChoice(selection)
+                }
+              }
             }
-          }
-        >
-          <EditIcon/>
-        </IconButton>
+          >
+            <SettingsIcon/>
+          </IconButton>
+        }
 
         <IconButton 
           edge="end"
           onClick={
             () => {
-              setConfirmSelection(selection)
+              setConfirmSelection(selection.name)
             }
           }
         >
@@ -105,9 +114,9 @@ const EditDeleteListItem = (props: {
         (items).map((item) => {                 
           return (
             <ListItem
-              key={item} 
+              key={item.name} 
               secondaryAction={
-                confirmSelection === item
+                confirmSelection === item.name
                 ? <ConfirmCancel/> 
                 : <EditDeleteButton selection={item}/>
               }
@@ -116,7 +125,7 @@ const EditDeleteListItem = (props: {
                 borderRadius: "10px"
               }}
             >
-              <ListItemText primary={item}/>
+              <ListItemText primary={item.name}/>
             </ListItem>
           )
         })

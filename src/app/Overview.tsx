@@ -79,32 +79,31 @@ const Overview = () => {
       <MockDataWarning/>
 
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
-        <ShowCaseCard title={`YTD Totals for ${currentYear}`}>
+        <ShowCaseCard title={`${currentYear} Totals`}>
           <FlexColWrapper gap={2} toRowBreak={"md"}>
             <ColoredInfoCard
               cardColors={defaultCardColor}
               info={`$${getYearTotal(currentYear, incomeTransactions)}`}
-              title={"Total Income"}
+              title={`${currentYear} Total Income`}
             />
 
             <ColoredInfoCard
               cardColors={defaultCardColor}
               info={`$${getYearTotal(currentYear, expenseTransactions)}`}
-              title={"Total Expenses"}
+              title={`${currentYear} Total Expenses`}
             />
           </FlexColWrapper>
         </ShowCaseCard>
 
-        <ShowCaseCard title={`YTD Net Cash Flow for ${currentYear}`}>
+        <ShowCaseCard title={`${currentYear} Net Cash`}>
             <ColoredInfoCard
               cardColors={savingsColor}
-              info={`$${annualNetIncome}`}
-              title={`${currentYear} State: ${savingsHealthState}`}
+              info={`Net Cash: $${annualNetIncome}`}
+              title={`Net Cash Rating: ${savingsHealthState}`}
             />
         </ShowCaseCard>
       </FlexColWrapper>
 
-      <ShowCaseCard title={`${currentYear} Overview`}>
         <LineChart
           multiColumnData={lineChartData}
           lineColors={
@@ -113,7 +112,6 @@ const Overview = () => {
             : [darkMode.success, darkMode.error]
           }
         />        
-      </ShowCaseCard>      
     </FlexColWrapper>
   )
 }

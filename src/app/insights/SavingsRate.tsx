@@ -1,7 +1,7 @@
 "use client"
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
-import { FlexColWrapper, FlexRowWrapper } from "@/components/Wrappers"
+import { FlexColWrapper } from "@/components/Wrappers"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { useSavingsRateData } from "@/hooks/useSavingsRateData"
@@ -60,20 +60,20 @@ const SavingsRate = (props: {
           <ColoredInfoCard
             cardColors={monthSavingsColor}
             title={`${selectedMonth} ${selectedYear} 
-              State: ${monthSavingsHealthState}`}
-            info={`${formattedStringNumber(monthRate)}%`}
+              Savings Rating: ${monthSavingsHealthState}`}
+            info={`Savings Rate: ${formattedStringNumber(monthRate)}%`}
           />
 
           <FlexColWrapper gap={3} toRowBreak={"sm"}>
             <ColoredInfoCard
               cardColors={defaultColor}
-              title={`Compared to last month:`}
+              title={`Compared to Last Month`}
               info={`${formattedStringNumber(diffs.monthOverMonth)}%`}
             />
 
             <ColoredInfoCard
               cardColors={defaultColor}
-              title={`Compared to ${prevMonthYear}:`}
+              title={`Compared to ${prevMonthYear}`}
               info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
             />            
           </FlexColWrapper>
@@ -84,13 +84,13 @@ const SavingsRate = (props: {
       <FlexColWrapper gap={3}>
         <ColoredInfoCard
           cardColors={annualSavingsColor}
-          title={`${selectedYear} State: ${annualSavingsHealthState}`}
-          info={`${formattedStringNumber(annualRate)}%`}
+          title={`${selectedYear} Savings Rating: ${annualSavingsHealthState}`}
+          info={`Savings Rate: ${formattedStringNumber(annualRate)}%`}
         />
 
         <ColoredInfoCard
           cardColors={defaultColor}
-          title={`Compared to ${previousYear}:`}
+          title={`Compared to ${previousYear}`}
           info={`${formattedStringNumber(diffs.yearOverYear)}%`}
         />
       </FlexColWrapper>

@@ -90,27 +90,27 @@ const NetCashFlow = (props: {
   }, [eachMonthNetIncome])
   
   return (
-    <FlexColWrapper gap={4}> 
+    <FlexColWrapper gap={2}> 
+      {view === "month" &&
+        <ColoredInfoCard
+          cardColors={monthSavingsColor}
+          info={`Net Cash: $${monthNetIncome}`}
+          title={`${selectedMonth} ${selectedYear} 
+            Net Cash Rating: ${monthSavingsHealthState}`}
+        />
+      }
+
+      {view === "annual" &&
+        <ColoredInfoCard
+          cardColors={annualSavingsColor}
+          info={`Net Cash: $${formattedStringNumber(annualNetIncome)}`}
+          title={`${selectedYear} Net Cash Rating: ${annualSavingsHealthState}`}
+        />      
+      }
       <LineChart
         twoColumnData={lineChartData}
         lineColors={[accentColorSecondary]}
       />
-        {view === "month" &&
-          <ColoredInfoCard
-            cardColors={monthSavingsColor}
-            info={`$${monthNetIncome}`}
-            title={`${selectedMonth} ${selectedYear} 
-              State: ${monthSavingsHealthState}`}
-          />
-        }
-
-        {view === "annual" &&
-          <ColoredInfoCard
-            cardColors={annualSavingsColor}
-            info={`$${formattedStringNumber(annualNetIncome)}`}
-            title={`${selectedYear} State: ${annualSavingsHealthState}`}
-          />      
-        }
     </FlexColWrapper>
   )
 }

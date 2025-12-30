@@ -24,7 +24,7 @@ export const getAnnualProjection = (
   ytdTotal: number, 
   ytdMonths: number
 ) => {
-  return formattedStringNumber((ytdTotal/ytdMonths)*12)
+  return (ytdTotal/ytdMonths)*12
 }
 
 export const getAverage = (

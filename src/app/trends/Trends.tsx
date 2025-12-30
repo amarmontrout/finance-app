@@ -12,7 +12,7 @@ const Trends =() => {
 
       <AverageExpenses/>
 
-      <Projections/>
+      <Projections />
     </FlexColWrapper>
   )
 }

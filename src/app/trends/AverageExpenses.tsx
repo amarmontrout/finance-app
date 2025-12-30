@@ -18,16 +18,15 @@ import { useTheme } from "next-themes"
 import { useEffect, useMemo } from "react"
 
 const AverageExpenses = () => {
-
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
   const badColor = currentTheme === "light" ?
-   lightMode.error 
-   : darkMode.error
+    lightMode.error 
+    : darkMode.error
   const goodColor = currentTheme === "light" ?
-   lightMode.success 
-   : darkMode.success
+    lightMode.success 
+    : darkMode.success
 
   const {
     refreshExpenseTransactions,

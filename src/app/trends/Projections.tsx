@@ -1,36 +1,87 @@
+"use client"
+
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
+import { MONTHS } from "@/globals/globals"
+import { getAnnualProjection } from "@/utils/financialFunctions"
+import { 
+  cleanNumber, 
+  flattenTransactions, 
+  formattedStringNumber, 
+  getCurrentDateInfo 
+} from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
+import { useEffect, useMemo } from "react"
 
 const Projections = () => {
-
-  const { expenseTransactions } = useTransactionContext()
+  const { 
+    expenseTransactions, 
+    refreshExpenseTransactions 
+  } = useTransactionContext()
   const { expenseCategories } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
+  const { currentYear, currentMonth } = getCurrentDateInfo()
   const defaultColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)["default"]
 
+  useEffect(() => {
+    refreshExpenseTransactions()
+  }, [])
+
+  const annualProjectionPerCategory = useMemo(() => {
+    const flattenedData = flattenTransactions(expenseTransactions)
+    const passedMonths = MONTHS.indexOf(currentMonth) + 1
+    const projectionMap = new Map<string, number>()
+    const relevantTransactions = flattenedData.filter((t) => {
+      return (
+        t.year === currentYear &&
+        MONTHS.indexOf(t.month) + 1 <= passedMonths
+      )
+    })
+
+    for (const category of expenseCategories) {
+      let total = 0
+      for (const t of relevantTransactions) {
+        if (t.category !== category.name) continue
+        if (t.year !== currentYear) continue
+        total += cleanNumber(t.amount)
+      }
+      const projectedValue = category.isRecurring
+        ? getAnnualProjection(total, passedMonths)
+        : total
+      projectionMap.set(
+        category.name,
+        projectedValue
+      )
+    }
+
+    return projectionMap
+  }, [expenseCategories, expenseTransactions, currentYear, currentMonth])
+
   return (
-    <ShowCaseCard title={"Projections for the Year"}>
+    <ShowCaseCard title={`${currentYear} Year End Projections`}>
       <Box
-        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
       >
         {
-          expenseCategories.map((category) => 
-            <FlexChildWrapper key={category.name}>
-              <ColoredInfoCard
-                cardColors={defaultColor}
-                title={category.name}
-                info={"$50"}
-              />
-            </FlexChildWrapper>
-          )
+          expenseCategories.map((category) => {
+            const proj = annualProjectionPerCategory.get(category.name) ?? 0
+            return (
+              <FlexChildWrapper key={category.name}>
+                <ColoredInfoCard
+                  cardColors={defaultColor}
+                  title={category.name}
+                  info={`$${formattedStringNumber(proj)}`}
+                />
+              </FlexChildWrapper>
+            )
+          })
         }
       </Box>
     </ShowCaseCard>

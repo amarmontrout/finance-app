@@ -23,9 +23,10 @@ const Projections = () => {
     expenseTransactions, 
     refreshExpenseTransactions 
   } = useTransactionContext()
-  const { expenseCategories } = useCategoryContext()
+  const { expenseCategories, excludedSet } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
+
   const defaultColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)["default"]
@@ -64,8 +65,23 @@ const Projections = () => {
     return projectionMap
   }, [expenseCategories, expenseTransactions, currentYear, currentMonth])
 
+  const annualTotalExpenseProjection = useMemo(() => {
+    let total = 0
+
+    annualProjectionPerCategory.forEach((value, key) => {
+      if (!excludedSet.has(key)) {
+        total += value
+      }
+    })
+
+    return total
+  }, [annualProjectionPerCategory])
+
   return (
-    <ShowCaseCard title={`${currentYear} Year End Projections`}>
+    <ShowCaseCard 
+      title={`${currentYear} Projections`}
+      secondaryTitle={`Total: $${formattedStringNumber(annualTotalExpenseProjection)}`}
+    >
       <Box
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
       >

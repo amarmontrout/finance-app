@@ -95,7 +95,6 @@ const AverageExpenses = () => {
     return { currentAvg, prevAvg, percentChangeAvg }
   }, [expenseTransactions, expenseCategories, currentYear, currentMonth])
 
-
   return (
     <ShowCaseCard title={"Expense Averages"}>
       <FlexColWrapper gap={5} toRowBreak={"sm"}>

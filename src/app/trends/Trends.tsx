@@ -4,6 +4,7 @@ import MockDataWarning from "@/components/MockDataWarning"
 import AverageExpenses from "./AverageExpenses"
 import { FlexColWrapper } from "@/components/Wrappers"
 import Projections from "./Projections"
+import ExpectedSpending from "./ExpectedSpending"
 
 const Trends =() => {
   return (
@@ -13,6 +14,8 @@ const Trends =() => {
       <AverageExpenses/>
 
       <Projections />
+
+      <ExpectedSpending/>
     </FlexColWrapper>
   )
 }

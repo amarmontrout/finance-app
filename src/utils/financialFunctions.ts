@@ -28,14 +28,14 @@ export const getAnnualProjection = (
 }
 
 export const getAverage = (
-  ytdAmounts: number[], 
-  ytdMonths: number
+  ytdAmounts: number[],
 ): number => {
-  let total = 0
-  ytdAmounts.map((amount) => {
-    total += amount
-  })
-  return total/ytdMonths
+  if (ytdAmounts.length === 0) return 0
+  const total = ytdAmounts.reduce(
+    (sum, amount) => sum + amount,
+    0
+  )
+  return total/ytdAmounts.length
 }
 
 export const getDifference = (

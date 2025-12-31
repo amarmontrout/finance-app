@@ -44,43 +44,57 @@ const AverageExpenses = () => {
 
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)
+    const passedMonths = MONTHS.indexOf(currentMonth) + 1
 
     const currentAvg: [string, number][] = []
     const prevAvg: [string, number][] = []
     const percentChangeAvg: [string, number][] = []
 
     expenseCategories.forEach((category) => {
-      const currentAmounts: number[] = []
-      const prevAmounts: number[] = []
-
+      // ---- CURRENT YEAR ----
+      const currentMonthTotals: Record<string, number> = {}
       flattenedData.forEach((t) => {
-        if (t.category !== category.name) return
-
-        if (t.year === currentYear) {
-          currentAmounts.push(cleanNumber(t.amount))
-        }
-
-        if (Number(t.year) === Number(currentYear) - 1) {
-          prevAmounts.push(cleanNumber(t.amount))
+        if (
+          t.category === category.name &&
+          t.year === currentYear &&
+          MONTHS.indexOf(t.month) + 1 <= passedMonths
+        ) {
+          currentMonthTotals[t.month] =
+            (currentMonthTotals[t.month] ?? 0) + cleanNumber(t.amount)
         }
       })
+      const currentAmounts = MONTHS
+        .slice(0, passedMonths)
+        .map((month) => currentMonthTotals[month] ?? 0)
+      const currentAverage = getAverage(currentAmounts)
 
-      const currentAverage = getAverage(
-        currentAmounts, 
-        MONTHS.indexOf(currentMonth)+1
+      // ---- PREVIOUS YEAR ----
+      const prevMonthTotals: Record<string, number> = {}
+      flattenedData.forEach((t) => {
+        if (
+          t.category === category.name &&
+          Number(t.year) === Number(currentYear) - 1
+        ) {
+          prevMonthTotals[t.month] =
+            (prevMonthTotals[t.month] ?? 0) + cleanNumber(t.amount)
+        }
+      })
+      const prevAmounts = MONTHS.map(
+        (month) => prevMonthTotals[month] ?? 0
       )
-      const prevAverage = getAverage(prevAmounts, 12)
+      const prevAverage = getAverage(prevAmounts)
 
       currentAvg.push([category.name, currentAverage])
       prevAvg.push([category.name, prevAverage])
       percentChangeAvg.push([
-        category.name, 
-        getDifference(prevAverage, currentAverage)
+        category.name,
+        getDifference(prevAverage, currentAverage),
       ])
     })
 
     return { currentAvg, prevAvg, percentChangeAvg }
-  }, [expenseTransactions, expenseCategories, currentYear])
+  }, [expenseTransactions, expenseCategories, currentYear, currentMonth])
+
 
   return (
     <ShowCaseCard title={"Expense Averages"}>
@@ -206,7 +220,7 @@ const AverageExpenses = () => {
 
                   <Typography 
                     variant="h6"
-                    color={diff < 0 ? goodColor : badColor}
+                    color={diff <= 0 ? goodColor : badColor}
                   >
                     {
                     `${diff < 0 ? '-' : '+'}

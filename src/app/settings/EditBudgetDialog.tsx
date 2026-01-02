@@ -28,12 +28,11 @@ const EditBudgetDialog = ({
 }) => {
 
   const {
-    budgetCategories,
     refreshBudgetCategories
   } = useBudgetContext()
 
   const UPDATE_BUDGET_INIT: BudgetCategoryType = {
-    category: budgetCategories[0].category,
+    category: "",
     amount: ""
   }
 

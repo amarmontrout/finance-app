@@ -27,6 +27,7 @@ export const MONTHS = [
 export const YEARS_KEY = "years"
 export const INCOME_CATEGORIES_KEY = "incomeCategories"
 export const EXPENSE_CATEGORIES_KEY = "expenseCategories"
+export const BUDGET_CATEGORIES_KEY = "budgetCategories"
 export const BUDGET_KEY = "budget"
 export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: DataUsageIcon},

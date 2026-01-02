@@ -1,10 +1,11 @@
-import { BudgetType } from "@/contexts/budget-context"
+import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 
-export const getBudget = ({
+
+export const getBudgetCategories = ({
   key,
 }: {
   key: string
-}): BudgetType[] => {
+}): BudgetCategoryType[] => {
   const stored = localStorage.getItem(key)
   if (!stored) return []
 
@@ -12,7 +13,7 @@ export const getBudget = ({
     const parsed = JSON.parse(stored)
     if (!Array.isArray(parsed)) return []
     return parsed.filter(
-      (item): item is BudgetType =>
+      (item): item is BudgetCategoryType =>
         typeof item?.category === "string" &&
         typeof item?.amount === "string"
     )
@@ -21,26 +22,72 @@ export const getBudget = ({
   }
 }
 
-export const saveBudget = ({
+export const getBudgetEntries = ({
   key,
-  budget,
 }: {
   key: string
-  budget: BudgetType
+}): BudgetEntryType[] => {
+  const stored = localStorage.getItem(key)
+  if (!stored) return []
+
+  try {
+    const parsed = JSON.parse(stored)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (item): item is BudgetEntryType =>
+        typeof item?.category === "string" &&
+        typeof item?.note === "string" &&
+        typeof item?.amount === "string"
+    )
+  } catch {
+    return []
+  }
+}
+
+export const saveBudgetCategories = ({
+  key,
+  budgetCategory,
+}: {
+  key: string
+  budgetCategory: BudgetCategoryType
 }) => {
 
-  let budgetData: BudgetType[] = getBudget({ key })
+  let budgetData: BudgetCategoryType[] = getBudgetCategories({ key })
 
   if (
-    budget &&
-    !budgetData.some((c) => c.category === budget.category)
+    budgetCategory &&
+    !budgetData.some((c) => c.category === budgetCategory.category)
   ) {
     budgetData.push({
-      category: budget.category,
-      amount: budget.amount
+      category: budgetCategory.category,
+      amount: budgetCategory.amount
     })
   }
 
   localStorage.setItem(key, JSON.stringify(budgetData))
-  console.log("Budget saved")
+  console.log("Budget category saved")
+}
+
+export const saveBudgetEntries = ({
+  key,
+  budgetEntry,
+}: {
+  key: string
+  budgetEntry: BudgetEntryType
+}) => {
+
+  let budgetData: BudgetEntryType[] = getBudgetEntries({ key })
+
+  if (
+    budgetEntry
+  ) {
+    budgetData.push({
+      category: budgetEntry.category,
+      note: budgetEntry.note,
+      amount: budgetEntry.amount
+    })
+  }
+
+  localStorage.setItem(key, JSON.stringify(budgetData))
+  console.log("Budget entry saved")
 }

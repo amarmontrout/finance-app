@@ -1,37 +1,44 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { BudgetType, useBudgetContext } from "@/contexts/budget-context"
+import DeleteIcon from '@mui/icons-material/Delete'
+import CancelIcon from '@mui/icons-material/Cancel'
+import EditIcon from '@mui/icons-material/Edit'
+import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
-import { BUDGET_KEY } from "@/globals/globals"
-import { saveBudget } from "@/utils/budgetStorage"
+import { BUDGET_CATEGORIES_KEY } from "@/globals/globals"
 import { 
   Box, 
   Button, 
   FormControl, 
+  IconButton, 
   InputAdornment, 
   InputLabel, 
   List, 
   ListItem, 
   ListItemText, 
-  OutlinedInput 
+  OutlinedInput, 
+  Stack
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useEffect, useState } from "react"
+import { saveBudgetCategories } from "@/utils/budgetStorage"
 
-const BUDGET_INIT: BudgetType = {
+const BUDGET_INIT: BudgetCategoryType = {
   category: "",
   amount: ""
 }
 
 const AddBudget = () => {
-  const {budgetInfo, refreshBudgetInfo} = useBudgetContext()
+  const {budgetCategories, refreshBudgetCategories} = useBudgetContext()
 
   useEffect(() => {
-    refreshBudgetInfo()
+    refreshBudgetCategories()
   }, [])
 
-  const [budgetCategory, setBudgetCategory] = useState<BudgetType>(BUDGET_INIT)
+  const [budgetCategory, setBudgetCategory] = 
+    useState<BudgetCategoryType>(BUDGET_INIT)
+  const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
 
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
@@ -69,9 +76,86 @@ const AddBudget = () => {
   }
 
   const save = () => {
-    saveBudget({key: BUDGET_KEY, budget: budgetCategory})
-    refreshBudgetInfo()
+    saveBudgetCategories({
+      key: BUDGET_CATEGORIES_KEY, 
+      budgetCategory: budgetCategory
+    })
+    refreshBudgetCategories()
     resetFormData()
+  }
+
+  // const handleDeleteItem = () => {
+  //   const newItemList = items.filter(
+  //     (selection) => {return selection.name !== confirmSelection}
+  //   )
+  //   saveChoices({key: storageKey, choiceArray: newItemList})
+  //   refresh()
+  // }
+
+  const EditDeleteButton = (props: {
+    selection: BudgetCategoryType
+  }) => {
+
+    const { selection } = props
+
+    return (
+      <Stack direction={"row"} gap={2}>
+        {
+          <IconButton 
+            edge="end"
+            onClick={
+              () => {
+                // if (setCategoryDialogOpen && setChoice) {
+                //   setCategoryDialogOpen(true)
+                //   setChoice(selection)
+                // }
+              }
+            }
+          >
+            <EditIcon/>
+          </IconButton>
+        }
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setConfirmSelection(selection.category)
+            }
+          }
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Stack>
+    )
+  }
+
+  const ConfirmCancel = () => {
+    return (
+      <Stack direction={"row"} gap={2}>
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              // handleDeleteItem()
+            }
+          }
+        >
+          <DeleteIcon/>
+        </IconButton>
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setConfirmSelection(null)
+            }
+          }
+        >
+          <CancelIcon/>
+        </IconButton>
+      </Stack>
+    )
   }
 
   return (
@@ -119,7 +203,7 @@ const AddBudget = () => {
               backgroundColor: accentColorSecondary
             }}
           >
-            {"Add Budget"}
+            {"Add"}
           </Button>
         </Box>
 
@@ -130,24 +214,24 @@ const AddBudget = () => {
           overflow={"auto"}
         >
           <List className="flex flex-col gap-2">
-            { budgetInfo &&
-              (budgetInfo).map((buget) => {                 
+            { budgetCategories &&
+              (budgetCategories).map((budget) => {                 
                 return (
                   <ListItem
-                    key={buget.category} 
-                    // secondaryAction={
-                    //   confirmSelection === item.name
-                    //   ? <ConfirmCancel/> 
-                    //   : <EditDeleteButton selection={item}/>
-                    // }
+                    key={budget.category} 
+                    secondaryAction={
+                      confirmSelection === budget.category
+                      ? <ConfirmCancel/> 
+                      : <EditDeleteButton selection={budget}/>
+                    }
                     sx={{ 
                       backgroundColor: listItemColor,
                       borderRadius: "10px"
                     }}
                   >
                     <ListItemText 
-                      primary={buget.category} 
-                      secondary={`$${buget.amount}`}
+                      primary={budget.category} 
+                      secondary={`$${budget.amount}`}
                     />
                   </ListItem>
                 )

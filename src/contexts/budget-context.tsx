@@ -1,15 +1,23 @@
-import { BUDGET_KEY } from "@/globals/globals"
-import { getBudget } from "@/utils/budgetStorage"
+import { BUDGET_CATEGORIES_KEY, BUDGET_KEY } from "@/globals/globals"
+import { getBudgetCategories, getBudgetEntries } from "@/utils/budgetStorage"
 import { createContext, useContext, useEffect, useState } from "react"
 
-export type BudgetType = {
+export type BudgetCategoryType = {
   category: string,
   amount: string
 }
 
+export type BudgetEntryType = {
+  category: string,
+  note: string,
+  amount: string
+}
+
 type BudgetContextType = {
-  budgetInfo: BudgetType[]
-  refreshBudgetInfo: () => void
+  budgetCategories: BudgetCategoryType[]
+  refreshBudgetCategories: () => void
+  budgetEntries: BudgetEntryType[]
+  refreshBudgetEntries: () => void
 }
 
 const BudgetContext = createContext<BudgetContextType | null>(null)
@@ -27,22 +35,32 @@ export const useBudgetContext = () => {
 export const BudgetProvider = (props: {
   children: React.ReactNode
 }) => {
-  const [budgetInfo, setBudgetInfo] = useState<BudgetType[]>([])
+  const [budgetCategories, setBudgetCategories] = 
+    useState<BudgetCategoryType[]>([])
+  const [budgetEntries, setBudgetEntries] = 
+    useState<BudgetEntryType[]>([])  
 
-  const refreshBudgetInfo = () => {
-    const budgetData = getBudget({key: BUDGET_KEY})
-
-    setBudgetInfo(budgetData)
+  const refreshBudgetCategories = () => {
+    const budgetData = getBudgetCategories({key: BUDGET_CATEGORIES_KEY})
+    setBudgetCategories(budgetData)
   }
 
+  const refreshBudgetEntries = () => {
+    const budgetData = getBudgetEntries({key: BUDGET_KEY})
+    setBudgetEntries(budgetData)
+  } 
+
   useEffect(() => {
-    refreshBudgetInfo()
+    refreshBudgetCategories()
+    refreshBudgetEntries()
   }, [])
 
   return (
     <BudgetContext.Provider value={{
-      budgetInfo,
-      refreshBudgetInfo,
+      budgetCategories,
+      refreshBudgetCategories,
+      budgetEntries,
+      refreshBudgetEntries
     }}>
       {props.children}
     </BudgetContext.Provider>

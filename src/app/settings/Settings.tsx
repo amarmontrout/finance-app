@@ -85,7 +85,11 @@ const Settings = () => {
         />
       </Box>
 
-      <AddBudget/>
+      <Box
+        className="flex flex-col xl:flex-row xl:w-[33%] gap-2 h-full"
+      >
+        <AddBudget/>
+      </Box>
 
       <FileUploadDialog
         dialogOpen={dialogOpen}

@@ -75,7 +75,7 @@ const AddBudget = () => {
   }
 
   return (
-    <ShowCaseCard title={"Add Budget"}>
+    <ShowCaseCard title={"Add Weekly Budget"}>
       <Box
         display={"flex"}
         flexDirection={"column"}

@@ -1,7 +1,6 @@
 "use client"
 
 import { 
-  BUDGET_KEY,
   EXPENSE_CATEGORIES_KEY, 
   EXPENSES, 
   INCOME, 
@@ -20,7 +19,6 @@ import AddYear from "./AddYear"
 import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
-import { getBudget } from "@/utils/budgetStorage"
 
 const CHOICE_INIT = {
   name: "", 
@@ -35,12 +33,6 @@ const Settings = () => {
   const [choice, setChoice] = useState<Choice>(CHOICE_INIT)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
-
-  useEffect(() => {
-    const budget = getBudget({key: BUDGET_KEY})
-
-    console.log(budget)
-  })
 
   return (
     <Box

@@ -1,6 +1,5 @@
 import { BudgetType } from "@/contexts/budget-context"
 
-
 export const getBudget = ({
   key,
 }: {

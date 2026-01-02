@@ -3,7 +3,6 @@
 import { FlexColWrapper } from "@/components/Wrappers"
 import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
 import { useEffect, useMemo } from "react"
-import SetBudget from "./SetBudget"
 import RemainingBudget from "./RemainingBudget"
 import BudgetEntries from "./BudgetEntries"
 import { 
@@ -56,10 +55,6 @@ const Budget = () => {
 
   return (
     <FlexColWrapper gap={2}>
-      <SetBudget
-        budgetCategories={budgetCategories}
-      />
-
       <RemainingBudget
         budgetCategories={remainingBudgetCategories}
       />

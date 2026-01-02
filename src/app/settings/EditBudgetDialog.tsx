@@ -7,14 +7,11 @@ import {
   DialogTitle, 
   Box, 
   FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
+  InputLabel,  
   OutlinedInput, 
   InputAdornment, 
   DialogActions, 
   Button, 
-  SelectChangeEvent
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -41,7 +38,7 @@ const EditBudgetDialog = ({
   }
 
   const [updateBudget, setUpdateBudget] = 
-    useState<BudgetCategoryType>(UPDATE_BUDGET_INIT)
+    useState<BudgetCategoryType>(confirmEdit? confirmEdit : UPDATE_BUDGET_INIT)
 
   useEffect(() => {
     refreshBudgetCategories()
@@ -55,14 +52,6 @@ const EditBudgetDialog = ({
       amount: confirmEdit.amount,
     })
   }, [confirmEdit])
-
-  const handleCategory = (e: SelectChangeEvent) => {
-    const { value } = e.target
-    setUpdateBudget(prev => ({
-      ...prev,
-      category: value,
-    }));
-  }
       
   const handleAmount = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -101,29 +90,6 @@ const EditBudgetDialog = ({
         padding={"10px"}
         margin={"0 auto"}
       >
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select
-            label="Category"
-            value={updateBudget.category}
-            name={"category"}
-            onChange={e => handleCategory(e)}
-            sx={{
-              width: "100%"
-            }}
-          >
-            {budgetCategories.map((category) => {
-              return (
-              <MenuItem 
-                value={category.category}
-              >
-                {category.category}
-              </MenuItem>
-            )
-            })}
-          </Select>
-        </FormControl>
-
         <FormControl>
           <InputLabel>Amount</InputLabel>
           <OutlinedInput

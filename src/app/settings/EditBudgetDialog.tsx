@@ -81,7 +81,7 @@ const EditBudgetDialog = ({
   return (
     <Dialog open={budgetEditDialogOpen}>
       <DialogTitle>
-        {`Edit Budget`}
+        {`Edit ${confirmEdit?.category}`}
       </DialogTitle>
 
       <Box

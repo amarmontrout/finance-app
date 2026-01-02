@@ -1,6 +1,8 @@
 "use client"
 
 import { 
+  BUDGET_CATEGORIES_KEY,
+  BUDGET_KEY,
   EXPENSE_CATEGORIES_KEY, 
   EXPENSES, 
   INCOME, 
@@ -51,7 +53,9 @@ const Settings = () => {
                 INCOME,
                 INCOME_CATEGORIES_KEY,
                 EXPENSES,
-                EXPENSE_CATEGORIES_KEY
+                EXPENSE_CATEGORIES_KEY,
+                BUDGET_KEY,
+                BUDGET_CATEGORIES_KEY
               ]})
             }
           }

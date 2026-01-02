@@ -1,7 +1,7 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { BudgetEntryType, useBudgetContext } from "@/contexts/budget-context"
+import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { BUDGET_KEY } from "@/globals/globals"
 import { saveBudgetEntries } from "@/utils/budgetStorage"
@@ -22,17 +22,22 @@ import {
 import { useTheme } from "next-themes"
 import { ChangeEvent, useEffect, useState } from "react"
 
-const BudgetEntries = () => {
-  const { 
-    budgetCategories, 
-    refreshBudgetCategories,
-    budgetEntries,
-    refreshBudgetEntries
-  } = useBudgetContext()
+const BudgetEntries = ({
+  budgetCategories, 
+  refreshBudgetCategories,
+  budgetEntries,
+  refreshBudgetEntries
+}: {
+    budgetCategories: BudgetCategoryType[]
+    refreshBudgetCategories: ()=> void
+    budgetEntries: BudgetEntryType[]
+    refreshBudgetEntries: () => void
+}) => {
   const BUDGET_ENTRY_INIT: BudgetEntryType = {
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
-    amount: ""
+    amount: "",
+    createdAt: 0
   }
   
   const [budgetEntry, setBudgetEntry] = 
@@ -45,7 +50,6 @@ const BudgetEntries = () => {
 
   useEffect(() => {
     refreshBudgetCategories()
-    refreshBudgetEntries()
   }, [])
 
   const handleCategory = (
@@ -90,7 +94,12 @@ const BudgetEntries = () => {
   }
 
   const save = () => {
-    saveBudgetEntries({key: BUDGET_KEY, budgetEntry: budgetEntry})
+    saveBudgetEntries({
+      key: BUDGET_KEY, 
+      budgetEntry: {
+        ...budgetEntry,
+        createdAt: Date.now()
+    }})
     refreshBudgetEntries()
     resetFormData()
   }

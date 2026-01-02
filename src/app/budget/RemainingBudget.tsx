@@ -6,10 +6,11 @@ import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { useTheme } from "next-themes"
 
 const RemainingBudget = ({ 
-  budgetCategories
+  budgetCategories,
  }: { 
-  budgetCategories: BudgetCategoryType[] 
+  budgetCategories: BudgetCategoryType[]
 }) => {
+
   const { theme: currentTheme } = useTheme()
   const defaultCardColor = (currentTheme === "light" 
     ? healthStateLightMode

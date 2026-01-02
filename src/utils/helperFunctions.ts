@@ -16,6 +16,30 @@ export const getCurrentDateInfo = () => {
 }
 
 /**
+ * This helper function gets the beginning and end of the current week.
+ * 
+ * @returns The current week's beginning and end time
+ */
+export const getWeekBounds = (date = new Date()) => {
+  const d = new Date(date)
+  d.setHours(0, 0, 0, 0)
+
+  const day = d.getDay() // 0 = Sunday
+  const startOfWeek = new Date(d)
+  startOfWeek.setDate(d.getDate() - day)
+
+  const endOfWeek = new Date(startOfWeek)
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+  endOfWeek.setHours(23, 59, 59, 999)
+
+  return {
+    start: startOfWeek.getTime(),
+    end: endOfWeek.getTime(),
+  }
+}
+
+
+/**
  * This helper function converts a string number to a number.
  * It also removes any commas.
  * 

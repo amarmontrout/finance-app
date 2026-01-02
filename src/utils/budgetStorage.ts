@@ -84,7 +84,8 @@ export const saveBudgetEntries = ({
     budgetData.push({
       category: budgetEntry.category,
       note: budgetEntry.note,
-      amount: budgetEntry.amount
+      amount: budgetEntry.amount,
+      createdAt: budgetEntry.createdAt
     })
   }
 

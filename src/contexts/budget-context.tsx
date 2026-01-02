@@ -10,7 +10,8 @@ export type BudgetCategoryType = {
 export type BudgetEntryType = {
   category: string,
   note: string,
-  amount: string
+  amount: string,
+  createdAt: number
 }
 
 type BudgetContextType = {

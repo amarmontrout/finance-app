@@ -10,6 +10,15 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 
 export const EXPENSES = "expenses"
 export const INCOME = "income"
+export const DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+]
 export const MONTHS = [
   "January",
   "February",

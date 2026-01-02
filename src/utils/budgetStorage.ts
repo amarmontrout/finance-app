@@ -47,9 +47,11 @@ export const getBudgetEntries = ({
 export const saveBudgetCategories = ({
   key,
   budgetCategory,
+  updatedCategories
 }: {
   key: string
-  budgetCategory: BudgetCategoryType
+  budgetCategory?: BudgetCategoryType
+  updatedCategories?: BudgetCategoryType[]
 }) => {
 
   let budgetData: BudgetCategoryType[] = getBudgetCategories({ key })
@@ -62,6 +64,10 @@ export const saveBudgetCategories = ({
       category: budgetCategory.category,
       amount: budgetCategory.amount
     })
+  }
+
+  if (updatedCategories) {
+    budgetData = updatedCategories
   }
 
   localStorage.setItem(key, JSON.stringify(budgetData))
@@ -91,4 +97,17 @@ export const saveBudgetEntries = ({
 
   localStorage.setItem(key, JSON.stringify(budgetData))
   console.log("Budget entry saved")
+}
+
+export const updateBudgetCategories = (
+  key: string,
+  updatedCategory: BudgetCategoryType
+) => {
+  const categories = getBudgetCategories({ key })
+
+  const updated = categories.map((c) =>
+    c.category === updatedCategory.category ? updatedCategory : c
+  )
+
+  saveBudgetCategories({ key, updatedCategories: updated })
 }

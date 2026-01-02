@@ -29,7 +29,17 @@ const BUDGET_INIT: BudgetCategoryType = {
   amount: ""
 }
 
-const AddBudget = () => {
+const AddBudget = ({ 
+  confirmSelection,
+  setConfirmSelection,
+  setBudgetEditDialogOpen,
+  setConfirmEdit
+}: { 
+  confirmSelection: BudgetCategoryType | null
+  setConfirmSelection: React.Dispatch<React.SetStateAction<BudgetCategoryType | null>>
+  setBudgetEditDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setConfirmEdit: React.Dispatch<React.SetStateAction<BudgetCategoryType | null>>
+}) => {
   const {budgetCategories, refreshBudgetCategories} = useBudgetContext()
 
   useEffect(() => {
@@ -38,7 +48,6 @@ const AddBudget = () => {
 
   const [budgetCategory, setBudgetCategory] = 
     useState<BudgetCategoryType>(BUDGET_INIT)
-  const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
 
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
@@ -84,13 +93,14 @@ const AddBudget = () => {
     resetFormData()
   }
 
-  // const handleDeleteItem = () => {
-  //   const newItemList = items.filter(
-  //     (selection) => {return selection.name !== confirmSelection}
-  //   )
-  //   saveChoices({key: storageKey, choiceArray: newItemList})
-  //   refresh()
-  // }
+  const handleDeleteItem = () => {
+    const newBudgetList = budgetCategories.filter(
+      (selection) => {return selection.category !== confirmSelection?.category}
+    )
+
+    saveBudgetCategories({key: BUDGET_CATEGORIES_KEY, updatedCategories: newBudgetList})
+    refreshBudgetCategories()
+  }
 
   const EditDeleteButton = (props: {
     selection: BudgetCategoryType
@@ -105,10 +115,10 @@ const AddBudget = () => {
             edge="end"
             onClick={
               () => {
-                // if (setCategoryDialogOpen && setChoice) {
-                //   setCategoryDialogOpen(true)
-                //   setChoice(selection)
-                // }
+                if (setBudgetEditDialogOpen && setConfirmEdit) {
+                  setBudgetEditDialogOpen(true)
+                  setConfirmEdit(selection)
+                }
               }
             }
           >
@@ -120,7 +130,7 @@ const AddBudget = () => {
           edge="end"
           onClick={
             () => {
-              setConfirmSelection(selection.category)
+              setConfirmSelection(selection)
             }
           }
         >
@@ -137,7 +147,7 @@ const AddBudget = () => {
           edge="end"
           onClick={
             () => {
-              // handleDeleteItem()
+              handleDeleteItem()
             }
           }
         >
@@ -220,7 +230,7 @@ const AddBudget = () => {
                   <ListItem
                     key={budget.category} 
                     secondaryAction={
-                      confirmSelection === budget.category
+                      confirmSelection === budget
                       ? <ConfirmCancel/> 
                       : <EditDeleteButton selection={budget}/>
                     }

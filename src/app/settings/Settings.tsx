@@ -21,6 +21,8 @@ import AddYear from "./AddYear"
 import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
+import EditBudgetDialog from "./EditBudgetDialog"
+import { BudgetCategoryType } from "@/contexts/budget-context"
 
 const CHOICE_INIT = {
   name: "", 
@@ -35,6 +37,9 @@ const Settings = () => {
   const [choice, setChoice] = useState<Choice>(CHOICE_INIT)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
+  const [budgetEditDialogOpen, setBudgetEditDialogOpen] = useState<boolean>(false)
+  const [confirmSelection, setConfirmSelection] = useState<BudgetCategoryType | null>(null)
+  const [confirmEdit, setConfirmEdit] = useState<BudgetCategoryType | null>(null)
 
   return (
     <Box
@@ -92,7 +97,12 @@ const Settings = () => {
       <Box
         className="flex flex-col xl:flex-row xl:w-[33%] gap-2 h-full"
       >
-        <AddBudget/>
+        <AddBudget
+          confirmSelection={confirmSelection}
+          setConfirmSelection={setConfirmSelection}
+          setBudgetEditDialogOpen={setBudgetEditDialogOpen}
+          setConfirmEdit={setConfirmEdit}
+        />
       </Box>
 
       <FileUploadDialog
@@ -107,6 +117,13 @@ const Settings = () => {
         choice={choice}
         storageKey={EXPENSE_CATEGORIES_KEY}
         refresh={refreshExpenseCategoryChoices}
+      />
+
+      <EditBudgetDialog
+        budgetEditDialogOpen={budgetEditDialogOpen}
+        setBudgetEditDialogOpen={setBudgetEditDialogOpen}
+        confirmEdit={confirmEdit}
+        currentTheme={currentTheme}
       />
     </Box>
   )

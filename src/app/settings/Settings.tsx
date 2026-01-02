@@ -8,7 +8,7 @@ import {
   YEARS_KEY 
 } from "@/globals/globals"
 import { Box, Button, Stack } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { accentColorSecondary } from "@/globals/colors"
 import { useTheme } from "next-themes"
 import FileUploadDialog from "./FileUploadDialog"

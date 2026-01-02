@@ -134,7 +134,6 @@ export const HorizontalNavbar = () => {
         width={"100%"}
         gap={1}
         overflow={"hidden"}
-        justifyContent={"center"}
         style={{
           overflowX: "scroll"
         }}

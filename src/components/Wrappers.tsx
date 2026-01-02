@@ -10,7 +10,7 @@ export const FlexColWrapper = (props: {
   const hasGap = gap ? `gap-${gap}` : ""
   return (
     <Box
-      className={`flex flex-col ${hasGap} ${toRow} h-full`}
+      className={`flex flex-col ${hasGap} ${toRow}`}
     >
       {children}
     </Box>
@@ -27,7 +27,7 @@ export const FlexRowWrapper = (props: {
   const hasGap = gap ? `gap-${gap}` : ""
   return (
     <Box
-      className={`flex flex-row ${hasGap} ${toCol} h-full`}
+      className={`flex flex-row ${hasGap} ${toCol}`}
     >
       {children}
     </Box>
@@ -46,7 +46,7 @@ export const FlexChildWrapper = (props: {
     : "flex"
   return (
     <Box
-      className={`${hiddenToVisible} flex-1 flex-col ${hasGap} min-w-0 h-full`}
+      className={`${hiddenToVisible} flex-1 flex-col ${hasGap} min-w-0`}
     >
       {children}
     </Box>

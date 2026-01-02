@@ -1,8 +1,7 @@
 "use client"
 
-import ShowCaseCard from "@/components/ShowCaseCard"
-import SimpleForm from "@/components/SimpleForm"
 import { 
+  BUDGET_KEY,
   EXPENSE_CATEGORIES_KEY, 
   EXPENSES, 
   INCOME, 
@@ -10,37 +9,38 @@ import {
   YEARS_KEY 
 } from "@/globals/globals"
 import { Box, Button, Stack } from "@mui/material"
-import { ChangeEvent, useState } from "react"
-import EditDeleteListItem from "@/components/EditDeleteListItem"
+import { useEffect, useState } from "react"
 import { accentColorSecondary } from "@/globals/colors"
 import { useTheme } from "next-themes"
 import FileUploadDialog from "./FileUploadDialog"
-import { saveChoices } from "@/utils/choiceStorage"
 import { saveData } from "@/utils/appDataStorage"
 import { Choice, useCategoryContext } from "@/contexts/categories-context"
 import EditCategorySettingsDialog from "@/components/EditCategorySettingsDialog"
+import AddYear from "./AddYear"
+import AddIncomeCategory from "./AddIncomeCategory"
+import AddExpenseCategory from "./AddExpenseCategory"
+import AddBudget from "./AddBudget"
+import { getBudget } from "@/utils/budgetStorage"
+
+const CHOICE_INIT = {
+  name: "", 
+  isExcluded: false, 
+  isRecurring: false
+}
 
 const Settings = () => {
-  const {
-    refreshYearChoices,
-    refreshIncomeCategoryChoices,
-    refreshExpenseCategoryChoices,
-    years,
-    incomeCategories,
-    expenseCategories,
-    isMockData,
-  } = useCategoryContext()
+  const { refreshExpenseCategoryChoices } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
 
-  const [yearsInput, setYearsInput] = useState<string>("")
-  const [incomeCategoriesInput, setIncomeCategoriesInput] = 
-    useState<string>("")
-  const [expenseCategoriesInput, setExpenseCategoriesInput] = 
-    useState<string>("")
-  const [choice, setChoice] = 
-    useState<Choice>({name: "", isExcluded: false, isRecurring: false})
+  const [choice, setChoice] = useState<Choice>(CHOICE_INIT)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
+
+  useEffect(() => {
+    const budget = getBudget({key: BUDGET_KEY})
+
+    console.log(budget)
+  })
 
   return (
     <Box
@@ -83,92 +83,17 @@ const Settings = () => {
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
-        <ShowCaseCard title={"Add Year"}>
-          <SimpleForm
-            label={"Year"}
-            value={yearsInput}
-            onChange={
-              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-                {setYearsInput(e.target.value)}
-            }
-            onSubmit={
-              () => {
-                saveChoices({key: YEARS_KEY, choice: yearsInput})
-                refreshYearChoices()
-                setYearsInput("")
-              }
-            }
-          />
+        <AddYear/>
 
-          <hr style={{ width: "100%" }} />
+        <AddIncomeCategory/>
 
-          <EditDeleteListItem
-            items={!isMockData.years? years : []}
-            storageKey={YEARS_KEY}
-            refresh={refreshYearChoices}
-          />
-        </ShowCaseCard>
-
-        <ShowCaseCard title={"Add Income Category"}>
-          <SimpleForm
-            label={"Income Category"}
-            value={incomeCategoriesInput}
-            onChange={
-              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-                {setIncomeCategoriesInput(e.target.value)}
-            }
-            onSubmit={
-              () => {
-                saveChoices({
-                  key: INCOME_CATEGORIES_KEY, 
-                  choice: incomeCategoriesInput
-                })
-                refreshIncomeCategoryChoices()
-                setIncomeCategoriesInput("")
-              }
-            }
-          />
-
-          <hr style={{ width: "100%" }} />
-
-          <EditDeleteListItem
-            items={!isMockData.incomeCategories? incomeCategories : []}
-            storageKey={INCOME_CATEGORIES_KEY}
-            refresh={refreshIncomeCategoryChoices}
-          />
-        </ShowCaseCard>
-
-        <ShowCaseCard title={"Add Expense Category"}>
-          <SimpleForm
-            label={"Expense Category"}
-            value={expenseCategoriesInput}
-            onChange={
-              (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-              {setExpenseCategoriesInput(e.target.value)}
-            }
-            onSubmit={
-              () => {
-                saveChoices({
-                  key: EXPENSE_CATEGORIES_KEY, 
-                  choice: expenseCategoriesInput
-                })
-                refreshExpenseCategoryChoices()
-                setExpenseCategoriesInput("")
-              }
-            }
-          />
-
-          <hr style={{ width: "100%" }} />
-
-          <EditDeleteListItem
-            items={!isMockData.expensesCategories? expenseCategories : []}
-            storageKey={EXPENSE_CATEGORIES_KEY}
-            refresh={refreshExpenseCategoryChoices}
-            setCategoryDialogOpen={setCategoryDialogOpen}
-            setChoice={setChoice}
-          />
-        </ShowCaseCard>      
+        <AddExpenseCategory
+          setCategoryDialogOpen={setCategoryDialogOpen}
+          setChoice={setChoice}
+        />
       </Box>
+
+      <AddBudget/>
 
       <FileUploadDialog
         dialogOpen={dialogOpen}

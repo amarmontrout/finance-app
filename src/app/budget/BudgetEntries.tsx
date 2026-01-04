@@ -109,6 +109,14 @@ const BudgetEntries = ({
     resetFormData()
   }
 
+  const deleteEntry = (id: number) => {
+    const updatedEntries = budgetEntries.filter((entry) => {
+      return entry.createdAt !== id
+    })
+    saveBudgetEntries({key: BUDGET_KEY, updatedEntry: updatedEntries})
+    refreshBudgetEntries()
+  }
+
   const EditDeleteButton = (props: {id: number, entry: BudgetEntryType}) => {
     const { id, entry } = props
     return (
@@ -147,7 +155,7 @@ const BudgetEntries = ({
           edge="end"
           onClick={
             () => {
-              // DELETE LOGIC TODO
+              deleteEntry(id)
               setNoteId(null)
             }
           }

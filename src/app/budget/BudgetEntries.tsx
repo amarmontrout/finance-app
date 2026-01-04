@@ -17,8 +17,10 @@ import {
   ListItemText,
   Select,
   MenuItem,
-  SelectChangeEvent
+  SelectChangeEvent,
+  TextField
 } from "@mui/material"
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from "next-themes"
 import { ChangeEvent, useEffect, useState } from "react"
 
@@ -42,6 +44,10 @@ const BudgetEntries = ({
   
   const [budgetEntry, setBudgetEntry] = 
     useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
+  const [noteValue, setNoteValue] = 
+    useState<string | null>(null)
+  const [notes, setNotes] = 
+    useState<string[]>([])
 
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
@@ -52,6 +58,16 @@ const BudgetEntries = ({
     refreshBudgetCategories()
   }, [])
 
+  useEffect(() => {
+    let notes: string[] = []
+    budgetEntries.map((entry) => {
+      if (!notes.includes(entry.note)) {
+        notes.push(entry.note)
+      }
+    })
+    setNotes(notes)
+  }, [budgetEntries])
+
   const handleCategory = (
     e: SelectChangeEvent
   ) => {
@@ -60,17 +76,7 @@ const BudgetEntries = ({
       ...prev,
       category: value,
     }));
-  }
-
-  const handleNote = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { value } = e.target
-    setBudgetEntry(prev => ({
-      ...prev,
-      note: value,
-    }));
-  }  
+  } 
 
   const handleAmount = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -135,13 +141,27 @@ const BudgetEntries = ({
           </FormControl>
 
           <FormControl>
-            <InputLabel>Note</InputLabel>
-            <OutlinedInput
+            <Autocomplete
               className="w-full lg:w-[175px]"
-              label={"Note"}
-              value={budgetEntry.note}
-              name={"note"}
-              onChange={e => handleNote(e)}
+              freeSolo
+              options={notes.map((option) => option)}
+              value={noteValue}
+              onChange={(event: any, newValue: string | null) => {
+                setNoteValue(newValue);
+              }}
+              inputValue={budgetEntry.note}
+              onInputChange={(event, newInputValue) => {
+                setBudgetEntry(prev => ({
+                  ...prev,
+                  note: newInputValue,
+                }));
+              }}
+              renderInput={(params) => 
+                <TextField
+                  {...params} 
+                  label="Note" 
+                />
+              }
             />
           </FormControl>           
 

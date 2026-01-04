@@ -1,8 +1,12 @@
 "use client"
 
 import { FlexColWrapper } from "@/components/Wrappers"
-import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
-import { useEffect, useMemo } from "react"
+import { 
+  BudgetCategoryType, 
+  BudgetEntryType, 
+  useBudgetContext 
+} from "@/contexts/budget-context"
+import { useEffect, useMemo, useState } from "react"
 import RemainingBudget from "./RemainingBudget"
 import BudgetEntries from "./BudgetEntries"
 import { 
@@ -10,6 +14,7 @@ import {
   formattedStringNumber,
   getWeekBounds
 } from "@/utils/helperFunctions"
+import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 
 const Budget = () => {
   const { 
@@ -20,10 +25,27 @@ const Budget = () => {
   } = useBudgetContext()
   const { start, end } = getWeekBounds()
 
+  const [notes, setNotes] = 
+    useState<string[]>([])
+  const [selectedEntry, setSelectedEntry] = 
+    useState<BudgetEntryType | null>(null)
+  const [openEditDialog, setOpenEditDialog] = 
+    useState<boolean>(false)
+
   useEffect(() => {
     refreshBudgetEntries()
     refreshBudgetCategories()
   }, [])
+
+  useEffect(() => {
+    let notes: string[] = []
+    budgetEntries.map((entry) => {
+      if (!notes.includes(entry.note)) {
+        notes.push(entry.note)
+      }
+    })
+    setNotes(notes)
+  }, [budgetEntries])
 
   const weeklyEntries = useMemo(() => {
     return budgetEntries.filter(entry =>
@@ -63,6 +85,18 @@ const Budget = () => {
         budgetCategories={budgetCategories}
         refreshBudgetCategories={refreshBudgetCategories}
         budgetEntries={weeklyEntries}
+        refreshBudgetEntries={refreshBudgetEntries}
+        notes={notes}
+        setOpenEditDialog={setOpenEditDialog}
+        setSelectedEntry={setSelectedEntry}
+      />
+
+      <EditBudgetEntryDialog
+        openEditDialog={openEditDialog}
+        setOpenEditDialog={setOpenEditDialog}
+        notes={notes}
+        budgetCategories={budgetCategories}
+        selectedEntry={selectedEntry}
         refreshBudgetEntries={refreshBudgetEntries}
       />
     </FlexColWrapper>

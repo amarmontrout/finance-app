@@ -5,6 +5,9 @@ import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { BUDGET_KEY } from "@/globals/globals"
 import { saveBudgetEntries } from "@/utils/budgetStorage"
+import DeleteIcon from '@mui/icons-material/Delete'
+import CancelIcon from '@mui/icons-material/Cancel'
+import EditIcon from '@mui/icons-material/Edit'
 import { 
   Box, 
   FormControl, 
@@ -18,7 +21,9 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
-  TextField
+  TextField,
+  IconButton,
+  Stack
 } from "@mui/material"
 import Autocomplete from '@mui/material/Autocomplete';
 import { useTheme } from "next-themes"
@@ -28,12 +33,18 @@ const BudgetEntries = ({
   budgetCategories, 
   refreshBudgetCategories,
   budgetEntries,
-  refreshBudgetEntries
+  refreshBudgetEntries,
+  notes,
+  setOpenEditDialog,
+  setSelectedEntry
 }: {
     budgetCategories: BudgetCategoryType[]
     refreshBudgetCategories: ()=> void
     budgetEntries: BudgetEntryType[]
     refreshBudgetEntries: () => void
+    notes: string[]
+    setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
+    setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetEntryType | null>>
 }) => {
   const BUDGET_ENTRY_INIT: BudgetEntryType = {
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
@@ -46,8 +57,8 @@ const BudgetEntries = ({
     useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = 
     useState<string | null>(null)
-  const [notes, setNotes] = 
-    useState<string[]>([])
+  const [noteId, setNoteId] = 
+    useState<number | null>(null)
 
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
@@ -57,16 +68,6 @@ const BudgetEntries = ({
   useEffect(() => {
     refreshBudgetCategories()
   }, [])
-
-  useEffect(() => {
-    let notes: string[] = []
-    budgetEntries.map((entry) => {
-      if (!notes.includes(entry.note)) {
-        notes.push(entry.note)
-      }
-    })
-    setNotes(notes)
-  }, [budgetEntries])
 
   const handleCategory = (
     e: SelectChangeEvent
@@ -108,6 +109,67 @@ const BudgetEntries = ({
     }})
     refreshBudgetEntries()
     resetFormData()
+  }
+
+  const EditDeleteButton = (props: {id: number, entry: BudgetEntryType}) => {
+    const { id, entry } = props
+    return (
+      <Stack direction={"row"} gap={2}>
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setOpenEditDialog(true)
+              setSelectedEntry(entry)
+            }
+          }
+        >
+          <EditIcon/>
+        </IconButton>
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setNoteId(id)
+            }
+          }
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Stack>
+    )
+  }
+
+  const ConfirmCancel = (props: { id: number }) => {
+    const { id } = props
+    return (
+      <Stack direction={"row"} gap={2}>
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              // DELETE LOGIC TODO
+              setNoteId(null)
+            }
+          }
+        >
+          <DeleteIcon/>
+        </IconButton>
+
+        <IconButton 
+          edge="end"
+          onClick={
+            () => {
+              setSelectedEntry(null)
+              setNoteId(null)
+            }
+          }
+        >
+          <CancelIcon/>
+        </IconButton>
+      </Stack>
+    )
   }
 
   return (
@@ -205,6 +267,11 @@ const BudgetEntries = ({
                 return (
                   <ListItem
                     key={`${entry.category}-${entry.note}-${entry.amount}`} 
+                    secondaryAction={
+                    noteId === entry.createdAt
+                      ? <ConfirmCancel id={entry.createdAt}/> 
+                      : <EditDeleteButton id={entry.createdAt} entry={entry}/>
+                    }
                     sx={{ 
                       backgroundColor: listItemColor,
                       borderRadius: "10px"

@@ -55,10 +55,8 @@ const BudgetEntries = ({
   
   const [budgetEntry, setBudgetEntry] = 
     useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
-  const [noteValue, setNoteValue] = 
-    useState<string | null>(null)
-  const [noteId, setNoteId] = 
-    useState<number | null>(null)
+  const [noteValue, setNoteValue] = useState<string | null>(null)
+  const [noteId, setNoteId] = useState<number | null>(null)
 
   const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?

@@ -46,12 +46,17 @@ const EditBudgetEntryDialog = ({
 
   const [updatedBudgetEntry, setUpdatedBudgetEntry] = 
     useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
-  const [noteValue, setNoteValue] = 
-    useState<string | null>(null)
+  const [noteValue, setNoteValue] = useState<string | null>(null)
+
+  const refreshDialog = () => {
+    if (selectedEntry) {
+      setUpdatedBudgetEntry(selectedEntry)
+    }
+    setNoteValue(null)
+  }
 
   useEffect(() => {
-    if (selectedEntry)
-    setUpdatedBudgetEntry(selectedEntry)
+    refreshDialog()
   }, [selectedEntry])
 
   return (
@@ -145,7 +150,7 @@ const EditBudgetEntryDialog = ({
               updateBudgetEntries(BUDGET_KEY, updatedBudgetEntry)
               setOpenEditDialog(false)
               refreshBudgetEntries()
-              setNoteValue(null)
+              refreshDialog()
             }}
             sx={{
               backgroundColor: currentTheme === "light" 
@@ -162,6 +167,7 @@ const EditBudgetEntryDialog = ({
             }
             onClick={() => {
               setOpenEditDialog(false)
+              refreshDialog()
             }}
             sx={{
               backgroundColor: currentTheme === "light" 

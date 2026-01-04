@@ -25,12 +25,10 @@ const Budget = () => {
   } = useBudgetContext()
   const { start, end } = getWeekBounds()
 
-  const [notes, setNotes] = 
-    useState<string[]>([])
+  const [notes, setNotes] = useState<string[]>([])
   const [selectedEntry, setSelectedEntry] = 
     useState<BudgetEntryType | null>(null)
-  const [openEditDialog, setOpenEditDialog] = 
-    useState<boolean>(false)
+  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
 
   useEffect(() => {
     refreshBudgetEntries()

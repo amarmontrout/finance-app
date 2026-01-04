@@ -145,6 +145,7 @@ const EditBudgetEntryDialog = ({
               updateBudgetEntries(BUDGET_KEY, updatedBudgetEntry)
               setOpenEditDialog(false)
               refreshBudgetEntries()
+              setNoteValue(null)
             }}
             sx={{
               backgroundColor: currentTheme === "light" 

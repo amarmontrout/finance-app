@@ -5,9 +5,6 @@ import
 from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
-import ShowCaseCard from "@/components/ShowCaseCard"
-import TransactionForm from "@/components/TransactionForm"
-import TransactionsList from "@/components/TransactionsList"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -15,12 +12,13 @@ import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
 import { buildMultiColumnData } from "@/utils/buildChartData"
 import { getChoices } from "@/utils/choiceStorage"
-import { getMonthTotal } from "@/utils/getTotals"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
 import { useState, useEffect, useMemo } from "react"
+import AddIncome from "./AddIncome"
+import IncomeList from "./IncomeList"
 
 const Income = () => {
   const { 
@@ -28,14 +26,13 @@ const Income = () => {
     refreshIncomeTransactions,
   } = useTransactionContext()
   const { incomeCategories, years, excludedSet } = useCategoryContext()
+  const pathname = usePathname()
+  const { theme: currentTheme } = useTheme()
+  const { currentYear, currentMonth } = getCurrentDateInfo()
 
   useEffect(() => {
     refreshIncomeTransactions()
   }, [])
-
-  const pathname = usePathname()
-  const { theme: currentTheme } = useTheme()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -48,14 +45,7 @@ const Income = () => {
       getChoices({ key: INCOME_CATEGORIES_KEY }).length !== 0
     )
   }, [])
-  const monthIncome = useMemo(() => {
-    return getMonthTotal(
-      selectedYear, 
-      selectedMonth, 
-      incomeTransactions, 
-      excludedSet
-    )
-  }, [selectedYear, selectedMonth, incomeTransactions])
+
   const lineChartData = useMemo(() => {
     return buildMultiColumnData({
       firstData: incomeTransactions,
@@ -70,46 +60,37 @@ const Income = () => {
 
       {hasChoices &&
         <Box>
-          <ShowCaseCard title={"Add Income"}>
-            <TransactionForm
-              categories={incomeCategories}
-              type={INCOME}
-              refreshTransactions={refreshIncomeTransactions}
-              years={years}
-            />
-          </ShowCaseCard>
+          <AddIncome
+            incomeCategories={incomeCategories}
+            income={INCOME}
+            refreshIncomeTransactions={refreshIncomeTransactions}
+            years={years}
+          />
         </Box>
       }
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        <ShowCaseCard 
-          title={`Income for ${selectedMonth} ${selectedYear}`} 
-          secondaryTitle={`$${monthIncome}`}
-        >
-          <TransactionsList
-            type={INCOME}
-            transactions={incomeTransactions}
-            refreshTransactions={refreshIncomeTransactions}
-            selectedMonth={selectedMonth}
-            setSelectedMonth={setSelectedMonth}
-            selectedYear={selectedYear}
-            setSelectedYear={setSelectedYear}
-            setOpenEditDialog={setOpenEditDialog}
-            setSelectedId={setSelectedId}
-            excludedSet={excludedSet}
-          />
-        </ShowCaseCard>
+        <IncomeList
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+          income={INCOME}
+          incomeTransactions={incomeTransactions}
+          refreshIncomeTransactions={refreshIncomeTransactions}
+          setOpenEditDialog={setOpenEditDialog}
+          setSelectedId={setSelectedId}
+          excludedSet={excludedSet}
+        />
         
-        <ShowCaseCard title={"Income Chart"}>
-          <LineChart
-            multiColumnData={lineChartData}
-            lineColors={
-              currentTheme === "light" 
-              ? incomeLinesLight
-              : incomeLinesDark
-            }
-          />
-        </ShowCaseCard>
+        <LineChart
+          multiColumnData={lineChartData}
+          lineColors={
+            currentTheme === "light" 
+            ? incomeLinesLight
+            : incomeLinesDark
+          }
+        />
       </FlexColWrapper>
 
       <EditTransactionDetailDialog

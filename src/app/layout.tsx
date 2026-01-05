@@ -5,6 +5,7 @@ import { Box } from "@mui/material";
 import Header from "@/header/Header";
 import "../globals.css"
 import { HorizontalNavbar, Navbar } from "@/navigation/Navbar";
+import { accentColorPrimary } from "@/globals/colors";
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -63,23 +64,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   height: "70px",
                   bgcolor: "primary.main",
-                  borderBottom: 2,
+                  borderBottom: 1,
                   borderColor: "divider",
                 }}
               >
                 <Header />
-              </Box>
-
-              <Box
-                className="flex md:hidden"
-                component="nav"
-                sx={{
-                  bgcolor: "background.paper",
-                  borderBottom: 2,
-                  borderColor: "divider",
-                }}
-              >
-                <HorizontalNavbar/>
               </Box>
 
               {/* Main content */}
@@ -104,6 +93,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                   {children}
                 </Box>
+              </Box>
+
+              <Box
+                className="flex md:hidden"
+                component="nav"
+                sx={{
+                  bgcolor: "background.paper",
+                  borderTop: 1,
+                  borderColor: accentColorPrimary,
+                }}
+              >
+                <HorizontalNavbar/>
               </Box>
             </Box>
           </Box>

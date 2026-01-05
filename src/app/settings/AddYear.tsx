@@ -21,7 +21,7 @@ const AddYear = () => {
       <Box
         display={"flex"}
         flexDirection={"column"}
-        height={"350px"}
+        height={"325px"}
         overflow={"hidden"}
         paddingTop={"1px"}
       >

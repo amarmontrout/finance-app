@@ -128,8 +128,12 @@ export const HorizontalNavbar = () => {
       direction={"column"}
       width={"100%"}
     >
+      <Box textAlign={"center"} paddingTop={".25rem"}>
+        <Typography variant="h5">{activeTab}</Typography>
+      </Box>
+
       <Stack
-        className="p-[.5rem] md:p-[1.25rem]"
+        className="p-[.3rem] md:p-[1.25rem]"
         direction={"row"}
         width={"100%"}
         gap={1}
@@ -188,10 +192,6 @@ export const HorizontalNavbar = () => {
           )
         })}
       </Stack>
-
-      <Box textAlign={"center"}>
-        <Typography variant="h5" gutterBottom>{activeTab}</Typography>
-      </Box>
     </Stack>
   )
 }

@@ -133,7 +133,7 @@ export const HorizontalNavbar = () => {
       </Box>
 
       <Stack
-        className="p-[.3rem] mb-[40px]"
+        className="p-[.35rem] mb-[30px]"
         direction={"row"}
         width={"100%"}
         gap={1}

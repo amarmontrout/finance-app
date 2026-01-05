@@ -5,7 +5,8 @@ import {
   ListItemText, 
   ListItem, 
   IconButton, 
-  Box, 
+  Box,
+  Divider, 
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -292,6 +293,17 @@ const TransactionsList = ({
       className="flex flex-col md:flex-row sm:gap-2"
     >
       <YearList/>
+
+      <Divider 
+        className="flex md:hidden w-full"
+        sx={{ 
+          borderColor: currentTheme === "light" ?
+            lightMode.borderStrong 
+            : darkMode.borderStrong,
+          borderWidth: 1
+        }}
+      />
+
       <Box 
         className="flex flex-row gap-2 w-full md:w-[70%]"
       >

@@ -3,8 +3,6 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { useCategoryContext } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
   accentColorSecondary, 
   healthStateDarkMode, 
@@ -20,22 +18,26 @@ import {
   getSavingsHealthState, 
   removeCommas 
 } from "@/utils/helperFunctions"
-import { useTheme } from "next-themes"
+import { TransactionData } from "@/utils/transactionStorage"
 import { useMemo } from "react"
 
-const NetCashFlow = (props: {
+const NetCashFlow = ({
+  incomeTransactions,
+  expenseTransactions,
+  selectedYear,
+  selectedMonth,
+  view,
+  currentTheme,
+  excludedSet
+}: {
+  incomeTransactions: TransactionData
+  expenseTransactions: TransactionData
   selectedYear: string
   selectedMonth: string
   view: "annual" | "month"
+  currentTheme: string | undefined
+  excludedSet: Set<string>
 }) => {
-  const { selectedYear, selectedMonth, view } = props
-
-  const {
-    incomeTransactions,
-    expenseTransactions
-  } = useTransactionContext()
-  const { excludedSet } = useCategoryContext()
-  const { theme: currentTheme } = useTheme()
 
   const monthIncome = getMonthTotal(
     selectedYear, 

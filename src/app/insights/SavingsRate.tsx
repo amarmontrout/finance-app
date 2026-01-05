@@ -2,7 +2,6 @@
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { useSavingsRateData } from "@/hooks/useSavingsRateData"
 import {
@@ -10,20 +9,23 @@ import {
   getPreviousMonthInfo, 
   getSavingsHealthState 
 } from "@/utils/helperFunctions"
-import { useTheme } from "next-themes"
+import { TransactionData } from "@/utils/transactionStorage"
 
-const SavingsRate = (props: {
+const SavingsRate = ({
+  incomeTransactions,
+  expenseTransactions,
+  selectedYear,
+  selectedMonth,
+  view,
+  currentTheme
+}: {
+  incomeTransactions: TransactionData
+  expenseTransactions: TransactionData
   selectedYear: string
   selectedMonth: string
   view: "annual" | "month"
+  currentTheme: string | undefined
 }) => {
-  const { selectedYear, selectedMonth, view } = props
-
-  const {
-    incomeTransactions,
-    expenseTransactions
-  } = useTransactionContext()
-  const { theme: currentTheme } = useTheme()
   const { year: prevMonthYear, month: prevMonth } =
     getPreviousMonthInfo(selectedYear, selectedMonth)
   const previousYear = String(Number(selectedYear) - 1)

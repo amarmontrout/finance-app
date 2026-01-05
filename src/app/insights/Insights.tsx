@@ -10,15 +10,20 @@ import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import DateSelector from "@/components/DateSelector"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
+import { Divider } from "@mui/material"
+import { darkMode, lightMode } from "@/globals/colors"
+import { useTheme } from "next-themes"
 
 const Insights = () => {
   const { 
+    incomeTransactions,
     refreshIncomeTransactions,
+    expenseTransactions,
     refreshExpenseTransactions
   } = useTransactionContext()
-  const { years } = useCategoryContext()
-
+  const { years, excludedSet } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
+  const {theme: currentTheme} = useTheme()
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -43,14 +48,27 @@ const Insights = () => {
         years={years}
       />
 
-      <hr style={{width: "100%"}}/>
+      <Divider
+        className="flex w-full"
+        sx={{ 
+          borderColor: currentTheme === "light" ?
+            lightMode.borderStrong 
+            : darkMode.borderStrong,
+          borderWidth: 1
+        }}
+      />
+
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
         <FlexChildWrapper>
           <ShowCaseCard title={"Net Cash Flow"}>
             <NetCashFlow
+              incomeTransactions={incomeTransactions}
+              expenseTransactions={expenseTransactions}
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
               view={view}
+              currentTheme={currentTheme}
+              excludedSet={excludedSet}
             />
           </ShowCaseCard>
         </FlexChildWrapper>
@@ -58,9 +76,12 @@ const Insights = () => {
         <FlexChildWrapper>
           <ShowCaseCard title={"Savings Rate"}>
             <SavingsRate
+              incomeTransactions={incomeTransactions}
+              expenseTransactions={expenseTransactions}
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
               view={view}
+              currentTheme={currentTheme}
             />
           </ShowCaseCard>
         </FlexChildWrapper>

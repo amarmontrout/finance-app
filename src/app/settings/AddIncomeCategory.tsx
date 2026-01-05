@@ -48,6 +48,7 @@ const AddIncomeCategory = () => {
         <Box
           flex={1}
           overflow={"auto"}
+          paddingRight={"10px"}
         >
           <EditDeleteListItem
             items={!isMockData.incomeCategories? incomeCategories : []}

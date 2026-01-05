@@ -6,13 +6,11 @@ import {
   ListItem, 
   IconButton, 
   Box, 
-  useMediaQuery 
 } from "@mui/material"
 import { useState, useEffect } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { 
   accentColorPrimarySelected, 
@@ -171,8 +169,6 @@ const TransactionsList = ({
   }
 
   const YearList = () => {
-    const isMdUp = useMediaQuery("(min-width: 768px)")
-
     return (
       <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">
         <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
@@ -201,13 +197,6 @@ const TransactionsList = ({
                   }}
                 >
                   <ListItemText primary={year} secondary={`$${yearTotal}`}/>
-
-                  {year === selectedYear &&
-                    (isMdUp ? (
-                      <KeyboardArrowRightIcon />
-                    ) : (
-                      <KeyboardArrowDownIcon />
-                    ))}
                 </ListItemButton>
               )
             })

@@ -44,6 +44,7 @@ const AddYear = () => {
         <Box
           flex={1}
           overflow={"auto"}
+          paddingRight={"10px"}
         >
           <EditDeleteListItem
             items={!isMockData.years? years : []}

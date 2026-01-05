@@ -56,6 +56,7 @@ const AddExpenseCategory = (props: {
         <Box
           flex={1}
           overflow={"auto"}
+          paddingRight={"10px"}
         >
           <EditDeleteListItem
             items={!isMockData.expensesCategories? expenseCategories : []}

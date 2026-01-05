@@ -30,6 +30,13 @@ const Categories = () => {
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
+  const defaultCardColor = (currentTheme === "light" 
+    ? healthStateLightMode
+    : healthStateDarkMode)["default"]
+
+  const incomeSource = incomeTransactions
+  const expenseSource = expenseTransactions
+
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [view, setView] = useState<"annual" | "month">("month")
@@ -38,9 +45,6 @@ const Categories = () => {
     refreshIncomeTransactions()
     refreshExpenseTransactions()
   }, [selectedYear])
-
-  const incomeSource = incomeTransactions
-  const expenseSource = expenseTransactions
 
   const flattenedIncomeData = useMemo(
     () => flattenTransactions(
@@ -93,10 +97,6 @@ const Categories = () => {
       .sort((a, b) => Number(b[1]) - Number(a[1]))
       .slice(0, 3)
   }, [monthExpenseCategoryTotals, view])
-
-  const defaultCardColor = (currentTheme === "light" 
-    ? healthStateLightMode
-    : healthStateDarkMode)["default"]
 
   return (
     <FlexColWrapper gap={2}>

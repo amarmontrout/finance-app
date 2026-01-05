@@ -2,17 +2,15 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 
-type Props = {
-  selectedYear: string
-  annualIncomeCategoryTotals: any[]
-  annualExpenseCategoryTotals: any[]
-}
-
 const AnnualCategoryBreakdown = ({
   selectedYear,
   annualIncomeCategoryTotals,
   annualExpenseCategoryTotals,
-}: Props) => {
+}: {
+  selectedYear: string
+  annualIncomeCategoryTotals: [string, string | number][]
+  annualExpenseCategoryTotals: [string, string | number][]
+}) => {
   return (
     <FlexColWrapper gap={2} toRowBreak={"xl"}>
       <ShowCaseCard title={`${selectedYear} Income Category Breakdown`}>

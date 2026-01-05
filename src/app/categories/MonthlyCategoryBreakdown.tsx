@@ -4,15 +4,6 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 
-type Props = {
-  selectedMonth: string
-  selectedYear: string
-  monthIncomeCategoryTotals: any[]
-  monthExpenseCategoryTotals: any[]
-  topThreeExpenses: [string, string | number][]
-  defaultCardColor: any
-}
-
 const MonthlyCategoryBreakdown = ({
   selectedMonth,
   selectedYear,
@@ -20,7 +11,14 @@ const MonthlyCategoryBreakdown = ({
   monthExpenseCategoryTotals,
   topThreeExpenses,
   defaultCardColor,
-}: Props) => {
+}: {
+  selectedMonth: string
+  selectedYear: string
+  monthIncomeCategoryTotals: any[]
+  monthExpenseCategoryTotals: any[]
+  topThreeExpenses: [string, string | number][]
+  defaultCardColor: any
+}) => {
   return (
     <FlexColWrapper gap={2}>
       <ShowCaseCard title={`Top Expenses for ${selectedMonth} ${selectedYear}`}>

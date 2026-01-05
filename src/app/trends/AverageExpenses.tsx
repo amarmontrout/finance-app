@@ -2,24 +2,40 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
-import { useCategoryContext } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transactions-context"
+import { Choice } from "@/contexts/categories-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage, getDifference } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
   flattenTransactions, 
-  formattedStringNumber, 
-  getCurrentDateInfo 
+  formattedStringNumber
 } from "@/utils/helperFunctions"
+import { TransactionData } from "@/utils/transactionStorage"
 import { Typography } from "@mui/material"
-import { useTheme } from "next-themes"
 import { useEffect, useMemo } from "react"
 
-const AverageExpenses = () => {
-  const { currentYear, currentMonth } = getCurrentDateInfo()
-  const { theme: currentTheme } = useTheme()
+const AverageExpenses = ({
+  expenseTransactions,
+  refreshExpenseTransactions,
+  expenseCategories,
+  refreshExpenseCategoryChoices,
+  currentTheme,
+  currentYear,
+  currentMonth
+}: {
+  expenseTransactions: TransactionData
+  refreshExpenseTransactions: () => void
+  expenseCategories: Choice[]
+  refreshExpenseCategoryChoices: () => void
+  currentTheme: string | undefined
+  currentYear: string
+  currentMonth: string
+}) => {
+  useEffect(() => {
+    refreshExpenseTransactions()
+    refreshExpenseCategoryChoices()
+  }, [])  
 
   const badColor = currentTheme === "light" ?
     lightMode.error 
@@ -27,21 +43,6 @@ const AverageExpenses = () => {
   const goodColor = currentTheme === "light" ?
     lightMode.success 
     : darkMode.success
-
-  const {
-    refreshExpenseTransactions,
-    expenseTransactions,
-  } = useTransactionContext()
-  const { 
-    expenseCategories, 
-    refreshExpenseCategoryChoices 
-  } = useCategoryContext()
-
-  useEffect(() => {
-    refreshExpenseTransactions()
-    refreshExpenseCategoryChoices()
-  }, [])
-
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)
     const passedMonths = MONTHS.indexOf(currentMonth) + 1

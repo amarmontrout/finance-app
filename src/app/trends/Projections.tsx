@@ -3,37 +3,43 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper } from "@/components/Wrappers"
-import { useCategoryContext } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transactions-context"
+import { Choice } from "@/contexts/categories-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
   flattenTransactions, 
-  formattedStringNumber, 
-  getCurrentDateInfo 
+  formattedStringNumber
 } from "@/utils/helperFunctions"
+import { TransactionData } from "@/utils/transactionStorage"
 import { Box } from "@mui/material"
-import { useTheme } from "next-themes"
 import { useEffect, useMemo } from "react"
 
-const Projections = () => {
-  const { 
-    expenseTransactions, 
-    refreshExpenseTransactions 
-  } = useTransactionContext()
-  const { expenseCategories, excludedSet } = useCategoryContext()
-  const { theme: currentTheme } = useTheme()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
+const Projections = ({
+  expenseTransactions,
+  refreshExpenseTransactions,
+  currentTheme,
+  expenseCategories,
+  excludedSet,
+  currentYear,
+  currentMonth
+}: {
+  expenseTransactions: TransactionData
+  refreshExpenseTransactions: () => void
+  currentTheme: string | undefined
+  expenseCategories: Choice[]
+  excludedSet: Set<string>
+  currentYear: string
+  currentMonth: string
+}) => {
+  useEffect(() => {
+    refreshExpenseTransactions()
+  }, [])  
 
   const defaultColor = (currentTheme === "light"
     ? healthStateLightMode
     : healthStateDarkMode)["default"]
-
-  useEffect(() => {
-    refreshExpenseTransactions()
-  }, [])
 
   const annualProjectionPerCategory = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)

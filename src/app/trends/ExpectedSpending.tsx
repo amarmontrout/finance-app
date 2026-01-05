@@ -1,29 +1,32 @@
 import DiffColumnChart from "@/components/DiffColumnChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { useCategoryContext } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transactions-context"
+import { Choice } from "@/contexts/categories-context"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData } from "@/utils/buildChartData"
 import { getAverage } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
-  flattenTransactions, 
-  getCurrentDateInfo 
+  flattenTransactions
 } from "@/utils/helperFunctions"
+import { TransactionData } from "@/utils/transactionStorage"
 import { Box } from "@mui/material"
 import { useEffect, useMemo } from "react"
 
-const ExpectedSpending = () => {
-  const { 
-    expenseTransactions,
-    refreshExpenseTransactions
-  } = useTransactionContext()
-  const { 
-    expenseCategories,
-    refreshExpenseCategoryChoices 
-  } = useCategoryContext()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
-
+const ExpectedSpending = ({
+  expenseTransactions,
+  refreshExpenseTransactions,
+  expenseCategories,
+  refreshExpenseCategoryChoices,
+  currentYear,
+  currentMonth
+}: {
+  expenseTransactions: TransactionData
+  refreshExpenseTransactions: () => void
+  expenseCategories: Choice[]
+  refreshExpenseCategoryChoices: () => void
+  currentYear: string
+  currentMonth: string
+}) => {
   useEffect(() => {
     refreshExpenseTransactions()
     refreshExpenseCategoryChoices()

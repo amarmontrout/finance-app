@@ -1,32 +1,17 @@
 "use client"
 
-import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import MockDataWarning from "@/components/MockDataWarning"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { 
-  darkMode, 
-  healthStateDarkMode, 
-  healthStateLightMode, 
-  lightMode 
-} from "@/globals/colors"
-import { 
-  buildMultiColumnData, 
-  MultiColumnDataType 
-} from "@/utils/buildChartData"
-import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getYearTotal } from "@/utils/getTotals"
-import { 
-  cleanNumber, 
-  getCurrentDateInfo, 
-  getExcludedCategorySet, 
-  getSavingsHealthState 
-} from "@/utils/helperFunctions"
+import { darkMode, lightMode } from "@/globals/colors"
+import { buildMultiColumnData } from "@/utils/buildChartData"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo } from "react"
+import YearTotals from "./YearTotals"
+import YearNetCash from "./YearNetCash"
 
 const Overview = () => {
   const { 
@@ -38,83 +23,48 @@ const Overview = () => {
   const { excludedSet } = useCategoryContext()
   const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
-  
-  const [lineChartData, setLineChartData] = useState<MultiColumnDataType>([])
 
-  const annualIncome = getYearTotal(currentYear, incomeTransactions, excludedSet)
-  const annualExpense = getYearTotal(currentYear, expenseTransactions, excludedSet)
-  const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
-  
-  const savingsHealthState = getSavingsHealthState(
-    cleanNumber(annualNetIncome), 
-    cleanNumber(annualIncome)
-  )
-  const savingsColor = (currentTheme === "light" 
-    ? healthStateLightMode 
-    : healthStateDarkMode)[savingsHealthState]
-  const defaultCardColor = (currentTheme === "light" 
-    ? healthStateLightMode 
-    : healthStateDarkMode)["default"]
-
-  useEffect(() => {
-    refreshIncomeTransactions()
-    refreshExpenseTransactions()
-  }, [])
-
-  const buildCompareChartData = () => {
-    const chartData = buildMultiColumnData({
+  const lineColor = currentTheme === "light" 
+    ? [lightMode.success, lightMode.error] 
+    : [darkMode.success, darkMode.error]
+  const chartData = useMemo(() => {
+    return buildMultiColumnData({
       firstData: incomeTransactions,
       secondData: expenseTransactions,
       selectedYear: currentYear,
       firstColumnTitle: "Month",
       method: "compare"
     })
-    if (!chartData) return
-    setLineChartData(chartData)
-  }
-    
-  useEffect(() => {
-    buildCompareChartData()
   }, [incomeTransactions, expenseTransactions])
 
+  useEffect(() => {
+    refreshIncomeTransactions()
+    refreshExpenseTransactions()
+  }, [])
+    
   return (
     <FlexColWrapper gap={2}>
       <MockDataWarning/>
-
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
-        <ShowCaseCard title={`${currentYear} Totals`}>
-          <FlexColWrapper gap={2} toRowBreak={"md"}>
-            <ColoredInfoCard
-              cardColors={defaultCardColor}
-              info={`$${getYearTotal(currentYear, incomeTransactions, excludedSet)}`}
-              title={`${currentYear} Total Income`}
-            />
-
-            <ColoredInfoCard
-              cardColors={defaultCardColor}
-              info={`$${getYearTotal(currentYear, expenseTransactions, excludedSet)}`}
-              title={`${currentYear} Total Expenses`}
-            />
-          </FlexColWrapper>
-        </ShowCaseCard>
-
-        <ShowCaseCard title={`${currentYear} Net Cash`}>
-            <ColoredInfoCard
-              cardColors={savingsColor}
-              info={`Net Cash: $${annualNetIncome}`}
-              title={`Net Cash Rating: ${savingsHealthState}`}
-            />
-        </ShowCaseCard>
+        <YearTotals
+          currentYear={currentYear}
+          currentTheme={currentTheme}
+          incomeTransactions={incomeTransactions}
+          expenseTransactions={expenseTransactions}
+          excludedSet={excludedSet}
+        />
+        <YearNetCash
+          currentYear={currentYear}
+          currentTheme={currentTheme}
+          incomeTransactions={incomeTransactions}
+          expenseTransactions={expenseTransactions}
+          excludedSet={excludedSet}
+        />
       </FlexColWrapper>
-
-        <LineChart
-          multiColumnData={lineChartData}
-          lineColors={
-            currentTheme === "light" 
-            ? [lightMode.success, lightMode.error] 
-            : [darkMode.success, darkMode.error]
-          }
-        />        
+      <LineChart
+        multiColumnData={chartData}
+        lineColors={lineColor}
+      />        
     </FlexColWrapper>
   )
 }

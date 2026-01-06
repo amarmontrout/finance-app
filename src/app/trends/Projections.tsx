@@ -2,8 +2,9 @@
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { FlexChildWrapper } from "@/components/Wrappers"
+import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { Choice } from "@/contexts/categories-context"
+import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { 
@@ -13,8 +14,15 @@ import {
   getCardColor
 } from "@/utils/helperFunctions"
 import { TransactionData } from "@/utils/transactionStorage"
-import { Box } from "@mui/material"
-import { useEffect, useMemo } from "react"
+import { 
+  Box, 
+  Divider, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Select 
+} from "@mui/material"
+import { useEffect, useMemo, useState } from "react"
 
 const Projections = ({
   expenseTransactions,
@@ -36,6 +44,8 @@ const Projections = ({
   useEffect(() => {
     refreshExpenseTransactions()
   }, [])  
+
+  const [view, setView] = useState<"annual" | "month">("annual")
 
   const defaultColor = getCardColor(currentTheme, "default")
 
@@ -69,7 +79,7 @@ const Projections = ({
     return projectionMap
   }, [expenseCategories, expenseTransactions, currentYear, currentMonth])
 
-  const annualTotalExpenseProjection = useMemo(() => {
+  const totalProj = useMemo(() => {
     let total = 0
 
     annualProjectionPerCategory.forEach((value, key) => {
@@ -77,33 +87,71 @@ const Projections = ({
         total += value
       }
     })
-
-    return total
-  }, [annualProjectionPerCategory])
+    if (view === "annual") {
+      return total
+    } else {
+      return total/12
+    }
+  }, [annualProjectionPerCategory, view])
 
   return (
     <ShowCaseCard 
       title={`${currentYear} Projections`}
-      secondaryTitle={`Total: $${formattedStringNumber(annualTotalExpenseProjection)}`}
+      secondaryTitle={`Total: $${formattedStringNumber(totalProj)}`}
     >
-      <Box
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
-      >
-        {
-          expenseCategories.map((category) => {
-            const proj = annualProjectionPerCategory.get(category.name) ?? 0
-            return (
-              <FlexChildWrapper key={category.name}>
-                <ColoredInfoCard
-                  cardColors={defaultColor}
-                  title={category.name}
-                  info={`$${formattedStringNumber(proj)}`}
-                />
-              </FlexChildWrapper>
-            )
-          })
-        }
-      </Box>
+      <FlexColWrapper gap={2}>
+        <FormControl>
+          <InputLabel>View</InputLabel>
+          <Select
+            className="w-full sm:w-[200px]"
+            label="View"
+            value={view}
+            name={"view"}
+            onChange={e => setView(e.target.value)}
+          >
+            <MenuItem key={"annual"} value={"annual"}>
+              Annual Projection
+            </MenuItem>
+            <MenuItem key={"month"} value={"month"}>
+              Monthly Projection
+            </MenuItem>
+          </Select>
+        </FormControl>
+
+        <Divider 
+          className="flex w-full"
+          sx={{ 
+            borderColor: currentTheme === "light" ?
+              lightMode.borderStrong 
+              : darkMode.borderStrong,
+            borderWidth: 1
+          }}
+        />
+
+        <Box
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
+        >
+          {
+            expenseCategories.map((category) => {
+              const proj = annualProjectionPerCategory.get(category.name) ?? 0
+              if (proj === 0) return
+
+              const annual = formattedStringNumber(proj)
+              const monthly = formattedStringNumber(proj/12)
+
+              return (
+                <FlexChildWrapper key={category.name}>
+                  <ColoredInfoCard
+                    cardColors={defaultColor}
+                    title={category.name}
+                    info={`$${view === "annual" ? annual : monthly}`}
+                  />
+                </FlexChildWrapper>
+              )
+            })
+          }
+        </Box>
+      </FlexColWrapper>
     </ShowCaseCard>
   )
 }

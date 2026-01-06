@@ -5,7 +5,7 @@ import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { Choice } from "@/contexts/categories-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
-import { getAverage, getDifference } from "@/utils/financialFunctions"
+import { getAverage } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
   flattenTransactions, 
@@ -89,7 +89,7 @@ const AverageExpenses = ({
       prevAvg.push([category.name, prevAverage])
       percentChangeAvg.push([
         category.name,
-        getDifference(prevAverage, currentAverage),
+        prevAverage - currentAverage,
       ])
     })
 

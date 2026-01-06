@@ -37,10 +37,3 @@ export const getAverage = (
   )
   return total/ytdAmounts.length
 }
-
-export const getDifference = (
-  previousAmount: number, 
-  currentAmount: number
-) => {
-  return currentAmount-previousAmount
-}

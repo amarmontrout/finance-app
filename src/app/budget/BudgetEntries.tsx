@@ -117,8 +117,7 @@ const BudgetEntries = ({
     refreshBudgetEntries()
   }
 
-  const EditDeleteButton = (props: {id: number, entry: BudgetEntryType}) => {
-    const { id, entry } = props
+  const EditDeleteButton = ({ id, entry }: {id: number, entry: BudgetEntryType}) => {
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 
@@ -147,8 +146,7 @@ const BudgetEntries = ({
     )
   }
 
-  const ConfirmCancel = (props: { id: number }) => {
-    const { id } = props
+  const ConfirmCancel = ({ id }: { id: number }) => {
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 

@@ -10,6 +10,7 @@ import {
 } from "@/utils/getTotals"
 import { 
   flattenTransactions, 
+  getCardColor, 
   getCurrentDateInfo 
 } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
@@ -30,9 +31,7 @@ const Categories = () => {
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
-  const defaultCardColor = (currentTheme === "light" 
-    ? healthStateLightMode
-    : healthStateDarkMode)["default"]
+  const defaultCardColor = getCardColor(currentTheme, "default")
 
   const incomeSource = incomeTransactions
   const expenseSource = expenseTransactions

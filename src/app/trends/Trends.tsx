@@ -47,14 +47,14 @@ const Trends =() => {
         currentMonth={currentMonth}  
       />
 
-      <ExpectedSpending
+      {/* <ExpectedSpending
         expenseTransactions={expenseTransactions}
         refreshExpenseTransactions={refreshExpenseTransactions}
         expenseCategories={expenseCategories}
         refreshExpenseCategoryChoices={refreshExpenseCategoryChoices}
         currentYear={currentYear}
         currentMonth={currentMonth}
-      />
+      /> */}
     </FlexColWrapper>
   )
 }

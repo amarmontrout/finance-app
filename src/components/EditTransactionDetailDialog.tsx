@@ -207,7 +207,6 @@ const EditTransactionDetailDialog = (props: {
             }
             onClick={() => {
               setOpenEditDialog(false)
-              setUpdateTransaction(UPDATE_TRANSACTION_INIT)
             }}
             sx={{
               backgroundColor: currentTheme === "light" 

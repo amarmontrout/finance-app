@@ -54,6 +54,10 @@ const Income = () => {
     }) ?? []
   }, [incomeTransactions])
 
+  const lineColors = currentTheme === "light" 
+    ? incomeLinesLight
+    : incomeLinesDark
+
   return (
     <FlexColWrapper gap={2}>
       <MockDataWarning pathname={pathname}/>
@@ -85,11 +89,7 @@ const Income = () => {
         
         <LineChart
           multiColumnData={lineChartData}
-          lineColors={
-            currentTheme === "light" 
-            ? incomeLinesLight
-            : incomeLinesDark
-          }
+          lineColors={ lineColors }
         />
       </FlexColWrapper>
 

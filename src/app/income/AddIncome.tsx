@@ -9,7 +9,7 @@ const AddIncome = ({
   years
 }: {
   incomeCategories: Choice[]
-  income: string
+  income: "income"
   refreshIncomeTransactions: () => void
   years: Choice[]
 }) => {

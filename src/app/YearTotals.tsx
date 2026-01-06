@@ -1,8 +1,8 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { getYearTotal } from "@/utils/getTotals"
+import { getCardColor } from "@/utils/helperFunctions"
 import { TransactionData } from "@/utils/transactionStorage"
 
 const YearTotals = ({
@@ -18,9 +18,7 @@ const YearTotals = ({
   expenseTransactions: TransactionData
   excludedSet: Set<string>
 }) => {
-  const defaultCardColor = (currentTheme === "light" 
-    ? healthStateLightMode 
-    : healthStateDarkMode)["default"]
+  const defaultCardColor = getCardColor(currentTheme, "default")
 
   return (
     <ShowCaseCard title={`${currentYear} Totals`}>

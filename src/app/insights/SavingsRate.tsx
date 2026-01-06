@@ -2,10 +2,10 @@
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { useSavingsRateData } from "@/hooks/useSavingsRateData"
 import {
   formattedStringNumber, 
+  getCardColor, 
   getPreviousMonthInfo, 
   getSavingsHealthState 
 } from "@/utils/helperFunctions"
@@ -45,15 +45,9 @@ const SavingsRate = ({
   const monthSavingsHealthState = getSavingsHealthState(monthRate, 100)
   const annualSavingsHealthState = getSavingsHealthState(annualRate, 100)
 
-  const monthSavingsColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)[monthSavingsHealthState]
-  const annualSavingsColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)[annualSavingsHealthState]
-  const defaultColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)["default"]
+  const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
+  const annualSavingsColor = getCardColor(currentTheme, annualSavingsHealthState)
+  const defaultColor = getCardColor(currentTheme, "default")
 
   return (
     <FlexColWrapper gap={3}>

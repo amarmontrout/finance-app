@@ -15,6 +15,7 @@ import {
   getWeekBounds
 } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
+import { useTheme } from "next-themes"
 
 const Budget = () => {
   const { 
@@ -24,6 +25,7 @@ const Budget = () => {
     refreshBudgetEntries
   } = useBudgetContext()
   const { start, end } = getWeekBounds()
+  const { theme: currentTheme } = useTheme()
 
   const [notes, setNotes] = useState<string[]>([])
   const [selectedEntry, setSelectedEntry] = 
@@ -77,6 +79,7 @@ const Budget = () => {
     <FlexColWrapper gap={2}>
       <RemainingBudget
         budgetCategories={remainingBudgetCategories}
+        currentTheme={currentTheme}
       />
 
       <BudgetEntries
@@ -87,6 +90,7 @@ const Budget = () => {
         notes={notes}
         setOpenEditDialog={setOpenEditDialog}
         setSelectedEntry={setSelectedEntry}
+        currentTheme={currentTheme}
       />
 
       <EditBudgetEntryDialog

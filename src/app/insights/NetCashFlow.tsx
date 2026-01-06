@@ -3,11 +3,7 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { 
-  accentColorSecondary, 
-  healthStateDarkMode, 
-  healthStateLightMode 
-} from "@/globals/colors"
+import { accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
@@ -15,6 +11,7 @@ import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { 
   cleanNumber, 
   formattedStringNumber, 
+  getCardColor, 
   getSavingsHealthState, 
   removeCommas 
 } from "@/utils/helperFunctions"
@@ -90,12 +87,8 @@ const NetCashFlow = ({
     annualNetIncome, 
     cleanNumber(annualIncome)
   )
-  const monthSavingsColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)[monthSavingsHealthState]
-  const annualSavingsColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)[annualSavingsHealthState]
+  const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
+  const annualSavingsColor = getCardColor(currentTheme, annualSavingsHealthState)
 
   const lineChartData: TwoColumnDataType = useMemo(() => {
     return buildTwoColumnData({

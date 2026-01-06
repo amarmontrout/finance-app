@@ -1,9 +1,8 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, getSavingsHealthState } from "@/utils/helperFunctions"
+import { cleanNumber, getCardColor, getSavingsHealthState } from "@/utils/helperFunctions"
 import { TransactionData } from "@/utils/transactionStorage"
 
 const YearNetCash = ({
@@ -28,9 +27,7 @@ const YearNetCash = ({
     cleanNumber(annualIncome)
   )
 
-  const savingsColor = (currentTheme === "light" 
-    ? healthStateLightMode
-    : healthStateDarkMode)[savingsHealthState]
+  const savingsColor = getCardColor(currentTheme, savingsHealthState)
 
   return (
     <ShowCaseCard title={`${currentYear} Net Cash`}>

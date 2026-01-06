@@ -1,6 +1,7 @@
 import { MONTHS } from "@/globals/globals"
 import { TransactionData } from "./transactionStorage"
 import { Choice } from "@/contexts/categories-context"
+import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 
 /**
  * This helper function gets the current year and month.
@@ -174,3 +175,14 @@ export const getExcludedCategorySet = (
       .filter((c) => c.isExcluded)
       .map((c) => c.name)
   )
+
+export const getCardColor = (
+  currentTheme: string | undefined, 
+  state: keyof typeof healthStateLightMode
+) => {
+  if (currentTheme === "light") {
+    return healthStateLightMode[state]
+  }
+  
+  return healthStateDarkMode[state]
+}

@@ -26,7 +26,6 @@ import {
   Stack
 } from "@mui/material"
 import Autocomplete from '@mui/material/Autocomplete';
-import { useTheme } from "next-themes"
 import { ChangeEvent, useEffect, useState } from "react"
 
 const BudgetEntries = ({
@@ -36,7 +35,8 @@ const BudgetEntries = ({
   refreshBudgetEntries,
   notes,
   setOpenEditDialog,
-  setSelectedEntry
+  setSelectedEntry,
+  currentTheme
 }: {
     budgetCategories: BudgetCategoryType[]
     refreshBudgetCategories: ()=> void
@@ -45,6 +45,7 @@ const BudgetEntries = ({
     notes: string[]
     setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
     setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetEntryType | null>>
+    currentTheme: string | undefined
 }) => {
   const BUDGET_ENTRY_INIT: BudgetEntryType = {
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
@@ -58,7 +59,6 @@ const BudgetEntries = ({
   const [noteValue, setNoteValue] = useState<string | null>(null)
   const [noteId, setNoteId] = useState<number | null>(null)
 
-  const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg

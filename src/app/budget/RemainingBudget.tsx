@@ -2,19 +2,16 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { BudgetCategoryType } from "@/contexts/budget-context"
-import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { useTheme } from "next-themes"
+import { getCardColor } from "@/utils/helperFunctions"
 
 const RemainingBudget = ({ 
   budgetCategories,
+  currentTheme
  }: { 
   budgetCategories: BudgetCategoryType[]
+  currentTheme: string | undefined
 }) => {
-
-  const { theme: currentTheme } = useTheme()
-  const defaultCardColor = (currentTheme === "light" 
-    ? healthStateLightMode
-    : healthStateDarkMode)["default"]
+  const defaultCardColor = getCardColor(currentTheme, "default")
 
   return (
     <ShowCaseCard title={"Remaining Budget for the Week"}>

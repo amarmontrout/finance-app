@@ -4,13 +4,13 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper } from "@/components/Wrappers"
 import { Choice } from "@/contexts/categories-context"
-import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
   flattenTransactions, 
-  formattedStringNumber
+  formattedStringNumber,
+  getCardColor
 } from "@/utils/helperFunctions"
 import { TransactionData } from "@/utils/transactionStorage"
 import { Box } from "@mui/material"
@@ -37,9 +37,7 @@ const Projections = ({
     refreshExpenseTransactions()
   }, [])  
 
-  const defaultColor = (currentTheme === "light"
-    ? healthStateLightMode
-    : healthStateDarkMode)["default"]
+  const defaultColor = getCardColor(currentTheme, "default")
 
   const annualProjectionPerCategory = useMemo(() => {
     const flattenedData = flattenTransactions(expenseTransactions)

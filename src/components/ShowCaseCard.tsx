@@ -38,7 +38,7 @@ const ShowCaseCard = ({
 
         <hr/>
         
-        <Box paddingTop={"5px"}>
+        <Box paddingTop={"10px"}>
           {children}
         </Box>
       </CardContent>

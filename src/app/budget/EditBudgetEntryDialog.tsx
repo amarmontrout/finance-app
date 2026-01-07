@@ -1,3 +1,4 @@
+import MoneyInput from "@/components/MoneyInput"
 import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { BUDGET_KEY } from "@/globals/globals"
@@ -12,10 +13,9 @@ import {
   MenuItem, 
   Autocomplete, 
   TextField, 
-  OutlinedInput, 
-  InputAdornment, 
   DialogActions, 
-  Button 
+  Button, 
+  DialogContent
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
@@ -65,120 +65,107 @@ const EditBudgetEntryDialog = ({
         {`Edit Budget Entry`}
       </DialogTitle>
 
-      <Box
-        className="flex flex-col gap-5"
-        width={"fit-content"}
-        padding={"10px"}
-        margin={"0 auto"}
-      >
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select
-            className="w-full lg:w-[175px]"
-            label="Category"
-            value={updatedBudgetEntry.category}
-            name={"category"}
-            onChange={e => 
-              setUpdatedBudgetEntry(prev => ({
-                ...prev,
-                category: e.target.value,
-              }))}
-          >
-            {budgetCategories.map((budget) => {
-              return (
-                <MenuItem 
-                  value={budget.category}
-                >
-                  {budget.category}
-                </MenuItem>
-              )
-            })}
-          </Select>
-        </FormControl>
+      <DialogContent>
+        <Box
+          className="flex flex-col gap-5"
+          padding={"10px"}
+        >
+          <FormControl>
+            <InputLabel>Category</InputLabel>
+            <Select
+              className="w-full"
+              label="Category"
+              value={updatedBudgetEntry.category}
+              name={"category"}
+              onChange={e => 
+                setUpdatedBudgetEntry(prev => ({
+                  ...prev,
+                  category: e.target.value,
+                }))}
+            >
+              {budgetCategories.map((budget) => {
+                return (
+                  <MenuItem 
+                    value={budget.category}
+                  >
+                    {budget.category}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
 
-        <FormControl>
-          <Autocomplete
-            className="w-full lg:w-[175px]"
-            freeSolo
-            options={notes.map((option) => option)}
-            value={noteValue}
-            onChange={(event: any, newValue: string | null) => {
-              setNoteValue(newValue)
-            }}
-            inputValue={updatedBudgetEntry.note}
-            onInputChange={(event, newInputValue) => {
-              setUpdatedBudgetEntry(prev => ({
-                ...prev,
-                note: newInputValue,
-              }))
-            }}
-            renderInput={(params) => 
-              <TextField
-                {...params} 
-                label="Note" 
-              />
-            }
-          />
-        </FormControl>           
+          <FormControl>
+            <Autocomplete
+              className="w-full"
+              freeSolo
+              options={notes.map((option) => option)}
+              value={noteValue}
+              onChange={(event: any, newValue: string | null) => {
+                setNoteValue(newValue)
+              }}
+              inputValue={updatedBudgetEntry.note}
+              onInputChange={(event, newInputValue) => {
+                setUpdatedBudgetEntry(prev => ({
+                  ...prev,
+                  note: newInputValue,
+                }))
+              }}
+              renderInput={(params) => 
+                <TextField
+                  {...params} 
+                  label="Note" 
+                />
+              }
+            />
+          </FormControl> 
 
-        <FormControl>
-          <InputLabel>Amount</InputLabel>
-          <OutlinedInput
-            className="w-full lg:w-[175px]"
-            label={"Amount"}
+          <MoneyInput
             value={updatedBudgetEntry.amount}
-            name={"amount"}
-            onChange={e => 
-              setUpdatedBudgetEntry(prev => ({
-                ...prev,
-                amount: e.target.value,
-              }))
-            }
-            startAdornment={
-              <InputAdornment position="start">$</InputAdornment>
-            }
+            setValue={setUpdatedBudgetEntry}
           />
-        </FormControl> 
+        </Box>
+      </DialogContent>
 
-        <DialogActions>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={() => {
-              updateBudgetEntries(BUDGET_KEY, updatedBudgetEntry)
-              setOpenEditDialog(false)
-              refreshBudgetEntries()
-              refreshDialog()
-            }}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.success] 
-                : [darkMode.success]
-            }}
-          >
-            {"Update"}
-          </Button>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={() => {
-              setOpenEditDialog(false)
-              refreshDialog()
-            }}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.error] 
-                : [darkMode.error]
-            }}
-          >
-            {"Cancel"}
-          </Button>
-        </DialogActions>
-      </Box>
+      <DialogActions>
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={() => {
+            updateBudgetEntries(BUDGET_KEY, updatedBudgetEntry)
+            setOpenEditDialog(false)
+            refreshBudgetEntries()
+            refreshDialog()
+          }}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.success] 
+              : [darkMode.success]
+          }}
+        >
+          {"Update"}
+        </Button>
+        
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={() => {
+            setOpenEditDialog(false)
+            refreshDialog()
+          }}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.error] 
+              : [darkMode.error]
+          }}
+        >
+          {"Cancel"}
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

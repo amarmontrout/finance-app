@@ -9,14 +9,14 @@ import {
   FormControl, 
   InputLabel, 
   Select, 
-  MenuItem, 
-  OutlinedInput, 
-  InputAdornment,  
+  MenuItem,   
   Button, 
   SelectChangeEvent,
-  DialogActions
+  DialogActions,
+  DialogContent
 } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import MoneyInput from "./MoneyInput"
 
 type UpdateTransactionType = {
   id: string
@@ -83,23 +83,6 @@ const EditTransactionDetailDialog = ({
       category: value,
     }));
   }
-    
-  const handleAmount = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-
-    if (formatted.length <= 7) {
-      setUpdateTransaction(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
-  }
 
   const handleUpdateTransactionData = () => {
     if (!selectedYear || !selectedMonth || !selectedId) return
@@ -138,83 +121,74 @@ const EditTransactionDetailDialog = ({
       <DialogTitle>
         {`Edit ${type === INCOME ? "Income" : "Expense"} Detail`}
       </DialogTitle>
+      
+      <DialogContent>
+        <Box
+          className="flex flex-col gap-5"
+          padding={"10px"}
+        >
+          <FormControl>
+            <InputLabel>Category</InputLabel>
+            <Select
+              className="w-full sm:w-[175px]"
+              label="Category"
+              value={updateTransaction.category}
+              name={"category"}
+              onChange={e => handleCategory(e)}
+            >
+              {categories.map((category) => {
+                return (
+                <MenuItem 
+                  value={category.name}
+                >
+                  {category.name}
+                </MenuItem>
+              )
+              })}
+            </Select>
+          </FormControl>
 
-      <Box
-        className="flex flex-col gap-5"
-        width={"fit-content"}
-        padding={"10px"}
-        margin={"0 auto"}
-      >
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select
-            label="Category"
-            value={updateTransaction.category}
-            name={"category"}
-            onChange={e => handleCategory(e)}
-            sx={{
-              width: "100%"
-            }}
-          >
-            {categories.map((category) => {
-              return (
-              <MenuItem 
-                value={category.name}
-              >
-                {category.name}
-              </MenuItem>
-            )
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Amount</InputLabel>
-          <OutlinedInput
-            label={"Amount"}
+          <MoneyInput
             value={updateTransaction.amount}
-            name={"amount"}
-            onChange={e => handleAmount(e)}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            sx={{
-              width: "100%"
-            }}
-            />
-        </FormControl>
+            setValue={setUpdateTransaction}
+            smallWidthBp={"sm"}
+          />
+        </Box>
+      </DialogContent>
 
-        <DialogActions>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={handleUpdateTransactionData}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.success] 
-                : [darkMode.success]
-            }}
-          >
-            {"Update"}
-          </Button>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={() => {
-              setOpenEditDialog(false)
-            }}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.error] 
-                : [darkMode.error]
-            }}
-          >
-            {"Cancel"}
-          </Button>
-        </DialogActions>
-      </Box>
+      <DialogActions>
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={handleUpdateTransactionData}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.success] 
+              : [darkMode.success]
+          }}
+        >
+          {"Update"}
+        </Button>
+        
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={() => {
+            setOpenEditDialog(false)
+          }}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.error] 
+              : [darkMode.error]
+          }}
+        >
+          {"Cancel"}
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

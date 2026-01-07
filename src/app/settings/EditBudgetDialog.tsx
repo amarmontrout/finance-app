@@ -1,3 +1,4 @@
+import MoneyInput from "@/components/MoneyInput"
 import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { BUDGET_CATEGORIES_KEY } from "@/globals/globals"
@@ -6,14 +7,11 @@ import {
   Dialog, 
   DialogTitle, 
   Box, 
-  FormControl, 
-  InputLabel,  
-  OutlinedInput, 
-  InputAdornment, 
   DialogActions, 
-  Button, 
+  Button,
+  DialogContent, 
 } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
   const UPDATE_BUDGET_INIT: BudgetCategoryType = {
     category: "",
@@ -45,22 +43,6 @@ const EditBudgetDialog = ({
       amount: confirmEdit.amount,
     })
   }, [confirmEdit])
-      
-  const handleAmount = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-    if (formatted.length <= 7) {
-      setUpdateBudget(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
-  }
 
   const handleUpdateBudgetData = () => {
     updateBudgetCategories(
@@ -77,59 +59,46 @@ const EditBudgetDialog = ({
         {`Edit ${confirmEdit?.category}`}
       </DialogTitle>
 
-      <Box
-        className="flex flex-col gap-5"
-        width={"fit-content"}
-        padding={"10px"}
-        margin={"0 auto"}
-      >
-        <FormControl>
-          <InputLabel>Amount</InputLabel>
-          <OutlinedInput
-            label={"Amount"}
+      <DialogContent>
+        <Box padding={"10px"}>
+          <MoneyInput
             value={updateBudget.amount}
-            name={"amount"}
-            onChange={e => handleAmount(e)}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            sx={{
-              width: "100%"
-            }}
-            />
-        </FormControl>
-
-        <DialogActions>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={handleUpdateBudgetData}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.success] 
-                : [darkMode.success]
-            }}
-          >
-            {"Update"}
-          </Button>
-          <Button 
-            variant={"contained"} 
-            disabled={
-              false
-            }
-            onClick={() => {
-              setBudgetEditDialogOpen(false)
-            }}
-            sx={{
-              backgroundColor: currentTheme === "light" 
-                ? [lightMode.error] 
-                : [darkMode.error]
-            }}
-          >
-            {"Cancel"}
-          </Button>
-        </DialogActions>
-      </Box>
+            setValue={setUpdateBudget}
+          />
+        </Box>
+      </DialogContent>
+      <DialogActions>
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={handleUpdateBudgetData}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.success] 
+              : [darkMode.success]
+          }}
+        >
+          {"Update"}
+        </Button>
+        <Button 
+          variant={"contained"} 
+          disabled={
+            false
+          }
+          onClick={() => {
+            setBudgetEditDialogOpen(false)
+          }}
+          sx={{
+            backgroundColor: currentTheme === "light" 
+              ? [lightMode.error] 
+              : [darkMode.error]
+          }}
+        >
+          {"Cancel"}
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

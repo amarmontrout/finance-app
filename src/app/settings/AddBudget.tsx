@@ -12,7 +12,6 @@ import {
   Button, 
   FormControl, 
   IconButton, 
-  InputAdornment, 
   InputLabel, 
   List, 
   ListItem, 
@@ -23,6 +22,7 @@ import {
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
 import { saveBudgetCategories } from "@/utils/budgetStorage"
+import MoneyInput from "@/components/MoneyInput"
 
 const BUDGET_INIT: BudgetCategoryType = {
   category: "",
@@ -57,23 +57,6 @@ const AddBudget = ({
       ...prev,
       category: e.target.value,
     }));
-  }
-
-  const handleAmount = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-
-    if (formatted.length <= 7) {
-      setBudgetCategory(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
   }
 
   const resetFormData = () => {
@@ -175,11 +158,11 @@ const AddBudget = ({
         overflow={"hidden"}
         paddingTop={"5px"}
       >
-        <Box className="flex flex-row gap-2 pb-[12px]">
+        <Box className="flex flex-row xl:flex-col gap-3 pb-[12px]">
           <FormControl>
             <InputLabel>Category</InputLabel>
             <OutlinedInput
-              className="w-full sm:w-[175px]"
+              className="w-full"
               label={"Category"}
               value={budgetCategory.category}
               name={"category"}
@@ -187,19 +170,10 @@ const AddBudget = ({
               />
           </FormControl>
 
-          <FormControl>
-            <InputLabel>Amount</InputLabel>
-            <OutlinedInput
-              className="w-full sm:w-[175px]"
-              label={"Amount"}
-              value={budgetCategory.amount}
-              name={"amount"}
-              onChange={e => handleAmount(e)}
-              startAdornment={
-                <InputAdornment position="start">$</InputAdornment>
-              }
-              />
-          </FormControl> 
+          <MoneyInput
+            value={budgetCategory.amount}
+            setValue={setBudgetCategory}
+          />
 
           <Button
             variant={"contained"} 

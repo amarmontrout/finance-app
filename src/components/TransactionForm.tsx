@@ -4,18 +4,17 @@ import {
   Box, 
   Button,
   FormControl,
-  InputAdornment, 
   InputLabel, 
-  MenuItem, 
-  OutlinedInput, 
+  MenuItem,  
   Select, 
   SelectChangeEvent 
 } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { MONTHS } from "@/globals/globals";
 import { accentColorSecondary } from "@/globals/colors";
 import { saveTransaction } from "@/utils/transactionStorage";
 import { Choice } from "@/contexts/categories-context";
+import MoneyInput from "./MoneyInput";
 
 const today = new Date()
 const currentMonth = today.getMonth()
@@ -81,23 +80,6 @@ const TransactionForm = ({
       ...prev,
       category: value,
     }));
-  }
-
-  const handleAmount = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-
-    if (formatted.length <= 7) {
-      setTransaction(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
   }
 
   const resetFormData = () => {
@@ -180,17 +162,11 @@ const TransactionForm = ({
           </Select>
         </FormControl>
 
-        <FormControl>
-          <InputLabel>Amount</InputLabel>
-          <OutlinedInput
-            className="w-full sm:w-[175px]"
-            label={"Amount"}
-            value={transaction.amount}
-            name={"amount"}
-            onChange={e => handleAmount(e)}
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            />
-        </FormControl>        
+        <MoneyInput
+          value={transaction.amount}
+          setValue={setTransaction}
+          smallWidthBp={"sm"}
+        />
       </Box>
 
       <Button 

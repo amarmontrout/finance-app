@@ -11,9 +11,7 @@ import EditIcon from '@mui/icons-material/Edit'
 import { 
   Box, 
   FormControl, 
-  InputLabel, 
-  OutlinedInput, 
-  InputAdornment, 
+  InputLabel,  
   Button, 
   List,
   ListItem,
@@ -26,7 +24,8 @@ import {
   Stack
 } from "@mui/material"
 import Autocomplete from '@mui/material/Autocomplete';
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
+import MoneyInput from "@/components/MoneyInput"
 
 const BudgetEntries = ({
   budgetCategories, 
@@ -75,23 +74,6 @@ const BudgetEntries = ({
       ...prev,
       category: value,
     }));
-  } 
-
-  const handleAmount = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "");
-    const cents = digits.slice(-2);
-    let dollars = digits.slice(0, -2);
-    dollars = dollars.replace(/^0+/, "");
-    const formatted = `${dollars}.${cents}`;
-
-    if (formatted.length <= 7) {
-      setBudgetEntry(prev => ({
-        ...prev,
-        amount: dollars || cents ? formatted : "",
-      }));
-    }
   }
 
   const resetFormData = () => {
@@ -229,21 +211,13 @@ const BudgetEntries = ({
                 />
               }
             />
-          </FormControl>           
+          </FormControl>  
 
-          <FormControl>
-            <InputLabel>Amount</InputLabel>
-            <OutlinedInput
-              className="w-full lg:w-[175px]"
-              label={"Amount"}
-              value={budgetEntry.amount}
-              name={"amount"}
-              onChange={e => handleAmount(e)}
-              startAdornment={
-                <InputAdornment position="start">$</InputAdornment>
-              }
-            />
-          </FormControl> 
+          <MoneyInput
+            value={budgetEntry.amount}
+            setValue={setBudgetEntry}
+            smallWidthBp={"lg"}
+          /> 
 
           <Button
             variant={"contained"} 

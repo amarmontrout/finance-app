@@ -13,6 +13,7 @@ import { getCurrentDateInfo } from "@/utils/helperFunctions"
 const Trends =() => {
   const {
     expenseTransactions,
+    flatExpenseTransactions,
     refreshExpenseTransactions
   } = useTransactionContext()
   const {
@@ -28,7 +29,7 @@ const Trends =() => {
       <MockDataWarning/>
 
       <AverageExpenses
-        expenseTransactions={expenseTransactions}
+        flatExpenseTransactions={flatExpenseTransactions}
         refreshExpenseTransactions={refreshExpenseTransactions}
         expenseCategories={expenseCategories}
         refreshExpenseCategoryChoices={refreshExpenseCategoryChoices}
@@ -38,7 +39,7 @@ const Trends =() => {
       />
 
       <Projections
-        expenseTransactions={expenseTransactions}
+        flatExpenseTransactions={flatExpenseTransactions}
         refreshExpenseTransactions={refreshExpenseTransactions}
         currentTheme={currentTheme}
         expenseCategories={expenseCategories}
@@ -48,7 +49,7 @@ const Trends =() => {
       />
 
       {/* <ExpectedSpending
-        expenseTransactions={expenseTransactions}
+        flatExpenseTransactions={flatExpenseTransactions}
         refreshExpenseTransactions={refreshExpenseTransactions}
         expenseCategories={expenseCategories}
         refreshExpenseCategoryChoices={refreshExpenseCategoryChoices}

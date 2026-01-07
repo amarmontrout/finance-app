@@ -3,20 +3,19 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { Choice } from "@/contexts/categories-context"
+import { FlatTransaction } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
-  flattenTransactions, 
   formattedStringNumber
 } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
 import { Typography } from "@mui/material"
 import { useEffect, useMemo } from "react"
 
 const AverageExpenses = ({
-  expenseTransactions,
+  flatExpenseTransactions,
   refreshExpenseTransactions,
   expenseCategories,
   refreshExpenseCategoryChoices,
@@ -24,7 +23,7 @@ const AverageExpenses = ({
   currentYear,
   currentMonth
 }: {
-  expenseTransactions: TransactionData
+  flatExpenseTransactions: FlatTransaction[]
   refreshExpenseTransactions: () => void
   expenseCategories: Choice[]
   refreshExpenseCategoryChoices: () => void
@@ -44,7 +43,6 @@ const AverageExpenses = ({
     lightMode.success 
     : darkMode.success
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
-    const flattenedData = flattenTransactions(expenseTransactions)
     const passedMonths = MONTHS.indexOf(currentMonth) + 1
 
     const currentAvg: [string, number][] = []
@@ -54,7 +52,7 @@ const AverageExpenses = ({
     expenseCategories.forEach((category) => {
       // ---- CURRENT YEAR ----
       const currentMonthTotals: Record<string, number> = {}
-      flattenedData.forEach((t) => {
+      flatExpenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
           t.year === currentYear &&
@@ -71,7 +69,7 @@ const AverageExpenses = ({
 
       // ---- PREVIOUS YEAR ----
       const prevMonthTotals: Record<string, number> = {}
-      flattenedData.forEach((t) => {
+      flatExpenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
           Number(t.year) === Number(currentYear) - 1
@@ -94,7 +92,7 @@ const AverageExpenses = ({
     })
 
     return { currentAvg, prevAvg, percentChangeAvg }
-  }, [expenseTransactions, expenseCategories, currentYear, currentMonth])
+  }, [flatExpenseTransactions, expenseCategories, currentYear, currentMonth])
 
   return (
     <ShowCaseCard title={"Expense Averages"}>

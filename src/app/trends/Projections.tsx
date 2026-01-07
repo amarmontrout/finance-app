@@ -4,16 +4,15 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { Choice } from "@/contexts/categories-context"
+import { FlatTransaction } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { 
   cleanNumber, 
-  flattenTransactions, 
   formattedStringNumber,
   getCardColor
 } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
 import { 
   Box, 
   Divider, 
@@ -25,7 +24,7 @@ import {
 import { useEffect, useMemo, useState } from "react"
 
 const Projections = ({
-  expenseTransactions,
+  flatExpenseTransactions,
   refreshExpenseTransactions,
   currentTheme,
   expenseCategories,
@@ -33,7 +32,7 @@ const Projections = ({
   currentYear,
   currentMonth
 }: {
-  expenseTransactions: TransactionData
+  flatExpenseTransactions: FlatTransaction[]
   refreshExpenseTransactions: () => void
   currentTheme: string | undefined
   expenseCategories: Choice[]
@@ -50,10 +49,9 @@ const Projections = ({
   const defaultColor = getCardColor(currentTheme, "default")
 
   const annualProjectionPerCategory = useMemo(() => {
-    const flattenedData = flattenTransactions(expenseTransactions)
     const passedMonths = MONTHS.indexOf(currentMonth) + 1
     const projectionMap = new Map<string, number>()
-    const relevantTransactions = flattenedData.filter((t) => {
+    const relevantTransactions = flatExpenseTransactions.filter((t) => {
       return (
         t.year === currentYear &&
         MONTHS.indexOf(t.month) + 1 <= passedMonths
@@ -77,7 +75,7 @@ const Projections = ({
     }
 
     return projectionMap
-  }, [expenseCategories, expenseTransactions, currentYear, currentMonth])
+  }, [expenseCategories, flatExpenseTransactions, currentYear, currentMonth])
 
   const totalProj = useMemo(() => {
     let total = 0

@@ -2,6 +2,7 @@ import { MONTHS } from "@/globals/globals"
 import { TransactionData } from "./transactionStorage"
 import { Choice } from "@/contexts/categories-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
+import { FlatTransaction } from "../contexts/transactions-context"
 
 /**
  * This helper function gets the current year and month.
@@ -95,13 +96,6 @@ export const makeId = (
     return result
 }
 
-export type FlatTransaction = {
-  id: string
-  year: string
-  month: string
-  category: string
-  amount: string
-}
 /**
  * This helper function makes the TransactionData more manageable.
  * 

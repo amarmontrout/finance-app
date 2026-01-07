@@ -6,12 +6,15 @@ import {
   mockExpenseData, 
   mockIncomeData, 
 } from "@/globals/mockData"
+import { flattenTransactions } from "@/utils/helperFunctions"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
 import { createContext, useContext, useState } from "react"
 
 type TransactionsContextType = {
   incomeTransactions: TransactionData
+  flatIncomeTransactions: FlatTransaction[]
   expenseTransactions: TransactionData
+  flatExpenseTransactions: FlatTransaction[]
   refreshIncomeTransactions: () => void
   refreshExpenseTransactions: () => void
   isMockData: MockDataType
@@ -23,6 +26,14 @@ type MockDataType = {
   incomeCategories: boolean
   expenses: boolean
   expensesCategories: boolean
+}
+
+export type FlatTransaction = {
+  id: string
+  year: string
+  month: string
+  category: string
+  amount: string
 }
 
 const mockDataInit = {
@@ -50,8 +61,12 @@ export const TransactionProvider = (props: {
 }) => {
   const [incomeTransactions, setIncomeTransactions] = 
     useState<TransactionData>({})
+  const [flatIncomeTransactions, setFlatIncomeTransactions] = 
+    useState<FlatTransaction[]>([])
   const [expenseTransactions, setExpenseTransactions] = 
     useState<TransactionData>({})
+  const [flatExpenseTransactions, setFlatExpenseTransactions] = 
+    useState<FlatTransaction[]>([])
   const [isMockData, setIsMockData] = useState<MockDataType>(mockDataInit)
 
   const refreshIncomeTransactions = () => {
@@ -62,6 +77,7 @@ export const TransactionProvider = (props: {
     } else {
       setIsMockData(prev => ({...prev, income: false}))
       setIncomeTransactions(localIncomeData)
+      setFlatIncomeTransactions(flattenTransactions(localIncomeData))
     }
   }
 
@@ -73,13 +89,16 @@ export const TransactionProvider = (props: {
     } else {
       setIsMockData(prev => ({...prev, expenses: false}))
       setExpenseTransactions(localExpenseData)
+      setFlatExpenseTransactions(flattenTransactions(localExpenseData))
     }
   }
 
   return (
     <TransactionContext.Provider value={{
       incomeTransactions,
+      flatIncomeTransactions,
       expenseTransactions,
+      flatExpenseTransactions,
       refreshIncomeTransactions,
       refreshExpenseTransactions,
       isMockData

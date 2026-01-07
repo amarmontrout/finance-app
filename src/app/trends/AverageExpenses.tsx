@@ -7,10 +7,7 @@ import { FlatTransaction } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage } from "@/utils/financialFunctions"
-import { 
-  cleanNumber, 
-  formattedStringNumber
-} from "@/utils/helperFunctions"
+import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
 import { Typography } from "@mui/material"
 import { useMemo } from "react"
 
@@ -76,10 +73,7 @@ const AverageExpenses = ({
 
       currentAvg.push([category.name, currentAverage])
       prevAvg.push([category.name, prevAverage])
-      percentChangeAvg.push([
-        category.name,
-        prevAverage - currentAverage,
-      ])
+      percentChangeAvg.push([category.name, currentAverage - prevAverage])
     })
 
     return { currentAvg, prevAvg, percentChangeAvg }
@@ -88,13 +82,8 @@ const AverageExpenses = ({
   return (
     <ShowCaseCard title={"Expense Averages"}>
       <FlexColWrapper gap={5} toRowBreak={"sm"}>
-        <FlexChildWrapper
-          gap={1}
-          hiddenToVisibleBp={"sm"}
-        >
-          <Typography
-            textAlign={"center"}
-          >
+        <FlexChildWrapper gap={1} hiddenToVisibleBp={"sm"}>
+          <Typography textAlign={"center"}>
             Categories
           </Typography> 
 
@@ -117,12 +106,8 @@ const AverageExpenses = ({
           </ul>
         </FlexChildWrapper>
 
-        <FlexChildWrapper
-          gap={1}
-        >
-          <Typography
-            textAlign={"center"}
-          >
+        <FlexChildWrapper gap={1}>
+          <Typography textAlign={"center"}>
             {Number(currentYear)-1}
           </Typography> 
 
@@ -140,18 +125,16 @@ const AverageExpenses = ({
                 >
                   {`${category}`}
                 </Typography>
-                <Typography variant="h6">{`$${formattedStringNumber(amount)}`}</Typography>
+                <Typography variant="h6">
+                  {`$${formattedStringNumber(amount)}`}
+                </Typography>
               </li>
             ))}
           </ul>
         </FlexChildWrapper>
 
-        <FlexChildWrapper
-          gap={1}
-        >
-          <Typography
-            textAlign={"center"}
-          >
+        <FlexChildWrapper gap={1}>
+          <Typography textAlign={"center"}>
             {currentYear}
           </Typography>
 
@@ -182,12 +165,8 @@ const AverageExpenses = ({
           </ul>
         </FlexChildWrapper>
 
-        <FlexChildWrapper
-          gap={1}
-        >
-          <Typography
-            textAlign={"center"}
-          >
+        <FlexChildWrapper gap={1}>
+          <Typography textAlign={"center"}>
             Change
           </Typography>
 

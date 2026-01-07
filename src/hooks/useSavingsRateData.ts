@@ -59,16 +59,19 @@ export const useSavingsRateData = (
   const monthRate = cleanNumber(
     getSavingRate(monthIncome, monthExpense)
   )
+
   const prevMonthRate = cleanNumber(
     getSavingRate(prevMonthIncome, prevMonthExpense)
   )
+
   const annualRate = cleanNumber(
     getSavingRate(annualIncome, annualExpense)
   )
+
   const prevAnnualRate = cleanNumber(
     getSavingRate(prevAnnualIncome, prevAnnualExpense)
   )
-
+  
   return {
     previousYear,
     monthRate,

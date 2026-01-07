@@ -44,7 +44,6 @@ const SavingsRate = ({
 
   const monthSavingsHealthState = getSavingsHealthState(monthRate, 100)
   const annualSavingsHealthState = getSavingsHealthState(annualRate, 100)
-
   const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
   const annualSavingsColor = getCardColor(currentTheme, annualSavingsHealthState)
   const defaultColor = getCardColor(currentTheme, "default")
@@ -69,7 +68,7 @@ const SavingsRate = ({
 
             <ColoredInfoCard
               cardColors={defaultColor}
-              title={`Compared to ${prevMonthYear}`}
+              title={`Compared to ${selectedYear}`}
               info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
             />            
           </FlexColWrapper>

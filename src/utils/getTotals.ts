@@ -1,4 +1,5 @@
-import { FlatTransaction, formattedStringNumber } from "./helperFunctions"
+import { FlatTransaction } from "@/contexts/transactions-context"
+import { formattedStringNumber } from "./helperFunctions"
 import { TransactionData } from "./transactionStorage"
 
 export const getYearTotal = (

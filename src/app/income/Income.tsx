@@ -19,6 +19,7 @@ import { usePathname } from "next/navigation"
 import { useState, useMemo } from "react"
 import AddIncome from "./AddIncome"
 import IncomeList from "./IncomeList"
+import ShowCaseCard from "@/components/ShowCaseCard"
 
 const Income = () => {
   const { 
@@ -82,11 +83,12 @@ const Income = () => {
           setSelectedId={setSelectedId}
           excludedSet={excludedSet}
         />
-        
-        <LineChart
-          multiColumnData={lineChartData}
-          lineColors={ lineColors }
-        />
+        <ShowCaseCard title={"Income"}>
+          <LineChart
+            multiColumnData={lineChartData}
+            lineColors={ lineColors }
+          />
+        </ShowCaseCard>
       </FlexColWrapper>
 
       <EditTransactionDetailDialog

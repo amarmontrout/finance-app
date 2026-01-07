@@ -19,6 +19,7 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import AddExpenses from "./AddExpenses"
 import ExpenseList from "./ExpenseList"
+import ShowCaseCard from "@/components/ShowCaseCard"
 
 const Expenses = () => {
   const { 
@@ -81,11 +82,12 @@ const Expenses = () => {
           setSelectedId={setSelectedId}
           excludedSet={excludedSet}
         />
-        
-        <LineChart
-          multiColumnData={lineChartData}
-          lineColors={ lineColors }
-        />
+        <ShowCaseCard title={"Expenses"}>
+          <LineChart
+            multiColumnData={lineChartData}
+            lineColors={ lineColors }
+          />
+        </ShowCaseCard>
       </FlexColWrapper>
 
       <EditTransactionDetailDialog

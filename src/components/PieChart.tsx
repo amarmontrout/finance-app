@@ -35,7 +35,7 @@ const PieChart = ({
     <Box
       // This box makes the rounded corners for the chart
       overflow={"hidden"}
-      borderRadius={"10px"}
+      borderRadius={"15px"}
     >
       <Chart
         chartType={"PieChart"}

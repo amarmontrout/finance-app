@@ -192,7 +192,7 @@ const TransactionsList = ({
                     backgroundColor: year === selectedYear ?
                       accentColorPrimarySelected 
                       : listItemColor,
-                    borderRadius: "10px",
+                    borderRadius: "15px",
                     minWidth: "fit-content"
                   }}
                 >
@@ -227,7 +227,7 @@ const TransactionsList = ({
                     backgroundColor: month === selectedMonth ?
                       accentColorPrimarySelected 
                       : listItemColor,
-                    borderRadius: "10px",
+                    borderRadius: "15px",
                     minWidth: "fit-content"
                   }}
                 >
@@ -264,7 +264,7 @@ const TransactionsList = ({
                   }
                   sx={{
                     backgroundColor: listItemColor,
-                    borderRadius: "10px",
+                    borderRadius: "15px",
                     minWidth: "fit-content"
                   }}
                 >

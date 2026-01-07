@@ -8,24 +8,22 @@ export type CardColorsType = {
 
 const ColoredInfoCard = ({
   cardColors,
-  info,
-  title
+  title,
+  info
 }: {
   cardColors: CardColorsType
-  info: string
   title: string
+  info: string
 }) => {
   return (
     <Box
       className="flex flex-col"
       border={`2px solid ${cardColors.border}`} 
-      borderRadius={"10px"} 
+      borderRadius={"15px"} 
       padding={"15px"}
       minWidth={"fit-content"}
       width={"100%"}
-      sx={{
-        backgroundColor: cardColors.background
-      }}
+      sx={{ backgroundColor: cardColors.background }}
     >
       <Typography 
         color={cardColors.textIcon}

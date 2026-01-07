@@ -14,23 +14,10 @@ const ShowCaseCard = ({
       style={{
         width: "100%",
         height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        borderRadius: "15px",
-        minHeight: 0,
-        minWidth: 0
+        borderRadius: "15px"
       }}
     >
-      <CardContent
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          minHeight: 0,
-          flex: 1,
-          px: 2,
-          py: 3
-        }}
-      >
+      <CardContent>
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography 
             sx={{
@@ -49,7 +36,9 @@ const ShowCaseCard = ({
           </Typography>
         </Stack>
 
-        <Box paddingTop={"10px"}>
+        <hr/>
+        
+        <Box paddingTop={"5px"}>
           {children}
         </Box>
       </CardContent>

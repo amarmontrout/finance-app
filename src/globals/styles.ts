@@ -15,7 +15,7 @@ export const navSelection = {
     position: "absolute",
     left: 0,
     height: "100%",
-    borderRadius: "10px",
+    borderRadius: "15px",
     zIndex: 0,
   },
   "&:hover::before": {

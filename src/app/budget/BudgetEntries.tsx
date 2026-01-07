@@ -278,7 +278,7 @@ const BudgetEntries = ({
                     }
                     sx={{ 
                       backgroundColor: listItemColor,
-                      borderRadius: "10px"
+                      borderRadius: "15px"
                     }}
                   >
                     <ListItemText 

@@ -166,7 +166,7 @@ const BudgetEntries = ({
         overflow={"hidden"}
         paddingTop={"5px"}
       >
-        <Box className="flex flex-col lg:flex-row gap-2 pb-[12px]">
+        <Box className="flex flex-col lg:flex-row gap-3 pb-[12px]">
           <FormControl>
             <InputLabel>Category</InputLabel>
             <Select

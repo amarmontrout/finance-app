@@ -119,8 +119,13 @@ export const HorizontalNavbar = () => {
     ...NAV_SETTINGS
   ]
 
-  const activeTab = useMemo(() => {
-    return ALL_NAV_ITEMS.find(item => item.link === pathname)?.name ?? ""
+  const {activeTabName, ActiveTabIcon} = useMemo(() => {
+    const activeTab = ALL_NAV_ITEMS.find(item => item.link === pathname)
+
+    return {
+      activeTabName: activeTab?.name ?? "",
+      ActiveTabIcon: activeTab?.icon ?? null
+    }
   }, [pathname])
 
   return (
@@ -128,9 +133,16 @@ export const HorizontalNavbar = () => {
       direction={"column"}
       width={"100%"}
     >
-      <Box textAlign={"center"} paddingTop={".25rem"}>
-        <Typography variant="h5">{activeTab}</Typography>
-      </Box>
+      <Stack 
+        direction={"row"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        paddingTop={".25rem"}
+        gap={1}
+      >
+        {ActiveTabIcon && <ActiveTabIcon/>}
+        <Typography variant="h5">{activeTabName}</Typography>
+      </Stack>
 
       <Stack
         className="p-[.35rem] mb-[30px]"

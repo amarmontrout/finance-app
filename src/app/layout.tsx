@@ -37,7 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           >
             {/* Nav / Sidebar */}
             <Box
-              className="hidden md:flex md:min-w-[210px]"
+              className="hidden md:flex md:min-w-[205px]"
               component="nav"
               sx={{
                 bgcolor: "background.paper",
@@ -95,6 +95,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Box>
               </Box>
 
+              {/* Mobile nav */}
               <Box
                 className="flex md:hidden"
                 component="nav"

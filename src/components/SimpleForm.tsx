@@ -8,20 +8,17 @@ import {
 } from "@mui/material"
 import { ChangeEvent } from "react"
 
-const SimpleForm = (props: {
+const SimpleForm = ({
+    label,
+    value,
+    onChange,
+    onSubmit
+  }: {
   label: string,
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   onSubmit: () => void
 }) => {
-
-  const {
-    label,
-    value,
-    onChange,
-    onSubmit
-  } = props
-
   return (
     <Box
       className="flex flex-col gap-2 mt-1 mb-3"

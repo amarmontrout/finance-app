@@ -16,20 +16,19 @@ import {
 import { useTheme } from "next-themes"
 import React, { useEffect } from "react"
 
-const EditCategorySettingsDialog = (props: {
+const EditCategorySettingsDialog = ({ 
+    categoryDialogOpen, 
+    setCategoryDialogOpen, 
+    choice, 
+    storageKey, 
+    refresh 
+  }: {
   categoryDialogOpen: boolean
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   choice: Choice
   storageKey: string
   refresh: () => void
 }) => {
-  const { 
-    categoryDialogOpen, 
-    setCategoryDialogOpen, 
-    choice, 
-    storageKey, 
-    refresh 
-  } = props
   const {theme: currentTheme} = useTheme()
 
   const [localChoice, setLocalChoice] = React.useState<Choice>(choice)

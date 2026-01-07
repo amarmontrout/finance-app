@@ -37,9 +37,12 @@ const Settings = () => {
   const [choice, setChoice] = useState<Choice>(CHOICE_INIT)
   const [dialogOpen, setDialogOpen] = useState<boolean>(false)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
-  const [budgetEditDialogOpen, setBudgetEditDialogOpen] = useState<boolean>(false)
-  const [confirmSelection, setConfirmSelection] = useState<BudgetCategoryType | null>(null)
-  const [confirmEdit, setConfirmEdit] = useState<BudgetCategoryType | null>(null)
+  const [budgetEditDialogOpen, setBudgetEditDialogOpen] = 
+    useState<boolean>(false)
+  const [confirmSelection, setConfirmSelection] = 
+    useState<BudgetCategoryType | null>(null)
+  const [confirmEdit, setConfirmEdit] = 
+    useState<BudgetCategoryType | null>(null)
 
   return (
     <Box

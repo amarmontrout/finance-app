@@ -4,13 +4,13 @@ import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import Chart from "react-google-charts"
 
-const DiffColumnChart = (props: {
+const DiffColumnChart = ({
+  oldData,
+  newData
+}: {
   oldData: TwoColumnDataType
   newData: TwoColumnDataType
 }) => {
-
-  const { oldData, newData } = props
-
   const { theme: currentTheme } = useTheme()
   const backgroundColor = currentTheme === "light" ?
     lightMode.elevatedBg 

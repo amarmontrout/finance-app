@@ -8,6 +8,7 @@ import { Box } from "@mui/material";
 
 const ThemeToggle = () => {
   const { theme, setTheme, systemTheme } = useTheme();
+  
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => setMounted(true), []);

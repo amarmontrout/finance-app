@@ -1,16 +1,12 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { Alert, Box } from "@mui/material"
 
-const MockDataWarning = (props: {
+const MockDataWarning = ({
+  pathname
+}: {
   pathname?: string
 }) => {
-  const {
-    pathname
-  } = props
-
-  const { 
-    isMockData,
-  } = useTransactionContext()
+  const { isMockData } = useTransactionContext()
 
   if (pathname === "/income") {
     return (

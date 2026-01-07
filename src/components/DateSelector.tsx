@@ -2,16 +2,6 @@ import { Choice } from "@/contexts/categories-context"
 import { MONTHS } from "@/globals/globals"
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 
-type Props = {
-  view: "annual" | "month"
-  setView: (v: "annual" | "month") => void
-  selectedYear: string
-  setSelectedYear: (y: string) => void
-  selectedMonth: string
-  setSelectedMonth: (m: string) => void
-  years: Choice[]
-}
-
 const DateSelector = ({
   view,
   setView,
@@ -20,7 +10,15 @@ const DateSelector = ({
   selectedMonth,
   setSelectedMonth,
   years
-}: Props) => {
+}: {
+  view: "annual" | "month"
+  setView: (v: "annual" | "month") => void
+  selectedYear: string
+  setSelectedYear: (y: string) => void
+  selectedMonth: string
+  setSelectedMonth: (m: string) => void
+  years: Choice[]
+}) => {
   return (
     <Box
       className="flex flex-col sm:flex-row gap-3 h-full"

@@ -12,30 +12,21 @@ import {
   formattedStringNumber
 } from "@/utils/helperFunctions"
 import { Typography } from "@mui/material"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 
 const AverageExpenses = ({
   flatExpenseTransactions,
-  refreshExpenseTransactions,
   expenseCategories,
-  refreshExpenseCategoryChoices,
   currentTheme,
   currentYear,
   currentMonth
 }: {
   flatExpenseTransactions: FlatTransaction[]
-  refreshExpenseTransactions: () => void
   expenseCategories: Choice[]
-  refreshExpenseCategoryChoices: () => void
   currentTheme: string | undefined
   currentYear: string
   currentMonth: string
 }) => {
-  useEffect(() => {
-    refreshExpenseTransactions()
-    refreshExpenseCategoryChoices()
-  }, [])  
-
   const badColor = currentTheme === "light" ?
     lightMode.error 
     : darkMode.error

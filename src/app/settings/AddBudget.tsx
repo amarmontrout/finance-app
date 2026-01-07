@@ -21,7 +21,7 @@ import {
   Stack
 } from "@mui/material"
 import { useTheme } from "next-themes"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { saveBudgetCategories } from "@/utils/budgetStorage"
 
 const BUDGET_INIT: BudgetCategoryType = {
@@ -41,15 +41,11 @@ const AddBudget = ({
   setConfirmEdit: React.Dispatch<React.SetStateAction<BudgetCategoryType | null>>
 }) => {
   const {budgetCategories, refreshBudgetCategories} = useBudgetContext()
-
-  useEffect(() => {
-    refreshBudgetCategories()
-  }, [])
+  const { theme: currentTheme } = useTheme()
 
   const [budgetCategory, setBudgetCategory] = 
     useState<BudgetCategoryType>(BUDGET_INIT)
 
-  const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg
@@ -98,7 +94,10 @@ const AddBudget = ({
       (selection) => {return selection.category !== confirmSelection?.category}
     )
 
-    saveBudgetCategories({key: BUDGET_CATEGORIES_KEY, updatedCategories: newBudgetList})
+    saveBudgetCategories({
+      key: BUDGET_CATEGORIES_KEY, 
+      updatedCategories: newBudgetList
+    })
     refreshBudgetCategories()
   }
 

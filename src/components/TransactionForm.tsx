@@ -28,14 +28,17 @@ export type TransactionType = {
   amount: string
 }
 
-const TransactionForm = (props: {
+const TransactionForm = ({ 
+  categories, 
+  type, 
+  refreshTransactions,
+  years 
+}: {
   categories: Choice[],
   type: string,
   refreshTransactions: () => void
   years: Choice[]
 }) => {
-  const { categories, type, refreshTransactions, years } = props
-
   const TRANSACTION_INIT: TransactionType = {
     month: MONTHS[currentMonth],
     year: String(currentYear),

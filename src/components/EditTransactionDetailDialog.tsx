@@ -1,5 +1,4 @@
 import { Choice } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSES, INCOME } from "@/globals/globals"
 import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
@@ -25,7 +24,19 @@ type UpdateTransactionType = {
   amount: string
 }
 
-const EditTransactionDetailDialog = (props: {
+const EditTransactionDetailDialog = ({
+    openEditDialog,
+    setOpenEditDialog,
+    type,
+    selectedId,
+    transactions,
+    categories,
+    currentTheme,
+    selectedYear,
+    selectedMonth,
+    refreshIncomeTransactions,
+    refreshExpenseTransactions
+  }: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   type: string
@@ -35,30 +46,14 @@ const EditTransactionDetailDialog = (props: {
   currentTheme: string | undefined
   selectedYear: string
   selectedMonth: string
+  refreshIncomeTransactions?: () => void
+  refreshExpenseTransactions?: () => void
 }) => {
-
-  const {
-    openEditDialog,
-    setOpenEditDialog,
-    type,
-    selectedId,
-    transactions,
-    categories,
-    currentTheme,
-    selectedYear,
-    selectedMonth
-  } = props
-
   const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
     id: "",
     category: categories[0].name,
     amount: ""
   }
-
-  const {
-    refreshIncomeTransactions,
-    refreshExpenseTransactions,
-  } =useTransactionContext()
  
   const [updateTransaction, setUpdateTransaction] = 
     useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
@@ -130,9 +125,11 @@ const EditTransactionDetailDialog = (props: {
     setOpenEditDialog(false)
 
     if (type === INCOME) {
-      refreshIncomeTransactions()
+      if (refreshIncomeTransactions) 
+        refreshIncomeTransactions()
     } else if (type === EXPENSES) {
-      refreshExpenseTransactions()
+      if (refreshExpenseTransactions)
+        refreshExpenseTransactions()
     }
   }
 

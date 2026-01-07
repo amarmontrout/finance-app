@@ -4,7 +4,11 @@ const ShowCaseCard = ({
   children, 
   title, 
   secondaryTitle 
-}: { children: React.ReactNode, title: string, secondaryTitle?: string }) => {
+}: { 
+  children: React.ReactNode, 
+  title: string, 
+  secondaryTitle?: string 
+}) => {
   return (
     <Card
       style={{

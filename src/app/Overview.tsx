@@ -9,17 +9,12 @@ import { darkMode, lightMode } from "@/globals/colors"
 import { buildMultiColumnData } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import YearTotals from "./YearTotals"
 import YearNetCash from "./YearNetCash"
 
 const Overview = () => {
-  const { 
-    incomeTransactions, 
-    expenseTransactions, 
-    refreshIncomeTransactions, 
-    refreshExpenseTransactions
-  } = useTransactionContext()
+  const { incomeTransactions, expenseTransactions } = useTransactionContext()
   const { excludedSet } = useCategoryContext()
   const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
@@ -36,11 +31,6 @@ const Overview = () => {
       method: "compare"
     })
   }, [incomeTransactions, expenseTransactions])
-
-  useEffect(() => {
-    refreshIncomeTransactions()
-    refreshExpenseTransactions()
-  }, [])
     
   return (
     <FlexColWrapper gap={2}>

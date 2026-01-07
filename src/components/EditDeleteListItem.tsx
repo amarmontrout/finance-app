@@ -11,25 +11,23 @@ import { saveChoices } from "@/utils/choiceStorage";
 import { EXPENSE_CATEGORIES_KEY } from "@/globals/globals";
 import { Choice } from "@/contexts/categories-context";
 
-const EditDeleteListItem = (props: {
-    items: Choice[]
-    storageKey: string
-    refresh: () => void
-    setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
-    setChoice?: React.Dispatch<React.SetStateAction<Choice>>
-  }) => {
-
-  const { 
+const EditDeleteListItem = ({ 
     items,
     storageKey,
     refresh,
     setCategoryDialogOpen,
     setChoice
-  } = props
-    
+  }: {
+    items: Choice[]
+    storageKey: string
+    refresh: () => void
+    setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
+    setChoice?: React.Dispatch<React.SetStateAction<Choice>>
+  }) => {    
+  const { theme: currentTheme } = useTheme()
+  
   const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
 
-  const { theme: currentTheme } = useTheme()
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg

@@ -16,7 +16,7 @@ import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { usePathname } from "next/navigation"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import AddIncome from "./AddIncome"
 import IncomeList from "./IncomeList"
 
@@ -29,10 +29,6 @@ const Income = () => {
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
-
-  useEffect(() => {
-    refreshIncomeTransactions()
-  }, [])
 
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -103,6 +99,7 @@ const Income = () => {
         currentTheme={currentTheme}
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
+        refreshIncomeTransactions={refreshIncomeTransactions}
       />
     </FlexColWrapper>
   )

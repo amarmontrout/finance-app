@@ -11,16 +11,8 @@ import { useCategoryContext } from "@/contexts/categories-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 
 const Trends =() => {
-  const {
-    expenseTransactions,
-    flatExpenseTransactions,
-    refreshExpenseTransactions
-  } = useTransactionContext()
-  const {
-    expenseCategories,
-    refreshExpenseCategoryChoices,
-    excludedSet
-  } = useCategoryContext()
+  const { flatExpenseTransactions } = useTransactionContext()
+  const { expenseCategories, excludedSet } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   
@@ -30,9 +22,7 @@ const Trends =() => {
 
       <AverageExpenses
         flatExpenseTransactions={flatExpenseTransactions}
-        refreshExpenseTransactions={refreshExpenseTransactions}
         expenseCategories={expenseCategories}
-        refreshExpenseCategoryChoices={refreshExpenseCategoryChoices}
         currentTheme={currentTheme}
         currentYear={currentYear}
         currentMonth={currentMonth}
@@ -40,7 +30,6 @@ const Trends =() => {
 
       <Projections
         flatExpenseTransactions={flatExpenseTransactions}
-        refreshExpenseTransactions={refreshExpenseTransactions}
         currentTheme={currentTheme}
         expenseCategories={expenseCategories}
         excludedSet={excludedSet}
@@ -50,9 +39,7 @@ const Trends =() => {
 
       {/* <ExpectedSpending
         flatExpenseTransactions={flatExpenseTransactions}
-        refreshExpenseTransactions={refreshExpenseTransactions}
         expenseCategories={expenseCategories}
-        refreshExpenseCategoryChoices={refreshExpenseCategoryChoices}
         currentYear={currentYear}
         currentMonth={currentMonth}
       /> */}

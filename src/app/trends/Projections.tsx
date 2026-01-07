@@ -21,11 +21,10 @@ import {
   MenuItem, 
   Select 
 } from "@mui/material"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 
 const Projections = ({
   flatExpenseTransactions,
-  refreshExpenseTransactions,
   currentTheme,
   expenseCategories,
   excludedSet,
@@ -33,17 +32,12 @@ const Projections = ({
   currentMonth
 }: {
   flatExpenseTransactions: FlatTransaction[]
-  refreshExpenseTransactions: () => void
   currentTheme: string | undefined
   expenseCategories: Choice[]
   excludedSet: Set<string>
   currentYear: string
   currentMonth: string
 }) => {
-  useEffect(() => {
-    refreshExpenseTransactions()
-  }, [])  
-
   const [view, setView] = useState<"annual" | "month">("annual")
 
   const defaultColor = getCardColor(currentTheme, "default")

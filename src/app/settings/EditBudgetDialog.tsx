@@ -15,6 +15,11 @@ import {
 } from "@mui/material"
 import { ChangeEvent, useEffect, useState } from "react"
 
+  const UPDATE_BUDGET_INIT: BudgetCategoryType = {
+    category: "",
+    amount: ""
+  }
+
 const EditBudgetDialog = ({
   budgetEditDialogOpen,
   setBudgetEditDialogOpen,
@@ -27,21 +32,10 @@ const EditBudgetDialog = ({
   currentTheme: string | undefined
 }) => {
 
-  const {
-    refreshBudgetCategories
-  } = useBudgetContext()
-
-  const UPDATE_BUDGET_INIT: BudgetCategoryType = {
-    category: "",
-    amount: ""
-  }
+  const { refreshBudgetCategories } = useBudgetContext()
 
   const [updateBudget, setUpdateBudget] = 
     useState<BudgetCategoryType>(confirmEdit? confirmEdit : UPDATE_BUDGET_INIT)
-
-  useEffect(() => {
-    refreshBudgetCategories()
-  }, [])
 
   useEffect(() => {
     if (!confirmEdit) return

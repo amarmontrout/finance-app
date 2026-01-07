@@ -2,7 +2,7 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
 import MockDataWarning from "@/components/MockDataWarning"
@@ -17,9 +17,7 @@ import { useTheme } from "next-themes"
 const Insights = () => {
   const { 
     incomeTransactions,
-    refreshIncomeTransactions,
-    expenseTransactions,
-    refreshExpenseTransactions
+    expenseTransactions
   } = useTransactionContext()
   const { years, excludedSet } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -28,11 +26,6 @@ const Insights = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [view, setView] = useState<"annual" | "month">("month")
-
-  useEffect(() => {
-    refreshIncomeTransactions()
-    refreshExpenseTransactions()
-  }, [])
 
   return (
     <FlexColWrapper gap={2}>

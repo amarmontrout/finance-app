@@ -7,15 +7,13 @@ import { saveChoices } from "@/utils/choiceStorage"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
-const AddExpenseCategory = (props: {
+const AddExpenseCategory = ({ 
+    setCategoryDialogOpen,
+    setChoice 
+  }: {
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   setChoice: React.Dispatch<React.SetStateAction<Choice>>
 }) => {
-  const { 
-    setCategoryDialogOpen,
-    setChoice 
-  } = props
-
   const {
     refreshExpenseCategoryChoices,
     expenseCategories,

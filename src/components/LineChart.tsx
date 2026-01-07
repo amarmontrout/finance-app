@@ -5,20 +5,20 @@ import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { Chart } from "react-google-charts"
 
-const LineChart = (props: {
+const LineChart = ({
+    twoColumnData,
+    multiColumnData,
+    lineColors
+  }: {
   twoColumnData?: TwoColumnDataType
   multiColumnData?: MultiColumnDataType
   lineColors: string[]
 }) => {
-  const {
-    twoColumnData,
-    multiColumnData,
-    lineColors
-  } = props
+  const { theme: currentTheme } = useTheme()
+  
   const [chartData, setChartData] = 
     useState<TwoColumnDataType | MultiColumnDataType>([])
 
-  const { theme: currentTheme } = useTheme()
   const backgroundColor = currentTheme === "light" ? 
     lightMode.elevatedBg 
     : darkMode.elevatedBg

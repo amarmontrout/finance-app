@@ -1,14 +1,8 @@
-import { 
-  EXPENSES, 
-  INCOME, 
-} from "@/globals/globals"
-import { 
-  mockExpenseData, 
-  mockIncomeData, 
-} from "@/globals/mockData"
+import { EXPENSES, INCOME } from "@/globals/globals"
+import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { flattenTransactions } from "@/utils/helperFunctions"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
   incomeTransactions: TransactionData
@@ -92,6 +86,11 @@ export const TransactionProvider = (props: {
       setFlatExpenseTransactions(flattenTransactions(localExpenseData))
     }
   }
+
+  useEffect(() => {
+    refreshIncomeTransactions()
+    refreshExpenseTransactions()
+  }, [])
 
   return (
     <TransactionContext.Provider value={{

@@ -3,12 +3,13 @@ import { Box } from "@mui/material"
 import { useTheme } from "next-themes";
 import Chart from "react-google-charts"
 
-const PieChart = (props: {
+const PieChart = ({
+  data
+}: {
   data: [string, string | number][]
 }) => {
-  const { data } = props
-
   const { theme: currentTheme } = useTheme()
+  
   const backgroundColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg

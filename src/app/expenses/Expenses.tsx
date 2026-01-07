@@ -5,7 +5,7 @@ import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
 import { EXPENSE_CATEGORIES_KEY, EXPENSES, YEARS_KEY } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import 
   EditTransactionDetailDialog 
@@ -23,16 +23,11 @@ import ExpenseList from "./ExpenseList"
 const Expenses = () => {
   const { 
     expenseTransactions, 
-    refreshExpenseTransactions,
-  } = useTransactionContext()
+    refreshExpenseTransactions } = useTransactionContext()
   const { expenseCategories, years, excludedSet } = useCategoryContext()
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
-
-  useEffect(() => {
-    refreshExpenseTransactions()
-  }, [])
   
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -103,6 +98,7 @@ const Expenses = () => {
         currentTheme={currentTheme}
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
+        refreshExpenseTransactions={refreshExpenseTransactions}
       />
     </FlexColWrapper>
   )

@@ -2,18 +2,15 @@ import { darkMode, lightMode } from "@/globals/colors"
 import { loadData } from "@/utils/appDataStorage"
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material"
 
-const FileUploadDialog = (props: {
+const FileUploadDialog = ({
+    dialogOpen,
+    currentTheme,
+    setDialogOpen
+  }: {
   dialogOpen: boolean
   currentTheme: string | undefined
   setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
 }) => {
-
-  const {
-    dialogOpen,
-    currentTheme,
-    setDialogOpen
-  } = props
-
   return (
     <Dialog open={dialogOpen}>
       <DialogContent 

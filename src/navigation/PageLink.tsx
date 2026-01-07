@@ -10,12 +10,13 @@ export type PageLinkType = {
   icon: SvgIconComponent
 }
 
-const PageLink = (props: {
+const PageLink = ({
+  item,
+  active
+}: {
   item: PageLinkType
   active: boolean
 }) => {
-  const { item, active } = props
-
   return (
     <Link style={linkStyle} href={item.link}>
       <Box 

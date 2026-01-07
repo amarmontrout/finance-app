@@ -21,20 +21,7 @@ import {
 import { useTheme } from "next-themes"
 import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
-import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
-
-type TransactionsListProps = {
-  type: "income" | "expenses"
-  transactions: TransactionData
-  refreshTransactions: () => void
-  selectedMonth: string
-  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
-  selectedYear: string
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
-  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedId: React.Dispatch<React.SetStateAction<string>>
-  excludedSet: Set<string>
-}
+import { saveTransaction, TransactionData } from "@/utils/transactionStorage" 
 
 const TransactionsList = ({
   type, 
@@ -47,10 +34,22 @@ const TransactionsList = ({
   setOpenEditDialog,
   setSelectedId,
   excludedSet
-}: TransactionsListProps) => {
+}: {
+  type: "income" | "expenses"
+  transactions: TransactionData
+  refreshTransactions: () => void
+  selectedMonth: string
+  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
+  selectedYear: string
+  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
+  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedId: React.Dispatch<React.SetStateAction<string>>
+  excludedSet: Set<string>
+}) => {
+  const { theme: currentTheme } = useTheme()
 
   const [confirmId, setConfirmId] = useState<string | null>(null)
-  const { theme: currentTheme } = useTheme()
+  
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg

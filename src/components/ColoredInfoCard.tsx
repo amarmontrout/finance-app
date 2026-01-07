@@ -1,20 +1,20 @@
 import { Box, Typography } from "@mui/material"
 
-const ColoredInfoCard = (props: {
-  cardColors: {
+export type CardColorsType = {
     background: string,
     textIcon: string,
-    border: string
-  }
+    border: string  
+}
+
+const ColoredInfoCard = ({
+  cardColors,
+  info,
+  title
+}: {
+  cardColors: CardColorsType
   info: string
   title: string
 }) => {
-  const {
-    cardColors,
-    info,
-    title
-  }= props
-
   return (
     <Box
       className="flex flex-col"

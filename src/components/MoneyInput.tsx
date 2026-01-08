@@ -8,11 +8,13 @@ type HasAmount = {
 const MoneyInput = <T extends HasAmount>({
   value,
   setValue,
-  smallWidthBp
+  smallWidthBp,
+  disabled
 }: {
   value: string
   setValue: React.Dispatch<React.SetStateAction<T>>
   smallWidthBp?: "sm" | "md" | "lg" | "xl" | "2xl" | undefined
+  disabled?: boolean
 }) => {
   const handleAmount = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,6 +40,7 @@ const MoneyInput = <T extends HasAmount>({
         label={"Amount"}
         value={value}
         name={"amount"}
+        disabled={disabled}
         onChange={e => handleAmount(e)}
         startAdornment={<InputAdornment position="start">$</InputAdornment>}
         />

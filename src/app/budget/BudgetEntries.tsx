@@ -4,7 +4,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import { BUDGET_KEY } from "@/globals/globals"
-import { saveBudgetEntries } from "@/utils/budgetStorage"
+import { getBudgetEntries, saveBudgetEntries } from "@/utils/budgetStorage"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
@@ -35,7 +35,8 @@ const BudgetEntries = ({
   notes,
   setOpenEditDialog,
   setSelectedEntry,
-  currentTheme
+  currentTheme,
+  week
 }: {
     budgetCategories: BudgetCategoryType[]
     refreshBudgetCategories: ()=> void
@@ -45,6 +46,7 @@ const BudgetEntries = ({
     setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
     setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetEntryType | null>>
     currentTheme: string | undefined
+    week: "prev" | "current"
 }) => {
   const BUDGET_ENTRY_INIT: BudgetEntryType = {
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
@@ -92,10 +94,14 @@ const BudgetEntries = ({
   }
 
   const deleteEntry = (id: number) => {
-    const updatedEntries = budgetEntries.filter((entry) => {
-      return entry.createdAt !== id
+    const allEntries = getBudgetEntries({ key: BUDGET_KEY })
+    const updatedEntries = allEntries.filter(
+      entry => entry.createdAt !== id
+    )
+    saveBudgetEntries({
+      key: BUDGET_KEY,
+      updatedEntry: updatedEntries
     })
-    saveBudgetEntries({key: BUDGET_KEY, updatedEntry: updatedEntries})
     refreshBudgetEntries()
   }
 
@@ -159,7 +165,7 @@ const BudgetEntries = ({
   }
 
   return (
-    <ShowCaseCard title={"Enter Expenses for the Week"}>
+    <ShowCaseCard title={"Budget Expenses"}>
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -175,6 +181,7 @@ const BudgetEntries = ({
               value={budgetEntry.category}
               name={"category"}
               onChange={e => handleCategory(e)}
+              disabled={week === "prev"}
             >
               {budgetCategories.map((budget) => {
                 return (
@@ -192,6 +199,7 @@ const BudgetEntries = ({
             <Autocomplete
               className="w-full lg:w-[175px]"
               freeSolo
+              disabled={week === "prev"}
               options={notes.map((option) => option)}
               value={noteValue}
               onChange={(event: any, newValue: string | null) => {
@@ -217,13 +225,12 @@ const BudgetEntries = ({
             value={budgetEntry.amount}
             setValue={setBudgetEntry}
             smallWidthBp={"lg"}
+            disabled={week === "prev"}
           /> 
 
           <Button
             variant={"contained"} 
-            disabled={
-              false
-            }
+            disabled={week === "prev"}
             onClick={save}
             sx={{
               backgroundColor: accentColorSecondary

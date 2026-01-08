@@ -16,6 +16,7 @@ import {
 } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
+import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
 
 const Budget = () => {
   const { 
@@ -24,9 +25,10 @@ const Budget = () => {
     budgetEntries,
     refreshBudgetEntries
   } = useBudgetContext()
-  const { start, end } = getWeekBounds()
+  const { start, end, prevStart, prevEnd } = getWeekBounds()
   const { theme: currentTheme } = useTheme()
 
+  const [week, setWeek] = useState<"prev" | "current">("current")
   const [notes, setNotes] = useState<string[]>([])
   const [selectedEntry, setSelectedEntry] = 
     useState<BudgetEntryType | null>(null)
@@ -48,10 +50,14 @@ const Budget = () => {
   }, [budgetEntries])
 
   const weeklyEntries = useMemo(() => {
-    return budgetEntries.filter(entry =>
-      entry.createdAt >= start && entry.createdAt <= end
-    )
-  }, [budgetEntries, start, end])
+    return budgetEntries.filter(entry => {
+      if (week === "prev") {
+        return entry.createdAt >= prevStart && entry.createdAt <= prevEnd
+      }
+      
+      return entry.createdAt >= start && entry.createdAt <= end
+    })
+  }, [budgetEntries, start, end, prevStart, prevEnd, week])
 
   const remainingBudgetCategories = useMemo(() => {
     let remaining: BudgetCategoryType[] = []
@@ -73,10 +79,31 @@ const Budget = () => {
     })
 
     return remaining
-  }, [budgetCategories, budgetEntries])
+  }, [budgetCategories, weeklyEntries])
 
   return (
     <FlexColWrapper gap={2}>
+      <Box
+        className="flex flex-col sm:flex-row gap-3 h-full"
+        paddingTop={"10px"}
+      >
+        <FormControl>
+          <InputLabel>View</InputLabel>
+          <Select
+            className="w-full sm:w-[175px]"
+            label="View"
+            value={week}
+            name={"view"}
+            onChange={e => setWeek(e.target.value)}
+          >
+            <MenuItem key={"prev"} value={"prev"}>Previous Week</MenuItem>
+            <MenuItem key={"current"} value={"current"}>Current Week</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+
+      <hr style={{width: "100%"}}/>
+
       <RemainingBudget
         budgetCategories={remainingBudgetCategories}
         currentTheme={currentTheme}
@@ -91,6 +118,7 @@ const Budget = () => {
         setOpenEditDialog={setOpenEditDialog}
         setSelectedEntry={setSelectedEntry}
         currentTheme={currentTheme}
+        week={week}
       />
 
       <EditBudgetEntryDialog

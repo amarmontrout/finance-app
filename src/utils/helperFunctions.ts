@@ -34,9 +34,17 @@ export const getWeekBounds = (date = new Date()) => {
   endOfWeek.setDate(startOfWeek.getDate() + 6)
   endOfWeek.setHours(23, 59, 59, 999)
 
+  const prevStartOfWeek = new Date(startOfWeek)
+  prevStartOfWeek.setDate(startOfWeek.getDate() - 7)
+
+  const prevEndOfWeek = new Date(startOfWeek)
+  prevEndOfWeek.setMilliseconds(-1)
+
   return {
     start: startOfWeek.getTime(),
     end: endOfWeek.getTime(),
+    prevStart: prevStartOfWeek.getTime(),
+    prevEnd: prevEndOfWeek.getTime()
   }
 }
 

@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 
-export async function proxy(request: NextRequest) {
+export function proxy(request: NextRequest) {
+  const isLoggedIn = true
+
+  if (!isLoggedIn) {
+    return NextResponse.redirect(new URL('/login', request.url))
+  }
   return NextResponse.next()
 }
 
 export const config = {
   matcher: [
-    '/((?!login).*)'
+    '/((?!login|_next|favicon.ico).*)'
   ]
 }

@@ -1,18 +1,15 @@
 import type { Metadata } from "next";
-import { Analytics } from "@vercel/analytics/next"
-import Providers from "./providers";
 import { Box } from "@mui/material";
 import Header from "@/header/Header";
-import "../globals.css"
-import { HorizontalNavbar, Navbar } from "@/navigation/Navbar";
-import { accentColorPrimary } from "@/globals/colors";
+import "../../globals.css"
+import Providers from "../providers";
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
   description: "Personal project to track finances.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body 
@@ -27,27 +24,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       >
         <Providers>
           <Box 
-            sx={{ 
-              display: "flex", 
-              flexDirection: "row", 
-              minWidth: 0,
-              minHeight: 0,
-              height: "100%"
-            }}
-          >
-            {/* Nav / Sidebar */}
-            <Box
-              className="hidden md:flex md:min-w-[205px]"
-              component="nav"
-              sx={{
-                bgcolor: "background.paper",
-                borderRight: 2,
-                borderColor: "divider",
+              sx={{ 
+                display: "flex", 
+                flexDirection: "row", 
+                minWidth: 0,
+                minHeight: 0,
+                height: "100%"
               }}
-            >
-              <Navbar/>
-            </Box>
-
+          >
             {/* Main column */}
             <Box 
               sx={{ 
@@ -70,7 +54,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 <Header />
               </Box>
-
               {/* Main content */}
               <Box
                 component="main"
@@ -94,24 +77,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   {children}
                 </Box>
               </Box>
-
-              {/* Mobile nav */}
-              <Box
-                className="flex md:hidden"
-                component="nav"
-                sx={{
-                  bgcolor: "background.paper",
-                  borderTop: 1,
-                  borderColor: accentColorPrimary,
-                }}
-              >
-                <HorizontalNavbar/>
-              </Box>
             </Box>
           </Box>
         </Providers>
-        <Analytics />
       </body>
     </html>
+
   );
 }

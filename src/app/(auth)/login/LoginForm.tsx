@@ -2,6 +2,7 @@
 
 import { FlexColWrapper } from "@/components/Wrappers"
 import { accentColorSecondary } from "@/globals/colors"
+import { supabaseBrowser } from "@/utils/supabase/client"
 import { 
   Box, 
   Button, 
@@ -12,6 +13,7 @@ import {
   OutlinedInput, 
   Typography 
 } from "@mui/material"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 type CredType = {
@@ -25,7 +27,22 @@ const CRED_INIT = {
 }
 
 const LoginForm = () => {
+  const router = useRouter()
+  const supabase = supabaseBrowser()
   const [credentials, setCredentials] = useState<CredType>(CRED_INIT)
+
+  const signIn = async () => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: credentials.username,
+      password: credentials.password,
+    })
+
+    if (error) {
+      console.log(error)
+    } else {
+      router.push("/")
+    }
+  }
 
   return (
     <Box
@@ -81,7 +98,7 @@ const LoginForm = () => {
 
               <Button
                 variant={"contained"} 
-                onClick={() => {}}
+                onClick={signIn}
                 disabled={!credentials.username || !credentials.password}
                 sx={{ backgroundColor: accentColorSecondary }}
               >

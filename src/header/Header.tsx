@@ -1,9 +1,21 @@
 "use client"
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { Box, Stack, Typography } from "@mui/material";
+import { accentColorSecondary } from "@/globals/colors";
+import { useUser } from "@/hooks/useUser";
+import { supabaseBrowser } from "@/utils/supabase/client";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const supabase = supabaseBrowser()
+  const router = useRouter()
+  const user = useUser()
+
+  const logout = async () => {
+    await supabase.auth.signOut()
+    router.push("/login")
+  }
 
   return (
     <Stack
@@ -25,13 +37,28 @@ const Header = () => {
         </Typography>
       </Box>
 
-      <Box
-        alignContent={"center"}
+      <Stack
+        direction={"row"}
+        gap={2}
+        alignItems={"center"}
         marginLeft={"5px"}
         marginRight={"1.5rem"}
       >
+        {
+          user &&
+          <Button
+            variant={"contained"} 
+            onClick={logout}
+            sx={{
+              backgroundColor: accentColorSecondary
+            }}
+          >
+            Log Out
+          </Button>
+        }
+
         <ThemeToggle />
-      </Box>
+      </Stack>
     </Stack>
   )
 }

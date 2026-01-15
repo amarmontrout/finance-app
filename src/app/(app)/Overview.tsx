@@ -6,7 +6,7 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { buildMultiColumnData, buildMultiColumnDataV2 } from "@/utils/buildChartData"
+import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
@@ -15,28 +15,15 @@ import YearNetCash from "./YearNetCash"
 
 const Overview = () => {
   const { 
-    incomeTransactions, 
-    expenseTransactions, 
     incomeTransactionsV2, 
     expenseTransactionsV2 
   } = useTransactionContext()
   const { excludedSet } = useCategoryContext()
   const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
-
   const lineColor = currentTheme === "light" 
     ? [lightMode.success, lightMode.error] 
     : [darkMode.success, darkMode.error]
-  const chartData = useMemo(() => {
-    return buildMultiColumnData({
-      firstData: incomeTransactions,
-      secondData: expenseTransactions,
-      selectedYear: currentYear,
-      firstColumnTitle: "Month",
-      method: "compare"
-    })
-  }, [incomeTransactions, expenseTransactions])
-
   const chartDataV2 = useMemo(() => {
     return buildMultiColumnDataV2({
       firstData: incomeTransactionsV2,
@@ -51,7 +38,7 @@ const Overview = () => {
   return (
     <FlexColWrapper gap={2}>
       <MockDataWarning/>
-      
+
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
         <YearTotals
           currentYear={Number(currentYear)}

@@ -1,4 +1,10 @@
 import { supabaseBrowser } from "@/utils/supabase/client"
+import { 
+  BudgetEntryTypeV2, 
+  BudgetTypeV2, 
+  ChoiceTypeV2, 
+  TransactionTypeV2 
+} from "@/utils/type"
 import { PostgrestResponse } from "@supabase/supabase-js"
 
 export const dbRequestBrowser = async <T>({
@@ -7,19 +13,15 @@ export const dbRequestBrowser = async <T>({
   method,
   userId,
   rowId,
-  body,
-  onSuccess,
-  onError
+  body
 }: {
   schema: string
   table: string
   method: "POST" | "GET" | "PATCH" | "DELETE"
   userId: string
   rowId?: number
-  body?: object
-  onSuccess: (data: T[] | null) => void
-  onError: (error: PostgrestResponse<T>["error"]) => void
-}) => {
+  body?: TransactionTypeV2 | BudgetEntryTypeV2 | BudgetTypeV2 | ChoiceTypeV2
+}): Promise<{ data: T[] | null; error: PostgrestResponse<T>["error"] }> => {
   const sb = supabaseBrowser()
   let result: PostgrestResponse<T>
 
@@ -58,9 +60,8 @@ export const dbRequestBrowser = async <T>({
       break
   }
 
-  if (result.error) {
-    onError(result.error)
-  } else {
-    onSuccess(result.data)
+  return {
+    data: result.data,
+    error: result.error
   }
 }

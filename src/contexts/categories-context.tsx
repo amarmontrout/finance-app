@@ -33,8 +33,8 @@ type MockDataType = {
 
 export type Choice = {
   name: string
-  isExcluded: boolean
-  isRecurring: boolean
+  isExcluded?: boolean
+  isRecurring?: boolean
 }
 
 const mockDataInit = {

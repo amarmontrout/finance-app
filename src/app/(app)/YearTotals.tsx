@@ -1,54 +1,46 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { getYearTotal, getYearTotalV2 } from "@/utils/getTotals"
+import { getYearTotalV2 } from "@/utils/getTotals"
 import { getCardColor } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
 import { TransactionTypeV2 } from "@/utils/type"
 
 const YearTotals = ({
   currentYear,
   currentTheme,
-  incomeTransactions,
-  expenseTransactions,
   excludedSet,
   incomeTransactionsV2,
   expenseTransactionsV2
 }: {
-  currentYear: string
+  currentYear: number
   currentTheme: string | undefined
-  incomeTransactions: TransactionData
-  expenseTransactions: TransactionData
   excludedSet: Set<string>
   incomeTransactionsV2: TransactionTypeV2[]
   expenseTransactionsV2: TransactionTypeV2[]
 }) => {
   const defaultCardColor = getCardColor(currentTheme, "default")
+  const totalIncome = getYearTotalV2(
+    currentYear, 
+    incomeTransactionsV2, 
+    excludedSet
+  )
+  const totalExpenses = getYearTotalV2(
+    currentYear, 
+    expenseTransactionsV2, 
+    excludedSet
+  )
 
   return (
     <ShowCaseCard title={`${currentYear} Totals`}>
       <FlexColWrapper gap={2} toRowBreak={"md"}>
         <ColoredInfoCard
           cardColors={defaultCardColor}
-          info={`$${getYearTotal(currentYear, incomeTransactions, excludedSet)}`}
+          info={`$${totalIncome}`}
           title={`${currentYear} Total Income`}
         />
         <ColoredInfoCard
           cardColors={defaultCardColor}
-          info={`$${getYearTotal(currentYear, expenseTransactions, excludedSet)}`}
-          title={`${currentYear} Total Expenses`}
-        />
-      </FlexColWrapper>
-
-      <FlexColWrapper gap={2} toRowBreak={"md"}>
-        <ColoredInfoCard
-          cardColors={defaultCardColor}
-          info={`$${getYearTotalV2(Number(currentYear), incomeTransactionsV2, excludedSet)}`}
-          title={`${currentYear} Total Income`}
-        />
-        <ColoredInfoCard
-          cardColors={defaultCardColor}
-          info={`$${getYearTotalV2(Number(currentYear), expenseTransactionsV2, excludedSet)}`}
+          info={`$${totalExpenses}`}
           title={`${currentYear} Total Expenses`}
         />
       </FlexColWrapper>

@@ -6,7 +6,7 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
-import { buildMultiColumnData } from "@/utils/buildChartData"
+import { buildMultiColumnData, buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
@@ -36,32 +36,44 @@ const Overview = () => {
       method: "compare"
     })
   }, [incomeTransactions, expenseTransactions])
+
+  const chartDataV2 = useMemo(() => {
+    return buildMultiColumnDataV2({
+      firstData: incomeTransactionsV2,
+      secondData: expenseTransactionsV2,
+      selectedYear: Number(currentYear),
+      firstColumnTitle: "Month",
+      method: "compare",
+      excludedSet: excludedSet
+    })
+  }, [incomeTransactionsV2, expenseTransactionsV2])
     
   return (
     <FlexColWrapper gap={2}>
       <MockDataWarning/>
+      
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
         <YearTotals
-          currentYear={currentYear}
+          currentYear={Number(currentYear)}
           currentTheme={currentTheme}
-          incomeTransactions={incomeTransactions}
-          expenseTransactions={expenseTransactions}
           excludedSet={excludedSet}
           incomeTransactionsV2={incomeTransactionsV2}
           expenseTransactionsV2={expenseTransactionsV2}
         />
+
         <YearNetCash
-          currentYear={currentYear}
+          currentYear={Number(currentYear)}
           currentTheme={currentTheme}
-          incomeTransactions={incomeTransactions}
-          expenseTransactions={expenseTransactions}
           excludedSet={excludedSet}
+          incomeTransactionsV2={incomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
         />
       </FlexColWrapper>
+
       <LineChart
-        multiColumnData={chartData}
+        multiColumnData={chartDataV2}
         lineColors={lineColor}
-      />        
+      /> 
     </FlexColWrapper>
   )
 }

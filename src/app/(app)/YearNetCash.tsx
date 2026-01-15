@@ -1,32 +1,42 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, getCardColor, getSavingsHealthState } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
+import { getYearTotalV2 } from "@/utils/getTotals"
+import { 
+  cleanNumber, 
+  getCardColor, 
+  getSavingsHealthState 
+} from "@/utils/helperFunctions"
+import { TransactionTypeV2 } from "@/utils/type"
 
 const YearNetCash = ({
   currentYear,
   currentTheme,
-  incomeTransactions,
-  expenseTransactions,
-  excludedSet
+  excludedSet,
+  incomeTransactionsV2,
+  expenseTransactionsV2
 }: {
-  currentYear: string
+  currentYear: number
   currentTheme: string | undefined
-  incomeTransactions: TransactionData
-  expenseTransactions: TransactionData
   excludedSet: Set<string>
+  incomeTransactionsV2: TransactionTypeV2[]
+  expenseTransactionsV2: TransactionTypeV2[]
 }) => {
-  const annualIncome = getYearTotal(currentYear, incomeTransactions, excludedSet)
-  const annualExpense = getYearTotal(currentYear, expenseTransactions, excludedSet)
+  const annualIncome = getYearTotalV2(
+    currentYear, 
+    incomeTransactionsV2, 
+    excludedSet
+  )
+  const annualExpense = getYearTotalV2(
+    currentYear, 
+    expenseTransactionsV2, 
+    excludedSet
+  )
   const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
-
   const savingsHealthState = getSavingsHealthState(
     cleanNumber(annualNetIncome), 
     cleanNumber(annualIncome)
   )
-
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
 
   return (

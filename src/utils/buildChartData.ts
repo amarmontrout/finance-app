@@ -1,5 +1,6 @@
 import { MONTHS } from "@/globals/globals"
 import { TransactionData } from "./transactionStorage"
+import { TransactionTypeV2 } from "./type"
 
 export type TwoColumnDataType = [string, string | number][]
 export type MultiColumnDataType = (string | number)[][]
@@ -115,6 +116,80 @@ export const buildMultiColumnData = (props: {
         month,
         Number((income[month] ?? 0).toFixed(2)),
         Number((expense[month] ?? 0).toFixed(2))
+      ])
+    })
+    return compareColumnData
+  }
+
+  return []
+}
+
+export const buildMultiColumnDataV2 = ({
+  firstData,
+  secondData,
+  selectedYear,
+  firstColumnTitle,
+  method,
+  excludedSet
+}: {
+  firstData: TransactionTypeV2[]
+  secondData?: TransactionTypeV2[]
+  selectedYear?: number
+  firstColumnTitle: string
+  method: "self" | "compare"
+  excludedSet: Set<string>
+}): MultiColumnDataType => {
+  if (!firstData) return []
+  if (method === "self") {
+    const years = Array.from(
+      new Set(firstData.map(entry => entry.year))
+    ).sort((a, b) => a-b)
+    const selfColumnData: MultiColumnDataType = [[firstColumnTitle, ...years]]
+    for (const month of MONTHS) {
+      const row: (string | number)[] = [month]
+      for (const year of years) {
+        let total: number = 0
+        firstData.forEach((entry) => {
+          if (entry.month === month 
+            && entry.year === year
+            && !excludedSet.has(entry.category)
+          ) {
+            total += entry.amount
+          }
+        })
+        row.push(Number(total.toFixed(2)))
+      }
+      selfColumnData.push(row)
+    }
+    return selfColumnData
+  }
+
+  if (!secondData) return []
+  if (method === "compare") {
+    const compareColumnData: MultiColumnDataType = [[
+      firstColumnTitle, "Income", "Expenses"
+    ]]
+    const income: Record<string, number> = {}
+    const expense: Record<string, number> = {}
+    MONTHS.forEach((month) => {
+      income[month] = 0
+      expense[month] = 0
+    })
+    firstData.forEach((entry) => {
+      if (entry.year === selectedYear) {
+        income[entry.month] += entry.amount
+      }
+    })
+    secondData.forEach((entry) => {
+      if (entry.year === selectedYear && !excludedSet.has(entry.category)) {
+        expense[entry.month] += entry.amount
+      }
+    })
+    MONTHS.forEach((month) => {
+      compareColumnData.push([
+        month,
+        Number(income[month].toFixed(2)),
+        Number(expense[month].toFixed(2))
       ])
     })
     return compareColumnData

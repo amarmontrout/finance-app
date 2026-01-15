@@ -1,6 +1,7 @@
 import { FlatTransaction } from "@/contexts/transactions-context"
 import { formattedStringNumber } from "./helperFunctions"
 import { TransactionData } from "./transactionStorage"
+import { TransactionTypeV2 } from "./type"
 
 export const getYearTotal = (
   year: string, 
@@ -17,6 +18,22 @@ export const getYearTotal = (
       })
     })    
   }
+  return formattedStringNumber(total)
+}
+
+export const getYearTotalV2 = (
+  year: number, 
+  transactions: TransactionTypeV2[],
+  excludedCategories: Set<string>
+): string => {
+  let total = 0
+  transactions.map((entry) => {
+    if (entry.year === year) {
+      if (!excludedCategories.has(entry.category)) {
+        total += entry.amount
+      }
+    }
+  })
   return formattedStringNumber(total)
 }
 

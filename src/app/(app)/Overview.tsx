@@ -14,7 +14,12 @@ import YearTotals from "./YearTotals"
 import YearNetCash from "./YearNetCash"
 
 const Overview = () => {
-  const { incomeTransactions, expenseTransactions } = useTransactionContext()
+  const { 
+    incomeTransactions, 
+    expenseTransactions, 
+    incomeTransactionsV2, 
+    expenseTransactionsV2 
+  } = useTransactionContext()
   const { excludedSet } = useCategoryContext()
   const { currentYear} = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
@@ -42,6 +47,8 @@ const Overview = () => {
           incomeTransactions={incomeTransactions}
           expenseTransactions={expenseTransactions}
           excludedSet={excludedSet}
+          incomeTransactionsV2={incomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
         />
         <YearNetCash
           currentYear={currentYear}

@@ -1,7 +1,10 @@
+import { getBudget, getExpenses, getIncome } from "@/app/api/Transactions/requests"
 import { EXPENSES, INCOME } from "@/globals/globals"
 import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
+import { useUser } from "@/hooks/useUser"
 import { flattenTransactions } from "@/utils/helperFunctions"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
+import { BudgetEntryTypeV2, TransactionTypeV2 } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
@@ -12,6 +15,13 @@ type TransactionsContextType = {
   refreshIncomeTransactions: () => void
   refreshExpenseTransactions: () => void
   isMockData: MockDataType
+
+  incomeTransactionsV2: TransactionTypeV2[]
+  refreshIncomeTransactionsV2: () => void
+  expenseTransactionsV2: TransactionTypeV2[]
+  refreshExpenseTransactionsV2: () => void
+  budgetTransactionsV2: BudgetEntryTypeV2[]
+  refreshBudgetTransactionsV2: () => void
 }
 
 type MockDataType = {
@@ -92,6 +102,66 @@ export const TransactionProvider = (props: {
     refreshExpenseTransactions()
   }, [])
 
+////////////////////////////////////////////////////////////////////////////////
+  const user = useUser()
+
+  const [incomeTransactionsV2, setIncomeTransactionsV2] = 
+    useState<TransactionTypeV2[]>([])
+  const [expenseTransactionsV2, setExpenseTransactionsV2] = 
+    useState<TransactionTypeV2[]>([])
+  const [budgetTransactionsV2, setBudgetTransactionsV2] = 
+    useState<BudgetEntryTypeV2[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const refreshIncomeTransactionsV2 = async () => {
+    if (!user) {
+      setIncomeTransactionsV2([])
+      return
+    }
+
+    setLoading(true)
+    const incomeResult = await getIncome({
+      userId: user.id
+    })
+    setIncomeTransactionsV2(incomeResult ?? [])
+    setLoading(false)
+  }
+
+  const refreshExpenseTransactionsV2 = async () => {
+    if (!user) {
+      setExpenseTransactionsV2([])
+      return
+    }
+
+    setLoading(true)
+    const expenseResult = await getExpenses({
+      userId: user.id
+    })
+    setExpenseTransactionsV2(expenseResult ?? [])
+    setLoading(false)
+  }
+
+  const refreshBudgetTransactionsV2 = async () => {
+    if (!user) {
+      setBudgetTransactionsV2([])
+      return
+    }
+
+    setLoading(true)
+    const budgetResult = await getBudget({
+      userId: user.id
+    })
+    setBudgetTransactionsV2(budgetResult ?? [])
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    refreshIncomeTransactionsV2()
+    refreshExpenseTransactionsV2()
+    refreshBudgetTransactionsV2()
+  }, [user?.id])
+////////////////////////////////////////////////////////////////////////////////
+
   return (
     <TransactionContext.Provider value={{
       incomeTransactions,
@@ -100,7 +170,14 @@ export const TransactionProvider = (props: {
       flatExpenseTransactions,
       refreshIncomeTransactions,
       refreshExpenseTransactions,
-      isMockData
+      isMockData,
+
+      incomeTransactionsV2,
+      refreshIncomeTransactionsV2,
+      expenseTransactionsV2,
+      refreshExpenseTransactionsV2,
+      budgetTransactionsV2,
+      refreshBudgetTransactionsV2
     }}>
       {props.children}
     </TransactionContext.Provider>

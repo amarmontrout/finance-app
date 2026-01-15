@@ -29,7 +29,7 @@ export const getIncome = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "income",
     method: "GET",
@@ -128,7 +128,7 @@ export const getExpenses = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "expenses",
     method: "GET",
@@ -221,7 +221,7 @@ export const getBudget = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<BudgetEntryTypeV2>({
     schema: "Transactions",
     table: "budget",
     method: "GET",

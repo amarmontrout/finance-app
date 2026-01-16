@@ -136,7 +136,14 @@ export const CategoryProvider = (props: {
     const yearsResult = await getYearChoices({
       userId: user.id
     })
-    setYearsV2(yearsResult ?? [])
+    if (yearsResult === null) {
+      setYearsV2([])
+      return
+    }
+    const sortedYears = [...yearsResult].sort((a, b) =>
+      Number(b.name) - Number(a.name)
+    )
+    setYearsV2(sortedYears)
     setLoading(false)
   }
 
@@ -150,7 +157,14 @@ export const CategoryProvider = (props: {
     const incomeCategoryResult = await getIncomeCategories({
       userId: user.id
     })
-    setIncomeCategoriesV2(incomeCategoryResult ?? [])
+    if (incomeCategoryResult == null) {
+      setIncomeCategoriesV2([])
+      return
+    }
+    const sortedIncomeCategories = [...incomeCategoryResult].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    )
+    setIncomeCategoriesV2(sortedIncomeCategories)
     setLoading(false)
   }
 
@@ -164,7 +178,14 @@ export const CategoryProvider = (props: {
     const expenseCategoryResult = await getExpenseCategories({
       userId: user.id
     })
-    setExpenseCategoriesV2(expenseCategoryResult ?? [])
+    if (expenseCategoryResult == null) {
+      setExpenseCategoriesV2([])
+      return
+    }
+    const sortedExpenseCategories = [...expenseCategoryResult].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    )
+    setExpenseCategoriesV2(sortedExpenseCategories)
     setLoading(false)
   }
 
@@ -178,7 +199,14 @@ export const CategoryProvider = (props: {
     const budgetCategoryResult = await getBudgetCategories({
       userId: user.id
     })
-    setBudgetCategoriesV2(budgetCategoryResult ?? [])
+    if (budgetCategoryResult == null) {
+      setBudgetCategoriesV2([])
+      return
+    }
+    const sortedBudgetCategories = [...budgetCategoryResult].sort((a, b) =>
+      a.category.localeCompare(b.category)
+    )
+    setBudgetCategoriesV2(sortedBudgetCategories)
     setLoading(false)
   }
 

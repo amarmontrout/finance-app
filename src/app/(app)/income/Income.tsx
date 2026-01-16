@@ -81,7 +81,7 @@ const Income = () => {
           excludedSet={excludedSet}
         />
 
-        <ShowCaseCard title={"Income V2"}>
+        <ShowCaseCard title={"Income"}>
           <LineChart
             multiColumnData={lineChartData}
             lineColors={lineColors}

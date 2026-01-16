@@ -38,7 +38,7 @@ const IncomeList = ({
 
   return (
     <ShowCaseCard
-      title={`Income for ${selectedMonth} ${selectedYear} V2`} 
+      title={`Income for ${selectedMonth} ${selectedYear}`} 
       secondaryTitle={`$${monthIncome}`}
     >
       <TransactionsList

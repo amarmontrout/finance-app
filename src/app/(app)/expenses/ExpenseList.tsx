@@ -38,7 +38,7 @@ const ExpenseList = ({
 
   return (
     <ShowCaseCard
-      title={`Expenses for ${selectedMonth} ${selectedYear} V2`} 
+      title={`Expenses for ${selectedMonth} ${selectedYear}`} 
       secondaryTitle={`$${monthExpense}`}
     >
       <TransactionsList

@@ -14,7 +14,7 @@ const AddExpenses = ({
   years: ChoiceTypeV2[]
 }) => {
   return (
-    <ShowCaseCard title={"Add Expense V2"}>
+    <ShowCaseCard title={"Add Expense"}>
       <TransactionForm
         categories={expenseCategories}
         type={expenses}

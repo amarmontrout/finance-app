@@ -1,20 +1,31 @@
+import { saveYearChoice } from "@/app/api/Choices/requests"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { YEARS_KEY } from "@/globals/globals"
-import { saveChoices } from "@/utils/choiceStorage"
+import { useUser } from "@/hooks/useUser"
+import { makeId } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
 const AddYear = () => {
-  const {
-    refreshYearChoices,
-    years,
-    isMockData,
-  } = useCategoryContext()
+  const { refreshYearChoicesV2, yearsV2 } = useCategoryContext()
+  const user = useUser()
 
   const [yearsInput, setYearsInput] = useState<string>("")
+
+  const save = async () => {
+    if (!user) return
+    await saveYearChoice({
+      userId: user.id,
+      body: {
+        id: Number(makeId(8)),
+        name: yearsInput
+      }
+    })
+    refreshYearChoicesV2()
+    setYearsInput("")
+  }
 
   return (
     <ShowCaseCard title={"Add Year"}>
@@ -32,13 +43,7 @@ const AddYear = () => {
             (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
               {setYearsInput(e.target.value)}
           }
-          onSubmit={
-            () => {
-              saveChoices({key: YEARS_KEY, choice: yearsInput})
-              refreshYearChoices()
-              setYearsInput("")
-            }
-          }
+          onSubmit={save}
         />
         <hr style={{ width: "100%" }} />
         <Box
@@ -47,9 +52,9 @@ const AddYear = () => {
           paddingRight={"10px"}
         >
           <EditDeleteListItem
-            items={!isMockData.years? years : []}
-            storageKey={YEARS_KEY}
-            refresh={refreshYearChoices}
+            type={"year"}
+            items={yearsV2}
+            refresh={refreshYearChoicesV2}
           />
         </Box>
       </Box>

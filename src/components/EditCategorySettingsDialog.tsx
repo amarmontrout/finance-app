@@ -1,6 +1,7 @@
-import { Choice } from "@/contexts/categories-context"
+import { updateExpenseCategory } from "@/app/api/Choices/requests"
 import { darkMode, lightMode } from "@/globals/colors"
-import { updateChoice } from "@/utils/choiceStorage"
+import { useUser } from "@/hooks/useUser"
+import { ChoiceTypeV2 } from "@/utils/type"
 import { 
   Button, 
   Dialog, 
@@ -14,47 +15,67 @@ import {
   Typography
 } from "@mui/material"
 import { useTheme } from "next-themes"
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 const EditCategorySettingsDialog = ({ 
     categoryDialogOpen, 
     setCategoryDialogOpen, 
     choice, 
-    storageKey, 
     refresh 
   }: {
   categoryDialogOpen: boolean
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  choice: Choice
-  storageKey: string
+  choice: ChoiceTypeV2 | null
   refresh: () => void
 }) => {
   const {theme: currentTheme} = useTheme()
+  const user = useUser()
 
-  const [localChoice, setLocalChoice] = React.useState<Choice>(choice)
+  const [localChoice, setLocalChoice] = useState<ChoiceTypeV2 | null>(null)
 
   useEffect(() => {
-    setLocalChoice(choice)
-  }, [choice])
+    if (categoryDialogOpen && choice) {
+      setLocalChoice(choice)
+    }
+  }, [choice, categoryDialogOpen])
 
   const handleChangeRecurring = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setLocalChoice((prev) => ({
-      ...prev,
-      isRecurring: event.target.checked,
-    }))
+    setLocalChoice(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        isRecurring: event.target.checked
+      }  
+    })
   }
 
   
   const handleChangeExclude = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    setLocalChoice((prev) => ({
-      ...prev,
-      isExcluded: event.target.checked,
-    }))
+    setLocalChoice(prev => {
+      if (!prev) return prev
+      return {
+        ...prev,
+        isExcluded: event.target.checked
+      }  
+    })
   }
+
+  const update = async () => {
+    if (!user || !localChoice) return
+    await updateExpenseCategory({
+      userId: user.id,
+      rowId: localChoice.id,
+      body: localChoice
+    })
+    refresh()
+    setCategoryDialogOpen(false)
+  }
+
+  if (!localChoice) return null
 
   return (
     <Dialog open={categoryDialogOpen}>
@@ -82,7 +103,7 @@ const EditCategorySettingsDialog = ({
                 onChange={handleChangeExclude}
               />
             } 
-            label="Exclude from Calculations"
+            label="Exclude"
           />
         </FormGroup>
       </DialogContent>
@@ -91,11 +112,7 @@ const EditCategorySettingsDialog = ({
         <Stack direction={"row"} gap={1} justifyContent={"right"}>
           <Button 
             variant={"contained"} 
-            onClick={() => {
-              updateChoice(storageKey, localChoice)
-              refresh()
-              setCategoryDialogOpen(false)
-            }}
+            onClick={update}
             sx={{
               backgroundColor: currentTheme === "light" 
                 ? [lightMode.success] 
@@ -109,6 +126,7 @@ const EditCategorySettingsDialog = ({
             variant={"contained"}
             onClick={() => {
               setCategoryDialogOpen(false)
+              setLocalChoice(null)
             }}
             sx={{
               backgroundColor: currentTheme === "light" 

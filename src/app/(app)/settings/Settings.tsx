@@ -1,89 +1,34 @@
 "use client"
 
-import { 
-  BUDGET_CATEGORIES_KEY,
-  BUDGET_KEY,
-  EXPENSE_CATEGORIES_KEY, 
-  EXPENSES, 
-  INCOME, 
-  INCOME_CATEGORIES_KEY, 
-  YEARS_KEY 
-} from "@/globals/globals"
-import { Box, Button, Stack } from "@mui/material"
+import { Box } from "@mui/material"
 import { useState } from "react"
-import { accentColorSecondary } from "@/globals/colors"
 import { useTheme } from "next-themes"
-import FileUploadDialog from "./FileUploadDialog"
-import { saveData } from "@/utils/appDataStorage"
-import { Choice, useCategoryContext } from "@/contexts/categories-context"
+import { useCategoryContext } from "@/contexts/categories-context"
 import EditCategorySettingsDialog from "@/components/EditCategorySettingsDialog"
 import AddYear from "./AddYear"
 import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
 import EditBudgetDialog from "./EditBudgetDialog"
-import { BudgetCategoryType } from "@/contexts/budget-context"
-
-const CHOICE_INIT = {
-  name: "", 
-  isExcluded: false, 
-  isRecurring: false
-}
+import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
 
 const Settings = () => {
-  const { refreshExpenseCategoryChoices } = useCategoryContext()
+  const { refreshExpenseCategoryChoicesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
 
-  const [choice, setChoice] = useState<Choice>(CHOICE_INIT)
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+  const [choice, setChoice] = useState<ChoiceTypeV2 | null>(null)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
   const [budgetEditDialogOpen, setBudgetEditDialogOpen] = 
     useState<boolean>(false)
   const [confirmSelection, setConfirmSelection] = 
-    useState<BudgetCategoryType | null>(null)
+    useState<BudgetTypeV2 | null>(null)
   const [confirmEdit, setConfirmEdit] = 
-    useState<BudgetCategoryType | null>(null)
+    useState<BudgetTypeV2 | null>(null)
 
   return (
     <Box
       className="flex flex-col gap-2 h-full"
     >
-      <Stack direction={"row"} gap={1} width={"fit-content"}>
-        <Button 
-          variant="contained"
-          sx={{
-            backgroundColor: accentColorSecondary
-          }}
-          onClick={
-            () => {
-              saveData({keys: [
-                YEARS_KEY,
-                INCOME,
-                INCOME_CATEGORIES_KEY,
-                EXPENSES,
-                EXPENSE_CATEGORIES_KEY,
-                BUDGET_KEY,
-                BUDGET_CATEGORIES_KEY
-              ]})
-            }
-          }
-        >
-            Download Data
-        </Button>
-
-        <Button 
-          variant="contained"
-          sx={{
-            backgroundColor: accentColorSecondary
-          }}
-          onClick={
-            () => {setDialogOpen(true)}
-          }
-        >
-            Upload Data
-        </Button>
-      </Stack>
-
       <Box
         className="flex flex-col xl:flex-row gap-2 h-full"
       >
@@ -108,18 +53,11 @@ const Settings = () => {
         />
       </Box>
 
-      <FileUploadDialog
-        dialogOpen={dialogOpen}
-        currentTheme={currentTheme}
-        setDialogOpen={setDialogOpen}
-      />
-
       <EditCategorySettingsDialog
         categoryDialogOpen={categoryDialogOpen}
         setCategoryDialogOpen={setCategoryDialogOpen}
         choice={choice}
-        storageKey={EXPENSE_CATEGORIES_KEY}
-        refresh={refreshExpenseCategoryChoices}
+        refresh={refreshExpenseCategoryChoicesV2}
       />
 
       <EditBudgetDialog

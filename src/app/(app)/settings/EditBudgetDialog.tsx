@@ -1,8 +1,9 @@
-import MoneyInput from "@/components/MoneyInput"
-import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
+import { updateBudgetCategory } from "@/app/api/Choices/requests"
+import { MoneyInputV2 } from "@/components/MoneyInput"
+import { useCategoryContext } from "@/contexts/categories-context"
 import { lightMode, darkMode } from "@/globals/colors"
-import { BUDGET_CATEGORIES_KEY } from "@/globals/globals"
-import { updateBudgetCategories } from "@/utils/budgetStorage"
+import { useUser } from "@/hooks/useUser"
+import { BudgetTypeV2 } from "@/utils/type"
 import { 
   Dialog, 
   DialogTitle, 
@@ -13,9 +14,10 @@ import {
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
-  const UPDATE_BUDGET_INIT: BudgetCategoryType = {
+  const UPDATE_BUDGET_INIT: BudgetTypeV2 = {
+    id: 0,
     category: "",
-    amount: ""
+    amount: 0,
   }
 
 const EditBudgetDialog = ({
@@ -26,33 +28,32 @@ const EditBudgetDialog = ({
 }: {
   budgetEditDialogOpen: boolean
   setBudgetEditDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  confirmEdit: BudgetCategoryType | null
+  confirmEdit: BudgetTypeV2 | null
   currentTheme: string | undefined
 }) => {
+  const { refreshBudgetCategoryChoicesV2 } = useCategoryContext()
+  const user = useUser()
 
-  const { refreshBudgetCategories } = useBudgetContext()
-
-  const [updateBudget, setUpdateBudget] = 
-    useState<BudgetCategoryType>(confirmEdit? confirmEdit : UPDATE_BUDGET_INIT)
+  const [updateBudget, setUpdateBudget] =
+    useState<BudgetTypeV2>(UPDATE_BUDGET_INIT)
 
   useEffect(() => {
     if (!confirmEdit) return
-
-    setUpdateBudget({
-      category: confirmEdit.category,
-      amount: confirmEdit.amount,
-    })
+    setUpdateBudget(confirmEdit)
   }, [confirmEdit])
 
-  const handleUpdateBudgetData = () => {
-    updateBudgetCategories(
-      BUDGET_CATEGORIES_KEY,
-      updateBudget
-    )
-    setBudgetEditDialogOpen(false)
-    refreshBudgetCategories()
-  }
+  const handleUpdateBudgetData = async () => {
+    if (!user || !updateBudget || !confirmEdit) return
 
+    await updateBudgetCategory({
+      userId: user.id,
+      rowId: confirmEdit.id,
+      body: updateBudget
+    })
+    setBudgetEditDialogOpen(false)
+    refreshBudgetCategoryChoicesV2()
+  }
+  if (!updateBudget) return null
   return (
     <Dialog open={budgetEditDialogOpen}>
       <DialogTitle>
@@ -61,7 +62,7 @@ const EditBudgetDialog = ({
 
       <DialogContent>
         <Box padding={"10px"}>
-          <MoneyInput
+          <MoneyInputV2
             value={updateBudget.amount}
             setValue={setUpdateBudget}
           />

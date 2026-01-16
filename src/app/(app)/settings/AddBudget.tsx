@@ -22,11 +22,18 @@ import {
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
 import { saveBudgetCategories } from "@/utils/budgetStorage"
-import MoneyInput from "@/components/MoneyInput"
+import MoneyInput, { MoneyInputV2 } from "@/components/MoneyInput"
+import { BudgetTypeV2 } from "@/utils/type"
+import { makeId } from "@/utils/helperFunctions"
+import { useTransactionContext } from "@/contexts/transactions-context"
+import { useCategoryContext } from "@/contexts/categories-context"
+import { deleteBudgetCategory, saveBudgetCategory } from "@/app/api/Choices/requests"
+import { useUser } from "@/hooks/useUser"
 
-const BUDGET_INIT: BudgetCategoryType = {
+const BUDGET_INIT: BudgetTypeV2 = {
+  id: Number(makeId(8)),
   category: "",
-  amount: ""
+  amount: 0
 }
 
 const AddBudget = ({ 
@@ -35,16 +42,17 @@ const AddBudget = ({
   setBudgetEditDialogOpen,
   setConfirmEdit
 }: { 
-  confirmSelection: BudgetCategoryType | null
-  setConfirmSelection: React.Dispatch<React.SetStateAction<BudgetCategoryType | null>>
+  confirmSelection: BudgetTypeV2 | null
+  setConfirmSelection: React.Dispatch<React.SetStateAction<BudgetTypeV2 | null>>
   setBudgetEditDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setConfirmEdit: React.Dispatch<React.SetStateAction<BudgetCategoryType | null>>
+  setConfirmEdit: React.Dispatch<React.SetStateAction<BudgetTypeV2 | null>>
 }) => {
-  const {budgetCategories, refreshBudgetCategories} = useBudgetContext()
+  const { budgetCategoriesV2, refreshBudgetCategoryChoicesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
+  const user = useUser()
 
   const [budgetCategory, setBudgetCategory] = 
-    useState<BudgetCategoryType>(BUDGET_INIT)
+    useState<BudgetTypeV2>(BUDGET_INIT)
 
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
@@ -63,33 +71,28 @@ const AddBudget = ({
     setBudgetCategory(BUDGET_INIT)
   }
 
-  const save = () => {
-    saveBudgetCategories({
-      key: BUDGET_CATEGORIES_KEY, 
-      budgetCategory: budgetCategory
+  const save = async () => {
+    if (!user) return
+    await saveBudgetCategory({
+      userId: user.id,
+      body: budgetCategory
     })
-    refreshBudgetCategories()
+    refreshBudgetCategoryChoicesV2()
     resetFormData()
   }
 
-  const handleDeleteItem = () => {
-    const newBudgetList = budgetCategories.filter(
-      (selection) => {return selection.category !== confirmSelection?.category}
-    )
-
-    saveBudgetCategories({
-      key: BUDGET_CATEGORIES_KEY, 
-      updatedCategories: newBudgetList
+  const handleDeleteItem = async () => {
+    if (!user || !confirmSelection) return
+    await deleteBudgetCategory({
+      userId: user.id,
+      rowId: confirmSelection.id
     })
-    refreshBudgetCategories()
+    refreshBudgetCategoryChoicesV2()
   }
 
-  const EditDeleteButton = (props: {
-    selection: BudgetCategoryType
+  const EditDeleteButton = ({ selection }: {
+    selection: BudgetTypeV2
   }) => {
-
-    const { selection } = props
-
     return (
       <Stack direction={"row"} gap={2}>
         {
@@ -170,7 +173,7 @@ const AddBudget = ({
               />
           </FormControl>
 
-          <MoneyInput
+          <MoneyInputV2
             value={budgetCategory.amount}
             setValue={setBudgetCategory}
           />
@@ -179,7 +182,7 @@ const AddBudget = ({
             variant={"contained"} 
             disabled={
               budgetCategory.category === ""
-              || budgetCategory.amount === ""
+              || budgetCategory.amount === 0
             }
             onClick={save}
             sx={{
@@ -197,8 +200,8 @@ const AddBudget = ({
           overflow={"auto"}
         >
           <List className="flex flex-col gap-2">
-            { budgetCategories &&
-              (budgetCategories).map((budget) => {                 
+            { budgetCategoriesV2 &&
+              (budgetCategoriesV2).map((budget) => {                 
                 return (
                   <ListItem
                     key={budget.category} 

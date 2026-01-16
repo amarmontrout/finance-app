@@ -7,48 +7,71 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CancelIcon from '@mui/icons-material/Cancel';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from "react";
-import { saveChoices } from "@/utils/choiceStorage";
-import { EXPENSE_CATEGORIES_KEY } from "@/globals/globals";
-import { Choice } from "@/contexts/categories-context";
+import { ChoiceTypeV2 } from "@/utils/type";
+import { 
+  deleteBudgetCategory, 
+  deleteExpenseCategory, 
+  deleteIncomeCategory, 
+  deleteYearChoice 
+} from "@/app/api/Choices/requests";
+import { useUser } from "@/hooks/useUser";
 
-const EditDeleteListItem = ({ 
+const EditDeleteListItem = ({
+    type, 
     items,
-    storageKey,
     refresh,
     setCategoryDialogOpen,
     setChoice
   }: {
-    items: Choice[]
-    storageKey: string
+    type: "year" | "income" | "expense" | "budget"
+    items: ChoiceTypeV2[]
     refresh: () => void
     setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
-    setChoice?: React.Dispatch<React.SetStateAction<Choice>>
+    setChoice?: React.Dispatch<React.SetStateAction<ChoiceTypeV2 | null>>
   }) => {    
   const { theme: currentTheme } = useTheme()
+  const user = useUser()
   
-  const [confirmSelection, setConfirmSelection] = useState<string | null>(null)
+  const [confirmSelection, setConfirmSelection] = useState<number | null>(null)
 
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg
 
-  const handleDeleteItem = () => {
-    const newItemList = items.filter(
-      (selection) => {return selection.name !== confirmSelection}
-    )
-    saveChoices({key: storageKey, choiceArray: newItemList})
+  const handleDeleteItem = async () => {
+    if (!user || !confirmSelection) return
+
+    if (type === "year") {
+      await deleteYearChoice({
+        userId: user.id,
+        rowId: confirmSelection
+      })
+    } else if (type === "income") {
+      await deleteIncomeCategory({
+        userId: user.id,
+        rowId: confirmSelection
+      })
+    } else if (type === "expense") {
+      await deleteExpenseCategory({
+        userId: user.id,
+        rowId: confirmSelection
+      })
+    } else if (type === "budget") {
+      await deleteBudgetCategory({
+        userId: user.id,
+        rowId: confirmSelection
+      })
+    }
     refresh()
+    setConfirmSelection(null)
   }
 
-  const EditDeleteButton = (props: {
-    selection: Choice
+  const EditDeleteButton = ({ selection }: {
+    selection: ChoiceTypeV2
   }) => {
-
-    const { selection } = props
-
     return (
       <Stack direction={"row"} gap={2}>
-        {storageKey === EXPENSE_CATEGORIES_KEY &&
+        {type === "expense" &&
           <IconButton 
             edge="end"
             onClick={
@@ -68,7 +91,7 @@ const EditDeleteListItem = ({
           edge="end"
           onClick={
             () => {
-              setConfirmSelection(selection.name)
+              setConfirmSelection(selection.id)
             }
           }
         >
@@ -83,11 +106,7 @@ const EditDeleteListItem = ({
       <Stack direction={"row"} gap={2}>
         <IconButton 
           edge="end"
-          onClick={
-            () => {
-              handleDeleteItem()
-            }
-          }
+          onClick={handleDeleteItem}
         >
           <DeleteIcon/>
         </IconButton>
@@ -114,7 +133,7 @@ const EditDeleteListItem = ({
             <ListItem
               key={item.name} 
               secondaryAction={
-                confirmSelection === item.name
+                confirmSelection === item.id
                 ? <ConfirmCancel/> 
                 : <EditDeleteButton selection={item}/>
               }

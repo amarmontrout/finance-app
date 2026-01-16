@@ -1,7 +1,5 @@
-import { Choice } from "@/contexts/categories-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { EXPENSES, INCOME } from "@/globals/globals"
-import { saveTransaction, TransactionData } from "@/utils/transactionStorage"
 import { 
   Dialog, 
   DialogTitle, 
@@ -16,13 +14,10 @@ import {
   DialogContent
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import MoneyInput from "./MoneyInput"
-
-type UpdateTransactionType = {
-  id: string
-  category: string,
-  amount: string
-}
+import { MoneyInputV2 } from "./MoneyInput"
+import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { updateExpense, updateIncome } from "@/app/api/Transactions/requests"
+import { useUser } from "@/hooks/useUser"
 
 const EditTransactionDetailDialog = ({
     openEditDialog,
@@ -40,40 +35,43 @@ const EditTransactionDetailDialog = ({
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   type: string
-  selectedId: string,
-  transactions: TransactionData
-  categories: Choice[]
+  selectedId: number | null,
+  transactions: TransactionTypeV2[]
+  categories: ChoiceTypeV2[]
   currentTheme: string | undefined
   selectedYear: string
   selectedMonth: string
   refreshIncomeTransactions?: () => void
   refreshExpenseTransactions?: () => void
-}) => {
-  const UPDATE_TRANSACTION_INIT: UpdateTransactionType = {
-    id: "",
-    category: categories[0].name,
-    amount: ""
+}) => { 
+  const UPDATE_TRANSACTION_INIT = {
+    id: 0,
+    month: selectedMonth,
+    year: Number(selectedYear),
+    category: "",
+    amount: 0
   }
- 
+
+  const user = useUser()
+
   const [updateTransaction, setUpdateTransaction] = 
-    useState<UpdateTransactionType>(UPDATE_TRANSACTION_INIT)
+    useState<TransactionTypeV2>(UPDATE_TRANSACTION_INIT)
 
   useEffect(() => {
     if (!selectedId || !selectedYear || !selectedMonth) return
 
-    const transaction =
-      transactions?.[selectedYear]?.[selectedMonth]?.find(
-        (detail) => detail.id === selectedId
-      )
+    const transaction = transactions.find(t => t.id === selectedId)
 
     if (!transaction) return
 
     setUpdateTransaction({
       id: transaction.id,
+      month: selectedMonth,
+      year: Number(selectedYear),
       category: transaction.category,
       amount: transaction.amount,
     })
-  }, [selectedId, selectedYear, selectedMonth, transactions])
+  }, [selectedId, transactions])
 
   const handleCategory = (e: SelectChangeEvent) => {
     const { value } = e.target
@@ -84,36 +82,28 @@ const EditTransactionDetailDialog = ({
     }));
   }
 
-  const handleUpdateTransactionData = () => {
-    if (!selectedYear || !selectedMonth || !selectedId) return
-
-    const updatedTransactions: TransactionData = {
-      ...transactions,
-      [selectedYear]: {
-        ...transactions[selectedYear],
-        [selectedMonth]: transactions[selectedYear][selectedMonth].map(
-          (detail) =>
-            detail.id === selectedId
-              ? {
-                  ...detail,
-                  category: updateTransaction.category,
-                  amount: updateTransaction.amount,
-                }
-              : detail
-        ),
-      },
-    }
-
-    saveTransaction({key: type, updatedTransactionData: updatedTransactions})
-    setOpenEditDialog(false)
-
+  const handleUpdateTransactionData = async () => {
+    if (!selectedYear || !selectedMonth || !selectedId || !user) return
     if (type === INCOME) {
+      await updateIncome({
+        userId: user.id,
+        rowId: selectedId,
+        body: updateTransaction
+
+      })
       if (refreshIncomeTransactions) 
         refreshIncomeTransactions()
     } else if (type === EXPENSES) {
+      await updateExpense({
+        userId: user.id,
+        rowId: selectedId,
+        body: updateTransaction
+
+      })
       if (refreshExpenseTransactions)
         refreshExpenseTransactions()
     }
+    setOpenEditDialog(false)
   }
 
   return (
@@ -148,7 +138,7 @@ const EditTransactionDetailDialog = ({
             </Select>
           </FormControl>
 
-          <MoneyInput
+          <MoneyInputV2
             value={updateTransaction.amount}
             setValue={setUpdateTransaction}
             smallWidthBp={"sm"}

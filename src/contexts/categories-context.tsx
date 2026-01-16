@@ -1,3 +1,4 @@
+import { getBudgetCategories, getExpenseCategories, getIncomeCategories, getYearChoices } from "@/app/api/Choices/requests"
 import { 
   EXPENSE_CATEGORIES_KEY, 
   INCOME_CATEGORIES_KEY, 
@@ -8,8 +9,10 @@ import {
   mockIncomeCategories,
   mockYears 
 } from "@/globals/mockData"
+import { useUser } from "@/hooks/useUser"
 import { getChoices } from "@/utils/choiceStorage"
 import { getExcludedCategorySet } from "@/utils/helperFunctions"
+import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type CategoryContextType = {
@@ -21,6 +24,15 @@ type CategoryContextType = {
   expenseCategories: Choice[]
   isMockData: MockDataType
   excludedSet: Set<string>
+////////////////////////////////////////////////////////////////////////////////
+  yearsV2: ChoiceTypeV2[]
+  refreshYearChoicesV2: () => void
+  incomeCategoriesV2: ChoiceTypeV2[]
+  refreshIncomeCategoryChoicesV2: () => void
+  expenseCategoriesV2: ChoiceTypeV2[]
+  refreshExpenseCategoryChoicesV2: () => void
+  budgetCategoriesV2: BudgetTypeV2[]
+  refreshBudgetCategoryChoicesV2: () => void
 }
 
 type MockDataType = {
@@ -105,6 +117,79 @@ export const CategoryProvider = (props: {
     refreshExpenseCategoryChoices()
   }, [])
 
+////////////////////////////////////////////////////////////////////////////////
+  const user = useUser()
+
+  const [yearsV2, setYearsV2] = useState<ChoiceTypeV2[]>([])
+  const [incomeCategoriesV2, setIncomeCategoriesV2] = useState<ChoiceTypeV2[]>([])
+  const [expenseCategoriesV2, setExpenseCategoriesV2] = useState<ChoiceTypeV2[]>([])
+  const [budgetCategoriesV2, setBudgetCategoriesV2] = useState<BudgetTypeV2[]>([])
+  const [loading, setLoading] = useState(false)
+
+  const refreshYearChoicesV2 = async () => {
+    if (!user) {
+      setYearsV2([])
+      return
+    }
+
+    setLoading(true)
+    const yearsResult = await getYearChoices({
+      userId: user.id
+    })
+    setYearsV2(yearsResult ?? [])
+    setLoading(false)
+  }
+
+  const refreshIncomeCategoryChoicesV2 = async () => {
+    if (!user) {
+      setIncomeCategoriesV2([])
+      return
+    }
+
+    setLoading(true)
+    const incomeCategoryResult = await getIncomeCategories({
+      userId: user.id
+    })
+    setIncomeCategoriesV2(incomeCategoryResult ?? [])
+    setLoading(false)
+  }
+
+  const refreshExpenseCategoryChoicesV2 = async () => {
+    if (!user) {
+      setExpenseCategoriesV2([])
+      return
+    }
+
+    setLoading(true)
+    const expenseCategoryResult = await getExpenseCategories({
+      userId: user.id
+    })
+    setExpenseCategoriesV2(expenseCategoryResult ?? [])
+    setLoading(false)
+  }
+
+  const refreshBudgetCategoryChoicesV2 = async () => {
+    if (!user) {
+      setBudgetCategoriesV2([])
+      return
+    }
+
+    setLoading(true)
+    const budgetCategoryResult = await getBudgetCategories({
+      userId: user.id
+    })
+    setBudgetCategoriesV2(budgetCategoryResult ?? [])
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    refreshYearChoicesV2()
+    refreshIncomeCategoryChoicesV2()
+    refreshExpenseCategoryChoicesV2()
+    refreshBudgetCategoryChoicesV2()
+  }, [user])
+////////////////////////////////////////////////////////////////////////////////
+
   return (
     <CategoryContext.Provider value={{
       years,
@@ -114,7 +199,16 @@ export const CategoryProvider = (props: {
       refreshIncomeCategoryChoices,
       refreshExpenseCategoryChoices,
       isMockData,
-      excludedSet
+      excludedSet,
+////////////////////////////////////////////////////////////////////////////////
+      yearsV2,
+      refreshYearChoicesV2,
+      incomeCategoriesV2,
+      refreshIncomeCategoryChoicesV2,
+      expenseCategoriesV2,
+      refreshExpenseCategoryChoicesV2,
+      budgetCategoriesV2,
+      refreshBudgetCategoryChoicesV2
     }}>
       {props.children}
     </CategoryContext.Provider>

@@ -8,7 +8,7 @@ import {
   Box,
   Divider, 
 } from "@mui/material"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
@@ -19,9 +19,12 @@ import {
   lightMode 
 } from "@/globals/colors"
 import { useTheme } from "next-themes"
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
-import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
-import { saveTransaction, TransactionData } from "@/utils/transactionStorage" 
+import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
+import { formattedStringNumber } from "@/utils/helperFunctions"
+import { TransactionTypeV2 } from "@/utils/type"
+import { deleteExpense, deleteIncome } from "@/app/api/Transactions/requests"
+import { useUser } from "@/hooks/useUser"
+import { MONTHS } from "@/globals/globals"
 
 const TransactionsList = ({
   type, 
@@ -36,79 +39,74 @@ const TransactionsList = ({
   excludedSet
 }: {
   type: "income" | "expenses"
-  transactions: TransactionData
+  transactions: TransactionTypeV2[]
   refreshTransactions: () => void
   selectedMonth: string
   setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
   selectedYear: string
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedId: React.Dispatch<React.SetStateAction<string>>
+  setSelectedId: React.Dispatch<React.SetStateAction<number | null>>
   excludedSet: Set<string>
 }) => {
   const { theme: currentTheme } = useTheme()
+  const user = useUser()
 
-  const [confirmId, setConfirmId] = useState<string | null>(null)
+  const [confirmId, setConfirmId] = useState<number | null>(null)
   
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg
 
   useEffect(() => {
-    if (!transactions || Object.keys(transactions).length === 0) return
-
-    if (transactions[selectedYear]) {
-      setSelectedYear(selectedYear)
-
-      if (transactions[selectedYear][selectedMonth]) {
-        setSelectedMonth(selectedMonth)
-      } else {
-        setSelectedMonth("")
-      }
-    } else {
+    if (!transactions || transactions.length === 0) {
       setSelectedYear("")
       setSelectedMonth("")
+      return
     }
-  }, [transactions])
+    const yearNum = Number(selectedYear)
 
-  const handleDeleteTransaction = (
-    passedYear: string, 
-    passedMonth: string, 
-    passedId: string
+    const years = Array.from(new Set(transactions.map(t => t.year)))
+    const monthsForYear = Array.from(
+      new Set(
+        transactions
+        .filter(t => t.year === yearNum)
+        .map(t => t.month)
+      )
+    ).sort((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
+
+    if (!years.includes(yearNum)) {
+      const newestYear = Math.max(...years)
+      setSelectedYear(newestYear.toString())
+      setSelectedMonth("")
+      return
+    }
+    if (!monthsForYear.includes(selectedMonth)) {
+      setSelectedMonth(monthsForYear[0] ?? "")
+    }
+  }, [transactions, selectedYear, selectedMonth])
+
+  const handleDeleteTransaction = async ( 
+    id: number
   ) => {
-    const updated = structuredClone(transactions)
+    if (!user) return
 
-    if (updated[passedYear] && updated[passedYear][passedMonth]) {
-      updated[passedYear][passedMonth] = 
-        updated[passedYear][passedMonth].filter(
-          (transaction) => transaction.id !== passedId
-        )
-
-      // Remove month if empty
-      if (updated[passedYear][passedMonth].length === 0) {
-        delete updated[passedYear][passedMonth]
-      }
-
-      // Remove year if empty
-      if (Object.keys(updated[passedYear]).length === 0) {
-        delete updated[passedYear]
-      }
-
-      // Check if the **entire object is empty**
-      if (Object.keys(updated).length === 0) {
-        localStorage.removeItem(type) // fully clean
-      } else {
-        saveTransaction({ key: type, updatedTransactionData: updated })
-      }
-
-      refreshTransactions()
-    } else {
-      console.warn("Year or month not found in records.")
+    if (type === "income") {
+      await deleteIncome({
+        userId: user.id,
+        rowId: id
+      })
+    } else if (type === "expenses") {
+      await deleteExpense({
+        userId: user.id,
+        rowId: id
+      })
     }
+    refreshTransactions()
+    setSelectedId(null)
   }
 
-  const EditDeleteButton = (props: {id: string}) => {
-    const { id } = props
+  const EditDeleteButton = ({ id }: {id: number}) => {
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 
@@ -137,8 +135,7 @@ const TransactionsList = ({
     )
   }
 
-  const ConfirmCancel = (props: { id: string }) => {
-    const { id } = props
+  const ConfirmCancel = ({ id }: { id: number }) => {
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 
@@ -147,7 +144,7 @@ const TransactionsList = ({
             () => {
               setConfirmId(null)
               if (!selectedYear || !selectedMonth) return
-              handleDeleteTransaction(selectedYear, selectedMonth, id)
+              handleDeleteTransaction(id)
             }
           }
         >
@@ -169,12 +166,17 @@ const TransactionsList = ({
   }
 
   const YearList = () => {
+    const years = useMemo(() => {
+      return Array.from(
+        new Set(transactions.map(t => t.year))
+      ).sort((a, b) => b - a)
+    }, [transactions])
+
     return (
       <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">
         <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
-          { transactions &&
-            Object.entries(transactions).map(([year, _]) => {
-              const yearTotal = getYearTotal(
+          { years.map((year) => {
+              const yearTotal = getYearTotalV2(
                 year, 
                 transactions,
                 excludedSet
@@ -185,11 +187,11 @@ const TransactionsList = ({
                   className="flex flex-col md:flex-row"
                   key={year} 
                   onClick={() => {
-                    setSelectedYear(year)
+                    setSelectedYear(year.toString())
                     setSelectedMonth("")
                   }} 
                   sx={{ 
-                    backgroundColor: year === selectedYear ?
+                    backgroundColor: year.toString() === selectedYear ?
                       accentColorPrimarySelected 
                       : listItemColor,
                     borderRadius: "15px",
@@ -207,13 +209,24 @@ const TransactionsList = ({
   }
 
   const MonthList = () => {
+    const months = useMemo(() => {
+      if (!selectedYear) return []
+
+      return Array.from(
+        new Set(
+          transactions
+          .filter(t => t.year === Number(selectedYear))
+          .map(t => t.month)
+        )
+      ).sort ((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
+    }, [transactions, selectedYear])
+
     return (
       <Box className="flex-[2]">
         <List className="flex flex-col gap-2">
-          { transactions[selectedYear] &&
-            Object.entries(transactions[selectedYear]).map(([month, _]) => {
-              const monthTotal = getMonthTotal(
-                selectedYear, 
+          { months.map((month) => {
+              const monthTotal = getMonthTotalV2(
+                Number(selectedYear), 
                 month, 
                 transactions,
                 excludedSet
@@ -251,9 +264,12 @@ const TransactionsList = ({
     return (
       <Box className="flex-[3]">
         <List className="flex flex-col gap-2">
-          { transactions[selectedYear] 
-            && transactions[selectedYear][selectedMonth] 
-            && transactions[selectedYear]?.[selectedMonth]?.map((details) => {
+          {transactions.map((details) => {
+            if (
+              String(details.year) !== selectedYear 
+              || details.month !== selectedMonth
+            ) return
+
               return (
                 <ListItem 
                   key={details.id}
@@ -271,9 +287,7 @@ const TransactionsList = ({
                   <ListItemText 
                     primary={`$${
                       formattedStringNumber(
-                        cleanNumber(
-                          details.amount
-                        )
+                        details.amount
                       )
                     }`}
                     secondary={details.category}

@@ -54,6 +54,23 @@ export const getMonthTotal = (
   return formattedStringNumber(total)
 }
 
+export const getMonthTotalV2 = (
+  year: number, 
+  month: string, 
+  transactions: TransactionTypeV2[],
+  excludedCategories: Set<string>
+): string => {
+  let total = 0
+  transactions.map((entry) => {
+    if (entry.year === year && entry.month === month) {
+      if (!excludedCategories.has(entry.category)) {
+        total += entry.amount
+      }
+    }
+  })
+  return formattedStringNumber(total)
+}
+
 export const getAnnualCategoryTotals = (
   year: string,
   transactions: FlatTransaction[]

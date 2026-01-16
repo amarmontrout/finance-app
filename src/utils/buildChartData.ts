@@ -144,7 +144,10 @@ export const buildMultiColumnDataV2 = ({
     const years = Array.from(
       new Set(firstData.map(entry => entry.year))
     ).sort((a, b) => a-b)
-    const selfColumnData: MultiColumnDataType = [[firstColumnTitle, ...years]]
+    const yearStrings = years.map(String)
+    const selfColumnData: MultiColumnDataType = [[
+      firstColumnTitle, ...yearStrings
+    ]]
     for (const month of MONTHS) {
       const row: (string | number)[] = [month]
       for (const year of years) {

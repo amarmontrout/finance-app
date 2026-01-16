@@ -2,19 +2,18 @@
 
 import LineChart from "@/components/LineChart"
 import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
-import { EXPENSE_CATEGORIES_KEY, EXPENSES, YEARS_KEY } from "@/globals/globals"
+import { EXPENSES } from "@/globals/globals"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useMemo } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import 
-  EditTransactionDetailDialog 
+  EditTransactionDetailDialog
 from "@/components/EditTransactionDetailDialog"
-import { buildMultiColumnData } from "@/utils/buildChartData"
+import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { getChoices } from "@/utils/choiceStorage"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import AddExpenses from "./AddExpenses"
@@ -22,10 +21,15 @@ import ExpenseList from "./ExpenseList"
 import ShowCaseCard from "@/components/ShowCaseCard"
 
 const Expenses = () => {
+  const {
+    expenseTransactionsV2,
+    refreshExpenseTransactionsV2
+  } = useTransactionContext()
   const { 
-    expenseTransactions, 
-    refreshExpenseTransactions } = useTransactionContext()
-  const { expenseCategories, years, excludedSet } = useCategoryContext()
+    excludedSet,
+    expenseCategoriesV2,
+    yearsV2
+  } = useCategoryContext()
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -33,22 +37,16 @@ const Expenses = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
-  const [selectedId, setSelectedId] = useState<string>("")
-
-  const hasChoices = useMemo(() => {
-    return (
-      getChoices({ key: YEARS_KEY }).length !== 0 &&
-      getChoices({ key: EXPENSE_CATEGORIES_KEY }).length !== 0
-    )
-  }, [])
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const lineChartData = useMemo(() => {
-    return buildMultiColumnData({
-      firstData: expenseTransactions,
+    return buildMultiColumnDataV2({
+      firstData: expenseTransactionsV2,
       firstColumnTitle: "Month",
-      method: "self"
+      method: "self",
+      excludedSet: excludedSet
     }) ?? []
-  }, [expenseTransactions])
+  }, [expenseTransactionsV2])
 
   const lineColors = currentTheme === "light" 
     ? expenseLinesLight
@@ -58,13 +56,13 @@ const Expenses = () => {
     <FlexColWrapper gap={2}>
       <MockDataWarning pathname={pathname}/>
 
-      {hasChoices &&
-        <Box display={hasChoices? "flex" : "none"}>
+      { expenseCategoriesV2.length !== 0 &&
+        <Box>
           <AddExpenses
-            expenseCategories={expenseCategories}
+            expenseCategories={expenseCategoriesV2}
             expenses={EXPENSES}
-            refreshExpenseTransactions={refreshExpenseTransactions}
-            years={years}
+            refreshExpenseTransactions={refreshExpenseTransactionsV2}
+            years={yearsV2}
           />
         </Box>
       }
@@ -76,13 +74,14 @@ const Expenses = () => {
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
           expenses={EXPENSES}
-          expenseTransactions={expenseTransactions}
-          refreshExpenseTransactions={refreshExpenseTransactions}
+          expenseTransactions={expenseTransactionsV2}
+          refreshExpenseTransactions={refreshExpenseTransactionsV2}
           setOpenEditDialog={setOpenEditDialog}
           setSelectedId={setSelectedId}
           excludedSet={excludedSet}
         />
-        <ShowCaseCard title={"Expenses"}>
+
+        <ShowCaseCard title={"Expenses V2"}>
           <LineChart
             multiColumnData={lineChartData}
             lineColors={ lineColors }
@@ -95,12 +94,12 @@ const Expenses = () => {
         setOpenEditDialog={setOpenEditDialog}
         type={EXPENSES}
         selectedId={selectedId}
-        transactions={expenseTransactions}
-        categories={expenseCategories}
+        transactions={expenseTransactionsV2}
+        categories={expenseCategoriesV2}
         currentTheme={currentTheme}
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
-        refreshExpenseTransactions={refreshExpenseTransactions}
+        refreshExpenseTransactions={refreshExpenseTransactionsV2}
       />
     </FlexColWrapper>
   )

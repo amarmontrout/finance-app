@@ -1,6 +1,6 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionForm from "@/components/TransactionForm"
-import { Choice } from "@/contexts/categories-context"
+import { ChoiceTypeV2 } from "@/utils/type"
 
 const AddExpenses = ({
   expenseCategories,
@@ -8,13 +8,13 @@ const AddExpenses = ({
   refreshExpenseTransactions,
   years
 }: {
-  expenseCategories: Choice[]
+  expenseCategories: ChoiceTypeV2[]
   expenses: "expenses"
   refreshExpenseTransactions: () => void
-  years: Choice[]
+  years: ChoiceTypeV2[]
 }) => {
   return (
-    <ShowCaseCard title={"Add Expense"}>
+    <ShowCaseCard title={"Add Expense V2"}>
       <TransactionForm
         categories={expenseCategories}
         type={expenses}

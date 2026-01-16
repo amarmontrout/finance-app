@@ -1,8 +1,11 @@
-import MoneyInput from "@/components/MoneyInput"
+import { updateBudget } from "@/app/api/Transactions/requests"
+import MoneyInput, { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { BUDGET_KEY } from "@/globals/globals"
+import { useUser } from "@/hooks/useUser"
 import { updateBudgetEntries } from "@/utils/budgetStorage"
+import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
 import { 
   Dialog, 
   DialogTitle, 
@@ -26,26 +29,28 @@ const EditBudgetEntryDialog = ({
   notes,
   budgetCategories,
   selectedEntry,
-  refreshBudgetEntries
+  refreshBudgetTransactions
 }: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   notes: string[]
-  budgetCategories: BudgetCategoryType[]
-  selectedEntry: BudgetEntryType | null
-  refreshBudgetEntries: () => void
+  budgetCategories: BudgetTypeV2[]
+  selectedEntry: BudgetTransactionTypeV2 | null
+  refreshBudgetTransactions: () => void
 }) => {
   const { theme: currentTheme } = useTheme()
+  const user = useUser()
 
-  const BUDGET_ENTRY_INIT: BudgetEntryType = {
+  const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
+    id: 0,
     category: "",
     note: "",
-    amount: "",
+    amount: 0,
     createdAt: 0
   }
 
   const [updatedBudgetEntry, setUpdatedBudgetEntry] = 
-    useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
+    useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
 
   const refreshDialog = () => {
@@ -59,10 +64,23 @@ const EditBudgetEntryDialog = ({
     refreshDialog()
   }, [selectedEntry])
 
+  const update = async () => {
+    if (!user || !selectedEntry) return
+    await updateBudget({
+      userId: user.id,
+      rowId: selectedEntry.id,
+      body: updatedBudgetEntry
+    })
+
+    refreshBudgetTransactions()
+    setOpenEditDialog(false)
+    setNoteValue(null)
+  }
+
   return (
     <Dialog open={openEditDialog}>
       <DialogTitle>
-        {`Edit Budget Entry`}
+        {`Edit Budget Transaction`}
       </DialogTitle>
 
       <DialogContent>
@@ -120,7 +138,7 @@ const EditBudgetEntryDialog = ({
             />
           </FormControl> 
 
-          <MoneyInput
+          <MoneyInputV2
             value={updatedBudgetEntry.amount}
             setValue={setUpdatedBudgetEntry}
           />
@@ -129,16 +147,8 @@ const EditBudgetEntryDialog = ({
 
       <DialogActions>
         <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
-          onClick={() => {
-            updateBudgetEntries(BUDGET_KEY, updatedBudgetEntry)
-            setOpenEditDialog(false)
-            refreshBudgetEntries()
-            refreshDialog()
-          }}
+          variant={"contained"}
+          onClick={update}
           sx={{
             backgroundColor: currentTheme === "light" 
               ? [lightMode.success] 
@@ -149,10 +159,7 @@ const EditBudgetEntryDialog = ({
         </Button>
         
         <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
+          variant={"contained"}
           onClick={() => {
             setOpenEditDialog(false)
             refreshDialog()

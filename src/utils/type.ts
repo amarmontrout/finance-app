@@ -6,7 +6,7 @@ export type TransactionTypeV2 = {
   amount: number
 }
 
-export type BudgetEntryTypeV2 = {
+export type BudgetTransactionTypeV2 = {
   id: number,
   category: string,
   note: string,

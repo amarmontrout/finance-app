@@ -4,7 +4,7 @@ import { mockExpenseData, mockIncomeData } from "@/globals/mockData"
 import { useUser } from "@/hooks/useUser"
 import { flattenTransactions } from "@/utils/helperFunctions"
 import { getTransactions, TransactionData } from "@/utils/transactionStorage"
-import { BudgetEntryTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { BudgetTransactionTypeV2, TransactionTypeV2 } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
@@ -20,7 +20,7 @@ type TransactionsContextType = {
   refreshIncomeTransactionsV2: () => void
   expenseTransactionsV2: TransactionTypeV2[]
   refreshExpenseTransactionsV2: () => void
-  budgetTransactionsV2: BudgetEntryTypeV2[]
+  budgetTransactionsV2: BudgetTransactionTypeV2[]
   refreshBudgetTransactionsV2: () => void
 }
 
@@ -110,7 +110,7 @@ export const TransactionProvider = (props: {
   const [expenseTransactionsV2, setExpenseTransactionsV2] = 
     useState<TransactionTypeV2[]>([])
   const [budgetTransactionsV2, setBudgetTransactionsV2] = 
-    useState<BudgetEntryTypeV2[]>([])
+    useState<BudgetTransactionTypeV2[]>([])
   const [loading, setLoading] = useState(false)
 
   const refreshIncomeTransactionsV2 = async () => {

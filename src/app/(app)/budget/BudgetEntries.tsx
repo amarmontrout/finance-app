@@ -1,10 +1,7 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { BudgetCategoryType, BudgetEntryType } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
-import { BUDGET_KEY } from "@/globals/globals"
-import { getBudgetEntries, saveBudgetEntries } from "@/utils/budgetStorage"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
@@ -24,49 +21,50 @@ import {
   Stack
 } from "@mui/material"
 import Autocomplete from '@mui/material/Autocomplete';
-import { useEffect, useState } from "react"
-import MoneyInput from "@/components/MoneyInput"
+import { useState } from "react"
+import { MoneyInputV2 } from "@/components/MoneyInput"
+import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
+import { makeId } from "@/utils/helperFunctions"
+import { deleteBudget, saveBudget } from "@/app/api/Transactions/requests"
+import { useUser } from "@/hooks/useUser"
 
 const BudgetEntries = ({
   budgetCategories, 
-  refreshBudgetCategories,
-  budgetEntries,
-  refreshBudgetEntries,
+  budgetTransactions,
+  refreshBudgetTransactions,
   notes,
   setOpenEditDialog,
   setSelectedEntry,
   currentTheme,
   week
 }: {
-    budgetCategories: BudgetCategoryType[]
-    refreshBudgetCategories: ()=> void
-    budgetEntries: BudgetEntryType[]
-    refreshBudgetEntries: () => void
+    budgetCategories: BudgetTypeV2[]
+    budgetTransactions: BudgetTransactionTypeV2[]
+    refreshBudgetTransactions: () => void
     notes: string[]
     setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-    setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetEntryType | null>>
+    setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetTransactionTypeV2 | null>>
     currentTheme: string | undefined
     week: "prev" | "current"
 }) => {
-  const BUDGET_ENTRY_INIT: BudgetEntryType = {
+  const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
+    id: Number(makeId(8)),
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
-    amount: "",
+    amount: 0,
     createdAt: 0
   }
+
+  const user = useUser()
   
   const [budgetEntry, setBudgetEntry] = 
-    useState<BudgetEntryType>(BUDGET_ENTRY_INIT)
+    useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
   const [noteId, setNoteId] = useState<number | null>(null)
 
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg
-
-  useEffect(() => {
-    refreshBudgetCategories()
-  }, [])
 
   const handleCategory = (
     e: SelectChangeEvent
@@ -82,30 +80,35 @@ const BudgetEntries = ({
     setBudgetEntry(BUDGET_ENTRY_INIT)
   }
 
-  const save = () => {
-    saveBudgetEntries({
-      key: BUDGET_KEY, 
-      budgetEntry: {
+  const save = async () => {
+    if (!user) return
+    await saveBudget({
+      userId: user.id,
+      body: {
         ...budgetEntry,
         createdAt: Date.now()
-    }})
-    refreshBudgetEntries()
+      }
+    })
+    refreshBudgetTransactions()
     resetFormData()
   }
 
-  const deleteEntry = (id: number) => {
-    const allEntries = getBudgetEntries({ key: BUDGET_KEY })
-    const updatedEntries = allEntries.filter(
-      entry => entry.createdAt !== id
-    )
-    saveBudgetEntries({
-      key: BUDGET_KEY,
-      updatedEntry: updatedEntries
+  const deleteEntry = async (id: number) => {
+    if (!user) return
+    await deleteBudget({
+      userId: user?.id,
+      rowId: id
     })
-    refreshBudgetEntries()
+    refreshBudgetTransactions()
   }
 
-  const EditDeleteButton = ({ id, entry }: {id: number, entry: BudgetEntryType}) => {
+  const EditDeleteButton = ({ 
+    id, 
+    entry 
+  }: {
+    id: number, 
+    entry: BudgetTransactionTypeV2
+  }) => {
     return (
       <Stack direction={"row"} gap={2}>
         <IconButton 
@@ -221,7 +224,7 @@ const BudgetEntries = ({
             />
           </FormControl>  
 
-          <MoneyInput
+          <MoneyInputV2
             value={budgetEntry.amount}
             setValue={setBudgetEntry}
             smallWidthBp={"lg"}
@@ -247,15 +250,15 @@ const BudgetEntries = ({
           overflow={"auto"}
         >
           <List className="flex flex-col gap-2">
-            { budgetEntries &&
-              (budgetEntries).map((entry) => {                 
+            { budgetTransactions &&
+              (budgetTransactions).map((entry) => {                 
                 return (
                   <ListItem
-                    key={`${entry.category}-${entry.note}-${entry.amount}`} 
+                    key={entry.id} 
                     secondaryAction={
-                    noteId === entry.createdAt
-                      ? <ConfirmCancel id={entry.createdAt}/> 
-                      : <EditDeleteButton id={entry.createdAt} entry={entry}/>
+                    noteId === entry.id
+                      ? <ConfirmCancel id={entry.id}/> 
+                      : <EditDeleteButton id={entry.id} entry={entry}/>
                     }
                     sx={{ 
                       backgroundColor: listItemColor,
@@ -263,7 +266,7 @@ const BudgetEntries = ({
                     }}
                   >
                     <ListItemText 
-                      primary={`$${entry.amount} - ${entry.note}`} 
+                      primary={`$${entry.amount.toFixed(2)} - ${entry.note}`} 
                       secondary={entry.category}
                     />
                   </ListItem>

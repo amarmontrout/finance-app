@@ -1,85 +1,75 @@
 "use client"
 
 import { FlexColWrapper } from "@/components/Wrappers"
-import { 
-  BudgetCategoryType, 
-  BudgetEntryType, 
-  useBudgetContext 
-} from "@/contexts/budget-context"
 import { useEffect, useMemo, useState } from "react"
 import RemainingBudget from "./RemainingBudget"
 import BudgetEntries from "./BudgetEntries"
-import { 
-  cleanNumber, 
-  formattedStringNumber,
-  getWeekBounds
-} from "@/utils/helperFunctions"
+import { getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
 import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { useTransactionContext } from "@/contexts/transactions-context"
+import { useCategoryContext } from "@/contexts/categories-context"
+import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
 
 const Budget = () => {
-  const { 
-    budgetCategories, 
-    refreshBudgetCategories,
-    budgetEntries,
-    refreshBudgetEntries
-  } = useBudgetContext()
+  const {
+    budgetTransactionsV2,
+    refreshBudgetTransactionsV2
+  } = useTransactionContext()
+  const { budgetCategoriesV2 } = useCategoryContext()
+
   const { start, end, prevStart, prevEnd } = getWeekBounds()
   const { theme: currentTheme } = useTheme()
 
   const [week, setWeek] = useState<"prev" | "current">("current")
   const [notes, setNotes] = useState<string[]>([])
   const [selectedEntry, setSelectedEntry] = 
-    useState<BudgetEntryType | null>(null)
+    useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
 
   useEffect(() => {
-    refreshBudgetEntries()
-    refreshBudgetCategories()
-  }, [])
-
-  useEffect(() => {
     let notes: string[] = []
-    budgetEntries.map((entry) => {
+    budgetTransactionsV2.map((entry) => {
       if (!notes.includes(entry.note)) {
         notes.push(entry.note)
       }
     })
     setNotes(notes)
-  }, [budgetEntries])
+  }, [budgetTransactionsV2])
 
-  const weeklyEntries = useMemo(() => {
-    return budgetEntries.filter(entry => {
+  const weeklyTransactions = useMemo(() => {
+    return budgetTransactionsV2.filter(entry => {
       if (week === "prev") {
         return entry.createdAt >= prevStart && entry.createdAt <= prevEnd
       }
       
       return entry.createdAt >= start && entry.createdAt <= end
     })
-  }, [budgetEntries, start, end, prevStart, prevEnd, week])
+  }, [budgetTransactionsV2, start, end, prevStart, prevEnd, week])
 
   const remainingBudgetCategories = useMemo(() => {
-    let remaining: BudgetCategoryType[] = []
+    let remaining: BudgetTypeV2[] = []
 
-    budgetCategories.map((category) => {
-      let budget = cleanNumber(category.amount)
+    budgetCategoriesV2.map((category) => {
+      let budget = category.amount
       let total = 0
 
-      weeklyEntries.map((entry) => {
+      weeklyTransactions.map((entry) => {
         if (entry.category === category.category) {
-          total += cleanNumber(entry.amount)
+          total += entry.amount
         }
       })
 
       remaining.push({
+        id: category.id,
         category: category.category, 
-        amount: formattedStringNumber(budget-total)
+        amount: budget-total
       })
     })
 
     return remaining
-  }, [budgetCategories, weeklyEntries])
+  }, [budgetCategoriesV2, weeklyTransactions])
 
   return (
     <FlexColWrapper gap={2}>
@@ -110,10 +100,9 @@ const Budget = () => {
       />
 
       <BudgetEntries
-        budgetCategories={budgetCategories}
-        refreshBudgetCategories={refreshBudgetCategories}
-        budgetEntries={weeklyEntries}
-        refreshBudgetEntries={refreshBudgetEntries}
+        budgetCategories={budgetCategoriesV2}
+        budgetTransactions={weeklyTransactions}
+        refreshBudgetTransactions={refreshBudgetTransactionsV2}
         notes={notes}
         setOpenEditDialog={setOpenEditDialog}
         setSelectedEntry={setSelectedEntry}
@@ -125,9 +114,9 @@ const Budget = () => {
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
         notes={notes}
-        budgetCategories={budgetCategories}
+        budgetCategories={budgetCategoriesV2}
         selectedEntry={selectedEntry}
-        refreshBudgetEntries={refreshBudgetEntries}
+        refreshBudgetTransactions={refreshBudgetTransactionsV2}
       />
     </FlexColWrapper>
   )

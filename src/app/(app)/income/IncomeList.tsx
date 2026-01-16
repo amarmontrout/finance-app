@@ -1,7 +1,7 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
-import { getMonthTotal } from "@/utils/getTotals"
-import { TransactionData } from "@/utils/transactionStorage"
+import { getMonthTotalV2 } from "@/utils/getTotals"
+import { TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
 
 const IncomeList = ({
@@ -21,24 +21,24 @@ const IncomeList = ({
   selectedYear: string
   setSelectedYear: React.Dispatch<React.SetStateAction<string>>
   income: "income" | "expenses"
-  incomeTransactions: TransactionData
+  incomeTransactions: TransactionTypeV2[]
   refreshIncomeTransactions: () => void
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedId: React.Dispatch<React.SetStateAction<string>>
+  setSelectedId: React.Dispatch<React.SetStateAction<number | null>>
   excludedSet: Set<string>
 }) => {
-    const monthIncome = useMemo(() => {
-      return getMonthTotal(
-        selectedYear, 
-        selectedMonth, 
-        incomeTransactions, 
-        excludedSet
-      )
-    }, [selectedYear, selectedMonth, incomeTransactions])
+  const monthIncome = useMemo(() => {
+    return getMonthTotalV2(
+      Number(selectedYear), 
+      selectedMonth, 
+      incomeTransactions, 
+      excludedSet
+    )
+  }, [selectedYear, selectedMonth, incomeTransactions])
 
   return (
     <ShowCaseCard
-      title={`Income for ${selectedMonth} ${selectedYear}`} 
+      title={`Income for ${selectedMonth} ${selectedYear} V2`} 
       secondaryTitle={`$${monthIncome}`}
     >
       <TransactionsList

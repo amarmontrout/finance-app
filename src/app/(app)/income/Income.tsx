@@ -9,9 +9,8 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
-import { INCOME, INCOME_CATEGORIES_KEY, YEARS_KEY } from "@/globals/globals"
-import { buildMultiColumnData } from "@/utils/buildChartData"
-import { getChoices } from "@/utils/choiceStorage"
+import { INCOME } from "@/globals/globals"
+import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
@@ -22,11 +21,15 @@ import IncomeList from "./IncomeList"
 import ShowCaseCard from "@/components/ShowCaseCard"
 
 const Income = () => {
-  const { 
-    incomeTransactions, 
-    refreshIncomeTransactions,
+  const {
+    incomeTransactionsV2,
+    refreshIncomeTransactionsV2
   } = useTransactionContext()
-  const { incomeCategories, years, excludedSet } = useCategoryContext()
+  const {
+    excludedSet,
+    incomeCategoriesV2,
+    yearsV2
+  } = useCategoryContext()
   const pathname = usePathname()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -34,22 +37,16 @@ const Income = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
-  const [selectedId, setSelectedId] = useState<string>("")
-
-  const hasChoices = useMemo(() => {
-    return (
-      getChoices({ key: YEARS_KEY }).length !== 0 &&
-      getChoices({ key: INCOME_CATEGORIES_KEY }).length !== 0
-    )
-  }, [])
+  const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const lineChartData = useMemo(() => {
-    return buildMultiColumnData({
-      firstData: incomeTransactions,
+    return buildMultiColumnDataV2({
+      firstData: incomeTransactionsV2,
       firstColumnTitle: "Month",
-      method: "self"
-    }) ?? []
-  }, [incomeTransactions])
+      method: "self",
+      excludedSet: excludedSet
+    })
+  }, [incomeTransactionsV2])
 
   const lineColors = currentTheme === "light" 
     ? incomeLinesLight
@@ -59,13 +56,13 @@ const Income = () => {
     <FlexColWrapper gap={2}>
       <MockDataWarning pathname={pathname}/>
 
-      {hasChoices &&
+      {incomeCategoriesV2.length !== 0 &&
         <Box>
           <AddIncome
-            incomeCategories={incomeCategories}
+            incomeCategories={incomeCategoriesV2}
             income={INCOME}
-            refreshIncomeTransactions={refreshIncomeTransactions}
-            years={years}
+            refreshIncomeTransactions={refreshIncomeTransactionsV2}
+            years={yearsV2}
           />
         </Box>
       }
@@ -77,16 +74,17 @@ const Income = () => {
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
           income={INCOME}
-          incomeTransactions={incomeTransactions}
-          refreshIncomeTransactions={refreshIncomeTransactions}
+          incomeTransactions={incomeTransactionsV2}
+          refreshIncomeTransactions={refreshIncomeTransactionsV2}
           setOpenEditDialog={setOpenEditDialog}
           setSelectedId={setSelectedId}
           excludedSet={excludedSet}
         />
-        <ShowCaseCard title={"Income"}>
+
+        <ShowCaseCard title={"Income V2"}>
           <LineChart
             multiColumnData={lineChartData}
-            lineColors={ lineColors }
+            lineColors={lineColors}
           />
         </ShowCaseCard>
       </FlexColWrapper>
@@ -96,12 +94,12 @@ const Income = () => {
         setOpenEditDialog={setOpenEditDialog}
         type={INCOME}
         selectedId={selectedId}
-        transactions={incomeTransactions}
-        categories={incomeCategories}
+        transactions={incomeTransactionsV2}
+        categories={incomeCategoriesV2}
         currentTheme={currentTheme}
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
-        refreshIncomeTransactions={refreshIncomeTransactions}
+        refreshIncomeTransactions={refreshIncomeTransactionsV2}
       />
     </FlexColWrapper>
   )

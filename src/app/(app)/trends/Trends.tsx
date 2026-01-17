@@ -4,15 +4,14 @@ import MockDataWarning from "@/components/MockDataWarning"
 import AverageExpenses from "./AverageExpenses"
 import { FlexColWrapper } from "@/components/Wrappers"
 import Projections from "./Projections"
-import ExpectedSpending from "./ExpectedSpending"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useTheme } from "next-themes"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 
 const Trends =() => {
-  const { flatExpenseTransactions } = useTransactionContext()
-  const { expenseCategories, excludedSet } = useCategoryContext()
+  const { expenseTransactionsV2 } = useTransactionContext()
+  const { excludedSet, expenseCategoriesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   
@@ -21,28 +20,21 @@ const Trends =() => {
       <MockDataWarning/>
 
       <AverageExpenses
-        flatExpenseTransactions={flatExpenseTransactions}
-        expenseCategories={expenseCategories}
+        expenseTransactions={expenseTransactionsV2}
+        expenseCategories={expenseCategoriesV2}
         currentTheme={currentTheme}
         currentYear={currentYear}
         currentMonth={currentMonth}
       />
 
       <Projections
-        flatExpenseTransactions={flatExpenseTransactions}
+        expenseTransactions={expenseTransactionsV2}
         currentTheme={currentTheme}
-        expenseCategories={expenseCategories}
+        expenseCategories={expenseCategoriesV2}
         excludedSet={excludedSet}
         currentYear={currentYear}
         currentMonth={currentMonth}  
       />
-
-      {/* <ExpectedSpending
-        flatExpenseTransactions={flatExpenseTransactions}
-        expenseCategories={expenseCategories}
-        currentYear={currentYear}
-        currentMonth={currentMonth}
-      /> */}
     </FlexColWrapper>
   )
 }

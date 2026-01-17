@@ -3,16 +3,11 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
-import { Choice } from "@/contexts/categories-context"
-import { FlatTransaction } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
-import { 
-  cleanNumber, 
-  formattedStringNumber,
-  getCardColor
-} from "@/utils/helperFunctions"
+import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
+import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
 import { 
   Box, 
   Divider, 
@@ -24,16 +19,16 @@ import {
 import { useMemo, useState } from "react"
 
 const Projections = ({
-  flatExpenseTransactions,
+  expenseTransactions,
   currentTheme,
   expenseCategories,
   excludedSet,
   currentYear,
   currentMonth
 }: {
-  flatExpenseTransactions: FlatTransaction[]
+  expenseTransactions: TransactionTypeV2[]
   currentTheme: string | undefined
-  expenseCategories: Choice[]
+  expenseCategories: ChoiceTypeV2[]
   excludedSet: Set<string>
   currentYear: string
   currentMonth: string
@@ -45,9 +40,9 @@ const Projections = ({
   const annualProjectionPerCategory = useMemo(() => {
     const passedMonths = MONTHS.indexOf(currentMonth) + 1
     const projectionMap = new Map<string, number>()
-    const relevantTransactions = flatExpenseTransactions.filter((t) => {
+    const relevantTransactions = expenseTransactions.filter((t) => {
       return (
-        t.year === currentYear &&
+        t.year === Number(currentYear) &&
         MONTHS.indexOf(t.month) + 1 <= passedMonths
       )
     })
@@ -56,8 +51,8 @@ const Projections = ({
       let total = 0
       for (const t of relevantTransactions) {
         if (t.category !== category.name) continue
-        if (t.year !== currentYear) continue
-        total += cleanNumber(t.amount)
+        if (t.year !== Number(currentYear)) continue
+        total += t.amount
       }
       const projectedValue = category.isRecurring
         ? getAnnualProjection(total, passedMonths)
@@ -69,7 +64,7 @@ const Projections = ({
     }
 
     return projectionMap
-  }, [expenseCategories, flatExpenseTransactions, currentYear, currentMonth])
+  }, [expenseCategories, expenseTransactions, currentYear, currentMonth])
 
   const totalProj = useMemo(() => {
     let total = 0

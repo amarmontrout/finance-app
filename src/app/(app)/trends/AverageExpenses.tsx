@@ -2,24 +2,23 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
-import { Choice } from "@/contexts/categories-context"
-import { FlatTransaction } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage } from "@/utils/financialFunctions"
-import { cleanNumber, formattedStringNumber } from "@/utils/helperFunctions"
+import { formattedStringNumber } from "@/utils/helperFunctions"
+import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
 import { Typography } from "@mui/material"
 import { useMemo } from "react"
 
 const AverageExpenses = ({
-  flatExpenseTransactions,
+  expenseTransactions,
   expenseCategories,
   currentTheme,
   currentYear,
   currentMonth
 }: {
-  flatExpenseTransactions: FlatTransaction[]
-  expenseCategories: Choice[]
+  expenseTransactions: TransactionTypeV2[]
+  expenseCategories: ChoiceTypeV2[]
   currentTheme: string | undefined
   currentYear: string
   currentMonth: string
@@ -40,14 +39,14 @@ const AverageExpenses = ({
     expenseCategories.forEach((category) => {
       // ---- CURRENT YEAR ----
       const currentMonthTotals: Record<string, number> = {}
-      flatExpenseTransactions.forEach((t) => {
+      expenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
-          t.year === currentYear &&
+          t.year === Number(currentYear) &&
           MONTHS.indexOf(t.month) + 1 <= passedMonths
         ) {
           currentMonthTotals[t.month] =
-            (currentMonthTotals[t.month] ?? 0) + cleanNumber(t.amount)
+            (currentMonthTotals[t.month] ?? 0) + t.amount
         }
       })
       const currentAmounts = MONTHS
@@ -57,13 +56,13 @@ const AverageExpenses = ({
 
       // ---- PREVIOUS YEAR ----
       const prevMonthTotals: Record<string, number> = {}
-      flatExpenseTransactions.forEach((t) => {
+      expenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
           Number(t.year) === Number(currentYear) - 1
         ) {
           prevMonthTotals[t.month] =
-            (prevMonthTotals[t.month] ?? 0) + cleanNumber(t.amount)
+            (prevMonthTotals[t.month] ?? 0) + t.amount
         }
       })
       const prevAmounts = MONTHS.map(
@@ -77,7 +76,7 @@ const AverageExpenses = ({
     })
 
     return { currentAvg, prevAvg, percentChangeAvg }
-  }, [flatExpenseTransactions, expenseCategories, currentYear, currentMonth])
+  }, [expenseTransactions, expenseCategories, currentYear, currentMonth])
 
   return (
     <ShowCaseCard title={"Expense Averages"}>

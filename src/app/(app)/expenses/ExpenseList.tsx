@@ -1,7 +1,7 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import TransactionsList from "@/components/TransactionsList"
 import { getMonthTotalV2 } from "@/utils/getTotals"
-import { TransactionTypeV2 } from "@/utils/type"
+import { HookSetter, TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
 
 const ExpenseList = ({
@@ -17,14 +17,14 @@ const ExpenseList = ({
   excludedSet,
 }: {
   selectedMonth: string
-  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
+  setSelectedMonth: HookSetter<string>
   selectedYear: string
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
+  setSelectedYear: HookSetter<string>
   expenses: "expenses"
   expenseTransactions: TransactionTypeV2[]
   refreshExpenseTransactions: () => void
-  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedId: React.Dispatch<React.SetStateAction<number | null>>
+  setOpenEditDialog: HookSetter<boolean>
+  setSelectedId: HookSetter<number | null>
   excludedSet: Set<string>
 }) => {
   const monthExpense = useMemo(() => {

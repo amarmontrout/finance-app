@@ -20,7 +20,7 @@ import {
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
-import { BudgetTypeV2 } from "@/utils/type"
+import { BudgetTypeV2, HookSetter } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { deleteBudgetCategory, saveBudgetCategory } from "@/app/api/Choices/requests"
@@ -39,9 +39,9 @@ const AddBudget = ({
   setConfirmEdit
 }: { 
   confirmSelection: BudgetTypeV2 | null
-  setConfirmSelection: React.Dispatch<React.SetStateAction<BudgetTypeV2 | null>>
-  setBudgetEditDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setConfirmEdit: React.Dispatch<React.SetStateAction<BudgetTypeV2 | null>>
+  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+  setBudgetEditDialogOpen: HookSetter<boolean>
+  setConfirmEdit: HookSetter<BudgetTypeV2 | null>
 }) => {
   const { budgetCategoriesV2, refreshBudgetCategoryChoicesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()

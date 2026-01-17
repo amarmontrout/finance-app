@@ -2,7 +2,7 @@ import { updateBudget } from "@/app/api/Transactions/requests"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
+import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
 import { 
   Dialog, 
   DialogTitle, 
@@ -29,7 +29,7 @@ const EditBudgetEntryDialog = ({
   refreshBudgetTransactions
 }: {
   openEditDialog: boolean
-  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenEditDialog: HookSetter<boolean>
   notes: string[]
   budgetCategories: BudgetTypeV2[]
   selectedEntry: BudgetTransactionTypeV2 | null

@@ -1,3 +1,5 @@
+export type HookSetter<T> = React.Dispatch<React.SetStateAction<T>>
+
 export type TransactionTypeV2 = {
   id: number,
   month: string,

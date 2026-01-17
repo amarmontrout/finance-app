@@ -23,7 +23,7 @@ import {
 import Autocomplete from '@mui/material/Autocomplete';
 import { useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
-import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
+import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
 import { deleteBudget, saveBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
@@ -42,8 +42,8 @@ const BudgetEntries = ({
     budgetTransactions: BudgetTransactionTypeV2[]
     refreshBudgetTransactions: () => void
     notes: string[]
-    setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-    setSelectedEntry: React.Dispatch<React.SetStateAction<BudgetTransactionTypeV2 | null>>
+    setOpenEditDialog: HookSetter<boolean>
+    setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
     currentTheme: string | undefined
     week: "prev" | "current"
 }) => {

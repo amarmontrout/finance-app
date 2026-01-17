@@ -11,7 +11,6 @@ import
   EditTransactionDetailDialog
 from "@/components/EditTransactionDetailDialog"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
-import { usePathname } from "next/navigation"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
@@ -24,12 +23,7 @@ const Expenses = () => {
     expenseTransactionsV2,
     refreshExpenseTransactionsV2
   } = useTransactionContext()
-  const { 
-    excludedSet,
-    expenseCategoriesV2,
-    yearsV2
-  } = useCategoryContext()
-  const pathname = usePathname()
+  const { excludedSet, expenseCategoriesV2, yearsV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   
@@ -38,31 +32,29 @@ const Expenses = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  const lineChartData = useMemo(() => {
-    return buildMultiColumnDataV2({
+  const { lineChartData, lineColors } = useMemo(() => {
+    const lineChartData = buildMultiColumnDataV2({
       firstData: expenseTransactionsV2,
       firstColumnTitle: "Month",
       method: "self",
       excludedSet: excludedSet
-    }) ?? []
-  }, [expenseTransactionsV2])
-
-  const lineColors = currentTheme === "light" 
-    ? expenseLinesLight
-    : expenseLinesDark
+    })
+    const lineColors = currentTheme === "light" 
+      ? expenseLinesLight
+      : expenseLinesDark
+    return{ lineChartData, lineColors }
+  }, [expenseTransactionsV2, currentTheme])
 
   return (
     <FlexColWrapper gap={2}>
-      { expenseCategoriesV2.length !== 0 &&
-        <Box>
-          <AddExpenses
-            expenseCategories={expenseCategoriesV2}
-            expenses={EXPENSES}
-            refreshExpenseTransactions={refreshExpenseTransactionsV2}
-            years={yearsV2}
-          />
-        </Box>
-      }
+      <Box>
+        <AddExpenses
+          expenseCategories={expenseCategoriesV2}
+          expenses={EXPENSES}
+          refreshExpenseTransactions={refreshExpenseTransactionsV2}
+          years={yearsV2}
+        />
+      </Box>
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ExpenseList

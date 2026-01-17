@@ -3,7 +3,7 @@ import { MoneyInputV2 } from "@/components/MoneyInput"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTypeV2 } from "@/utils/type"
+import { BudgetTypeV2, HookSetter } from "@/utils/type"
 import { 
   Dialog, 
   DialogTitle, 
@@ -27,7 +27,7 @@ const EditBudgetDialog = ({
   currentTheme
 }: {
   budgetEditDialogOpen: boolean
-  setBudgetEditDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setBudgetEditDialogOpen: HookSetter<boolean>
   confirmEdit: BudgetTypeV2 | null
   currentTheme: string | undefined
 }) => {

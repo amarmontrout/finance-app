@@ -13,7 +13,6 @@ import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box } from "@mui/material"
 import { useTheme } from "next-themes"
-import { usePathname } from "next/navigation"
 import { useState, useMemo } from "react"
 import AddIncome from "./AddIncome"
 import IncomeList from "./IncomeList"
@@ -24,12 +23,7 @@ const Income = () => {
     incomeTransactionsV2,
     refreshIncomeTransactionsV2
   } = useTransactionContext()
-  const {
-    excludedSet,
-    incomeCategoriesV2,
-    yearsV2
-  } = useCategoryContext()
-  const pathname = usePathname()
+  const { excludedSet, incomeCategoriesV2, yearsV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
@@ -38,31 +32,29 @@ const Income = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
-  const lineChartData = useMemo(() => {
-    return buildMultiColumnDataV2({
+  const { lineChartData, lineColors } = useMemo(() => {
+    const lineChartData = buildMultiColumnDataV2({
       firstData: incomeTransactionsV2,
       firstColumnTitle: "Month",
       method: "self",
       excludedSet: excludedSet
     })
-  }, [incomeTransactionsV2])
-
-  const lineColors = currentTheme === "light" 
-    ? incomeLinesLight
-    : incomeLinesDark
+    const lineColors = currentTheme === "light" 
+      ? incomeLinesLight
+      : incomeLinesDark
+    return { lineChartData, lineColors }
+  }, [incomeTransactionsV2, currentTheme])
 
   return (
     <FlexColWrapper gap={2}>
-      {incomeCategoriesV2.length !== 0 &&
-        <Box>
-          <AddIncome
-            incomeCategories={incomeCategoriesV2}
-            income={INCOME}
-            refreshIncomeTransactions={refreshIncomeTransactionsV2}
-            years={yearsV2}
-          />
-        </Box>
-      }
+      <Box>
+        <AddIncome
+          incomeCategories={incomeCategoriesV2}
+          income={INCOME}
+          refreshIncomeTransactions={refreshIncomeTransactionsV2}
+          years={yearsV2}
+        />
+      </Box>
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <IncomeList

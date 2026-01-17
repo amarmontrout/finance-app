@@ -5,7 +5,7 @@ import SimpleForm from "@/components/SimpleForm"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceTypeV2, HookSetter } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
@@ -13,8 +13,8 @@ const AddExpenseCategory = ({
   setCategoryDialogOpen,
   setChoice 
 }: {
-  setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  setChoice: React.Dispatch<React.SetStateAction<ChoiceTypeV2 | null>>
+  setCategoryDialogOpen: HookSetter<boolean>
+  setChoice: HookSetter<ChoiceTypeV2 | null>
 }) => {
   const {
     expenseCategoriesV2,

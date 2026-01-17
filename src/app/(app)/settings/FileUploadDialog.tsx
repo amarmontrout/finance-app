@@ -1,5 +1,6 @@
 import { darkMode, lightMode } from "@/globals/colors"
 import { loadData } from "@/utils/appDataStorage"
+import { HookSetter } from "@/utils/type"
 import { Button, Dialog, DialogActions, DialogContent } from "@mui/material"
 
 const FileUploadDialog = ({
@@ -9,7 +10,7 @@ const FileUploadDialog = ({
   }: {
   dialogOpen: boolean
   currentTheme: string | undefined
-  setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setDialogOpen: HookSetter<boolean>
 }) => {
   return (
     <Dialog open={dialogOpen}>

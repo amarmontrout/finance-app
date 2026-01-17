@@ -1,6 +1,6 @@
 import { supabaseBrowser } from "@/utils/supabase/client"
-import { 
-  BudgetEntryTypeV2, 
+import {  
+  BudgetTransactionTypeV2,
   BudgetTypeV2, 
   ChoiceTypeV2, 
   TransactionTypeV2 
@@ -20,7 +20,7 @@ export const dbRequestBrowser = async <T>({
   method: "POST" | "GET" | "PATCH" | "DELETE"
   userId: string
   rowId?: number
-  body?: TransactionTypeV2 | BudgetEntryTypeV2 | BudgetTypeV2 | ChoiceTypeV2
+  body?: TransactionTypeV2 | BudgetTransactionTypeV2 | BudgetTypeV2 | ChoiceTypeV2
 }): Promise<{ data: T[] | null; error: PostgrestResponse<T>["error"] }> => {
   const sb = supabaseBrowser()
   let result: PostgrestResponse<T>

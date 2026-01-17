@@ -1,5 +1,5 @@
 import { dbRequestBrowser } from "../dbRequest"
-import { BudgetEntryTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { BudgetTransactionTypeV2, TransactionTypeV2 } from "@/utils/type"
 
 export const saveIncome = async ({
   userId,
@@ -198,7 +198,7 @@ export const saveBudget = async ({
   body
 }: {
   userId: string
-  body: BudgetEntryTypeV2
+  body: BudgetTransactionTypeV2
 }) => {
   const {data, error} = await dbRequestBrowser({
     schema: "Transactions",
@@ -221,7 +221,7 @@ export const getBudget = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetEntryTypeV2>({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
     schema: "Transactions",
     table: "budget",
     method: "GET",
@@ -243,7 +243,7 @@ export const updateBudget = async ({
 }: {
   userId: string
   rowId: number
-  body: BudgetEntryTypeV2
+  body: BudgetTransactionTypeV2
 }) => {
   const {data, error} = await dbRequestBrowser({
     schema: "Transactions",

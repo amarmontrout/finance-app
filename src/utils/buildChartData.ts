@@ -1,5 +1,4 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionData } from "./transactionStorage"
 import { TransactionTypeV2 } from "./type"
 
 export type TwoColumnDataType = [string, string | number][]
@@ -43,87 +42,6 @@ export const buildTwoColumnData = (props: {
  * 
  * @returns Google chart data
  */
-export const buildMultiColumnData = (props: {
-  firstData: TransactionData
-  secondData?: TransactionData
-  selectedYear?: string
-  firstColumnTitle: string
-  method: "self" | "compare"
-}): MultiColumnDataType => {
-  const {
-    firstData,
-    secondData,
-    selectedYear,
-    firstColumnTitle,
-    method
-  } = props
-  
-  if (!firstData) return []
-  if (method === "self") {
-    const years = Object.keys(firstData).sort()
-    const selfColumnData: MultiColumnDataType = [[firstColumnTitle, ...years]]
-
-    for (const month of MONTHS) {
-      const row: (string | number)[] = [month]
-      for (const year of years) {
-        const total = firstData[year]?.[month]?.filter(t => t.category !== "Water")
-        .reduce((sum, t) => sum + Number(t.amount), 0) || 0
-        row.push(Number(total.toFixed(2)))
-      }
-      selfColumnData.push(row)
-    }
-    return selfColumnData
-  }
-
-  if (!secondData || !selectedYear) return []
-  if (method === "compare" && selectedYear) {
-    const compareColumnData: MultiColumnDataType = [[firstColumnTitle, "Income", "Expenses"]]
-    const income: Record<string, number> = {}
-    const expense: Record<string, number> = {}
-
-    if (firstData[selectedYear]) {
-      // Compute income totals if exists for selected year, defaulting to 0 if missing for month
-      Object.entries(firstData[selectedYear]).forEach(([month, _]) => {
-        const monthIncome = firstData[selectedYear]?.[month]?.reduce(
-          (sum, t) => sum + Number(t.amount), 0
-        ) ?? 0
-        income[month] = monthIncome
-      })
-    } else {
-      // If missing income for selected year, set months as 0
-      MONTHS.forEach((month) => {
-        income[month] = 0
-      })
-    }
-
-    if (secondData[selectedYear]) {
-      // Compute expense totals if exists for selected year, defaulting to 0 if missing for month
-      Object.entries(secondData[selectedYear]).forEach(([month, transactions]) => {
-        const monthExpense = transactions
-          .filter(t => t.category !== "Water")
-          .reduce((sum, t) => sum + Number(t.amount), 0)
-        expense[month] = monthExpense
-      })      
-    } else {
-      // If missing expenses for selected year, set months as 0
-      MONTHS.forEach((month) => {
-        expense[month] = 0
-      })
-    }
-
-    MONTHS.forEach((month) => {
-      compareColumnData.push([
-        month,
-        Number((income[month] ?? 0).toFixed(2)),
-        Number((expense[month] ?? 0).toFixed(2))
-      ])
-    })
-    return compareColumnData
-  }
-
-  return []
-}
-
 export const buildMultiColumnDataV2 = ({
   firstData,
   secondData,

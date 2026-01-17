@@ -47,7 +47,8 @@ const Header = () => {
         {
           user &&
           <Button
-            variant={"contained"} 
+            variant={"contained"}
+            size={"small"}
             onClick={logout}
             sx={{
               backgroundColor: accentColorSecondary

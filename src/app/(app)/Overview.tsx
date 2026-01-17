@@ -1,7 +1,6 @@
 "use client"
 
 import LineChart from "@/components/LineChart"
-import MockDataWarning from "@/components/MockDataWarning"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -37,8 +36,6 @@ const Overview = () => {
     
   return (
     <FlexColWrapper gap={2}>
-      <MockDataWarning/>
-
       <FlexColWrapper gap={2} toRowBreak={"2xl"}>
         <YearTotals
           currentYear={Number(currentYear)}

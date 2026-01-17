@@ -6,7 +6,6 @@ import { lightTheme, darkTheme } from "@/globals/theme";
 import { useState, useEffect } from "react";
 import { TransactionProvider } from "@/contexts/transactions-context";
 import { CategoryProvider } from "@/contexts/categories-context";
-import { BudgetProvider } from "@/contexts/budget-context";
 
 const MUIThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme(); // "light" | "dark"
@@ -25,17 +24,15 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
       attribute="class"
       defaultTheme="light"
     >
-      <BudgetProvider>
-        <CategoryProvider>
-          <TransactionProvider>
-            {mounted &&
-              <MUIThemeWrapper>
-                {children}
-              </MUIThemeWrapper> 
-            }
-          </TransactionProvider>
-        </CategoryProvider>
-      </BudgetProvider>
+      <CategoryProvider>
+        <TransactionProvider>
+          {mounted &&
+            <MUIThemeWrapper>
+              {children}
+            </MUIThemeWrapper> 
+          }
+        </TransactionProvider>
+      </CategoryProvider>
     </NextThemeProvider>
   )
 }

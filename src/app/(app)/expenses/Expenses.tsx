@@ -11,7 +11,6 @@ import
   EditTransactionDetailDialog
 from "@/components/EditTransactionDetailDialog"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
-import MockDataWarning from "@/components/MockDataWarning"
 import { usePathname } from "next/navigation"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { FlexColWrapper } from "@/components/Wrappers"
@@ -54,8 +53,6 @@ const Expenses = () => {
 
   return (
     <FlexColWrapper gap={2}>
-      <MockDataWarning pathname={pathname}/>
-
       { expenseCategoriesV2.length !== 0 &&
         <Box>
           <AddExpenses

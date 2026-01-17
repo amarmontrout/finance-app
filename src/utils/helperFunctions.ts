@@ -1,8 +1,6 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionData } from "./transactionStorage"
-import { Choice } from "@/contexts/categories-context"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { FlatTransaction } from "../contexts/transactions-context"
+import { ChoiceTypeV2 } from "./type"
 
 /**
  * This helper function gets the current year and month.
@@ -105,32 +103,6 @@ export const makeId = (
 }
 
 /**
- * This helper function makes the TransactionData more manageable.
- * 
- * @param data
- * @returns An array for better manipulation of TransactionData
- */
-export const flattenTransactions = (
-  data: TransactionData
-): FlatTransaction[] => {
-  const result: FlatTransaction[] = []
-  for (const year in data) {
-    for (const month in data[year]) {
-      for (const tx of data[year][month]) {
-        result.push({
-          id: tx.id,
-          year,
-          month,
-          category: tx.category,
-          amount: tx.amount
-        })
-      }
-    }
-  }
-  return result
-}
-
-/**
  * This helper function gets the state of the current savings rate.
  * 
  * @returns A string depicting the health state
@@ -170,7 +142,7 @@ export const getPreviousMonthInfo = (year: string, month: string) => {
 }
 
 export const getExcludedCategorySet = (
-  categories: Choice[]
+  categories: ChoiceTypeV2[]
 ): Set<string> =>
   new Set(
     categories

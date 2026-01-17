@@ -4,9 +4,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
-import { BudgetCategoryType, useBudgetContext } from "@/contexts/budget-context"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
-import { BUDGET_CATEGORIES_KEY } from "@/globals/globals"
 import { 
   Box, 
   Button, 
@@ -21,11 +19,9 @@ import {
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
-import { saveBudgetCategories } from "@/utils/budgetStorage"
-import MoneyInput, { MoneyInputV2 } from "@/components/MoneyInput"
+import { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetTypeV2 } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { deleteBudgetCategory, saveBudgetCategory } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"

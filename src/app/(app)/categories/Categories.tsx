@@ -1,7 +1,6 @@
 "use client"
 
 import DateSelector from "@/components/DateSelector"
-import MockDataWarning from "@/components/MockDataWarning"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
   getAnnualCategoryTotalsV2,
@@ -78,8 +77,6 @@ const Categories = () => {
 
   return (
     <FlexColWrapper gap={2}>
-      <MockDataWarning/>
-
       <DateSelector
         view={view}
         setView={setView}

@@ -4,7 +4,6 @@ import
   EditTransactionDetailDialog 
 from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
-import MockDataWarning from "@/components/MockDataWarning"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -54,8 +53,6 @@ const Income = () => {
 
   return (
     <FlexColWrapper gap={2}>
-      <MockDataWarning pathname={pathname}/>
-
       {incomeCategoriesV2.length !== 0 &&
         <Box>
           <AddIncome

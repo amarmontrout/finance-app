@@ -5,7 +5,6 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { useState } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
-import MockDataWarning from "@/components/MockDataWarning"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import DateSelector from "@/components/DateSelector"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
@@ -29,8 +28,6 @@ const Insights = () => {
 
   return (
     <FlexColWrapper gap={2}>
-      <MockDataWarning/>
-
       <DateSelector
         view={view}
         setView={setView}

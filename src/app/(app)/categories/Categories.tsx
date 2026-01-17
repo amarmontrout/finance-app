@@ -4,8 +4,8 @@ import DateSelector from "@/components/DateSelector"
 import MockDataWarning from "@/components/MockDataWarning"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { 
-  getAnnualCategoryTotals, 
-  getMonthCategoryTotals 
+  getAnnualCategoryTotalsV2,
+  getMonthCategoryTotalsV2
 } from "@/utils/getTotals"
 import { getCardColor, getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
@@ -17,12 +17,12 @@ import { useCategoryContext } from "@/contexts/categories-context"
 
 const Categories = () => {
   const { 
-    flatIncomeTransactions,
-    refreshIncomeTransactions,
-    flatExpenseTransactions, 
-    refreshExpenseTransactions,
+    incomeTransactionsV2,
+    refreshIncomeTransactionsV2,
+    expenseTransactionsV2,
+    refreshExpenseTransactionsV2
   } = useTransactionContext()
-  const { years } = useCategoryContext()
+  const { yearsV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
@@ -33,45 +33,43 @@ const Categories = () => {
   const [view, setView] = useState<"annual" | "month">("month")
 
   useEffect(() => {
-    refreshIncomeTransactions()
-    refreshExpenseTransactions()
+    refreshIncomeTransactionsV2()
+    refreshExpenseTransactionsV2()
   }, [selectedYear])
 
   const annualIncomeCategoryTotals = useMemo(
-    () => getAnnualCategoryTotals(
-      selectedYear, 
-      flatIncomeTransactions
-    ),[flatIncomeTransactions, selectedYear]
+    () => getAnnualCategoryTotalsV2(
+      Number(selectedYear), 
+      incomeTransactionsV2
+    ),[incomeTransactionsV2, selectedYear]
   )
   const annualExpenseCategoryTotals = useMemo(
-    () => getAnnualCategoryTotals(
-      selectedYear, 
-      flatExpenseTransactions
-    ),[flatExpenseTransactions, selectedYear]
+    () => getAnnualCategoryTotalsV2(
+      Number(selectedYear),
+      expenseTransactionsV2
+    ),[expenseTransactionsV2, selectedYear]
   )
 
   const monthIncomeCategoryTotals = useMemo(
-    () => getMonthCategoryTotals(
-      selectedYear, 
+    () => getMonthCategoryTotalsV2(
+      Number(selectedYear), 
       selectedMonth, 
-      flatIncomeTransactions
-    ),[selectedYear, selectedMonth, flatIncomeTransactions]
+      incomeTransactionsV2
+    ),[selectedYear, selectedMonth, incomeTransactionsV2]
   )
   const monthExpenseCategoryTotals = useMemo(
-    () => getMonthCategoryTotals(
-      selectedYear, 
+    () => getMonthCategoryTotalsV2(
+      Number(selectedYear), 
       selectedMonth, 
-      flatExpenseTransactions
-    ),[selectedYear, selectedMonth, flatExpenseTransactions]
+      expenseTransactionsV2
+    ),[selectedYear, selectedMonth, expenseTransactionsV2]
   )
 
   const topThreeExpenses = useMemo(() => {
     if (view !== "month") return []
-
     if (!monthExpenseCategoryTotals || monthExpenseCategoryTotals.length <= 1) {
       return []
     }
-
     return monthExpenseCategoryTotals
       .slice(1)
       .sort((a, b) => Number(b[1]) - Number(a[1]))
@@ -89,7 +87,7 @@ const Categories = () => {
         setSelectedYear={setSelectedYear}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
-        years={years}
+        years={yearsV2}
       />
 
       <hr style={{width: "100%"}}/>

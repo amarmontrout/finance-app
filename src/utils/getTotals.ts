@@ -1,25 +1,5 @@
-import { FlatTransaction } from "@/contexts/transactions-context"
 import { formattedStringNumber } from "./helperFunctions"
-import { TransactionData } from "./transactionStorage"
 import { TransactionTypeV2 } from "./type"
-
-export const getYearTotal = (
-  year: string, 
-  transactions: TransactionData,
-  excludedCategories: Set<string>
-): string => {
-  let total = 0
-  if (transactions[year]) {
-    Object.entries(transactions[year]).map(([month, _]) => {
-      transactions[year][month].map((detail) => {
-        if (!excludedCategories.has(detail.category)) {
-          total += Number(detail.amount)
-        }
-      })
-    })    
-  }
-  return formattedStringNumber(total)
-}
 
 export const getYearTotalV2 = (
   year: number, 
@@ -34,23 +14,6 @@ export const getYearTotalV2 = (
       }
     }
   })
-  return formattedStringNumber(total)
-}
-
-export const getMonthTotal = (
-  year: string, 
-  month: string, 
-  transactions: TransactionData,
-  excludedCategories: Set<string>
-): string => {
-  let total = 0
-  if (transactions[year] && transactions[year][month]) {
-    transactions[year][month].map((detail) => {
-      if (!excludedCategories.has(detail.category)) {
-        total += Number(detail.amount)
-      }
-    })
-  }
   return formattedStringNumber(total)
 }
 
@@ -71,9 +34,9 @@ export const getMonthTotalV2 = (
   return formattedStringNumber(total)
 }
 
-export const getAnnualCategoryTotals = (
-  year: string,
-  transactions: FlatTransaction[]
+export const getAnnualCategoryTotalsV2 = (
+  year: number,
+  transactions: TransactionTypeV2[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
   if (!transactions) {
@@ -92,10 +55,10 @@ export const getAnnualCategoryTotals = (
   return pieChartData
 }
 
-export const getMonthCategoryTotals = (
-  year: string, 
+export const getMonthCategoryTotalsV2 = (
+  year: number, 
   month: string, 
-  transactions: FlatTransaction[]
+  transactions: TransactionTypeV2[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
   if (!transactions) return [["Category", "Total"]]

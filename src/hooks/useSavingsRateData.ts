@@ -1,58 +1,58 @@
 import { useMemo } from "react"
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
+import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
 import { getSavingRate } from "@/utils/financialFunctions"
 import { cleanNumber } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
 import { useCategoryContext } from "@/contexts/categories-context"
+import { TransactionTypeV2 } from "@/utils/type"
 
 export const useSavingsRateData = (
   selectedYear: string,
   selectedMonth: string,
-  incomeTransactions: TransactionData,
-  expenseTransactions: TransactionData,
+  incomeTransactions: TransactionTypeV2[],
+  expenseTransactions: TransactionTypeV2[],
   prevMonthYear: string,
   prevMonth: string
 ) => {
   const { excludedSet } = useCategoryContext()
-  const previousYear = String(Number(selectedYear) - 1)
+  const previousYear = Number(selectedYear) - 1
 
   const monthIncome = useMemo(
-    () => getMonthTotal(selectedYear, selectedMonth, incomeTransactions, excludedSet),
+    () => getMonthTotalV2(Number(selectedYear), selectedMonth, incomeTransactions, excludedSet),
     [selectedYear, selectedMonth, incomeTransactions]
   )
 
   const monthExpense = useMemo(
-    () => getMonthTotal(selectedYear, selectedMonth, expenseTransactions, excludedSet),
+    () => getMonthTotalV2(Number(selectedYear), selectedMonth, expenseTransactions, excludedSet),
     [selectedYear, selectedMonth, expenseTransactions]
   )
 
   const prevMonthIncome = useMemo(
-    () => getMonthTotal(prevMonthYear, prevMonth, incomeTransactions, excludedSet),
+    () => getMonthTotalV2(Number(prevMonthYear), prevMonth, incomeTransactions, excludedSet),
     [prevMonthYear, prevMonth, incomeTransactions]
   )
 
   const prevMonthExpense = useMemo(
-    () => getMonthTotal(prevMonthYear, prevMonth, expenseTransactions, excludedSet),
+    () => getMonthTotalV2(Number(prevMonthYear), prevMonth, expenseTransactions, excludedSet),
     [prevMonthYear, prevMonth, expenseTransactions]
   )
 
   const annualIncome = useMemo(
-    () => getYearTotal(selectedYear, incomeTransactions, excludedSet),
+    () => getYearTotalV2(Number(selectedYear), incomeTransactions, excludedSet),
     [selectedYear, incomeTransactions]
   )
 
   const annualExpense = useMemo(
-    () => getYearTotal(selectedYear, expenseTransactions, excludedSet),
+    () => getYearTotalV2(Number(selectedYear), expenseTransactions, excludedSet),
     [selectedYear, expenseTransactions]
   )
 
   const prevAnnualIncome = useMemo(
-    () => getYearTotal(previousYear, incomeTransactions, excludedSet),
+    () => getYearTotalV2(previousYear, incomeTransactions, excludedSet),
     [previousYear, incomeTransactions]
   )
 
   const prevAnnualExpense = useMemo(
-    () => getYearTotal(previousYear, expenseTransactions, excludedSet),
+    () => getYearTotalV2(previousYear, expenseTransactions, excludedSet),
     [previousYear, expenseTransactions]
   )
 

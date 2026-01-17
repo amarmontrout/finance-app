@@ -7,7 +7,7 @@ import { accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
+import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
 import { 
   cleanNumber, 
   formattedStringNumber, 
@@ -15,7 +15,7 @@ import {
   getSavingsHealthState, 
   removeCommas 
 } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
+import { TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
 
 const NetCashFlow = ({
@@ -27,8 +27,8 @@ const NetCashFlow = ({
   currentTheme,
   excludedSet
 }: {
-  incomeTransactions: TransactionData
-  expenseTransactions: TransactionData
+  incomeTransactions: TransactionTypeV2[]
+  expenseTransactions: TransactionTypeV2[]
   selectedYear: string
   selectedMonth: string
   view: "annual" | "month"
@@ -36,34 +36,34 @@ const NetCashFlow = ({
   excludedSet: Set<string>
 }) => {
 
-  const monthIncome = getMonthTotal(
-    selectedYear, 
+  const monthIncome = getMonthTotalV2(
+    Number(selectedYear), 
     selectedMonth, 
     incomeTransactions,
     excludedSet
   )
-  const monthExpense = getMonthTotal(
-    selectedYear, 
+  const monthExpense = getMonthTotalV2(
+    Number(selectedYear),
     selectedMonth, 
     expenseTransactions,
     excludedSet
   )
   const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
-  const annualIncome = getYearTotal(
-    selectedYear, 
+  const annualIncome = getYearTotalV2(
+    Number(selectedYear),
     incomeTransactions,
     excludedSet
   )
   const eachMonthNetIncome: [string, string][] = useMemo(() => {
     return MONTHS.map(month => {
-      const incomeTotal = getMonthTotal(
-        selectedYear, 
+      const incomeTotal = getMonthTotalV2(
+        Number(selectedYear),
         month, 
         incomeTransactions,
         excludedSet
       )
-      const expenseTotal = getMonthTotal(
-        selectedYear, 
+      const expenseTotal = getMonthTotalV2(
+        Number(selectedYear),
         month, 
         expenseTransactions,
         excludedSet

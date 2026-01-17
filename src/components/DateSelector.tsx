@@ -1,5 +1,5 @@
-import { Choice } from "@/contexts/categories-context"
 import { MONTHS } from "@/globals/globals"
+import { ChoiceTypeV2 } from "@/utils/type"
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 
 const DateSelector = ({
@@ -17,7 +17,7 @@ const DateSelector = ({
   setSelectedYear: (y: string) => void
   selectedMonth: string
   setSelectedMonth: (m: string) => void
-  years: Choice[]
+  years: ChoiceTypeV2[]
 }) => {
   return (
     <Box
@@ -47,7 +47,7 @@ const DateSelector = ({
           name={"year"}
           onChange={e => setSelectedYear(e.target.value)}
         >
-          { 
+          {
             years.map((year) => {
               return (
                 <MenuItem 

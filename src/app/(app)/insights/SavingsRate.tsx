@@ -9,7 +9,7 @@ import {
   getPreviousMonthInfo, 
   getSavingsHealthState 
 } from "@/utils/helperFunctions"
-import { TransactionData } from "@/utils/transactionStorage"
+import { TransactionTypeV2 } from "@/utils/type"
 
 const SavingsRate = ({
   incomeTransactions,
@@ -19,8 +19,8 @@ const SavingsRate = ({
   view,
   currentTheme
 }: {
-  incomeTransactions: TransactionData
-  expenseTransactions: TransactionData
+  incomeTransactions: TransactionTypeV2[]
+  expenseTransactions: TransactionTypeV2[]
   selectedYear: string
   selectedMonth: string
   view: "annual" | "month"

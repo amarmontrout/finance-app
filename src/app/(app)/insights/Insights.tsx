@@ -16,10 +16,10 @@ import { useTheme } from "next-themes"
 
 const Insights = () => {
   const { 
-    incomeTransactions,
-    expenseTransactions
+    incomeTransactionsV2,
+    expenseTransactionsV2
   } = useTransactionContext()
-  const { years, excludedSet } = useCategoryContext()
+  const { excludedSet, yearsV2 } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const {theme: currentTheme} = useTheme()
 
@@ -38,7 +38,7 @@ const Insights = () => {
         setSelectedYear={setSelectedYear}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
-        years={years}
+        years={yearsV2}
       />
 
       <Divider
@@ -55,8 +55,8 @@ const Insights = () => {
         <FlexChildWrapper>
           <ShowCaseCard title={"Net Cash Flow"}>
             <NetCashFlow
-              incomeTransactions={incomeTransactions}
-              expenseTransactions={expenseTransactions}
+              incomeTransactions={incomeTransactionsV2}
+              expenseTransactions={expenseTransactionsV2}
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
               view={view}
@@ -69,8 +69,8 @@ const Insights = () => {
         <FlexChildWrapper>
           <ShowCaseCard title={"Savings Rate"}>
             <SavingsRate
-              incomeTransactions={incomeTransactions}
-              expenseTransactions={expenseTransactions}
+              incomeTransactions={incomeTransactionsV2}
+              expenseTransactions={expenseTransactionsV2}
               selectedYear={selectedYear}
               selectedMonth={selectedMonth}
               view={view}

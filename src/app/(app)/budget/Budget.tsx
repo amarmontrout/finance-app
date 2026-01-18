@@ -57,7 +57,11 @@ const Budget = () => {
 
       weeklyTransactions.map((entry) => {
         if (entry.category === category.category) {
-          total += entry.amount
+          if (entry.isReturn) {
+            total -= entry.amount
+          } else {
+            total += entry.amount
+          }
         }
       })
 

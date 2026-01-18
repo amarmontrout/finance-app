@@ -43,7 +43,8 @@ const EditBudgetEntryDialog = ({
     category: "",
     note: "",
     amount: 0,
-    createdAt: 0
+    createdAt: 0,
+    isReturn: false
   }
 
   const [updatedBudgetEntry, setUpdatedBudgetEntry] = 

@@ -52,7 +52,8 @@ const BudgetEntries = ({
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
     amount: 0,
-    createdAt: 0
+    createdAt: 0,
+    isReturn: false
   }
 
   const user = useUser()
@@ -266,7 +267,8 @@ const BudgetEntries = ({
                     }}
                   >
                     <ListItemText 
-                      primary={`$${entry.amount.toFixed(2)} - ${entry.note}`} 
+                      primary={`$${entry.amount.toFixed(2)} - ${entry.note}
+                        ${entry.isReturn? " - RETURNED" : ""}`} 
                       secondary={entry.category}
                     />
                   </ListItem>

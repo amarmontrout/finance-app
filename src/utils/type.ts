@@ -13,7 +13,8 @@ export type BudgetTransactionTypeV2 = {
   category: string,
   note: string,
   amount: number,
-  createdAt: number
+  createdAt: number,
+  isReturn: boolean
 }
 
 export type BudgetTypeV2 = {

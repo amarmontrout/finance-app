@@ -39,9 +39,12 @@ const LoginForm = () => {
 
     if (error) {
       console.log(error)
-    } else {
-      router.push("/")
+      return
     }
+    // await supabase.auth.getSession()
+    // router.push("/")
+    // router.refresh()
+    window.location.href = "/"
   }
 
   return (

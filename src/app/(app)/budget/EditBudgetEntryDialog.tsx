@@ -15,10 +15,12 @@ import {
   TextField, 
   DialogActions, 
   Button, 
-  DialogContent
+  DialogContent,
+  FormControlLabel,
+  Checkbox
 } from "@mui/material"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 
 const EditBudgetEntryDialog = ({
   openEditDialog,
@@ -139,6 +141,22 @@ const EditBudgetEntryDialog = ({
           <MoneyInputV2
             value={updatedBudgetEntry.amount}
             setValue={setUpdatedBudgetEntry}
+          />
+
+          <FormControlLabel
+            control={
+              <Checkbox 
+                checked={updatedBudgetEntry.isReturn}
+                sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setUpdatedBudgetEntry(prev => ({
+                    ...prev,
+                    isReturn: e.target.checked
+                  }))
+                }}
+              />
+            } 
+            label="Is a return?" 
           />
         </Box>
       </DialogContent>

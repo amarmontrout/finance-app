@@ -18,10 +18,12 @@ import {
   SelectChangeEvent,
   TextField,
   IconButton,
-  Stack
+  Stack,
+  Checkbox,
+  FormControlLabel
 } from "@mui/material"
 import Autocomplete from '@mui/material/Autocomplete';
-import { useState } from "react"
+import { ChangeEvent, useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
@@ -230,7 +232,23 @@ const BudgetEntries = ({
             setValue={setBudgetEntry}
             smallWidthBp={"lg"}
             disabled={week === "prev"}
-          /> 
+          />
+
+          <FormControlLabel 
+            control={
+              <Checkbox 
+                checked={budgetEntry.isReturn}
+                sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                  setBudgetEntry(prev => ({
+                    ...prev,
+                    isReturn: e.target.checked
+                  }))
+                }}
+              />
+            } 
+            label="Is a return?" 
+          />
 
           <Button
             variant={"contained"} 

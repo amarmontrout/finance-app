@@ -156,6 +156,7 @@ const AddBudget = ({
         flexDirection={"column"}
         overflow={"hidden"}
         paddingTop={"5px"}
+        height={"325px"}
       >
         <Box className="flex flex-row xl:flex-col gap-3 pb-[12px]">
           <FormControl>
@@ -212,8 +213,7 @@ const AddBudget = ({
                     }}
                   >
                     <ListItemText 
-                      primary={budget.category} 
-                      secondary={`$${budget.amount}`}
+                      primary={`${budget.category} - $${budget.amount}`}
                     />
                   </ListItem>
                 )

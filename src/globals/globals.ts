@@ -7,6 +7,7 @@ import DataUsageIcon from '@mui/icons-material/DataUsage';
 import MultilineChartIcon from '@mui/icons-material/MultilineChart';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import HomeIcon from '@mui/icons-material/Home';
 
 export const EXPENSES = "expenses"
 export const INCOME = "income"
@@ -50,5 +51,12 @@ export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
 export const NAV_SETTINGS: PageLinkType[] = [
+  {"name": "Settings", "link": "/settings", icon: SettingsIcon}
+]
+export const NAV_MOBILE: PageLinkType[] = [
+  {"name": "Overview", "link": "/", icon: HomeIcon},
+  {"name": "Income", "link": "/income", icon: TrendingUpIcon},
+  {"name": "Expenses", "link": "/expenses", icon: TrendingDownIcon},
+  {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
   {"name": "Settings", "link": "/settings", icon: SettingsIcon}
 ]

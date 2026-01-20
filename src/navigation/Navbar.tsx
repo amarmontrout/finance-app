@@ -1,9 +1,10 @@
 "use client"
 
-import { Box, Divider, Stack, Typography } from "@mui/material"
+import { Box, Divider, IconButton, Stack, Typography } from "@mui/material"
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
 import { 
+  NAV_MOBILE,
   NAV_QUICK_INFO, 
   NAV_SETTINGS, 
   NAV_TRANSACTIONS 
@@ -11,7 +12,9 @@ import {
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { darkMode, lightMode } from "@/globals/colors";
-import { useMemo } from "react";
+import { useState } from "react";
+import MenuIcon from '@mui/icons-material/Menu';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -111,98 +114,86 @@ export const Navbar = () => {
 
 export const HorizontalNavbar = () => {
   const pathname = usePathname()
-  const { theme: currentTheme } = useTheme()
-
-  const ALL_NAV_ITEMS = [
-    ...NAV_QUICK_INFO,
-    ...NAV_TRANSACTIONS,
-    ...NAV_SETTINGS
-  ]
-
-  const {activeTabName, ActiveTabIcon} = useMemo(() => {
-    const activeTab = ALL_NAV_ITEMS.find(item => item.link === pathname)
-
-    return {
-      activeTabName: activeTab?.name ?? "",
-      ActiveTabIcon: activeTab?.icon ?? null
-    }
-  }, [pathname])
+  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <Stack
-      direction={"column"}
+      direction={"row"}
+      justifyContent={"space-between"}
       width={"100%"}
+      gap={1}
     >
-      <Stack 
-        direction={"row"}
-        justifyContent={"center"}
-        alignItems={"center"}
-        paddingTop={".25rem"}
-        gap={1}
-      >
-        {ActiveTabIcon && <ActiveTabIcon/>}
-        <Typography variant="h5">{activeTabName}</Typography>
-      </Stack>
-
-      <Stack
-        className="p-[.35rem] mb-[30px]"
-        direction={"row"}
-        width={"100%"}
-        gap={1}
-        overflow={"hidden"}
-        style={{
-          overflowX: "scroll"
+      <Box 
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "79px",
+          bgcolor: "background.paper",
+          borderRadius: "25px",
+          boxShadow: 3,
+          zIndex: 1000
         }}
       >
-        {NAV_QUICK_INFO.map((item) => {
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}
-
-        <Divider 
-          orientation="vertical" 
-          sx={{ 
-            borderColor: currentTheme === "light" ?
-              lightMode.borderStrong 
-              : darkMode.borderStrong,
-            borderRightWidth: 2
+        <IconButton
+          onClick={() => {
+            setOpen(!open)
           }}
-        />
+        >
+          { open?
+            <KeyboardArrowUpIcon fontSize={"large"}/>
+            : <MenuIcon fontSize={"large"}/>
+          }
+        </IconButton>
+      </Box>
 
-        {NAV_TRANSACTIONS.map((item) => {
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}
-
-        <Divider 
-          orientation="vertical" 
-          sx={{ 
-            borderColor: currentTheme === "light" ?
-              lightMode.borderStrong 
-              : darkMode.borderStrong,
-            borderRightWidth: 2
+      {open &&
+        <Stack
+          className="p-[.75rem]"
+          direction={"column"}
+          gap={1}
+          sx={{
+            position: "absolute",
+            bottom: 90,
+            left: "9%",
+            transform: "translateX(-50%)",
+            bgcolor: "background.paper",
+            borderRadius: "25px",
+            boxShadow: 3,
           }}
-        />
-        
-        {NAV_SETTINGS.map((item) => {
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}
+        >
+          {NAV_QUICK_INFO.map((item) => {
+            if (item.link === "/") return
+              return (
+                <PageLink 
+                  item={item} 
+                  active={pathname === item.link} 
+                  key={item.name}
+                />
+              )
+            })}
+        </Stack>
+      }
+
+      <Stack
+        className="p-[.75rem]"
+        direction={"row"}
+        gap={1}
+        sx={{
+          bgcolor: "background.paper",
+          borderRadius: "25px",
+          boxShadow: 3,
+        }}
+      >
+        {NAV_MOBILE.map((item) => {
+            return (
+              <PageLink 
+                item={item} 
+                active={pathname === item.link} 
+                key={item.name}
+              />
+            )
+          })}
       </Stack>
     </Stack>
   )

@@ -90,12 +90,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 {/* Inner scroller */}
                 <Box
-                  className="p-[1rem] lg:p-[2.5rem]"
+                  className="p-[1rem] pb-[115px] md:pb-[1rem] lg:p-[2.5rem]"
                   sx={{
                     flex: 1,
                     minWidth: 0,
-                    overflowY: "auto",
-                    pb: "115px",
+                    overflowY: "auto"
                   }}
                 >
                   {children}

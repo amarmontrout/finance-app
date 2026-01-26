@@ -127,6 +127,7 @@ export const HorizontalNavbar = () => {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          width: "67px",
           bgcolor: "rgba(255, 255, 255, 0.12)",
           backdropFilter: "blur(4px) saturate(160%)",
           borderRadius: "25px",

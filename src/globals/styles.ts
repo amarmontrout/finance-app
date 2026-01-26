@@ -9,7 +9,7 @@ export const navSelection = {
   position: "relative",
   color: "inherit",
   cursor: "pointer",
-  padding: "10px",
+  padding: "8px",
   "&::before": {
     content: '""',
     position: "absolute",

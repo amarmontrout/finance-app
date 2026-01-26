@@ -40,7 +40,7 @@ export const EXPENSE_CATEGORIES_KEY = "expenseCategories"
 export const BUDGET_CATEGORIES_KEY = "budgetCategories"
 export const BUDGET_KEY = "budget"
 export const NAV_QUICK_INFO: PageLinkType[] = [
-  {"name": "Overview", "link": "/", icon: DataUsageIcon},
+  {"name": "Overview", "link": "/", icon: HomeIcon},
   {"name": "Insights", "link": "/insights", icon: InsightsIcon},
   {"name": "Trends", "link": "/trends", icon: MultilineChartIcon},
   {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
@@ -51,12 +51,5 @@ export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
 export const NAV_SETTINGS: PageLinkType[] = [
-  {"name": "Settings", "link": "/settings", icon: SettingsIcon}
-]
-export const NAV_MOBILE: PageLinkType[] = [
-  {"name": "Overview", "link": "/", icon: HomeIcon},
-  {"name": "Income", "link": "/income", icon: TrendingUpIcon},
-  {"name": "Expenses", "link": "/expenses", icon: TrendingDownIcon},
-  {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
   {"name": "Settings", "link": "/settings", icon: SettingsIcon}
 ]

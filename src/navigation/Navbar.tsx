@@ -4,7 +4,6 @@ import { Box, Divider, IconButton, Stack, Typography } from "@mui/material"
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
 import { 
-  NAV_MOBILE,
   NAV_QUICK_INFO, 
   NAV_SETTINGS, 
   NAV_TRANSACTIONS 
@@ -14,7 +13,7 @@ import { useTheme } from "next-themes";
 import { darkMode, lightMode } from "@/globals/colors";
 import { useState } from "react";
 import MenuIcon from '@mui/icons-material/Menu';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -121,15 +120,15 @@ export const HorizontalNavbar = () => {
       direction={"row"}
       justifyContent={"space-between"}
       width={"100%"}
-      gap={1}
     >
       <Box 
+        className="p-[.25rem]"
         sx={{
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          width: "79px",
-          bgcolor: "background.paper",
+          bgcolor: "rgba(255, 255, 255, 0.12)",
+          backdropFilter: "blur(4px) saturate(160%)",
           borderRadius: "25px",
           boxShadow: 3,
           zIndex: 1000
@@ -141,51 +140,44 @@ export const HorizontalNavbar = () => {
           }}
         >
           { open?
-            <KeyboardArrowUpIcon fontSize={"large"}/>
+            <KeyboardArrowRightIcon fontSize={"large"}/>
             : <MenuIcon fontSize={"large"}/>
           }
         </IconButton>
       </Box>
 
-      {open &&
-        <Stack
-          className="p-[.75rem]"
-          direction={"column"}
-          gap={1}
-          sx={{
-            position: "absolute",
-            bottom: 90,
-            left: "9%",
-            transform: "translateX(-50%)",
-            bgcolor: "background.paper",
-            borderRadius: "25px",
-            boxShadow: 3,
-          }}
-        >
-          {NAV_QUICK_INFO.map((item) => {
-            if (item.link === "/") return
-              return (
-                <PageLink 
-                  item={item} 
-                  active={pathname === item.link} 
-                  key={item.name}
-                />
-              )
-            })}
-        </Stack>
-      }
-
       <Stack
-        className="p-[.75rem]"
+        className="p-[.5rem]"
         direction={"row"}
         gap={1}
         sx={{
-          bgcolor: "background.paper",
+          bgcolor: "rgba(255, 255, 255, 0.12)",
+          backdropFilter: "blur(4px) saturate(160%)",
           borderRadius: "25px",
           boxShadow: 3,
         }}
       >
-        {NAV_MOBILE.map((item) => {
+        {NAV_QUICK_INFO.map((item) => {
+          if (item.link !== "/") return
+            return (
+              <PageLink 
+                item={item} 
+                active={pathname === item.link} 
+                key={item.name}
+              />
+            )
+          })}
+        {!open && NAV_TRANSACTIONS.map((item) => {
+            return (
+              <PageLink 
+                item={item} 
+                active={pathname === item.link} 
+                key={item.name}
+              />
+            )
+          })}
+        {open && NAV_QUICK_INFO.map((item) => {
+          if (item.link === "/") return
             return (
               <PageLink 
                 item={item} 
@@ -195,6 +187,30 @@ export const HorizontalNavbar = () => {
             )
           })}
       </Stack>
+
+      <Box
+        className="p-[.5rem]"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          bgcolor: "rgba(255, 255, 255, 0.12)",
+          backdropFilter: "blur(4px) saturate(160%)",
+          borderRadius: "25px",
+          boxShadow: 3,
+          zIndex: 1000
+        }}
+      >
+        {NAV_SETTINGS.map((item) => {
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}
+      </Box>
     </Stack>
   )
 }

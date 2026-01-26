@@ -110,7 +110,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   bottom: 30,
                   left: "50%",
                   transform: "translateX(-50%)",
-                  width: "95%",
+                  width: "96%",
                   zIndex: 1000
                 }}
               >

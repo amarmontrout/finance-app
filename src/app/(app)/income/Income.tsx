@@ -11,7 +11,7 @@ import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
 import { INCOME } from "@/globals/globals"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box } from "@mui/material"
+import { Box, Tab, Tabs } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useMemo } from "react"
 import AddIncome from "./AddIncome"
@@ -31,6 +31,7 @@ const Income = () => {
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [value, setValue] = useState(0)
 
   const { lineChartData, lineColors } = useMemo(() => {
     const lineChartData = buildMultiColumnDataV2({
@@ -45,18 +46,50 @@ const Income = () => {
     return { lineChartData, lineColors }
   }, [incomeTransactionsV2, currentTheme])
 
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  }
+  
+  const TabPanel = ({ 
+    children, 
+    value, 
+    index, 
+    ...other 
+  }: {
+    children?: React.ReactNode
+    index: number
+    value: number
+  }) => {
+    return (
+      <div hidden={value !== index} {...other} >
+        {
+          value === index 
+            && <Box>{children}</Box>
+        }
+      </div>
+    )
+  }
+
   return (
     <FlexColWrapper gap={2}>
-      <Box>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Add Income"/>
+          <Tab label="Income List"/>
+          <Tab label="Income Chart"/>
+        </Tabs>
+      </Box>
+
+      <TabPanel value={value} index={0}>
         <AddIncome
           incomeCategories={incomeCategoriesV2}
           income={INCOME}
           refreshIncomeTransactions={refreshIncomeTransactionsV2}
           years={yearsV2}
         />
-      </Box>
+      </TabPanel>
 
-      <FlexColWrapper gap={2} toRowBreak={"xl"}>
+      <TabPanel value={value} index={1}>
         <IncomeList
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
@@ -69,14 +102,16 @@ const Income = () => {
           setSelectedId={setSelectedId}
           excludedSet={excludedSet}
         />
+      </TabPanel>
 
+      <TabPanel value={value} index={2}>
         <ShowCaseCard title={"Income"}>
           <LineChart
             multiColumnData={lineChartData}
             lineColors={lineColors}
           />
         </ShowCaseCard>
-      </FlexColWrapper>
+      </TabPanel>
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}

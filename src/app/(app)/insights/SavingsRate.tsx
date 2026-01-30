@@ -1,6 +1,7 @@
 "use client"
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
+import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useSavingsRateData } from "@/hooks/useSavingsRateData"
 import {
@@ -49,48 +50,50 @@ const SavingsRate = ({
   const defaultColor = getCardColor(currentTheme, "default")
 
   return (
-    <FlexColWrapper gap={3}>
-      {view === "month" &&
-        <FlexColWrapper gap={3}>
-          <ColoredInfoCard
-            cardColors={monthSavingsColor}
-            title={`${selectedMonth} ${selectedYear} 
-              Savings Rating: ${monthSavingsHealthState}`}
-            info={`Savings Rate: ${formattedStringNumber(monthRate)}%`}
-          />
-
-          <FlexColWrapper gap={3} toRowBreak={"sm"}>
+    <ShowCaseCard title={"Savings Rate"}>
+      <FlexColWrapper gap={3}>
+        {view === "month" &&
+          <FlexColWrapper gap={3}>
             <ColoredInfoCard
-              cardColors={defaultColor}
-              title={`Compared to Last Month`}
-              info={`${formattedStringNumber(diffs.monthOverMonth)}%`}
+              cardColors={monthSavingsColor}
+              title={`${selectedMonth} ${selectedYear} 
+                Savings Rating: ${monthSavingsHealthState}`}
+              info={`Savings Rate: ${formattedStringNumber(monthRate)}%`}
             />
 
-            <ColoredInfoCard
-              cardColors={defaultColor}
-              title={`Compared to ${selectedYear}`}
-              info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
-            />            
+            <FlexColWrapper gap={3} toRowBreak={"sm"}>
+              <ColoredInfoCard
+                cardColors={defaultColor}
+                title={`Compared to Last Month`}
+                info={`${formattedStringNumber(diffs.monthOverMonth)}%`}
+              />
+
+              <ColoredInfoCard
+                cardColors={defaultColor}
+                title={`Compared to ${selectedYear}`}
+                info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
+              />            
+            </FlexColWrapper>
           </FlexColWrapper>
+        }
+
+        {view === "annual" &&
+        <FlexColWrapper gap={3}>
+          <ColoredInfoCard
+            cardColors={annualSavingsColor}
+            title={`${selectedYear} Savings Rating: ${annualSavingsHealthState}`}
+            info={`Savings Rate: ${formattedStringNumber(annualRate)}%`}
+          />
+
+          <ColoredInfoCard
+            cardColors={defaultColor}
+            title={`Compared to ${previousYear}`}
+            info={`${formattedStringNumber(diffs.yearOverYear)}%`}
+          />
         </FlexColWrapper>
-      }
-
-      {view === "annual" &&
-      <FlexColWrapper gap={3}>
-        <ColoredInfoCard
-          cardColors={annualSavingsColor}
-          title={`${selectedYear} Savings Rating: ${annualSavingsHealthState}`}
-          info={`Savings Rate: ${formattedStringNumber(annualRate)}%`}
-        />
-
-        <ColoredInfoCard
-          cardColors={defaultColor}
-          title={`Compared to ${previousYear}`}
-          info={`${formattedStringNumber(diffs.yearOverYear)}%`}
-        />
+        }
       </FlexColWrapper>
-      }
-    </FlexColWrapper>
+    </ShowCaseCard>
   )
 }
 

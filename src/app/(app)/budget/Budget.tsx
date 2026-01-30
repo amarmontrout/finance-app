@@ -7,7 +7,15 @@ import BudgetEntries from "./BudgetEntries"
 import { getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
-import { Box, FormControl, InputLabel, MenuItem, Select } from "@mui/material"
+import { 
+  Box, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Select, 
+  Tab, 
+  Tabs 
+} from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
@@ -18,7 +26,6 @@ const Budget = () => {
     refreshBudgetTransactionsV2
   } = useTransactionContext()
   const { budgetCategoriesV2 } = useCategoryContext()
-
   const { start, end, prevStart, prevEnd } = getWeekBounds()
   const { theme: currentTheme } = useTheme()
 
@@ -27,6 +34,7 @@ const Budget = () => {
   const [selectedEntry, setSelectedEntry] = 
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [value, setValue] = useState(0)
 
   useEffect(() => {
     let notes: string[] = []
@@ -75,8 +83,39 @@ const Budget = () => {
     return remaining
   }, [budgetCategoriesV2, weeklyTransactions])
 
+  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  }
+  
+  const TabPanel = ({ 
+    children, 
+    value, 
+    index, 
+    ...other 
+  }: {
+    children?: React.ReactNode
+    index: number
+    value: number
+  }) => {
+    return (
+      <div hidden={value !== index} {...other} >
+        {
+          value === index 
+            && <Box>{children}</Box>
+        }
+      </div>
+    )
+  }
+
   return (
     <FlexColWrapper gap={2}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange}>
+          <Tab label="Remaining Budget"/>
+          <Tab label="Budget Entires"/>
+        </Tabs>
+      </Box>
+
       <Box
         className="flex flex-col sm:flex-row gap-3 h-full"
         paddingTop={"10px"}
@@ -98,21 +137,25 @@ const Budget = () => {
 
       <hr style={{width: "100%"}}/>
 
-      <RemainingBudget
-        budgetCategories={remainingBudgetCategories}
-        currentTheme={currentTheme}
-      />
+      <TabPanel value={value} index={0}>
+        <RemainingBudget
+          budgetCategories={remainingBudgetCategories}
+          currentTheme={currentTheme}
+        />
+      </TabPanel>
 
-      <BudgetEntries
-        budgetCategories={budgetCategoriesV2}
-        budgetTransactions={weeklyTransactions}
-        refreshBudgetTransactions={refreshBudgetTransactionsV2}
-        notes={notes}
-        setOpenEditDialog={setOpenEditDialog}
-        setSelectedEntry={setSelectedEntry}
-        currentTheme={currentTheme}
-        week={week}
-      />
+      <TabPanel value={value} index={1}>
+        <BudgetEntries
+          budgetCategories={budgetCategoriesV2}
+          budgetTransactions={weeklyTransactions}
+          refreshBudgetTransactions={refreshBudgetTransactionsV2}
+          notes={notes}
+          setOpenEditDialog={setOpenEditDialog}
+          setSelectedEntry={setSelectedEntry}
+          currentTheme={currentTheme}
+          week={week}
+        />
+      </TabPanel>
 
       <EditBudgetEntryDialog
         openEditDialog={openEditDialog}

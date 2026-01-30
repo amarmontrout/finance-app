@@ -2,6 +2,7 @@
 
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
+import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
@@ -99,28 +100,30 @@ const NetCashFlow = ({
   }, [eachMonthNetIncome])
   
   return (
-    <FlexColWrapper gap={2}> 
-      {view === "month" &&
-        <ColoredInfoCard
-          cardColors={monthSavingsColor}
-          info={`Net Cash: $${monthNetIncome}`}
-          title={`${selectedMonth} ${selectedYear} 
-            Net Cash Rating: ${monthSavingsHealthState}`}
-        />
-      }
+    <ShowCaseCard title={"Net Cash Flow"}>
+      <FlexColWrapper gap={2}> 
+        {view === "month" &&
+          <ColoredInfoCard
+            cardColors={monthSavingsColor}
+            info={`Net Cash: $${monthNetIncome}`}
+            title={`${selectedMonth} ${selectedYear} 
+              Net Cash Rating: ${monthSavingsHealthState}`}
+          />
+        }
 
-      {view === "annual" &&
-        <ColoredInfoCard
-          cardColors={annualSavingsColor}
-          info={`Net Cash: $${formattedStringNumber(annualNetIncome)}`}
-          title={`${selectedYear} Net Cash Rating: ${annualSavingsHealthState}`}
-        />      
-      }
-      <LineChart
-        twoColumnData={lineChartData}
-        lineColors={[accentColorSecondary]}
-      />
-    </FlexColWrapper>
+        {view === "annual" &&
+          <ColoredInfoCard
+            cardColors={annualSavingsColor}
+            info={`Net Cash: $${formattedStringNumber(annualNetIncome)}`}
+            title={`${selectedYear} Net Cash Rating: ${annualSavingsHealthState}`}
+          />      
+        }
+        <LineChart
+          twoColumnData={lineChartData}
+          lineColors={[accentColorSecondary]}
+        />
+      </FlexColWrapper>
+    </ShowCaseCard>
   )
 }
 

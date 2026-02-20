@@ -1,9 +1,11 @@
 "use client"
 
+import { CredType } from "@/app/api/Auth/models"
+import { doLogin } from "@/app/api/Auth/requests"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { accentColorSecondary } from "@/globals/colors"
-import { supabaseBrowser } from "@/utils/supabase/client"
 import { 
+  Alert,
   Box, 
   Button, 
   Card, 
@@ -13,13 +15,9 @@ import {
   OutlinedInput, 
   Typography 
 } from "@mui/material"
+import { AuthError } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
-type CredType = {
-  username: string
-  password: string
-}
 
 const CRED_INIT = {
   username: "",
@@ -28,23 +26,17 @@ const CRED_INIT = {
 
 const LoginForm = () => {
   const router = useRouter()
-  const supabase = supabaseBrowser()
   const [credentials, setCredentials] = useState<CredType>(CRED_INIT)
+  const [error, setError] = useState<string | undefined>()
 
-  const signIn = async () => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email: credentials.username,
-      password: credentials.password,
+  const handleLogin = () => {
+    doLogin({
+      credentials: credentials,
+      router: router,
+      errorHandler: (error: AuthError) => {
+        setError(error.message)
+      }
     })
-
-    if (error) {
-      console.log(error)
-      return
-    }
-    // await supabase.auth.getSession()
-    // router.push("/")
-    // router.refresh()
-    window.location.href = "/"
   }
 
   return (
@@ -66,6 +58,8 @@ const LoginForm = () => {
             <Typography textAlign={"center"}>
               Please Sign In
             </Typography>
+
+            {error && <Alert severity={"error"}>{error}</Alert>}
 
             <Box className="flex flex-col gap-3 m-auto">
               <FormControl>
@@ -101,7 +95,7 @@ const LoginForm = () => {
 
               <Button
                 variant={"contained"} 
-                onClick={signIn}
+                onClick={handleLogin}
                 disabled={!credentials.username || !credentials.password}
                 sx={{ backgroundColor: accentColorSecondary }}
               >

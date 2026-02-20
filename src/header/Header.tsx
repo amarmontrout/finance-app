@@ -1,20 +1,24 @@
 "use client"
 
+import { doLogout } from "@/app/api/Auth/requests";
 import ThemeToggle from "@/components/ThemeToggle";
 import { accentColorSecondary } from "@/globals/colors";
 import { useUser } from "@/hooks/useUser";
-import { supabaseBrowser } from "@/utils/supabase/client";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import { AuthError } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const supabase = supabaseBrowser()
   const router = useRouter()
   const user = useUser()
 
-  const logout = async () => {
-    await supabase.auth.signOut()
-    router.replace("/login")
+  const handleLogOut = () => {
+    doLogout({
+      router: router,
+      errorHandler: (error: AuthError) => {
+        console.error(error.message)
+      }
+    })
   }
 
   return (
@@ -49,7 +53,7 @@ const Header = () => {
           <Button
             variant={"contained"}
             size={"small"}
-            onClick={logout}
+            onClick={handleLogOut}
             sx={{
               backgroundColor: accentColorSecondary
             }}

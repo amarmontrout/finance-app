@@ -2,7 +2,6 @@
 
 import LineChart from "@/components/LineChart"
 import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
-import { EXPENSES } from "@/globals/globals"
 import { Box, Tab, Tabs } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useMemo } from "react"
@@ -82,7 +81,7 @@ const Expenses = () => {
       <TabPanel value={value} index={0}>
         <AddExpenses
           expenseCategories={expenseCategoriesV2}
-          expenses={EXPENSES}
+          expenses={"expenses"}
           refreshExpenseTransactions={refreshExpenseTransactionsV2}
           years={yearsV2}
         />
@@ -94,7 +93,7 @@ const Expenses = () => {
           setSelectedMonth={setSelectedMonth}
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
-          expenses={EXPENSES}
+          expenses={"expenses"}
           expenseTransactions={expenseTransactionsV2}
           refreshExpenseTransactions={refreshExpenseTransactionsV2}
           setOpenEditDialog={setOpenEditDialog}
@@ -115,7 +114,7 @@ const Expenses = () => {
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
-        type={EXPENSES}
+        type={"expenses"}
         selectedId={selectedId}
         transactions={expenseTransactionsV2}
         categories={expenseCategoriesV2}

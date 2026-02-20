@@ -8,7 +8,6 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
-import { INCOME } from "@/globals/globals"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box, Tab, Tabs } from "@mui/material"
@@ -83,7 +82,7 @@ const Income = () => {
       <TabPanel value={value} index={0}>
         <AddIncome
           incomeCategories={incomeCategoriesV2}
-          income={INCOME}
+          income={"income"}
           refreshIncomeTransactions={refreshIncomeTransactionsV2}
           years={yearsV2}
         />
@@ -95,7 +94,7 @@ const Income = () => {
           setSelectedMonth={setSelectedMonth}
           selectedYear={selectedYear}
           setSelectedYear={setSelectedYear}
-          income={INCOME}
+          income={"income"}
           incomeTransactions={incomeTransactionsV2}
           refreshIncomeTransactions={refreshIncomeTransactionsV2}
           setOpenEditDialog={setOpenEditDialog}
@@ -116,7 +115,7 @@ const Income = () => {
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
-        type={INCOME}
+        type={"income"}
         selectedId={selectedId}
         transactions={incomeTransactionsV2}
         categories={incomeCategoriesV2}

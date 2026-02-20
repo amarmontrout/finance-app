@@ -32,7 +32,9 @@ const LoginForm = () => {
   const handleLogin = () => {
     doLogin({
       credentials: credentials,
-      router: router,
+      callback: (response) => {
+        router.replace("/")
+      },
       errorHandler: (error: AuthError) => {
         setError(error.message)
       }

@@ -43,11 +43,8 @@ export const TransactionProvider = (props: {
   const [budgetLoading, setBudgetLoading] = useState(false)
 
   const refreshIncomeTransactionsV2 = async () => {
-    if (!user) {
-      setIncomeTransactionsV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Income Transactions...")
     setIncomeLoading(true)
     const incomeResult = await getIncome({
       userId: user.id
@@ -57,11 +54,8 @@ export const TransactionProvider = (props: {
   }
 
   const refreshExpenseTransactionsV2 = async () => {
-    if (!user) {
-      setExpenseTransactionsV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Expenses Transactions...")
     setExpenseLoading(true)
     const expenseResult = await getExpenses({
       userId: user.id
@@ -71,11 +65,8 @@ export const TransactionProvider = (props: {
   }
 
   const refreshBudgetTransactionsV2 = async () => {
-    if (!user) {
-      setBudgetTransactionsV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Budget Transactions...")
     setBudgetLoading(true)
     const budgetResult = await getBudget({
       userId: user.id

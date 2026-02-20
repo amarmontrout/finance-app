@@ -1,34 +1,32 @@
 import { supabaseBrowser } from "@/utils/supabase/client"
-import { 
-  AppRouterInstance 
-} from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { CredType } from "./models"
-import { AuthError } from "@supabase/supabase-js"
+import { AuthError, Session, User, WeakPassword } from "@supabase/supabase-js"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 /**
  * Perform login
  */
 export const doLogin = async ({
   credentials,
-  router,
+  callback,
   errorHandler
 }: {
   credentials: CredType
-  router: AppRouterInstance
+  callback: (response: {user: User, session: Session, weakPassword?: WeakPassword}) => void
   errorHandler: (error: AuthError) => void
 }) => {
   const supabase = supabaseBrowser()
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: credentials.username,
     password: credentials.password,
   })
 
-  if (error) {errorHandler(error)}
-
-  await supabase.auth.getSession()
-  router.push("/")
-  router.refresh()
+  if (error) {
+    errorHandler(error)
+  } else {
+    callback(data)
+  }
 }
 
 /**
@@ -46,8 +44,8 @@ export const doLogout = async ({
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    if (error) {errorHandler(error)}
+    errorHandler(error)
+  } else {
+    router.replace("/login")
   }
-
-  router.replace("/login")
 }

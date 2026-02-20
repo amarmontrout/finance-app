@@ -54,11 +54,8 @@ export const CategoryProvider = (props: {
   const excludedSet = getExcludedCategorySet(expenseCategoriesV2)
 
   const refreshYearChoicesV2 = async () => {
-    if (!user) {
-      setYearsV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Year Choices...")
     setYearChoiceLoading(true)
     const yearsResult = await getYearChoices({
       userId: user.id
@@ -75,11 +72,8 @@ export const CategoryProvider = (props: {
   }
 
   const refreshIncomeCategoryChoicesV2 = async () => {
-    if (!user) {
-      setIncomeCategoriesV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Income Category Choices...")
     setIncomeCategoryLoading(true)
     const incomeCategoryResult = await getIncomeCategories({
       userId: user.id
@@ -96,11 +90,8 @@ export const CategoryProvider = (props: {
   }
 
   const refreshExpenseCategoryChoicesV2 = async () => {
-    if (!user) {
-      setExpenseCategoriesV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Expense Category Choices...")
     setexpenseCategoryLoading(true)
     const expenseCategoryResult = await getExpenseCategories({
       userId: user.id
@@ -117,11 +108,8 @@ export const CategoryProvider = (props: {
   }
 
   const refreshBudgetCategoryChoicesV2 = async () => {
-    if (!user) {
-      setBudgetCategoriesV2([])
-      return
-    }
-
+    if (!user) { return }
+    console.log("Pulling Budget Category Choices...")
     setBudgetLoading(true)
     const budgetCategoryResult = await getBudgetCategories({
       userId: user.id

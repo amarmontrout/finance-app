@@ -3,14 +3,11 @@ import InsightsIcon from '@mui/icons-material/Insights';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import TrendingDownIcon from '@mui/icons-material/TrendingDown';
 import SettingsIcon from '@mui/icons-material/Settings';
-import DataUsageIcon from '@mui/icons-material/DataUsage';
 import MultilineChartIcon from '@mui/icons-material/MultilineChart';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import HomeIcon from '@mui/icons-material/Home';
 
-export const EXPENSES = "expenses"
-export const INCOME = "income"
 export const DAYS = [
   "Sunday",
   "Monday",
@@ -34,11 +31,6 @@ export const MONTHS = [
   "November",
   "December"
 ]
-export const YEARS_KEY = "years"
-export const INCOME_CATEGORIES_KEY = "incomeCategories"
-export const EXPENSE_CATEGORIES_KEY = "expenseCategories"
-export const BUDGET_CATEGORIES_KEY = "budgetCategories"
-export const BUDGET_KEY = "budget"
 export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: HomeIcon},
   {"name": "Insights", "link": "/insights", icon: InsightsIcon},

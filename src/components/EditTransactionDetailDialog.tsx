@@ -1,5 +1,4 @@
 import { lightMode, darkMode } from "@/globals/colors"
-import { EXPENSES, INCOME } from "@/globals/globals"
 import { 
   Dialog, 
   DialogTitle, 
@@ -84,7 +83,7 @@ const EditTransactionDetailDialog = ({
 
   const handleUpdateTransactionData = async () => {
     if (!selectedYear || !selectedMonth || !selectedId || !user) return
-    if (type === INCOME) {
+    if (type === "income") {
       await updateIncome({
         userId: user.id,
         rowId: selectedId,
@@ -93,7 +92,7 @@ const EditTransactionDetailDialog = ({
       })
       if (refreshIncomeTransactions) 
         refreshIncomeTransactions()
-    } else if (type === EXPENSES) {
+    } else if (type === "expenses") {
       await updateExpense({
         userId: user.id,
         rowId: selectedId,
@@ -109,7 +108,7 @@ const EditTransactionDetailDialog = ({
   return (
     <Dialog open={openEditDialog}>
       <DialogTitle>
-        {`Edit ${type === INCOME ? "Income" : "Expense"} Detail`}
+        {`Edit ${type === "income" ? "Income" : "Expense"} Detail`}
       </DialogTitle>
       
       <DialogContent>

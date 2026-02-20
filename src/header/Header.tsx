@@ -6,13 +6,15 @@ import { accentColorSecondary } from "@/globals/colors";
 import { useUser } from "@/hooks/useUser";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { AuthError } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const Header = () => {
   const router = useRouter()
   const user = useUser()
+  const pathname = usePathname()
 
   const handleLogOut = () => {
+    if (!user) { return }
     doLogout({
       router: router,
       errorHandler: (error: AuthError) => {
@@ -43,16 +45,16 @@ const Header = () => {
 
       <Stack
         direction={"row"}
-        gap={2}
+        gap={1}
         alignItems={"center"}
         marginLeft={"5px"}
         marginRight={"1.5rem"}
       >
         {
-          user &&
+          pathname !== "/login" &&
           <Button
             variant={"contained"}
-            size={"small"}
+            size={"medium"}
             onClick={handleLogOut}
             sx={{
               backgroundColor: accentColorSecondary

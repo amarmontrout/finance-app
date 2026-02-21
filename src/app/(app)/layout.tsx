@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next"
 import Providers from "../providers";
-import { Box } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import Header from "@/header/Header";
 import "../../globals.css"
 import { HorizontalNavbar, Navbar } from "@/navigation/Navbar";
-import PageName from "@/header/PageName";
+import PageName from "@/navigation/PageName";
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -70,12 +70,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               >
                 <Header />
               </Box>
-              
-              <Box
-                className="flex md:hidden w-full"
-              >
-                <PageName/>
-              </Box>
 
               {/* Main content */}
               <Box
@@ -102,10 +96,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Box>
 
               {/* Mobile nav */}
-              <Box
+              <Stack
                 className="flex md:hidden"
                 component="nav"
                 bottom={0}
+                spacing={-1}
                 width={"100%"}
                 height={"97px"}
                 position={"absolute"}
@@ -119,7 +114,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 }}
               >
                 <HorizontalNavbar/>
-              </Box>
+
+                <Box
+                  className="flex md:hidden w-full"
+                >
+                  <PageName/>
+                </Box>
+              </Stack>
             </Box>
           </Box>
         </Providers>

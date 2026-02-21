@@ -15,16 +15,8 @@ const PageName = () => {
   if (!activeTab) return
   return (
     <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        bgcolor: "background.paper",
-        padding: "5px",
-        textAlign: "center",
-        borderBottom: 1,
-        borderColor: "divider"
-      }}
+      width={"100%"}
+      textAlign={"center"}
     >
       <Typography variant={"h6"} fontWeight={"bold"}>
         {activeTab.name}

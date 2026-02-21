@@ -1,6 +1,6 @@
 "use client"
 
-import { Box, Divider, IconButton, Stack, Typography } from "@mui/material"
+import { Box, Divider, Stack, Typography } from "@mui/material"
 import PageLink from "./PageLink";
 import Logo from "@/components/Logo";
 import { 
@@ -11,9 +11,6 @@ import {
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { darkMode, lightMode } from "@/globals/colors";
-import { useState } from "react";
-import MenuIcon from '@mui/icons-material/Menu';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -113,96 +110,21 @@ export const Navbar = () => {
 
 export const HorizontalNavbar = () => {
   const pathname = usePathname()
-  const [open, setOpen] = useState<boolean>(false)
 
   return (
     <Stack
+      className="p-[.5rem]"
       direction={"row"}
-      justifyContent={"space-between"}
-      width={"100%"}
+      spacing={1}
+      margin={"0 auto"}
+      sx={{
+        bgcolor: "rgba(255, 255, 255, 0.12)",
+        backdropFilter: "blur(4px) saturate(160%)",
+        borderRadius: "25px",
+        boxShadow: 3,
+      }}
     >
-      <Box 
-        className="p-[.25rem]"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "67px",
-          bgcolor: "rgba(255, 255, 255, 0.12)",
-          backdropFilter: "blur(4px) saturate(160%)",
-          borderRadius: "25px",
-          boxShadow: 3,
-          zIndex: 1000
-        }}
-      >
-        <IconButton
-          onClick={() => {
-            setOpen(!open)
-          }}
-        >
-          { open?
-            <KeyboardArrowRightIcon fontSize={"large"}/>
-            : <MenuIcon fontSize={"large"}/>
-          }
-        </IconButton>
-      </Box>
-
-      <Stack
-        className="p-[.5rem]"
-        direction={"row"}
-        gap={1}
-        sx={{
-          bgcolor: "rgba(255, 255, 255, 0.12)",
-          backdropFilter: "blur(4px) saturate(160%)",
-          borderRadius: "25px",
-          boxShadow: 3,
-        }}
-      >
-        {NAV_QUICK_INFO.map((item) => {
-          if (item.link !== "/") return
-            return (
-              <PageLink 
-                item={item} 
-                active={pathname === item.link} 
-                key={item.name}
-              />
-            )
-          })}
-        {!open && NAV_TRANSACTIONS.map((item) => {
-            return (
-              <PageLink 
-                item={item} 
-                active={pathname === item.link} 
-                key={item.name}
-              />
-            )
-          })}
-        {open && NAV_QUICK_INFO.map((item) => {
-          if (item.link === "/") return
-            return (
-              <PageLink 
-                item={item} 
-                active={pathname === item.link} 
-                key={item.name}
-              />
-            )
-          })}
-      </Stack>
-
-      <Box
-        className="p-[.5rem]"
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          bgcolor: "rgba(255, 255, 255, 0.12)",
-          backdropFilter: "blur(4px) saturate(160%)",
-          borderRadius: "25px",
-          boxShadow: 3,
-          zIndex: 1000
-        }}
-      >
-        {NAV_SETTINGS.map((item) => {
+      {NAV_TRANSACTIONS.map((item) => {
           return (
             <PageLink 
               item={item} 
@@ -211,7 +133,26 @@ export const HorizontalNavbar = () => {
             />
           )
         })}
-      </Box>
+      {NAV_QUICK_INFO.map((item) => {
+        if (item.link !== "/") return
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}        
+      {NAV_QUICK_INFO.map((item) => {
+        if (item.link === "/") return
+          return (
+            <PageLink 
+              item={item} 
+              active={pathname === item.link} 
+              key={item.name}
+            />
+          )
+        })}
     </Stack>
   )
 }

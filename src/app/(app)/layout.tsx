@@ -108,9 +108,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   position: "absolute",
                   bottom: 30,
-                  left: "50%",
-                  transform: "translateX(-50%)",
-                  width: "95%",
+                  width: "100%",
                   zIndex: 1000
                 }}
               >

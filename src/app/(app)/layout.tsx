@@ -105,10 +105,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <Box
                 className="flex md:hidden"
                 component="nav"
+                bottom={0}
+                width={"100%"}
+                height={"97px"}
+                position={"absolute"}
                 sx={{
-                  position: "absolute",
-                  bottom: 30,
-                  width: "100%",
+                  bgcolor: "rgba(255, 255, 255, 0.12)",
+                  backdropFilter: "blur(4px) saturate(160%)",
+                  borderTopLeftRadius: "25px",
+                  borderTopRightRadius: "25px",
+                  boxShadow: 3,
                   zIndex: 1000
                 }}
               >

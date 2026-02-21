@@ -113,16 +113,10 @@ export const HorizontalNavbar = () => {
 
   return (
     <Stack
-      className="p-[.5rem]"
+      className="p-[.5rem] w-full"
       direction={"row"}
       spacing={1}
-      margin={"0 auto"}
-      sx={{
-        bgcolor: "rgba(255, 255, 255, 0.12)",
-        backdropFilter: "blur(4px) saturate(160%)",
-        borderRadius: "25px",
-        boxShadow: 3,
-      }}
+      height={"67px"}
     >
       {NAV_TRANSACTIONS.map((item) => {
           return (

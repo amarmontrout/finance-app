@@ -113,10 +113,12 @@ export const HorizontalNavbar = () => {
 
   return (
     <Stack
-      className="p-[.5rem] w-full"
+      className="p-[.25rem] w-full"
       direction={"row"}
       spacing={1}
+      width={"100%"}
       height={"67px"}
+      justifyContent={"center"}
     >
       {NAV_TRANSACTIONS.map((item) => {
           return (

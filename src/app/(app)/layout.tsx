@@ -96,11 +96,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </Box>
 
               {/* Mobile nav */}
-              <Stack
-                className="flex md:hidden"
+              <Box
+                className="flex flex-col md:hidden"
                 component="nav"
                 bottom={0}
-                spacing={-1}
                 width={"100%"}
                 height={"97px"}
                 position={"absolute"}
@@ -120,7 +119,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 >
                   <PageName/>
                 </Box>
-              </Stack>
+              </Box>
             </Box>
           </Box>
         </Providers>

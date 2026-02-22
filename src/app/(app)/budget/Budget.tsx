@@ -47,13 +47,7 @@ const Budget = () => {
   }, [budgetTransactionsV2])
 
   const weeklyTransactions = useMemo(() => {
-    return budgetTransactionsV2.filter(entry => {
-      if (week === "prev") {
-        return entry.createdAt >= prevStart && entry.createdAt <= prevEnd
-      }
-      
-      return entry.createdAt >= start && entry.createdAt <= end
-    })
+    return budgetTransactionsV2
   }, [budgetTransactionsV2, start, end, prevStart, prevEnd, week])
 
   const remainingBudgetCategories = useMemo(() => {

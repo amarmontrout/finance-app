@@ -13,8 +13,8 @@ export type BudgetTransactionTypeV2 = {
   category: string,
   note: string,
   amount: number,
-  createdAt: number,
-  isReturn: boolean
+  isReturn: boolean,
+  date: DateType
 }
 
 export type BudgetTypeV2 = {
@@ -28,4 +28,10 @@ export type ChoiceTypeV2 = {
   name: string
   isExcluded?: boolean
   isRecurring?: boolean
+}
+
+export type DateType = {
+  month: string,
+  day: number | undefined, 
+  year: number
 }

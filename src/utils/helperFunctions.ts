@@ -12,6 +12,7 @@ export const getCurrentDateInfo = () => {
   const currentMonthIndex = today.getMonth()
   return {
     currentYear: String(today.getFullYear()),
+    currentDay: today.getDate(),
     currentMonth: MONTHS[today.getMonth()],
     passedMonths: MONTHS.slice(0, currentMonthIndex + 1)
   }

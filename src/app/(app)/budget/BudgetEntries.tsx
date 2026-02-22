@@ -25,10 +25,16 @@ import {
 import Autocomplete from '@mui/material/Autocomplete';
 import { ChangeEvent, useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
-import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
-import { makeId } from "@/utils/helperFunctions"
+import { 
+  BudgetTransactionTypeV2, 
+  BudgetTypeV2, 
+  DateType, 
+  HookSetter 
+} from "@/utils/type"
+import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
 import { deleteBudget, saveBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
+import FullDate from "@/components/FullDate"
 
 const BudgetEntries = ({
   budgetCategories, 
@@ -49,16 +55,22 @@ const BudgetEntries = ({
     currentTheme: string | undefined
     week: "prev" | "current"
 }) => {
+  const user = useUser()
+  const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
+
+  const TODAY: DateType = {
+    month: currentMonth,
+    day: currentDay,
+    year: Number(currentYear)
+  }
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
     id: Number(makeId(8)),
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
     amount: 0,
-    createdAt: 0,
-    isReturn: false
+    isReturn: false,
+    date: TODAY
   }
-
-  const user = useUser()
   
   const [budgetEntry, setBudgetEntry] = 
     useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
@@ -89,7 +101,6 @@ const BudgetEntries = ({
       userId: user.id,
       body: {
         ...budgetEntry,
-        createdAt: Date.now()
       }
     })
     refreshBudgetTransactions()
@@ -179,6 +190,11 @@ const BudgetEntries = ({
         paddingTop={"5px"}
       >
         <Box className="flex flex-col lg:flex-row gap-3 pb-[12px]">
+          <FullDate
+            today={TODAY}
+            setBudgetEntry={setBudgetEntry}
+          />
+
           <FormControl>
             <InputLabel>Category</InputLabel>
             <Select

@@ -13,10 +13,12 @@ import { ChangeEvent, useEffect, useState } from "react"
 
 const FullDate = ({
   today,
-  setBudgetEntry
+  setBudgetEntry,
+  disabled
 }: {
   today: DateType
   setBudgetEntry: HookSetter<BudgetTransactionTypeV2>
+  disabled?: boolean
 }) => {
   const [date, setDate] = useState<DateType>(today)
 
@@ -74,6 +76,7 @@ const FullDate = ({
           value={date.month}
           name={"month"}
           onChange={e => handleMonth(e)}
+          disabled={disabled}
         >
           {MONTHS.map((month) => {
             return (
@@ -98,6 +101,7 @@ const FullDate = ({
           value={date.day}
           name={"day"}
           onChange={e => handleDay(e)}
+          disabled={disabled}
         />
       </FormControl>
 
@@ -112,6 +116,7 @@ const FullDate = ({
           value={date.year}
           name={"year"}
           onChange={e => handleYear(e)}
+          disabled={disabled}
         />
       </FormControl>
     </Stack>

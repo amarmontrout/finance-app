@@ -1,40 +1,30 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
+import { darkMode, lightMode } from "@/globals/colors"
 import DeleteIcon from '@mui/icons-material/Delete'
 import CancelIcon from '@mui/icons-material/Cancel'
 import EditIcon from '@mui/icons-material/Edit'
 import { 
   Box, 
-  FormControl, 
-  InputLabel,  
-  Button, 
   List,
   ListItem,
   ListItemText,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-  TextField,
   IconButton,
   Stack,
-  Checkbox,
-  FormControlLabel
+  Typography,
 } from "@mui/material"
-import Autocomplete from '@mui/material/Autocomplete';
-import { ChangeEvent, useState } from "react"
-import { MoneyInputV2 } from "@/components/MoneyInput"
 import { 
   BudgetTransactionTypeV2, 
   BudgetTypeV2, 
   DateType, 
   HookSetter 
 } from "@/utils/type"
-import { makeId } from "@/utils/helperFunctions"
-import { deleteBudget, saveBudget } from "@/app/api/Transactions/requests"
+import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
-import FullDate from "@/components/FullDate"
+import BudgetEntryForm from "./BudgetEntryForm"
+import { FlexColWrapper } from "@/components/Wrappers"
+import { useState } from "react"
 
 const BudgetEntries = ({
   budgetCategories, 
@@ -58,50 +48,11 @@ const BudgetEntries = ({
     today: DateType
 }) => {
   const user = useUser()
-
-  const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
-    id: Number(makeId(8)),
-    category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
-    note: "",
-    amount: 0,
-    isReturn: false,
-    date: today
-  }
-  
-  const [budgetEntry, setBudgetEntry] = 
-    useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
-  const [noteValue, setNoteValue] = useState<string | null>(null)
   const [noteId, setNoteId] = useState<number | null>(null)
 
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
     : darkMode.elevatedBg
-
-  const handleCategory = (
-    e: SelectChangeEvent
-  ) => {
-    const { value } = e.target
-    setBudgetEntry(prev => ({
-      ...prev,
-      category: value,
-    }));
-  }
-
-  const resetFormData = () => {
-    setBudgetEntry(BUDGET_ENTRY_INIT)
-  }
-
-  const save = async () => {
-    if (!user) return
-    await saveBudget({
-      userId: user.id,
-      body: {
-        ...budgetEntry,
-      }
-    })
-    refreshBudgetTransactions()
-    resetFormData()
-  }
 
   const deleteEntry = async (id: number) => {
     if (!user) return
@@ -178,137 +129,48 @@ const BudgetEntries = ({
   }
 
   return (
-    <ShowCaseCard title={"Budget Expenses"}>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        overflow={"hidden"}
-        paddingTop={"5px"}
-      >
-        <Box className="flex flex-col lg:flex-row gap-3 pb-[12px]">
-          <FullDate
-            today={today}
-            setBudgetEntry={setBudgetEntry}
-          />
+    <FlexColWrapper gap={2}>
+      <ShowCaseCard title={"Budget Entry Form"}>
+        <BudgetEntryForm
+          budgetCategories={budgetCategories}
+          today={today}
+          user={user}
+          refreshBudgetTransactions={refreshBudgetTransactions}
+          week={week}
+          notes={notes}
+        />
+      </ShowCaseCard>
 
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select
-              className="w-full lg:w-[175px]"
-              label="Category"
-              value={budgetEntry.category}
-              name={"category"}
-              onChange={e => handleCategory(e)}
-              disabled={week === "prev"}
-            >
-              {budgetCategories.map((budget) => {
-                return (
-                  <MenuItem 
-                    value={budget.category}
-                  >
-                    {budget.category}
-                  </MenuItem>
-                )
-              })}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <Autocomplete
-              className="w-full lg:w-[175px]"
-              freeSolo
-              disabled={week === "prev"}
-              options={notes.map((option) => option)}
-              value={noteValue}
-              onChange={(event: any, newValue: string | null) => {
-                setNoteValue(newValue);
-              }}
-              inputValue={budgetEntry.note}
-              onInputChange={(event, newInputValue) => {
-                setBudgetEntry(prev => ({
-                  ...prev,
-                  note: newInputValue,
-                }));
-              }}
-              renderInput={(params) => 
-                <TextField
-                  {...params} 
-                  label="Note" 
-                />
-              }
-            />
-          </FormControl>  
-
-          <MoneyInputV2
-            value={budgetEntry.amount}
-            setValue={setBudgetEntry}
-            smallWidthBp={"lg"}
-            disabled={week === "prev"}
-          />
-
-          <FormControlLabel 
-            control={
-              <Checkbox 
-                checked={budgetEntry.isReturn}
-                sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setBudgetEntry(prev => ({
-                    ...prev,
-                    isReturn: e.target.checked
-                  }))
-                }}
-              />
-            } 
-            label="Is a return?" 
-          />
-
-          <Button
-            variant={"contained"} 
-            disabled={week === "prev"}
-            onClick={save}
-            sx={{
-              backgroundColor: accentColorSecondary
-            }}
-          >
-            {"Add"}
-          </Button>
-        </Box>
-
-        <hr style={{ width: "100%" }} />
-
-        <Box
-          flex={1}
-          overflow={"auto"}
-        >
-          <List className="flex flex-col gap-2">
-            { budgetTransactions &&
-              (budgetTransactions).map((entry) => {                 
-                return (
-                  <ListItem
-                    key={entry.id} 
-                    secondaryAction={
-                    noteId === entry.id
-                      ? <ConfirmCancel id={entry.id}/> 
-                      : <EditDeleteButton id={entry.id} entry={entry}/>
-                    }
-                    sx={{ 
-                      backgroundColor: listItemColor,
-                      borderRadius: "15px"
-                    }}
-                  >
-                    <ListItemText 
-                      primary={`$${entry.amount.toFixed(2)} - ${entry.note}
-                        ${entry.isReturn? " - RETURNED" : ""}`} 
-                      secondary={entry.category}
-                    />
-                  </ListItem>
-                )
-              })
-            }
-          </List>
-        </Box>
-      </Box>
-    </ShowCaseCard>
+      <ShowCaseCard title={"Budget Entries"}>
+        <List className="flex flex-col gap-2">
+          { budgetTransactions.length === 0?
+            <Typography>The are no budget entries</Typography> :
+            (budgetTransactions).map((entry) => {                 
+              return (
+                <ListItem
+                  key={entry.id} 
+                  secondaryAction={
+                  noteId === entry.id
+                    ? <ConfirmCancel id={entry.id}/> 
+                    : <EditDeleteButton id={entry.id} entry={entry}/>
+                  }
+                  sx={{ 
+                    backgroundColor: listItemColor,
+                    borderRadius: "15px"
+                  }}
+                >
+                  <ListItemText 
+                    primary={`$${entry.amount.toFixed(2)} - ${entry.note}
+                      ${entry.isReturn? " - RETURNED" : ""}`} 
+                    secondary={entry.category}
+                  />
+                </ListItem>
+              )
+            })
+          }
+        </List>
+      </ShowCaseCard>
+    </FlexColWrapper>
   )
 }
 

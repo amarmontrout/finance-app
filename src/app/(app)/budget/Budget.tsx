@@ -1,7 +1,7 @@
 "use client"
 
 import { FlexColWrapper } from "@/components/Wrappers"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import RemainingBudget from "./RemainingBudget"
 import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
@@ -33,24 +33,33 @@ const Budget = () => {
     day: currentDay,
     year: Number(currentYear)
   }
-  const { start, end, prevStart, prevEnd } = getWeekBounds(TODAY)
+  const { start, end, prevStart, prevEnd } = useMemo(() => {
+    return getWeekBounds({
+      month: currentMonth,
+      day: currentDay,
+      year: Number(currentYear)
+    })
+  }, [])
+
+  const prevWeek = {
+    start: `${prevStart.month} ${prevStart.day}, ${prevStart.year}`,
+    end: `${prevEnd.month} ${prevEnd.day}, ${prevEnd.year}`
+  }
+
+    const currentWeek = {
+    start: `${start.month} ${start.day}, ${start.year}`,
+    end: `${end.month} ${end.day}, ${end.year}`
+  }
 
   const [week, setWeek] = useState<"prev" | "current">("current")
-  const [notes, setNotes] = useState<string[]>([])
   const [selectedEntry, setSelectedEntry] = 
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [value, setValue] = useState(0)
 
-  useEffect(() => {
-    let notes: string[] = []
-    budgetTransactionsV2.map((entry) => {
-      if (!notes.includes(entry.note)) {
-        notes.push(entry.note)
-      }
-    })
-    setNotes(notes)
-  }, [budgetTransactionsV2])
+const notes = useMemo(() => {
+  return [...new Set(budgetTransactionsV2.map(e => e.note))]
+}, [budgetTransactionsV2])
   
   const weeklyTransactions = useMemo(() => {
     const toDate = (date: DateType) => {
@@ -135,16 +144,21 @@ const Budget = () => {
         paddingTop={"10px"}
       >
         <FormControl>
-          <InputLabel>View</InputLabel>
+          <InputLabel>Week</InputLabel>
           <Select
             className="w-full sm:w-[175px]"
-            label="View"
+            label="Week"
             value={week}
-            name={"view"}
+            name={"week"}
             onChange={e => setWeek(e.target.value)}
           >
-            <MenuItem key={"prev"} value={"prev"}>Previous Week</MenuItem>
-            <MenuItem key={"current"} value={"current"}>Current Week</MenuItem>
+            <MenuItem key={"prev"} value={"prev"}>
+              {`${prevWeek.start} - ${prevWeek.end}`}
+            </MenuItem>
+            
+            <MenuItem key={"current"} value={"current"}>
+              {`${currentWeek.start} - ${currentWeek.end}`}
+            </MenuItem>
           </Select>
         </FormControl>
       </Box>

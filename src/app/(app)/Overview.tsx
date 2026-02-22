@@ -91,10 +91,10 @@ const Overview = () => {
         />
       </TabPanel>
 
-      <LineChart
+      {/* <LineChart
         multiColumnData={chartDataV2}
         lineColors={lineColor}
-      /> 
+      />  */}
     </FlexColWrapper>
   )
 }

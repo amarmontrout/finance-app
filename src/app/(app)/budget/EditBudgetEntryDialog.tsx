@@ -2,7 +2,7 @@ import { updateBudget } from "@/app/api/Transactions/requests"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
+import { BudgetTransactionTypeV2, BudgetTypeV2, DateType, HookSetter } from "@/utils/type"
 import { 
   Dialog, 
   DialogTitle, 
@@ -28,7 +28,8 @@ const EditBudgetEntryDialog = ({
   notes,
   budgetCategories,
   selectedEntry,
-  refreshBudgetTransactions
+  refreshBudgetTransactions,
+  today
 }: {
   openEditDialog: boolean
   setOpenEditDialog: HookSetter<boolean>
@@ -36,6 +37,7 @@ const EditBudgetEntryDialog = ({
   budgetCategories: BudgetTypeV2[]
   selectedEntry: BudgetTransactionTypeV2 | null
   refreshBudgetTransactions: () => void
+  today: DateType
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
@@ -45,8 +47,8 @@ const EditBudgetEntryDialog = ({
     category: "",
     note: "",
     amount: 0,
-    createdAt: 0,
-    isReturn: false
+    isReturn: false,
+    date: today
   }
 
   const [updatedBudgetEntry, setUpdatedBudgetEntry] = 

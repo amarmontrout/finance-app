@@ -179,6 +179,7 @@ const Budget = () => {
         budgetCategories={budgetCategoriesV2}
         selectedEntry={selectedEntry}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
+        today={TODAY}
       />
     </FlexColWrapper>
   )

@@ -7,15 +7,22 @@ import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { incomeLinesLight, incomeLinesDark } from "@/globals/colors"
+import { 
+  incomeLinesLight, 
+  incomeLinesDark, 
+  accentColorPrimarySelected, 
+  lightMode, 
+  darkMode 
+} from "@/globals/colors"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box, Tab, Tabs } from "@mui/material"
+import { Box, Button, Tab, Tabs } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useMemo } from "react"
-import AddIncome from "./AddIncome"
 import IncomeList from "./IncomeList"
 import ShowCaseCard from "@/components/ShowCaseCard"
+import AddIncomeDialog from "./AddIncomeDialog"
+import AddIcon from '@mui/icons-material/Add';
 
 const Income = () => {
   const {
@@ -29,6 +36,7 @@ const Income = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [openAddIncomeDialog, setOpenAddIncomeDialog] = useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [value, setValue] = useState(0)
 
@@ -73,22 +81,25 @@ const Income = () => {
     <FlexColWrapper gap={2}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Add Income"/>
           <Tab label="Income List"/>
           <Tab label="Income Chart"/>
         </Tabs>
       </Box>
 
-      <TabPanel value={value} index={0}>
-        <AddIncome
-          incomeCategories={incomeCategoriesV2}
-          income={"income"}
-          refreshIncomeTransactions={refreshIncomeTransactionsV2}
-          years={yearsV2}
-        />
-      </TabPanel>
+      <Button
+        onClick={() => {setOpenAddIncomeDialog(true)}}
+        sx={{
+          backgroundColor: accentColorPrimarySelected,
+          color: currentTheme === "light" 
+            ? lightMode.primaryText
+            : darkMode.primaryText
+        }}
+      >
+        <AddIcon/>
+        Add Income
+      </Button>
 
-      <TabPanel value={value} index={1}>
+      <TabPanel value={value} index={0}>
         <IncomeList
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
@@ -103,7 +114,7 @@ const Income = () => {
         />
       </TabPanel>
 
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={1}>
         <ShowCaseCard title={"Income"}>
           <LineChart
             multiColumnData={lineChartData}
@@ -111,6 +122,15 @@ const Income = () => {
           />
         </ShowCaseCard>
       </TabPanel>
+
+      <AddIncomeDialog
+        incomeCategories={incomeCategoriesV2}
+        income={"income"}
+        refreshIncomeTransactions={refreshIncomeTransactionsV2}
+        years={yearsV2}
+        openAddIncomeDialog={openAddIncomeDialog}
+        setOpenAddIncomeDialog={setOpenAddIncomeDialog}
+      />
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}

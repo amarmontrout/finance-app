@@ -1,8 +1,14 @@
 "use client"
 
 import LineChart from "@/components/LineChart"
-import { expenseLinesLight, expenseLinesDark } from "@/globals/colors"
-import { Box, Tab, Tabs } from "@mui/material"
+import { 
+  expenseLinesLight, 
+  expenseLinesDark, 
+  accentColorPrimarySelected, 
+  lightMode, 
+  darkMode 
+} from "@/globals/colors"
+import { Box, Button, Tab, Tabs } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useState, useMemo } from "react"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -13,9 +19,10 @@ import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
-import AddExpenses from "./AddExpenses"
 import ExpenseList from "./ExpenseList"
 import ShowCaseCard from "@/components/ShowCaseCard"
+import AddExpenseDialog from "./AddExpenseDialog"
+import AddIcon from '@mui/icons-material/Add';
 
 const Expenses = () => {
   const {
@@ -29,6 +36,8 @@ const Expenses = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [openAddExpenseDialog, setOpenAddExpenseDialog] = 
+    useState<boolean>(false)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [value, setValue] = useState(0)
 
@@ -73,21 +82,25 @@ const Expenses = () => {
     <FlexColWrapper gap={2}>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Add Expense"/>
           <Tab label="Expense List"/>
           <Tab label="Expense Chart"/>
         </Tabs>
       </Box>
-      <TabPanel value={value} index={0}>
-        <AddExpenses
-          expenseCategories={expenseCategoriesV2}
-          expenses={"expenses"}
-          refreshExpenseTransactions={refreshExpenseTransactionsV2}
-          years={yearsV2}
-        />
-      </TabPanel>
 
-      <TabPanel value={value} index={1}>
+      <Button
+        onClick={() => {setOpenAddExpenseDialog(true)}}
+        sx={{
+          backgroundColor: accentColorPrimarySelected,
+          color: currentTheme === "light" 
+            ? lightMode.primaryText
+            : darkMode.primaryText
+        }}
+      >
+        <AddIcon/>
+        Add Expense
+      </Button>
+
+      <TabPanel value={value} index={0}>
         <ExpenseList
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
@@ -102,7 +115,7 @@ const Expenses = () => {
         />
       </TabPanel>
 
-      <TabPanel value={value} index={2}>
+      <TabPanel value={value} index={1}>
         <ShowCaseCard title={"Expenses"}>
           <LineChart
             multiColumnData={lineChartData}
@@ -110,6 +123,15 @@ const Expenses = () => {
           />
         </ShowCaseCard>
       </TabPanel>
+
+      <AddExpenseDialog
+        expenseCategories={expenseCategoriesV2}
+        expenses={"expenses"}
+        refreshExpenseTransactions={refreshExpenseTransactionsV2}
+        years={yearsV2}
+        openAddExpenseDialog={openAddExpenseDialog}
+        setOpenAddExpenseDialog={setOpenAddExpenseDialog}
+      />
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}

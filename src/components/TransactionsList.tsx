@@ -81,8 +81,15 @@ const TransactionsList = ({
       setSelectedMonth("")
       return
     }
+    const today = new Date()
+    const currentMonthName = MONTHS[today.getMonth()]
+
     if (!monthsForYear.includes(selectedMonth)) {
-      setSelectedMonth(monthsForYear[0] ?? "")
+      if (monthsForYear.includes(currentMonthName)) {
+        setSelectedMonth(currentMonthName)
+      } else {
+        setSelectedMonth(monthsForYear[0] ?? "")
+      }
     }
   }, [transactions, selectedYear, selectedMonth])
 

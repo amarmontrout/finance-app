@@ -1,6 +1,6 @@
 import { MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { ChoiceTypeV2 } from "./type"
+import { ChoiceTypeV2, DateType } from "./type"
 
 /**
  * This helper function gets the current year and month.
@@ -22,10 +22,17 @@ export const getCurrentDateInfo = () => {
  * This helper function gets the beginning and end of the current week.
  * 
  * @returns The current week's beginning and end time
- */
-export const getWeekBounds = (date = new Date()) => {
-  const d = new Date(date)
+*/
+export const getWeekBounds = (date: DateType) => {
+  const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
+  const d = new Date(date.year, monthIndex, date.day)
   d.setHours(0, 0, 0, 0)
+  
+  const toDateType = (d: Date): DateType => ({
+    month: d.toLocaleString("default", { month: "long" }),
+    day: d.getDate(),
+    year: d.getFullYear(),
+  })
 
   const day = d.getDay() // 0 = Sunday
   const startOfWeek = new Date(d)
@@ -33,19 +40,18 @@ export const getWeekBounds = (date = new Date()) => {
 
   const endOfWeek = new Date(startOfWeek)
   endOfWeek.setDate(startOfWeek.getDate() + 6)
-  endOfWeek.setHours(23, 59, 59, 999)
 
   const prevStartOfWeek = new Date(startOfWeek)
   prevStartOfWeek.setDate(startOfWeek.getDate() - 7)
 
   const prevEndOfWeek = new Date(startOfWeek)
-  prevEndOfWeek.setMilliseconds(-1)
+  prevEndOfWeek.setDate(startOfWeek.getDate() - 1)
 
   return {
-    start: startOfWeek.getTime(),
-    end: endOfWeek.getTime(),
-    prevStart: prevStartOfWeek.getTime(),
-    prevEnd: prevEndOfWeek.getTime()
+    start: toDateType(startOfWeek),
+    end: toDateType(endOfWeek),
+    prevStart: toDateType(prevStartOfWeek),
+    prevEnd: toDateType(prevEndOfWeek),
   }
 }
 

@@ -31,7 +31,7 @@ import {
   DateType, 
   HookSetter 
 } from "@/utils/type"
-import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
+import { makeId } from "@/utils/helperFunctions"
 import { deleteBudget, saveBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import FullDate from "@/components/FullDate"
@@ -44,7 +44,8 @@ const BudgetEntries = ({
   setOpenEditDialog,
   setSelectedEntry,
   currentTheme,
-  week
+  week,
+  today
 }: {
     budgetCategories: BudgetTypeV2[]
     budgetTransactions: BudgetTransactionTypeV2[]
@@ -54,22 +55,17 @@ const BudgetEntries = ({
     setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
     currentTheme: string | undefined
     week: "prev" | "current"
+    today: DateType
 }) => {
   const user = useUser()
-  const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
 
-  const TODAY: DateType = {
-    month: currentMonth,
-    day: currentDay,
-    year: Number(currentYear)
-  }
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
     id: Number(makeId(8)),
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
     amount: 0,
     isReturn: false,
-    date: TODAY
+    date: today
   }
   
   const [budgetEntry, setBudgetEntry] = 
@@ -191,7 +187,7 @@ const BudgetEntries = ({
       >
         <Box className="flex flex-col lg:flex-row gap-3 pb-[12px]">
           <FullDate
-            today={TODAY}
+            today={today}
             setBudgetEntry={setBudgetEntry}
           />
 

@@ -4,7 +4,7 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { useEffect, useMemo, useState } from "react"
 import RemainingBudget from "./RemainingBudget"
 import BudgetEntries from "./BudgetEntries"
-import { getWeekBounds } from "@/utils/helperFunctions"
+import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
 import { 
@@ -18,7 +18,7 @@ import {
 } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { BudgetTransactionTypeV2, BudgetTypeV2 } from "@/utils/type"
+import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
 
 const Budget = () => {
   const {
@@ -26,8 +26,14 @@ const Budget = () => {
     refreshBudgetTransactionsV2
   } = useTransactionContext()
   const { budgetCategoriesV2 } = useCategoryContext()
-  const { start, end, prevStart, prevEnd } = getWeekBounds()
   const { theme: currentTheme } = useTheme()
+  const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
+  const TODAY: DateType = {
+    month: currentMonth,
+    day: currentDay,
+    year: Number(currentYear)
+  }
+  const { start, end, prevStart, prevEnd } = getWeekBounds(TODAY)
 
   const [week, setWeek] = useState<"prev" | "current">("current")
   const [notes, setNotes] = useState<string[]>([])
@@ -45,9 +51,23 @@ const Budget = () => {
     })
     setNotes(notes)
   }, [budgetTransactionsV2])
-
+  
   const weeklyTransactions = useMemo(() => {
-    return budgetTransactionsV2
+    const toDate = (date: DateType) => {
+      const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
+      return new Date(date.year, monthIndex, date.day)
+    }
+
+    const weekStart = toDate(week === "prev" ? prevStart : start)
+    const weekEnd = toDate(week === "prev" ? prevEnd : end)
+    
+    return budgetTransactionsV2.filter(entry => {
+      if (!entry.date?.day) return false
+
+      const entryDate = toDate(entry.date)
+
+      return entryDate >= weekStart && entryDate <= weekEnd
+    })
   }, [budgetTransactionsV2, start, end, prevStart, prevEnd, week])
 
   const remainingBudgetCategories = useMemo(() => {
@@ -148,6 +168,7 @@ const Budget = () => {
           setSelectedEntry={setSelectedEntry}
           currentTheme={currentTheme}
           week={week}
+          today={TODAY}
         />
       </TabPanel>
 

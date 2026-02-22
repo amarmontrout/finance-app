@@ -19,7 +19,7 @@ const Overview = () => {
     expenseTransactionsV2 
   } = useTransactionContext()
   const { excludedSet } = useCategoryContext()
-  const { currentYear} = getCurrentDateInfo()
+  const { currentYear, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
   const [value, setValue] = useState(0)
@@ -74,6 +74,7 @@ const Overview = () => {
       <TabPanel value={value} index={0}>
         <YearTotals
           currentYear={Number(currentYear)}
+          passedMonths={passedMonths}
           currentTheme={currentTheme}
           excludedSet={excludedSet}
           incomeTransactionsV2={incomeTransactionsV2}
@@ -84,6 +85,7 @@ const Overview = () => {
       <TabPanel value={value} index={1}>
         <YearNetCash
           currentYear={Number(currentYear)}
+          passedMonths={passedMonths}
           currentTheme={currentTheme}
           excludedSet={excludedSet}
           incomeTransactionsV2={incomeTransactionsV2}

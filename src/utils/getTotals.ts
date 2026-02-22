@@ -2,13 +2,30 @@ import { formattedStringNumber } from "./helperFunctions"
 import { TransactionTypeV2 } from "./type"
 
 export const getYearTotalV2 = (
-  year: number, 
+  year: number,
   transactions: TransactionTypeV2[],
   excludedCategories: Set<string>
 ): string => {
   let total = 0
   transactions.map((entry) => {
     if (entry.year === year) {
+      if (!excludedCategories.has(entry.category)) {
+        total += entry.amount
+      }
+    }
+  })
+  return formattedStringNumber(total)
+}
+
+export const getYearUpToMonthTotalV2 = (
+  year: number, 
+  passedMonths: string[],
+  transactions: TransactionTypeV2[],
+  excludedCategories: Set<string>
+): string => {
+  let total = 0
+  transactions.map((entry) => {
+    if (entry.year === year && passedMonths.includes(entry.month)) {
       if (!excludedCategories.has(entry.category)) {
         total += entry.amount
       }

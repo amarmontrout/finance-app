@@ -9,9 +9,11 @@ import { ChoiceTypeV2 } from "./type"
  */
 export const getCurrentDateInfo = () => {
   const today = new Date()
+  const currentMonthIndex = today.getMonth()
   return {
     currentYear: String(today.getFullYear()),
-    currentMonth: MONTHS[today.getMonth()]
+    currentMonth: MONTHS[today.getMonth()],
+    passedMonths: MONTHS.slice(0, currentMonthIndex + 1)
   }
 }
 

@@ -2,6 +2,8 @@ import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 
+// Annual logic accounts for all transactions. Need to limit to past and current months only.
+
 const AnnualCategoryBreakdown = ({
   selectedYear,
   annualIncomeCategoryTotals,

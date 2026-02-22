@@ -19,6 +19,8 @@ import {
 import { TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
 
+// Annual logic accounts for all transactions. Need to limit to past and current months only.
+
 const NetCashFlow = ({
   incomeTransactions,
   expenseTransactions,

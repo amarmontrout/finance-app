@@ -28,7 +28,7 @@ const AddExpenseDialog = ({
   const { theme: currentTheme } = useTheme()
 
   return (
-    <Dialog open={openAddExpenseDialog}>
+    <Dialog open={openAddExpenseDialog} fullWidth>
       <DialogTitle>
         {"Enter Expense"}
       </DialogTitle>

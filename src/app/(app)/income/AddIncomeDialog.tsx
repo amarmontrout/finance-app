@@ -27,7 +27,7 @@ const AddIncomeDialog = ({
 }) => {
   const { theme: currentTheme } = useTheme()
   return (
-    <Dialog open={openAddIncomeDialog}>
+    <Dialog open={openAddIncomeDialog} fullWidth>
       <DialogTitle>
         {"Enter Income"}
       </DialogTitle>

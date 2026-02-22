@@ -24,9 +24,11 @@ const AddExpenseCategory = ({
 
   const [expenseCategoriesInput, setExpenseCategoriesInput] = 
     useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const save = async () => {
     if (!user) return
+    setIsLoading(true)
     await saveExpenseCategory({
       userId: user.id,
       body: {
@@ -34,6 +36,7 @@ const AddExpenseCategory = ({
         name: expenseCategoriesInput
       }
     })
+    setIsLoading(false)
     refreshExpenseCategoryChoicesV2()
     setExpenseCategoriesInput("")
   }
@@ -55,6 +58,7 @@ const AddExpenseCategory = ({
             {setExpenseCategoriesInput(e.target.value)}
           }
           onSubmit={save}
+          isLoading={isLoading}
         />
         <hr style={{ width: "100%" }} />
         <Box

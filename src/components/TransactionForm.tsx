@@ -52,6 +52,7 @@ const TransactionForm = ({
 
   const [transaction, setTransaction] = 
     useState<TransactionTypeV2>(TRANSACTION_INIT)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (!categories.length) return
@@ -96,16 +97,20 @@ const TransactionForm = ({
   const save = async () => {
     if (!user) return
     
+    setIsLoading(true)
+
     if (type === "income") {
       await saveIncome({
         userId: user?.id,
         body: transaction
       })
+      setIsLoading(false)
     } else if (type === "expenses") {
       await saveExpenses({
         userId: user.id,
         body: transaction
       })
+      setIsLoading(false)
     }
 
     refreshTransactions()
@@ -198,6 +203,7 @@ const TransactionForm = ({
         sx={{
           backgroundColor: accentColorSecondary
         }}
+        loading={isLoading}
       >
         {`Add ${type}`}
       </Button>

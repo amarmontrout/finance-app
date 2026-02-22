@@ -12,12 +12,14 @@ const SimpleForm = ({
     label,
     value,
     onChange,
-    onSubmit
+    onSubmit,
+    isLoading
   }: {
   label: string,
   value: string
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void
   onSubmit: () => void
+  isLoading: boolean
 }) => {
   return (
     <Box
@@ -40,6 +42,7 @@ const SimpleForm = ({
           backgroundColor: accentColorSecondary
         }}
         disabled={value === ""}
+        loading={isLoading}
       >
         {`Add`}
       </Button>

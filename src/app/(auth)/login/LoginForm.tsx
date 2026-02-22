@@ -28,15 +28,19 @@ const LoginForm = () => {
   const router = useRouter()
   const [credentials, setCredentials] = useState<CredType>(CRED_INIT)
   const [error, setError] = useState<string | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleLogin = () => {
+    setIsLoading(true)
     doLogin({
       credentials: credentials,
-      callback: (response) => {
+      callback: () => {
         router.replace("/")
+        setIsLoading(false)
       },
       errorHandler: (error: AuthError) => {
         setError(error.message)
+        setIsLoading(false)
       }
     })
   }
@@ -96,6 +100,7 @@ const LoginForm = () => {
               onClick={handleLogin}
               disabled={!credentials.username || !credentials.password}
               sx={{ backgroundColor: accentColorSecondary }}
+              loading={isLoading}
             >
               {"Sign In"}
             </Button>

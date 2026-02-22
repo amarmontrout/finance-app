@@ -13,9 +13,11 @@ const AddYear = () => {
   const user = useUser()
 
   const [yearsInput, setYearsInput] = useState<string>("")
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const save = async () => {
     if (!user) return
+    setIsLoading(true)
     await saveYearChoice({
       userId: user.id,
       body: {
@@ -23,6 +25,7 @@ const AddYear = () => {
         name: yearsInput
       }
     })
+    setIsLoading(false)
     refreshYearChoicesV2()
     setYearsInput("")
   }
@@ -44,6 +47,7 @@ const AddYear = () => {
               {setYearsInput(e.target.value)}
           }
           onSubmit={save}
+          isLoading={isLoading}
         />
         <hr style={{ width: "100%" }} />
         <Box

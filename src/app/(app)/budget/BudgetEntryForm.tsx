@@ -48,6 +48,7 @@ const BudgetEntryForm = ({
   const [budgetEntry, setBudgetEntry] = 
     useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   
   const handleCategory = (
     e: SelectChangeEvent
@@ -65,12 +66,14 @@ const BudgetEntryForm = ({
 
   const save = async () => {
     if (!user) return
+    setIsLoading(true)
     await saveBudget({
       userId: user.id,
       body: {
         ...budgetEntry,
       }
     })
+    setIsLoading(false)
     refreshBudgetTransactions()
     resetFormData()
   }
@@ -161,6 +164,7 @@ const BudgetEntryForm = ({
         sx={{
           backgroundColor: accentColorSecondary
         }}
+        loading={isLoading}
       >
         {"Add"}
       </Button>

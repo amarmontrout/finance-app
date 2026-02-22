@@ -49,6 +49,7 @@ const AddBudget = ({
 
   const [budgetCategory, setBudgetCategory] = 
     useState<BudgetTypeV2>(BUDGET_INIT)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const listItemColor = currentTheme === "light" ?
     lightMode.elevatedBg 
@@ -69,10 +70,12 @@ const AddBudget = ({
 
   const save = async () => {
     if (!user) return
+    setIsLoading(true)
     await saveBudgetCategory({
       userId: user.id,
       body: budgetCategory
     })
+    setIsLoading(false)
     refreshBudgetCategoryChoicesV2()
     resetFormData()
   }
@@ -185,6 +188,7 @@ const AddBudget = ({
             sx={{
               backgroundColor: accentColorSecondary
             }}
+            loading={isLoading}
           >
             {"Add"}
           </Button>

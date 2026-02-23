@@ -21,7 +21,7 @@ const Insights = () => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const {theme: currentTheme} = useTheme()
 
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [view, setView] = useState<"annual" | "month">("month")
   const [value, setValue] = useState(0)

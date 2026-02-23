@@ -33,7 +33,7 @@ const Income = () => {
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [openAddIncomeDialog, setOpenAddIncomeDialog] = useState<boolean>(false)
@@ -88,6 +88,7 @@ const Income = () => {
 
       <Button
         onClick={() => {setOpenAddIncomeDialog(true)}}
+        size="large"
         sx={{
           backgroundColor: accentColorPrimarySelected,
           color: currentTheme === "light" 

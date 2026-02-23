@@ -11,7 +11,7 @@ export const getCurrentDateInfo = () => {
   const today = new Date()
   const currentMonthIndex = today.getMonth()
   return {
-    currentYear: String(today.getFullYear()),
+    currentYear: today.getFullYear(),
     currentDay: today.getDate(),
     currentMonth: MONTHS[today.getMonth()],
     passedMonths: MONTHS.slice(0, currentMonthIndex + 1)
@@ -134,7 +134,7 @@ export const getSavingsHealthState = (net: number, total: number) => {
  * 
  * @returns An object with the previous month's year and month.
  */
-export const getPreviousMonthInfo = (year: string, month: string) => {
+export const getPreviousMonthInfo = (year: number, month: string) => {
   const monthIndex = MONTHS.indexOf(month)
 
   if (monthIndex > 0) {
@@ -145,7 +145,7 @@ export const getPreviousMonthInfo = (year: string, month: string) => {
   }
 
   return {
-    year: String(Number(year) - 1),
+    year: year - 1,
     month: MONTHS[11]
   }
 }

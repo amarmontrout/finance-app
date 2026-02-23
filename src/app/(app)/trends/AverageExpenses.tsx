@@ -20,7 +20,7 @@ const AverageExpenses = ({
   expenseTransactions: TransactionTypeV2[]
   expenseCategories: ChoiceTypeV2[]
   currentTheme: string | undefined
-  currentYear: string
+  currentYear: number
   currentMonth: string
 }) => {
   const badColor = currentTheme === "light" ?
@@ -42,7 +42,7 @@ const AverageExpenses = ({
       expenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
-          t.year === Number(currentYear) &&
+          t.year === currentYear &&
           MONTHS.indexOf(t.month) + 1 <= passedMonths
         ) {
           currentMonthTotals[t.month] =
@@ -59,7 +59,7 @@ const AverageExpenses = ({
       expenseTransactions.forEach((t) => {
         if (
           t.category === category.name &&
-          Number(t.year) === Number(currentYear) - 1
+          t.year === currentYear - 1
         ) {
           prevMonthTotals[t.month] =
             (prevMonthTotals[t.month] ?? 0) + t.amount
@@ -107,7 +107,7 @@ const AverageExpenses = ({
 
         <FlexChildWrapper gap={1}>
           <Typography textAlign={"center"}>
-            {Number(currentYear)-1}
+            {currentYear-1}
           </Typography> 
 
           <hr/>

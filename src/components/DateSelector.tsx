@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceTypeV2, HookSetter } from "@/utils/type"
 import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
 
 const DateSelector = ({
@@ -13,10 +13,10 @@ const DateSelector = ({
 }: {
   view: "annual" | "month"
   setView: (v: "annual" | "month") => void
-  selectedYear: string
-  setSelectedYear: (y: string) => void
+  selectedYear: number
+  setSelectedYear: HookSetter<number>
   selectedMonth: string
-  setSelectedMonth: (m: string) => void
+  setSelectedMonth: HookSetter<string>
   years: ChoiceTypeV2[]
 }) => {
   return (

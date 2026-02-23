@@ -21,7 +21,7 @@ import {
 import { useTheme } from "next-themes"
 import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { TransactionTypeV2 } from "@/utils/type"
+import { HookSetter, TransactionTypeV2 } from "@/utils/type"
 import { deleteExpense, deleteIncome } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { MONTHS } from "@/globals/globals"
@@ -42,11 +42,11 @@ const TransactionsList = ({
   transactions: TransactionTypeV2[]
   refreshTransactions: () => void
   selectedMonth: string
-  setSelectedMonth: React.Dispatch<React.SetStateAction<string>>
-  selectedYear: string
-  setSelectedYear: React.Dispatch<React.SetStateAction<string>>
-  setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedId: React.Dispatch<React.SetStateAction<number | null>>
+  setSelectedMonth: HookSetter<string>
+  selectedYear: number
+  setSelectedYear: HookSetter<number>
+  setOpenEditDialog: HookSetter<boolean>
+  setSelectedId: HookSetter<number | null>
   excludedSet: Set<string>
 }) => {
   const { theme: currentTheme } = useTheme()
@@ -60,11 +60,9 @@ const TransactionsList = ({
 
   useEffect(() => {
     if (!transactions || transactions.length === 0) {
-      setSelectedYear("")
-      setSelectedMonth("")
       return
     }
-    const yearNum = Number(selectedYear)
+    const yearNum = selectedYear
 
     const years = Array.from(new Set(transactions.map(t => t.year)))
     const monthsForYear = Array.from(
@@ -77,7 +75,7 @@ const TransactionsList = ({
 
     if (!years.includes(yearNum)) {
       const newestYear = Math.max(...years)
-      setSelectedYear(newestYear.toString())
+      setSelectedYear(newestYear)
       setSelectedMonth("")
       return
     }
@@ -194,11 +192,11 @@ const TransactionsList = ({
                   className="flex flex-col md:flex-row"
                   key={year} 
                   onClick={() => {
-                    setSelectedYear(year.toString())
+                    setSelectedYear(year)
                     setSelectedMonth("")
                   }} 
                   sx={{ 
-                    backgroundColor: year.toString() === selectedYear ?
+                    backgroundColor: year === selectedYear ?
                       accentColorPrimarySelected 
                       : listItemColor,
                     borderRadius: "15px",
@@ -222,7 +220,7 @@ const TransactionsList = ({
       return Array.from(
         new Set(
           transactions
-          .filter(t => t.year === Number(selectedYear))
+          .filter(t => t.year === selectedYear)
           .map(t => t.month)
         )
       ).sort ((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
@@ -233,7 +231,7 @@ const TransactionsList = ({
         <List className="flex flex-col gap-2">
           { months.map((month) => {
               const monthTotal = getMonthTotalV2(
-                Number(selectedYear), 
+                selectedYear, 
                 month, 
                 transactions,
                 excludedSet
@@ -273,7 +271,7 @@ const TransactionsList = ({
         <List className="flex flex-col gap-2">
           {transactions.map((details) => {
             if (
-              String(details.year) !== selectedYear 
+              details.year !== selectedYear 
               || details.month !== selectedMonth
             ) return
 

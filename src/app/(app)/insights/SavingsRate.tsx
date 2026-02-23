@@ -22,14 +22,14 @@ const SavingsRate = ({
 }: {
   incomeTransactions: TransactionTypeV2[]
   expenseTransactions: TransactionTypeV2[]
-  selectedYear: string
+  selectedYear: number
   selectedMonth: string
   view: "annual" | "month"
   currentTheme: string | undefined
 }) => {
   const { year: prevMonthYear, month: prevMonth } =
     getPreviousMonthInfo(selectedYear, selectedMonth)
-  const previousYear = String(Number(selectedYear) - 1)
+  const previousYear = selectedYear - 1
   const {
     monthRate,
     annualRate,

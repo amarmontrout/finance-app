@@ -9,7 +9,7 @@ const AnnualCategoryBreakdown = ({
   annualIncomeCategoryTotals,
   annualExpenseCategoryTotals,
 }: {
-  selectedYear: string
+  selectedYear: number
   annualIncomeCategoryTotals: [string, string | number][]
   annualExpenseCategoryTotals: [string, string | number][]
 }) => {

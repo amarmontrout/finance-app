@@ -38,7 +38,7 @@ const EditTransactionDetailDialog = ({
   transactions: TransactionTypeV2[]
   categories: ChoiceTypeV2[]
   currentTheme: string | undefined
-  selectedYear: string
+  selectedYear: number
   selectedMonth: string
   refreshIncomeTransactions?: () => void
   refreshExpenseTransactions?: () => void
@@ -46,7 +46,7 @@ const EditTransactionDetailDialog = ({
   const UPDATE_TRANSACTION_INIT = {
     id: 0,
     month: selectedMonth,
-    year: Number(selectedYear),
+    year: selectedYear,
     category: "",
     amount: 0
   }
@@ -66,7 +66,7 @@ const EditTransactionDetailDialog = ({
     setUpdateTransaction({
       id: transaction.id,
       month: selectedMonth,
-      year: Number(selectedYear),
+      year: selectedYear,
       category: transaction.category,
       amount: transaction.amount,
     })

@@ -13,7 +13,7 @@ const MonthlyCategoryBreakdown = ({
   defaultCardColor,
 }: {
   selectedMonth: string
-  selectedYear: string
+  selectedYear: number
   monthIncomeCategoryTotals: any[]
   monthExpenseCategoryTotals: any[]
   topThreeExpenses: [string, string | number][]

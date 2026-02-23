@@ -32,7 +32,7 @@ const NetCashFlow = ({
 }: {
   incomeTransactions: TransactionTypeV2[]
   expenseTransactions: TransactionTypeV2[]
-  selectedYear: string
+  selectedYear: number
   selectedMonth: string
   view: "annual" | "month"
   currentTheme: string | undefined
@@ -40,33 +40,33 @@ const NetCashFlow = ({
 }) => {
 
   const monthIncome = getMonthTotalV2(
-    Number(selectedYear), 
+    selectedYear, 
     selectedMonth, 
     incomeTransactions,
     excludedSet
   )
   const monthExpense = getMonthTotalV2(
-    Number(selectedYear),
+    selectedYear,
     selectedMonth, 
     expenseTransactions,
     excludedSet
   )
   const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
   const annualIncome = getYearTotalV2(
-    Number(selectedYear),
+    selectedYear,
     incomeTransactions,
     excludedSet
   )
   const eachMonthNetIncome: [string, string][] = useMemo(() => {
     return MONTHS.map(month => {
       const incomeTotal = getMonthTotalV2(
-        Number(selectedYear),
+        selectedYear,
         month, 
         incomeTransactions,
         excludedSet
       )
       const expenseTotal = getMonthTotalV2(
-        Number(selectedYear),
+        selectedYear,
         month, 
         expenseTransactions,
         excludedSet

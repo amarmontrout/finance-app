@@ -18,8 +18,8 @@ const IncomeList = ({
 }: {
   selectedMonth: string
   setSelectedMonth: HookSetter<string>
-  selectedYear: string
-  setSelectedYear: HookSetter<string>
+  selectedYear: number
+  setSelectedYear: HookSetter<number>
   income: "income" | "expenses"
   incomeTransactions: TransactionTypeV2[]
   refreshIncomeTransactions: () => void
@@ -29,7 +29,7 @@ const IncomeList = ({
 }) => {
   const monthIncome = useMemo(() => {
     return getMonthTotalV2(
-      Number(selectedYear), 
+      selectedYear, 
       selectedMonth, 
       incomeTransactions, 
       excludedSet

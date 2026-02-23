@@ -30,7 +30,7 @@ const Projections = ({
   currentTheme: string | undefined
   expenseCategories: ChoiceTypeV2[]
   excludedSet: Set<string>
-  currentYear: string
+  currentYear: number
   currentMonth: string
 }) => {
   const [view, setView] = useState<"annual" | "month">("annual")
@@ -42,7 +42,7 @@ const Projections = ({
     const projectionMap = new Map<string, number>()
     const relevantTransactions = expenseTransactions.filter((t) => {
       return (
-        t.year === Number(currentYear) &&
+        t.year === currentYear &&
         MONTHS.indexOf(t.month) + 1 <= passedMonths
       )
     })
@@ -51,7 +51,7 @@ const Projections = ({
       let total = 0
       for (const t of relevantTransactions) {
         if (t.category !== category.name) continue
-        if (t.year !== Number(currentYear)) continue
+        if (t.year !== currentYear) continue
         total += t.amount
       }
       const projectedValue = category.isRecurring

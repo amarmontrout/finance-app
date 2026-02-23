@@ -27,7 +27,7 @@ const Categories = () => {
 
   const defaultCardColor = getCardColor(currentTheme, "default")
 
-  const [selectedYear, setSelectedYear] = useState<string>(currentYear)
+  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [view, setView] = useState<"annual" | "month">("month")
 
@@ -38,27 +38,27 @@ const Categories = () => {
 
   const annualIncomeCategoryTotals = useMemo(
     () => getAnnualCategoryTotalsV2(
-      Number(selectedYear), 
+      selectedYear, 
       incomeTransactionsV2
     ),[incomeTransactionsV2, selectedYear]
   )
   const annualExpenseCategoryTotals = useMemo(
     () => getAnnualCategoryTotalsV2(
-      Number(selectedYear),
+      selectedYear,
       expenseTransactionsV2
     ),[expenseTransactionsV2, selectedYear]
   )
 
   const monthIncomeCategoryTotals = useMemo(
     () => getMonthCategoryTotalsV2(
-      Number(selectedYear), 
+      selectedYear, 
       selectedMonth, 
       incomeTransactionsV2
     ),[selectedYear, selectedMonth, incomeTransactionsV2]
   )
   const monthExpenseCategoryTotals = useMemo(
     () => getMonthCategoryTotalsV2(
-      Number(selectedYear), 
+      selectedYear, 
       selectedMonth, 
       expenseTransactionsV2
     ),[selectedYear, selectedMonth, expenseTransactionsV2]

@@ -31,13 +31,13 @@ const Budget = () => {
   const TODAY: DateType = {
     month: currentMonth,
     day: currentDay,
-    year: Number(currentYear)
+    year: currentYear
   }
   const { start, end, prevStart, prevEnd } = useMemo(() => {
     return getWeekBounds({
       month: currentMonth,
       day: currentDay,
-      year: Number(currentYear)
+      year: currentYear
     })
   }, [])
 

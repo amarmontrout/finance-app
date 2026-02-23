@@ -31,7 +31,7 @@ const Overview = () => {
     return buildMultiColumnDataV2({
       firstData: incomeTransactionsV2,
       secondData: expenseTransactionsV2,
-      selectedYear: Number(currentYear),
+      selectedYear: currentYear,
       firstColumnTitle: "Month",
       method: "compare",
       excludedSet: excludedSet
@@ -73,7 +73,7 @@ const Overview = () => {
 
       <TabPanel value={value} index={0}>
         <YearTotals
-          currentYear={Number(currentYear)}
+          currentYear={currentYear}
           passedMonths={passedMonths}
           currentTheme={currentTheme}
           excludedSet={excludedSet}
@@ -84,7 +84,7 @@ const Overview = () => {
 
       <TabPanel value={value} index={1}>
         <YearNetCash
-          currentYear={Number(currentYear)}
+          currentYear={currentYear}
           passedMonths={passedMonths}
           currentTheme={currentTheme}
           excludedSet={excludedSet}

@@ -13,7 +13,7 @@ const Header = () => {
       <Box
         minWidth={"fit-content"}
         alignContent={"center"}
-        marginLeft={"1.5rem"}
+        marginLeft={"1rem"}
         marginRight={"5px"}
       >
         <Typography

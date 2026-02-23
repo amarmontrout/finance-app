@@ -55,7 +55,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 flex: 1, 
                 minWidth: 0, 
                 minHeight: 0,
-                flexDirection: "column"
+                flexDirection: "column",
+                bgcolor: "background.default",
               }}
             >
               {/* Header */}
@@ -64,8 +65,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   height: "70px",
                   bgcolor: "primary.main",
-                  borderBottom: 1,
-                  borderColor: "divider",
+                  borderBottomLeftRadius: "15px",
+                  borderBottomRightRadius: "15px",
                 }}
               >
                 <Header />
@@ -77,7 +78,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   display: "flex",
                   flex: 1,
-                  bgcolor: "background.default",
                   color: "text.primary",
                   overflow: "hidden"
                 }}
@@ -106,8 +106,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 sx={{
                   bgcolor: "rgba(255, 255, 255, 0.12)",
                   backdropFilter: "blur(4px) saturate(160%)",
-                  borderTopLeftRadius: "25px",
-                  borderTopRightRadius: "25px",
+                  borderTopLeftRadius: "15px",
+                  borderTopRightRadius: "15px",
                   boxShadow: 3,
                   zIndex: 1000
                 }}

@@ -59,7 +59,7 @@ const HeaderDropdown = () => {
     <Box
       alignContent={"center"}
       marginLeft={"5px"}
-      marginRight={"1.5rem"}
+      marginRight={"1rem"}
       height={"100%"}
     >
       <IconButton

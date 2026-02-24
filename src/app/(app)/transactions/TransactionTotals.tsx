@@ -38,18 +38,19 @@ const TransactionTotals = ({
       title={`Totals for ${selectedYear}`}
     >
       <Stack direction={"row"} width={"100%"}>
-        <Stack direction={"column"} width={"34%"}>
-          <Typography>{selectedYear}</Typography>
+        <Stack direction={"column"} width={"30%"}>
+          <Typography variant={"h6"}>{selectedYear}</Typography>
           {
             MONTHS.map((month) => {
               return (
-                <Typography key={month}>{month}</Typography>
+                <Typography key={month} variant={"h6"}>{month}</Typography>
               )
             })
           }
         </Stack>
-        <Stack direction={"column"} width={"33%"}>
-          <Typography>{`+ $${yearIncomeTotal}`}</Typography>
+
+        <Stack direction={"column"} width={"35%"} textAlign={"right"}>
+          <Typography variant={"h6"}>{`+ $${yearIncomeTotal}`}</Typography>
           {
             MONTHS.map((month) => {
               const total = incomeTransactionsV2.reduce((acc, income) => {
@@ -63,15 +64,20 @@ const TransactionTotals = ({
                 return acc
               }, 0)
               return (
-                <Typography key={`${month}-${total}`} color={"success"}>
+                <Typography 
+                  key={`${month}-${total}`} 
+                  color={"success"} 
+                  variant={"h6"}
+                >
                   {`+  $${formattedStringNumber(total)}`}
                 </Typography>
               )
             })
           }
         </Stack>
-        <Stack direction={"column"} width={"33%"}>
-          <Typography>{`- $${yearExpenseTotal}`}</Typography>
+
+        <Stack direction={"column"} width={"35%"} textAlign={"right"}>
+          <Typography variant={"h6"}>{`- $${yearExpenseTotal}`}</Typography>
           {
             MONTHS.map((month) => {
               const total = expenseTransactionsV2.reduce((acc, expense) => {
@@ -85,7 +91,11 @@ const TransactionTotals = ({
                 return acc
               }, 0)
               return (
-                <Typography key={`${month}-${total}`} color={"error"}>
+                <Typography 
+                  key={`${month}-${total}`} 
+                  color={"error"} 
+                  variant={"h6"}
+                >
                   {`-  $${formattedStringNumber(total)}`}
                 </Typography>
               )

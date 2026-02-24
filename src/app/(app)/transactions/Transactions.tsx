@@ -13,7 +13,7 @@ import {
   Stack, 
 } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { MONTHS } from "@/globals/globals"
@@ -53,6 +53,11 @@ const Transactions = () => {
   const [tab, setTab] = useState(0)
   const [selectedTransaction, setSelectedTransaction] = 
     useState<SelectedTransactionType | null>(null)
+
+  useEffect(() => {
+    setSelectedYear(currentYear)
+    setSelectedMonth(currentMonth)
+  }, [tab])
 
   const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);

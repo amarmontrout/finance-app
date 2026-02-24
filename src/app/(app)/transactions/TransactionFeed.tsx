@@ -49,12 +49,13 @@ const TransactionFeed = ({
                     direction={"row"} 
                     justifyContent={"space-between"}
                   >
-                    <Typography>
+                    <Typography variant={"h6"}>
                       {transaction.category}
                     </Typography>
 
                     <Typography 
                       key={transaction.id} 
+                      variant={"h6"}
                       color={transaction.type === "income" ? 
                         "success" : "error"
                       }

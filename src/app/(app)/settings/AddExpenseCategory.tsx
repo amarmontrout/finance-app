@@ -9,20 +9,18 @@ import { ChoiceTypeV2, HookSetter } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
-const AddExpenseCategory = ({ 
+const AddExpenseCategory = ({
   setCategoryDialogOpen,
-  setChoice 
+  setChoice,
 }: {
   setCategoryDialogOpen: HookSetter<boolean>
   setChoice: HookSetter<ChoiceTypeV2 | null>
 }) => {
-  const {
-    expenseCategoriesV2,
-    refreshExpenseCategoryChoicesV2
-  } = useCategoryContext()
+  const { expenseCategoriesV2, refreshExpenseCategoryChoicesV2 } =
+    useCategoryContext()
   const user = useUser()
 
-  const [expenseCategoriesInput, setExpenseCategoriesInput] = 
+  const [expenseCategoriesInput, setExpenseCategoriesInput] =
     useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -33,8 +31,8 @@ const AddExpenseCategory = ({
       userId: user.id,
       body: {
         id: Number(makeId(8)),
-        name: expenseCategoriesInput
-      }
+        name: expenseCategoriesInput,
+      },
     })
     setIsLoading(false)
     refreshExpenseCategoryChoicesV2()
@@ -43,7 +41,7 @@ const AddExpenseCategory = ({
 
   return (
     <ShowCaseCard title={"Add Expense Category"}>
-      <Box 
+      <Box
         display={"flex"}
         flexDirection={"column"}
         height={"325px"}
@@ -53,19 +51,16 @@ const AddExpenseCategory = ({
         <SimpleForm
           label={"Expense Category"}
           value={expenseCategoriesInput}
-          onChange={
-            (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-            {setExpenseCategoriesInput(e.target.value)}
-          }
+          onChange={(
+            e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+          ) => {
+            setExpenseCategoriesInput(e.target.value)
+          }}
           onSubmit={save}
           isLoading={isLoading}
         />
         <hr style={{ width: "100%" }} />
-        <Box
-          flex={1}
-          overflow={"auto"}
-          paddingRight={"10px"}
-        >
+        <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"expense"}
             items={expenseCategoriesV2}

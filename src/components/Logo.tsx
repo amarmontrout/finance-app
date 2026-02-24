@@ -1,17 +1,17 @@
 import { accentColorPrimary } from "@/globals/colors"
 import { Box } from "@mui/material"
-import PaidIcon from '@mui/icons-material/Paid';
-import SavingsIcon from '@mui/icons-material/Savings';
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import PaidIcon from "@mui/icons-material/Paid"
+import SavingsIcon from "@mui/icons-material/Savings"
+import CreditCardIcon from "@mui/icons-material/CreditCard"
 
 const Logo = () => {
   return (
-    <Box 
-      bgcolor={"background.paper"} 
-      border={`2px solid ${accentColorPrimary}`} 
-      borderRadius={"15px"} 
-      width={"fit-content"} 
-      height={"fit-content"} 
+    <Box
+      bgcolor={"background.paper"}
+      border={`2px solid ${accentColorPrimary}`}
+      borderRadius={"15px"}
+      width={"fit-content"}
+      height={"fit-content"}
       padding={"10px 20px 10px 20px"}
     >
       <PaidIcon fontSize={"large"} />
@@ -21,4 +21,4 @@ const Logo = () => {
   )
 }
 
-export default Logo 
+export default Logo

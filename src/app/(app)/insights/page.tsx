@@ -3,9 +3,7 @@ import Insights from "./Insights"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
+    <Box width={"100%"}>
       <Insights />
     </Box>
   )

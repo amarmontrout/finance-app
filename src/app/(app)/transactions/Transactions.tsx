@@ -2,15 +2,15 @@
 
 import { FlexColWrapper } from "@/components/Wrappers"
 import TransactionFeed from "./TransactionFeed"
-import { 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Box, 
-  Tabs, 
+import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Tabs,
   Tab,
-  Stack, 
+  Stack,
 } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useEffect, useState } from "react"
@@ -20,38 +20,32 @@ import { MONTHS } from "@/globals/globals"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import AddIncomeDialog from "../income/AddIncomeDialog"
 import AddExpenseDialog from "../expenses/AddExpenseDialog"
-import 
-  EditTransactionDetailDialog 
-from "@/components/EditTransactionDetailDialog"
+import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import { SelectedTransactionType } from "@/utils/type"
 import AddTransactionButtons from "./AddTransactionButtons"
 import TransactionTotals from "./TransactionTotals"
 import ModifyTransactions from "./ModifyTransactions"
 
 const Transactions = () => {
-  const { 
+  const {
     incomeTransactionsV2,
     refreshIncomeTransactionsV2,
     expenseTransactionsV2,
-    refreshExpenseTransactionsV2
+    refreshExpenseTransactionsV2,
   } = useTransactionContext()
-  const { 
-    yearsV2, 
-    incomeCategoriesV2, 
-    expenseCategoriesV2, 
-    excludedSet 
-  } = useCategoryContext()
+  const { yearsV2, incomeCategoriesV2, expenseCategoriesV2, excludedSet } =
+    useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openAddIncomeDialog, setOpenAddIncomeDialog] = useState<boolean>(false)
-  const [openAddExpenseDialog, setOpenAddExpenseDialog] = 
+  const [openAddExpenseDialog, setOpenAddExpenseDialog] =
     useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [tab, setTab] = useState(0)
-  const [selectedTransaction, setSelectedTransaction] = 
+  const [selectedTransaction, setSelectedTransaction] =
     useState<SelectedTransactionType | null>(null)
 
   useEffect(() => {
@@ -60,25 +54,22 @@ const Transactions = () => {
   }, [tab])
 
   const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue);
+    setTab(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
@@ -91,11 +82,11 @@ const Transactions = () => {
         currentTheme={currentTheme}
       />
 
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tab} onChange={handleChangeTab}>
-          <Tab label="Totals"/>
-          <Tab label="Transactions"/>
-          <Tab label="Modify"/>
+          <Tab label="Totals" />
+          <Tab label="Transactions" />
+          <Tab label="Modify" />
         </Tabs>
       </Box>
 
@@ -107,20 +98,18 @@ const Transactions = () => {
             label="Month"
             value={selectedMonth}
             name={"month"}
-            onChange={e => setSelectedMonth(e.target.value)}
+            onChange={(e) => setSelectedMonth(e.target.value)}
             disabled={tab === 0}
           >
-            {
-              MONTHS.map((month) => {
-                return (
-                  <MenuItem key={month} value={month} >
-                    {month}
-                  </MenuItem>
-                )
-              })
-            }
+            {MONTHS.map((month) => {
+              return (
+                <MenuItem key={month} value={month}>
+                  {month}
+                </MenuItem>
+              )
+            })}
           </Select>
-        </FormControl> 
+        </FormControl>
 
         <FormControl fullWidth>
           <InputLabel>Year</InputLabel>
@@ -129,17 +118,15 @@ const Transactions = () => {
             label="Year"
             value={selectedYear}
             name={"year"}
-            onChange={e => setSelectedYear(Number(e.target.value))}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
           >
-            {
-              yearsV2.map((year) => {
-                return (
-                  <MenuItem key={year.name} value={year.name}>
-                    {year.name}
-                  </MenuItem>
-                )
-              })
-            }
+            {yearsV2.map((year) => {
+              return (
+                <MenuItem key={year.name} value={year.name}>
+                  {year.name}
+                </MenuItem>
+              )
+            })}
           </Select>
         </FormControl>
       </Stack>

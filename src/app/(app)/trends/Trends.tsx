@@ -10,7 +10,7 @@ import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 
-const Trends =() => {
+const Trends = () => {
   const { expenseTransactionsV2 } = useTransactionContext()
   const { excludedSet, expenseCategoriesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
@@ -19,35 +19,32 @@ const Trends =() => {
   const [value, setValue] = useState(0)
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
-  
+
   return (
     <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Expense Averages"/>
-          <Tab label="Annual Projection"/>
+          <Tab label="Expense Averages" />
+          <Tab label="Annual Projection" />
         </Tabs>
       </Box>
 
@@ -68,7 +65,7 @@ const Trends =() => {
           expenseCategories={expenseCategoriesV2}
           excludedSet={excludedSet}
           currentYear={currentYear}
-          currentMonth={currentMonth}  
+          currentMonth={currentMonth}
         />
       </TabPanel>
     </FlexColWrapper>

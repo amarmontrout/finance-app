@@ -16,17 +16,13 @@ const AnnualCategoryBreakdown = ({
   return (
     <FlexColWrapper gap={2} toRowBreak={"xl"}>
       <ShowCaseCard title={`${selectedYear} Income Category Breakdown`}>
-        <PieChart
-          data={annualIncomeCategoryTotals}
-        />
+        <PieChart data={annualIncomeCategoryTotals} />
       </ShowCaseCard>
-      
+
       <ShowCaseCard title={`${selectedYear} Expense Category Breakdown`}>
-        <PieChart
-          data={annualExpenseCategoryTotals}
-        />
+        <PieChart data={annualExpenseCategoryTotals} />
       </ShowCaseCard>
-    </FlexColWrapper>  
+    </FlexColWrapper>
   )
 }
 

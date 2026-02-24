@@ -2,22 +2,27 @@ import { updateBudget } from "@/app/api/Transactions/requests"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTransactionTypeV2, BudgetTypeV2, DateType, HookSetter } from "@/utils/type"
-import { 
-  Dialog, 
-  DialogTitle, 
-  Box, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Autocomplete, 
-  TextField, 
-  DialogActions, 
-  Button, 
+import {
+  BudgetTransactionTypeV2,
+  BudgetTypeV2,
+  DateType,
+  HookSetter,
+} from "@/utils/type"
+import {
+  Dialog,
+  DialogTitle,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Autocomplete,
+  TextField,
+  DialogActions,
+  Button,
   DialogContent,
   FormControlLabel,
-  Checkbox
+  Checkbox,
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useEffect, useState } from "react"
@@ -29,7 +34,7 @@ const EditBudgetEntryDialog = ({
   budgetCategories,
   selectedEntry,
   refreshBudgetTransactions,
-  today
+  today,
 }: {
   openEditDialog: boolean
   setOpenEditDialog: HookSetter<boolean>
@@ -48,10 +53,10 @@ const EditBudgetEntryDialog = ({
     note: "",
     amount: 0,
     isReturn: false,
-    date: today
+    date: today,
   }
 
-  const [updatedBudgetEntry, setUpdatedBudgetEntry] = 
+  const [updatedBudgetEntry, setUpdatedBudgetEntry] =
     useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
 
@@ -71,7 +76,7 @@ const EditBudgetEntryDialog = ({
     await updateBudget({
       userId: user.id,
       rowId: selectedEntry.id,
-      body: updatedBudgetEntry
+      body: updatedBudgetEntry,
     })
 
     refreshBudgetTransactions()
@@ -81,15 +86,10 @@ const EditBudgetEntryDialog = ({
 
   return (
     <Dialog open={openEditDialog}>
-      <DialogTitle>
-        {`Edit Budget Transaction`}
-      </DialogTitle>
+      <DialogTitle>{`Edit Budget Transaction`}</DialogTitle>
 
       <DialogContent>
-        <Box
-          className="flex flex-col gap-5"
-          padding={"10px"}
-        >
+        <Box className="flex flex-col gap-5" padding={"10px"}>
           <FormControl>
             <InputLabel>Category</InputLabel>
             <Select
@@ -97,19 +97,16 @@ const EditBudgetEntryDialog = ({
               label="Category"
               value={updatedBudgetEntry.category}
               name={"category"}
-              onChange={e => 
-                setUpdatedBudgetEntry(prev => ({
+              onChange={(e) =>
+                setUpdatedBudgetEntry((prev) => ({
                   ...prev,
                   category: e.target.value,
-                }))}
+                }))
+              }
             >
               {budgetCategories.map((budget) => {
                 return (
-                  <MenuItem 
-                    value={budget.category}
-                  >
-                    {budget.category}
-                  </MenuItem>
+                  <MenuItem value={budget.category}>{budget.category}</MenuItem>
                 )
               })}
             </Select>
@@ -126,19 +123,14 @@ const EditBudgetEntryDialog = ({
               }}
               inputValue={updatedBudgetEntry.note}
               onInputChange={(event, newInputValue) => {
-                setUpdatedBudgetEntry(prev => ({
+                setUpdatedBudgetEntry((prev) => ({
                   ...prev,
                   note: newInputValue,
                 }))
               }}
-              renderInput={(params) => 
-                <TextField
-                  {...params} 
-                  label="Note" 
-                />
-              }
+              renderInput={(params) => <TextField {...params} label="Note" />}
             />
-          </FormControl> 
+          </FormControl>
 
           <MoneyInputV2
             value={updatedBudgetEntry.amount}
@@ -147,45 +139,45 @@ const EditBudgetEntryDialog = ({
 
           <FormControlLabel
             control={
-              <Checkbox 
+              <Checkbox
                 checked={updatedBudgetEntry.isReturn}
-                sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
                 onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setUpdatedBudgetEntry(prev => ({
+                  setUpdatedBudgetEntry((prev) => ({
                     ...prev,
-                    isReturn: e.target.checked
+                    isReturn: e.target.checked,
                   }))
                 }}
               />
-            } 
-            label="Is a return?" 
+            }
+            label="Is a return?"
           />
         </Box>
       </DialogContent>
 
       <DialogActions>
-        <Button 
+        <Button
           variant={"contained"}
           onClick={update}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.success] 
-              : [darkMode.success]
+            backgroundColor:
+              currentTheme === "light"
+                ? [lightMode.success]
+                : [darkMode.success],
           }}
         >
           {"Update"}
         </Button>
-        
-        <Button 
+
+        <Button
           variant={"contained"}
           onClick={() => {
             setOpenEditDialog(false)
             refreshDialog()
           }}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.error] 
-              : [darkMode.error]
+            backgroundColor:
+              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
           }}
         >
           {"Cancel"}

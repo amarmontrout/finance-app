@@ -5,10 +5,10 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useSavingsRateData } from "@/hooks/useSavingsRateData"
 import {
-  formattedStringNumber, 
-  getCardColor, 
-  getPreviousMonthInfo, 
-  getSavingsHealthState 
+  formattedStringNumber,
+  getCardColor,
+  getPreviousMonthInfo,
+  getSavingsHealthState,
 } from "@/utils/helperFunctions"
 import { TransactionTypeV2 } from "@/utils/type"
 
@@ -18,7 +18,7 @@ const SavingsRate = ({
   selectedYear,
   selectedMonth,
   view,
-  currentTheme
+  currentTheme,
 }: {
   incomeTransactions: TransactionTypeV2[]
   expenseTransactions: TransactionTypeV2[]
@@ -27,32 +27,33 @@ const SavingsRate = ({
   view: "annual" | "month"
   currentTheme: string | undefined
 }) => {
-  const { year: prevMonthYear, month: prevMonth } =
-    getPreviousMonthInfo(selectedYear, selectedMonth)
+  const { year: prevMonthYear, month: prevMonth } = getPreviousMonthInfo(
+    selectedYear,
+    selectedMonth,
+  )
   const previousYear = selectedYear - 1
-  const {
-    monthRate,
-    annualRate,
-    diffs
-  } = useSavingsRateData(
+  const { monthRate, annualRate, diffs } = useSavingsRateData(
     selectedYear,
     selectedMonth,
     incomeTransactions,
     expenseTransactions,
     prevMonthYear,
-    prevMonth
+    prevMonth,
   )
 
   const monthSavingsHealthState = getSavingsHealthState(monthRate, 100)
   const annualSavingsHealthState = getSavingsHealthState(annualRate, 100)
   const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
-  const annualSavingsColor = getCardColor(currentTheme, annualSavingsHealthState)
+  const annualSavingsColor = getCardColor(
+    currentTheme,
+    annualSavingsHealthState,
+  )
   const defaultColor = getCardColor(currentTheme, "default")
 
   return (
     <ShowCaseCard title={"Savings Rate"}>
       <FlexColWrapper gap={3}>
-        {view === "month" &&
+        {view === "month" && (
           <FlexColWrapper gap={3}>
             <ColoredInfoCard
               cardColors={monthSavingsColor}
@@ -72,26 +73,26 @@ const SavingsRate = ({
                 cardColors={defaultColor}
                 title={`Compared to ${selectedYear}`}
                 info={`${formattedStringNumber(diffs.monthVsAnnual)}%`}
-              />            
+              />
             </FlexColWrapper>
           </FlexColWrapper>
-        }
+        )}
 
-        {view === "annual" &&
-        <FlexColWrapper gap={3}>
-          <ColoredInfoCard
-            cardColors={annualSavingsColor}
-            title={`${selectedYear} Savings Rating: ${annualSavingsHealthState}`}
-            info={`Savings Rate: ${formattedStringNumber(annualRate)}%`}
-          />
+        {view === "annual" && (
+          <FlexColWrapper gap={3}>
+            <ColoredInfoCard
+              cardColors={annualSavingsColor}
+              title={`${selectedYear} Savings Rating: ${annualSavingsHealthState}`}
+              info={`Savings Rate: ${formattedStringNumber(annualRate)}%`}
+            />
 
-          <ColoredInfoCard
-            cardColors={defaultColor}
-            title={`Compared to ${previousYear}`}
-            info={`${formattedStringNumber(diffs.yearOverYear)}%`}
-          />
-        </FlexColWrapper>
-        }
+            <ColoredInfoCard
+              cardColors={defaultColor}
+              title={`Compared to ${previousYear}`}
+              info={`${formattedStringNumber(diffs.yearOverYear)}%`}
+            />
+          </FlexColWrapper>
+        )}
       </FlexColWrapper>
     </ShowCaseCard>
   )

@@ -9,12 +9,12 @@ import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
-import { 
-  cleanNumber, 
-  formattedStringNumber, 
-  getCardColor, 
-  getSavingsHealthState, 
-  removeCommas 
+import {
+  cleanNumber,
+  formattedStringNumber,
+  getCardColor,
+  getSavingsHealthState,
+  removeCommas,
 } from "@/utils/helperFunctions"
 import { TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
@@ -28,7 +28,7 @@ const NetCashFlow = ({
   selectedMonth,
   view,
   currentTheme,
-  excludedSet
+  excludedSet,
 }: {
   incomeTransactions: TransactionTypeV2[]
   expenseTransactions: TransactionTypeV2[]
@@ -38,38 +38,37 @@ const NetCashFlow = ({
   currentTheme: string | undefined
   excludedSet: Set<string>
 }) => {
-
   const monthIncome = getMonthTotalV2(
-    selectedYear, 
-    selectedMonth, 
+    selectedYear,
+    selectedMonth,
     incomeTransactions,
-    excludedSet
+    excludedSet,
   )
   const monthExpense = getMonthTotalV2(
     selectedYear,
-    selectedMonth, 
+    selectedMonth,
     expenseTransactions,
-    excludedSet
+    excludedSet,
   )
   const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
   const annualIncome = getYearTotalV2(
     selectedYear,
     incomeTransactions,
-    excludedSet
+    excludedSet,
   )
   const eachMonthNetIncome: [string, string][] = useMemo(() => {
-    return MONTHS.map(month => {
+    return MONTHS.map((month) => {
       const incomeTotal = getMonthTotalV2(
         selectedYear,
-        month, 
+        month,
         incomeTransactions,
-        excludedSet
+        excludedSet,
       )
       const expenseTotal = getMonthTotalV2(
         selectedYear,
-        month, 
+        month,
         expenseTransactions,
-        excludedSet
+        excludedSet,
       )
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, removeCommas(net)]
@@ -77,49 +76,54 @@ const NetCashFlow = ({
   }, [selectedYear, incomeTransactions, expenseTransactions])
   const annualNetIncome = useMemo(() => {
     return eachMonthNetIncome.reduce(
-      (acc, [, amount]) => acc + Number(amount), 
-      0
+      (acc, [, amount]) => acc + Number(amount),
+      0,
     )
   }, [eachMonthNetIncome])
 
   const monthSavingsHealthState = getSavingsHealthState(
-    cleanNumber(monthNetIncome), 
-    cleanNumber(monthIncome)
+    cleanNumber(monthNetIncome),
+    cleanNumber(monthIncome),
   )
   const annualSavingsHealthState = getSavingsHealthState(
-    annualNetIncome, 
-    cleanNumber(annualIncome)
+    annualNetIncome,
+    cleanNumber(annualIncome),
   )
   const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
-  const annualSavingsColor = getCardColor(currentTheme, annualSavingsHealthState)
+  const annualSavingsColor = getCardColor(
+    currentTheme,
+    annualSavingsHealthState,
+  )
 
   const lineChartData: TwoColumnDataType = useMemo(() => {
-    return buildTwoColumnData({
-      data: eachMonthNetIncome,
-      firstColumnTitle: "Month",
-      secondColumnTitle: "Net Cash Flow"
-    }) || []
+    return (
+      buildTwoColumnData({
+        data: eachMonthNetIncome,
+        firstColumnTitle: "Month",
+        secondColumnTitle: "Net Cash Flow",
+      }) || []
+    )
   }, [eachMonthNetIncome])
-  
+
   return (
     <ShowCaseCard title={"Net Cash Flow"}>
-      <FlexColWrapper gap={2}> 
-        {view === "month" &&
+      <FlexColWrapper gap={2}>
+        {view === "month" && (
           <ColoredInfoCard
             cardColors={monthSavingsColor}
             info={`Net Cash: $${monthNetIncome}`}
             title={`${selectedMonth} ${selectedYear} 
               Net Cash Rating: ${monthSavingsHealthState}`}
           />
-        }
+        )}
 
-        {view === "annual" &&
+        {view === "annual" && (
           <ColoredInfoCard
             cardColors={annualSavingsColor}
             info={`Net Cash: $${formattedStringNumber(annualNetIncome)}`}
             title={`${selectedYear} Net Cash Rating: ${annualSavingsHealthState}`}
-          />      
-        }
+          />
+        )}
         <LineChart
           twoColumnData={lineChartData}
           lineColors={[accentColorSecondary]}

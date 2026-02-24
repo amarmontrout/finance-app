@@ -1,16 +1,16 @@
-import { 
-  accentColorPrimarySelected, 
-  lightMode, 
-  darkMode 
+import {
+  accentColorPrimarySelected,
+  lightMode,
+  darkMode,
 } from "@/globals/colors"
 import { Stack, Button } from "@mui/material"
-import AddIcon from '@mui/icons-material/Add';
-import { HookSetter } from "@/utils/type";
+import AddIcon from "@mui/icons-material/Add"
+import { HookSetter } from "@/utils/type"
 
 const AddTransactionButtons = ({
   setOpenAddIncomeDialog,
   setOpenAddExpenseDialog,
-  currentTheme
+  currentTheme,
 }: {
   setOpenAddIncomeDialog: HookSetter<boolean>
   setOpenAddExpenseDialog: HookSetter<boolean>
@@ -19,30 +19,36 @@ const AddTransactionButtons = ({
   return (
     <Stack direction={"row"} justifyContent={"space-evenly"}>
       <Button
-        onClick={() => {setOpenAddIncomeDialog(true)}}
+        onClick={() => {
+          setOpenAddIncomeDialog(true)
+        }}
         size="large"
         sx={{
           backgroundColor: accentColorPrimarySelected,
-          color: currentTheme === "light" 
-            ? lightMode.primaryText
-            : darkMode.primaryText
+          color:
+            currentTheme === "light"
+              ? lightMode.primaryText
+              : darkMode.primaryText,
         }}
       >
-        <AddIcon/>
+        <AddIcon />
         Add Income
       </Button>
 
       <Button
-        onClick={() => {setOpenAddExpenseDialog(true)}}
+        onClick={() => {
+          setOpenAddExpenseDialog(true)
+        }}
         size="large"
         sx={{
           backgroundColor: accentColorPrimarySelected,
-          color: currentTheme === "light" 
-            ? lightMode.primaryText
-            : darkMode.primaryText
+          color:
+            currentTheme === "light"
+              ? lightMode.primaryText
+              : darkMode.primaryText,
         }}
       >
-        <AddIcon/>
+        <AddIcon />
         Add Expense
       </Button>
     </Stack>

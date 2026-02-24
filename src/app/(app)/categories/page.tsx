@@ -3,10 +3,8 @@ import Categories from "./Categories"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
-      <Categories/>
+    <Box width={"100%"}>
+      <Categories />
     </Box>
   )
 }

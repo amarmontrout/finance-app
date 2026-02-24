@@ -1,41 +1,41 @@
 import { lightMode, darkMode } from "@/globals/colors"
-import { 
-  Dialog, 
-  DialogTitle, 
-  Box, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem,   
-  Button, 
+import {
+  Dialog,
+  DialogTitle,
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
   SelectChangeEvent,
   DialogActions,
-  DialogContent
+  DialogContent,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { MoneyInputV2 } from "./MoneyInput"
-import { 
-  ChoiceTypeV2, 
-  HookSetter, 
-  SelectedTransactionType, 
-  TransactionTypeV2 
+import {
+  ChoiceTypeV2,
+  HookSetter,
+  SelectedTransactionType,
+  TransactionTypeV2,
 } from "@/utils/type"
 import { updateExpense, updateIncome } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 
 const EditTransactionDetailDialog = ({
-    openEditDialog,
-    setOpenEditDialog,
-    selectedTransaction,
-    setSelectedTransaction,
-    transactions,
-    categories,
-    currentTheme,
-    selectedYear,
-    selectedMonth,
-    refreshIncomeTransactions,
-    refreshExpenseTransactions
-  }: {
+  openEditDialog,
+  setOpenEditDialog,
+  selectedTransaction,
+  setSelectedTransaction,
+  transactions,
+  categories,
+  currentTheme,
+  selectedYear,
+  selectedMonth,
+  refreshIncomeTransactions,
+  refreshExpenseTransactions,
+}: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
   selectedTransaction: SelectedTransactionType | null
@@ -47,24 +47,27 @@ const EditTransactionDetailDialog = ({
   selectedMonth: string
   refreshIncomeTransactions?: () => void
   refreshExpenseTransactions?: () => void
-}) => { 
+}) => {
   const UPDATE_TRANSACTION_INIT = {
     id: 0,
     month: selectedMonth,
     year: selectedYear,
     category: "",
-    amount: 0
+    amount: 0,
   }
 
   const user = useUser()
 
-  const [updateTransaction, setUpdateTransaction] = 
-    useState<TransactionTypeV2>(UPDATE_TRANSACTION_INIT)
+  const [updateTransaction, setUpdateTransaction] = useState<TransactionTypeV2>(
+    UPDATE_TRANSACTION_INIT,
+  )
 
   useEffect(() => {
     if (!selectedTransaction || !selectedYear || !selectedMonth) return
 
-    const transaction = transactions.find(t => t.id === selectedTransaction.id)
+    const transaction = transactions.find(
+      (t) => t.id === selectedTransaction.id,
+    )
 
     if (!transaction) return
 
@@ -80,10 +83,10 @@ const EditTransactionDetailDialog = ({
   const handleCategory = (e: SelectChangeEvent) => {
     const { value } = e.target
 
-    setUpdateTransaction(prev => ({
+    setUpdateTransaction((prev) => ({
       ...prev,
       category: value,
-    }));
+    }))
   }
 
   const handleUpdateTransactionData = async () => {
@@ -92,20 +95,16 @@ const EditTransactionDetailDialog = ({
       await updateIncome({
         userId: user.id,
         rowId: selectedTransaction.id,
-        body: updateTransaction
-
+        body: updateTransaction,
       })
-      if (refreshIncomeTransactions) 
-        refreshIncomeTransactions()
+      if (refreshIncomeTransactions) refreshIncomeTransactions()
     } else if (selectedTransaction.type === "expenses") {
       await updateExpense({
         userId: user.id,
         rowId: selectedTransaction.id,
-        body: updateTransaction
-
+        body: updateTransaction,
       })
-      if (refreshExpenseTransactions)
-        refreshExpenseTransactions()
+      if (refreshExpenseTransactions) refreshExpenseTransactions()
     }
     setOpenEditDialog(false)
     setSelectedTransaction(null)
@@ -116,12 +115,9 @@ const EditTransactionDetailDialog = ({
       <DialogTitle>
         {`Edit ${selectedTransaction?.type === "income" ? "Income" : "Expense"} Detail`}
       </DialogTitle>
-      
+
       <DialogContent>
-        <Box
-          className="flex flex-col gap-5"
-          padding={"10px"}
-        >
+        <Box className="flex flex-col gap-5" padding={"10px"}>
           <FormControl>
             <InputLabel>Category</InputLabel>
             <Select
@@ -129,17 +125,14 @@ const EditTransactionDetailDialog = ({
               label="Category"
               value={updateTransaction.category}
               name={"category"}
-              onChange={e => handleCategory(e)}
+              onChange={(e) => handleCategory(e)}
             >
               {categories.map((category) => {
                 return (
-                <MenuItem 
-                  key={category.name} 
-                  value={category.name}
-                >
-                  {category.name}
-                </MenuItem>
-              )
+                  <MenuItem key={category.name} value={category.name}>
+                    {category.name}
+                  </MenuItem>
+                )
               })}
             </Select>
           </FormControl>
@@ -153,35 +146,32 @@ const EditTransactionDetailDialog = ({
       </DialogContent>
 
       <DialogActions>
-        <Button 
-          variant={"contained"} 
+        <Button
+          variant={"contained"}
           disabled={
-            !updateTransaction.category 
-            || updateTransaction.amount <= 0
+            !updateTransaction.category || updateTransaction.amount <= 0
           }
           onClick={handleUpdateTransactionData}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.success] 
-              : [darkMode.success]
+            backgroundColor:
+              currentTheme === "light"
+                ? [lightMode.success]
+                : [darkMode.success],
           }}
         >
           {"Update"}
         </Button>
-        
-        <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
+
+        <Button
+          variant={"contained"}
+          disabled={false}
           onClick={() => {
             setOpenEditDialog(false)
             setSelectedTransaction(null)
           }}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.error] 
-              : [darkMode.error]
+            backgroundColor:
+              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
           }}
         >
           {"Cancel"}

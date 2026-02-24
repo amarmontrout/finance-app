@@ -3,10 +3,8 @@ import Settings from "./Settings"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
-      <Settings/>
+    <Box width={"100%"}>
+      <Settings />
     </Box>
   )
 }

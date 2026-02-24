@@ -4,10 +4,10 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
 import { BudgetTypeV2 } from "@/utils/type"
 
-const RemainingBudget = ({ 
+const RemainingBudget = ({
   budgetCategories,
-  currentTheme
- }: { 
+  currentTheme,
+}: {
   budgetCategories: BudgetTypeV2[]
   currentTheme: string | undefined
 }) => {
@@ -20,9 +20,8 @@ const RemainingBudget = ({
         {budgetCategories.map((entry) => {
           const category = entry.category
           const remaining = entry.amount
-          const cardColor = remaining < 0 ? 
-            negativeCardColor 
-            : positiveCardColor
+          const cardColor =
+            remaining < 0 ? negativeCardColor : positiveCardColor
 
           return (
             <ColoredInfoCard
@@ -31,7 +30,7 @@ const RemainingBudget = ({
               title={category}
               info={`$${formattedStringNumber(remaining)}`}
             />
-          ) 
+          )
         })}
       </FlexColWrapper>
     </ShowCaseCard>

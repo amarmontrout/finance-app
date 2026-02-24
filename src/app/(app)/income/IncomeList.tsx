@@ -29,16 +29,16 @@ const IncomeList = ({
 }) => {
   const monthIncome = useMemo(() => {
     return getMonthTotalV2(
-      selectedYear, 
-      selectedMonth, 
-      incomeTransactions, 
-      excludedSet
+      selectedYear,
+      selectedMonth,
+      incomeTransactions,
+      excludedSet,
     )
   }, [selectedYear, selectedMonth, incomeTransactions])
 
   return (
     <ShowCaseCard
-      title={`Income for ${selectedMonth} ${selectedYear}`} 
+      title={`Income for ${selectedMonth} ${selectedYear}`}
       secondaryTitle={`$${monthIncome}`}
     >
       <TransactionsList

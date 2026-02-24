@@ -1,22 +1,22 @@
-import { 
-  List, 
-  Stack, 
-  ListItemButton, 
-  ListItemText, 
-  ListItem, 
-  IconButton, 
+import {
+  List,
+  Stack,
+  ListItemButton,
+  ListItemText,
+  ListItem,
+  IconButton,
   Box,
-  Divider, 
+  Divider,
 } from "@mui/material"
 import { useState, useEffect, useMemo } from "react"
-import DeleteIcon from '@mui/icons-material/Delete'
-import CancelIcon from '@mui/icons-material/Cancel'
-import EditIcon from '@mui/icons-material/Edit'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import { 
-  accentColorPrimarySelected, 
-  darkMode, 
-  lightMode 
+import DeleteIcon from "@mui/icons-material/Delete"
+import CancelIcon from "@mui/icons-material/Cancel"
+import EditIcon from "@mui/icons-material/Edit"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
+import {
+  accentColorPrimarySelected,
+  darkMode,
+  lightMode,
 } from "@/globals/colors"
 import { useTheme } from "next-themes"
 import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
@@ -27,8 +27,8 @@ import { useUser } from "@/hooks/useUser"
 import { MONTHS } from "@/globals/globals"
 
 const TransactionsList = ({
-  type, 
-  transactions, 
+  type,
+  transactions,
   refreshTransactions,
   selectedMonth,
   setSelectedMonth,
@@ -36,7 +36,7 @@ const TransactionsList = ({
   setSelectedYear,
   setOpenEditDialog,
   setSelectedId,
-  excludedSet
+  excludedSet,
 }: {
   type: "income" | "expenses"
   transactions: TransactionTypeV2[]
@@ -53,10 +53,9 @@ const TransactionsList = ({
   const user = useUser()
 
   const [confirmId, setConfirmId] = useState<number | null>(null)
-  
-  const listItemColor = currentTheme === "light" ?
-    lightMode.elevatedBg 
-    : darkMode.elevatedBg
+
+  const listItemColor =
+    currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
 
   useEffect(() => {
     if (!transactions || transactions.length === 0) {
@@ -64,13 +63,11 @@ const TransactionsList = ({
     }
     const yearNum = selectedYear
 
-    const years = Array.from(new Set(transactions.map(t => t.year)))
+    const years = Array.from(new Set(transactions.map((t) => t.year)))
     const monthsForYear = Array.from(
       new Set(
-        transactions
-        .filter(t => t.year === yearNum)
-        .map(t => t.month)
-      )
+        transactions.filter((t) => t.year === yearNum).map((t) => t.month),
+      ),
     ).sort((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
 
     if (!years.includes(yearNum)) {
@@ -91,48 +88,42 @@ const TransactionsList = ({
     }
   }, [transactions, selectedYear, selectedMonth])
 
-  const handleDeleteTransaction = async ( 
-    id: number
-  ) => {
+  const handleDeleteTransaction = async (id: number) => {
     if (!user) return
 
     if (type === "income") {
       await deleteIncome({
         userId: user.id,
-        rowId: id
+        rowId: id,
       })
     } else if (type === "expenses") {
       await deleteExpense({
         userId: user.id,
-        rowId: id
+        rowId: id,
       })
     }
     refreshTransactions()
     setSelectedId(null)
   }
 
-  const EditDeleteButton = ({ id }: {id: number}) => {
+  const EditDeleteButton = ({ id }: { id: number }) => {
     return (
       <Stack direction={"row"} gap={2}>
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setOpenEditDialog(true)
-              setSelectedId(id)
-            }
-          }
+          onClick={() => {
+            setOpenEditDialog(true)
+            setSelectedId(id)
+          }}
         >
-          <EditIcon/>
+          <EditIcon />
         </IconButton>
 
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setConfirmId(id)
-            }
-          }
+          onClick={() => {
+            setConfirmId(id)
+          }}
         >
           <DeleteIcon />
         </IconButton>
@@ -143,28 +134,24 @@ const TransactionsList = ({
   const ConfirmCancel = ({ id }: { id: number }) => {
     return (
       <Stack direction={"row"} gap={2}>
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setConfirmId(null)
-              if (!selectedYear || !selectedMonth) return
-              handleDeleteTransaction(id)
-            }
-          }
+          onClick={() => {
+            setConfirmId(null)
+            if (!selectedYear || !selectedMonth) return
+            handleDeleteTransaction(id)
+          }}
         >
-          <DeleteIcon/>
+          <DeleteIcon />
         </IconButton>
 
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setConfirmId(null)
-            }
-          }
+          onClick={() => {
+            setConfirmId(null)
+          }}
         >
-          <CancelIcon/>
+          <CancelIcon />
         </IconButton>
       </Stack>
     )
@@ -172,42 +159,38 @@ const TransactionsList = ({
 
   const YearList = () => {
     const years = useMemo(() => {
-      return Array.from(
-        new Set(transactions.map(t => t.year))
-      ).sort((a, b) => b - a)
+      return Array.from(new Set(transactions.map((t) => t.year))).sort(
+        (a, b) => b - a,
+      )
     }, [transactions])
 
     return (
       <Box className="w-full md:w-[30%] overflow-x-auto md:overflow-x-hidden">
         <List className="flex flex-row gap-2 md:flex-col whitespace-nowrap">
-          { years.map((year) => {
-              const yearTotal = getYearTotalV2(
-                year, 
-                transactions,
-                excludedSet
-              )
-                
-              return (
-                <ListItemButton 
-                  className="flex flex-col md:flex-row"
-                  key={year} 
-                  onClick={() => {
-                    setSelectedYear(year)
-                    setSelectedMonth("")
-                  }} 
-                  sx={{ 
-                    backgroundColor: year === selectedYear ?
-                      accentColorPrimarySelected 
+          {years.map((year) => {
+            const yearTotal = getYearTotalV2(year, transactions, excludedSet)
+
+            return (
+              <ListItemButton
+                className="flex flex-col md:flex-row"
+                key={year}
+                onClick={() => {
+                  setSelectedYear(year)
+                  setSelectedMonth("")
+                }}
+                sx={{
+                  backgroundColor:
+                    year === selectedYear
+                      ? accentColorPrimarySelected
                       : listItemColor,
-                    borderRadius: "15px",
-                    minWidth: "fit-content"
-                  }}
-                >
-                  <ListItemText primary={year} secondary={`$${yearTotal}`}/>
-                </ListItemButton>
-              )
-            })
-          }
+                  borderRadius: "15px",
+                  minWidth: "fit-content",
+                }}
+              >
+                <ListItemText primary={year} secondary={`$${yearTotal}`} />
+              </ListItemButton>
+            )
+          })}
         </List>
       </Box>
     )
@@ -220,46 +203,44 @@ const TransactionsList = ({
       return Array.from(
         new Set(
           transactions
-          .filter(t => t.year === selectedYear)
-          .map(t => t.month)
-        )
-      ).sort ((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
+            .filter((t) => t.year === selectedYear)
+            .map((t) => t.month),
+        ),
+      ).sort((a, b) => MONTHS.indexOf(a) - MONTHS.indexOf(b))
     }, [transactions, selectedYear])
 
     return (
       <Box className="flex-[2]">
         <List className="flex flex-col gap-2">
-          { months.map((month) => {
-              const monthTotal = getMonthTotalV2(
-                selectedYear, 
-                month, 
-                transactions,
-                excludedSet
-              )
+          {months.map((month) => {
+            const monthTotal = getMonthTotalV2(
+              selectedYear,
+              month,
+              transactions,
+              excludedSet,
+            )
 
-              return (
-                <ListItemButton 
-                  key={month} 
-                  onClick={() => {setSelectedMonth(month)}}
-                  sx={{ 
-                    backgroundColor: month === selectedMonth ?
-                      accentColorPrimarySelected 
+            return (
+              <ListItemButton
+                key={month}
+                onClick={() => {
+                  setSelectedMonth(month)
+                }}
+                sx={{
+                  backgroundColor:
+                    month === selectedMonth
+                      ? accentColorPrimarySelected
                       : listItemColor,
-                    borderRadius: "15px",
-                    minWidth: "fit-content"
-                  }}
-                >
-                  <ListItemText primary={month} secondary={`$${monthTotal}`}/>
+                  borderRadius: "15px",
+                  minWidth: "fit-content",
+                }}
+              >
+                <ListItemText primary={month} secondary={`$${monthTotal}`} />
 
-                  {
-                    month === selectedMonth ?
-                      <KeyboardArrowRightIcon/> 
-                      : <></>
-                  }
-                </ListItemButton>
-              )
-            })
-          }
+                {month === selectedMonth ? <KeyboardArrowRightIcon /> : <></>}
+              </ListItemButton>
+            )
+          })}
         </List>
       </Box>
     )
@@ -271,62 +252,57 @@ const TransactionsList = ({
         <List className="flex flex-col gap-2">
           {transactions.map((details) => {
             if (
-              details.year !== selectedYear 
-              || details.month !== selectedMonth
-            ) return
+              details.year !== selectedYear ||
+              details.month !== selectedMonth
+            )
+              return
 
-              return (
-                <ListItem 
-                  key={details.id}
-                  secondaryAction={
-                    confirmId === details.id
-                      ? <ConfirmCancel id={details.id}/> 
-                      : <EditDeleteButton id={details.id}/>
-                  }
-                  sx={{
-                    backgroundColor: listItemColor,
-                    borderRadius: "15px",
-                    minWidth: "fit-content"
-                  }}
-                >
-                  <ListItemText 
-                    primary={`$${
-                      formattedStringNumber(
-                        details.amount
-                      )
-                    }`}
-                    secondary={details.category}
-                  />
-                </ListItem>
-              )
-            })
-          }
+            return (
+              <ListItem
+                key={details.id}
+                secondaryAction={
+                  confirmId === details.id ? (
+                    <ConfirmCancel id={details.id} />
+                  ) : (
+                    <EditDeleteButton id={details.id} />
+                  )
+                }
+                sx={{
+                  backgroundColor: listItemColor,
+                  borderRadius: "15px",
+                  minWidth: "fit-content",
+                }}
+              >
+                <ListItemText
+                  primary={`$${formattedStringNumber(details.amount)}`}
+                  secondary={details.category}
+                />
+              </ListItem>
+            )
+          })}
         </List>
       </Box>
     )
   }
 
   return (
-    <Box
-      className="flex flex-col md:flex-row sm:gap-2"
-    >
-      <YearList/>
+    <Box className="flex flex-col md:flex-row sm:gap-2">
+      <YearList />
 
-      <Divider 
+      <Divider
         className="flex md:hidden w-full"
-        sx={{ 
-          borderColor: currentTheme === "light" ?
-            lightMode.borderStrong 
-            : darkMode.borderStrong,
-          borderWidth: 1
+        sx={{
+          borderColor:
+            currentTheme === "light"
+              ? lightMode.borderStrong
+              : darkMode.borderStrong,
+          borderWidth: 1,
         }}
       />
 
-      <Box 
-        className="flex flex-row gap-2 w-full md:w-[70%]"
-      >
-        <MonthList/>
-        <DetailsList/>        
+      <Box className="flex flex-row gap-2 w-full md:w-[70%]">
+        <MonthList />
+        <DetailsList />
       </Box>
     </Box>
   )

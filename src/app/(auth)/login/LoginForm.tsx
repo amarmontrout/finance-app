@@ -4,16 +4,16 @@ import { CredType } from "@/app/api/Auth/models"
 import { doLogin } from "@/app/api/Auth/requests"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { accentColorSecondary } from "@/globals/colors"
-import { 
+import {
   Alert,
-  Box, 
-  Button, 
-  Card, 
-  CardContent, 
-  FormControl, 
-  InputLabel, 
-  OutlinedInput, 
-  Typography 
+  Box,
+  Button,
+  Card,
+  CardContent,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  Typography,
 } from "@mui/material"
 import { AuthError } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
@@ -21,7 +21,7 @@ import { useState } from "react"
 
 const CRED_INIT = {
   username: "",
-  password: ""
+  password: "",
 }
 
 const LoginForm = () => {
@@ -41,7 +41,7 @@ const LoginForm = () => {
       errorHandler: (error: AuthError) => {
         setError(error.message)
         setIsLoading(false)
-      }
+      },
     })
   }
 
@@ -50,7 +50,7 @@ const LoginForm = () => {
       style={{
         borderRadius: "15px",
         margin: "0 auto",
-        padding: "20px"
+        padding: "20px",
       }}
     >
       <CardContent>
@@ -59,9 +59,7 @@ const LoginForm = () => {
             Please Sign In
           </Typography>
 
-          { error && 
-            <Alert severity={"error"}>{error}</Alert>
-          }
+          {error && <Alert severity={"error"}>{error}</Alert>}
 
           <Box className="flex flex-col gap-3 m-auto">
             <FormControl>
@@ -71,12 +69,12 @@ const LoginForm = () => {
                 value={credentials.username}
                 name={"username"}
                 onChange={(e) => {
-                  setCredentials(prev => ({
+                  setCredentials((prev) => ({
                     ...prev,
-                    username: e.target.value
+                    username: e.target.value,
                   }))
                 }}
-                />
+              />
             </FormControl>
 
             <FormControl>
@@ -87,16 +85,16 @@ const LoginForm = () => {
                 value={credentials.password}
                 name={"password"}
                 onChange={(e) => {
-                  setCredentials(prev => ({
+                  setCredentials((prev) => ({
                     ...prev,
-                    password: e.target.value
+                    password: e.target.value,
                   }))
                 }}
-                />
+              />
             </FormControl>
-            
+
             <Button
-              variant={"contained"} 
+              variant={"contained"}
               onClick={handleLogin}
               disabled={!credentials.username || !credentials.password}
               sx={{ backgroundColor: accentColorSecondary }}

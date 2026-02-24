@@ -13,13 +13,11 @@ import { darkMode, lightMode } from "@/globals/colors"
 import { useTheme } from "next-themes"
 
 const Insights = () => {
-  const { 
-    incomeTransactionsV2,
-    expenseTransactionsV2
-  } = useTransactionContext()
+  const { incomeTransactionsV2, expenseTransactionsV2 } =
+    useTransactionContext()
   const { excludedSet, yearsV2 } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
-  const {theme: currentTheme} = useTheme()
+  const { theme: currentTheme } = useTheme()
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -27,35 +25,32 @@ const Insights = () => {
   const [value, setValue] = useState(0)
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
 
   return (
     <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Net Cash Flow"/>
-          <Tab label="Savings Rate"/>
+          <Tab label="Net Cash Flow" />
+          <Tab label="Savings Rate" />
         </Tabs>
       </Box>
 
@@ -71,11 +66,12 @@ const Insights = () => {
 
       <Divider
         className="flex w-full"
-        sx={{ 
-          borderColor: currentTheme === "light" ?
-            lightMode.borderStrong 
-            : darkMode.borderStrong,
-          borderWidth: 1
+        sx={{
+          borderColor:
+            currentTheme === "light"
+              ? lightMode.borderStrong
+              : darkMode.borderStrong,
+          borderWidth: 1,
         }}
       />
 

@@ -6,7 +6,7 @@ const AddIncome = ({
   incomeCategories,
   income,
   refreshIncomeTransactions,
-  years
+  years,
 }: {
   incomeCategories: ChoiceTypeV2[]
   income: "income"

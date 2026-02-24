@@ -1,33 +1,33 @@
 import { Box, Card, CardContent, Stack, Typography } from "@mui/material"
 
-const ShowCaseCard = ({ 
-  children, 
-  title, 
-  secondaryTitle 
-}: { 
-  children: React.ReactNode, 
-  title: string, 
-  secondaryTitle?: string 
+const ShowCaseCard = ({
+  children,
+  title,
+  secondaryTitle,
+}: {
+  children: React.ReactNode
+  title: string
+  secondaryTitle?: string
 }) => {
   return (
     <Card
       style={{
         width: "100%",
         height: "100%",
-        borderRadius: "15px"
+        borderRadius: "15px",
       }}
     >
       <CardContent>
         <Stack direction={"row"} justifyContent={"space-between"}>
-          <Typography 
+          <Typography
             sx={{
               fontSize: { xs: "1rem", sm: "1.5rem" },
             }}
           >
-              {title}
+            {title}
           </Typography>
 
-          <Typography 
+          <Typography
             sx={{
               fontSize: { xs: "1rem", sm: "1.5rem" },
             }}
@@ -36,13 +36,9 @@ const ShowCaseCard = ({
           </Typography>
         </Stack>
 
-        {title !== "" && <hr/>}
-        
-        <Box 
-          paddingTop={title !== "" ? "10px" : 0}
-        >
-          {children}
-        </Box>
+        {title !== "" && <hr />}
+
+        <Box paddingTop={title !== "" ? "10px" : 0}>{children}</Box>
       </CardContent>
     </Card>
   )

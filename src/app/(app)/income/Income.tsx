@@ -1,18 +1,16 @@
 "use client"
 
-import 
-  EditTransactionDetailDialog 
-from "@/components/EditTransactionDetailDialog"
+import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialog"
 import LineChart from "@/components/LineChart"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { 
-  incomeLinesLight, 
-  incomeLinesDark, 
-  accentColorPrimarySelected, 
-  lightMode, 
-  darkMode 
+import {
+  incomeLinesLight,
+  incomeLinesDark,
+  accentColorPrimarySelected,
+  lightMode,
+  darkMode,
 } from "@/globals/colors"
 import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
@@ -22,13 +20,11 @@ import { useState, useMemo } from "react"
 import IncomeList from "./IncomeList"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import AddIncomeDialog from "./AddIncomeDialog"
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from "@mui/icons-material/Add"
 
 const Income = () => {
-  const {
-    incomeTransactionsV2,
-    refreshIncomeTransactionsV2
-  } = useTransactionContext()
+  const { incomeTransactionsV2, refreshIncomeTransactionsV2 } =
+    useTransactionContext()
   const { excludedSet, incomeCategoriesV2, yearsV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -45,58 +41,57 @@ const Income = () => {
       firstData: incomeTransactionsV2,
       firstColumnTitle: "Month",
       method: "self",
-      excludedSet: excludedSet
+      excludedSet: excludedSet,
     })
-    const lineColors = currentTheme === "light" 
-      ? incomeLinesLight
-      : incomeLinesDark
+    const lineColors =
+      currentTheme === "light" ? incomeLinesLight : incomeLinesDark
     return { lineChartData, lineColors }
   }, [incomeTransactionsV2, currentTheme])
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
 
   return (
     <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Income List"/>
-          <Tab label="Income Chart"/>
+          <Tab label="Income List" />
+          <Tab label="Income Chart" />
         </Tabs>
       </Box>
 
       <Button
-        onClick={() => {setOpenAddIncomeDialog(true)}}
+        onClick={() => {
+          setOpenAddIncomeDialog(true)
+        }}
         size="large"
         sx={{
           backgroundColor: accentColorPrimarySelected,
-          color: currentTheme === "light" 
-            ? lightMode.primaryText
-            : darkMode.primaryText
+          color:
+            currentTheme === "light"
+              ? lightMode.primaryText
+              : darkMode.primaryText,
         }}
       >
-        <AddIcon/>
+        <AddIcon />
         Add Income
       </Button>
 
@@ -117,10 +112,7 @@ const Income = () => {
 
       <TabPanel value={value} index={1}>
         <ShowCaseCard title={"Income"}>
-          <LineChart
-            multiColumnData={lineChartData}
-            lineColors={lineColors}
-          />
+          <LineChart multiColumnData={lineChartData} lineColors={lineColors} />
         </ShowCaseCard>
       </TabPanel>
 

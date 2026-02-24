@@ -7,60 +7,58 @@ import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
-import { 
-  Box, 
-  FormControl, 
-  InputLabel, 
-  MenuItem, 
-  Select, 
-  Tab, 
-  Tabs 
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tab,
+  Tabs,
 } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
 
 const Budget = () => {
-  const {
-    budgetTransactionsV2,
-    refreshBudgetTransactionsV2
-  } = useTransactionContext()
+  const { budgetTransactionsV2, refreshBudgetTransactionsV2 } =
+    useTransactionContext()
   const { budgetCategoriesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
   const TODAY: DateType = {
     month: currentMonth,
     day: currentDay,
-    year: currentYear
+    year: currentYear,
   }
   const { start, end, prevStart, prevEnd } = useMemo(() => {
     return getWeekBounds({
       month: currentMonth,
       day: currentDay,
-      year: currentYear
+      year: currentYear,
     })
   }, [])
 
   const prevWeek = {
     start: `${prevStart.month} ${prevStart.day}, ${prevStart.year}`,
-    end: `${prevEnd.month} ${prevEnd.day}, ${prevEnd.year}`
+    end: `${prevEnd.month} ${prevEnd.day}, ${prevEnd.year}`,
   }
 
-    const currentWeek = {
+  const currentWeek = {
     start: `${start.month} ${start.day}, ${start.year}`,
-    end: `${end.month} ${end.day}, ${end.year}`
+    end: `${end.month} ${end.day}, ${end.year}`,
   }
 
   const [week, setWeek] = useState<"prev" | "current">("current")
-  const [selectedEntry, setSelectedEntry] = 
+  const [selectedEntry, setSelectedEntry] =
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [value, setValue] = useState(0)
 
-const notes = useMemo(() => {
-  return [...new Set(budgetTransactionsV2.map(e => e.note))]
-}, [budgetTransactionsV2])
-  
+  const notes = useMemo(() => {
+    return [...new Set(budgetTransactionsV2.map((e) => e.note))]
+  }, [budgetTransactionsV2])
+
   const weeklyTransactions = useMemo(() => {
     const toDate = (date: DateType) => {
       const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
@@ -69,8 +67,8 @@ const notes = useMemo(() => {
 
     const weekStart = toDate(week === "prev" ? prevStart : start)
     const weekEnd = toDate(week === "prev" ? prevEnd : end)
-    
-    return budgetTransactionsV2.filter(entry => {
+
+    return budgetTransactionsV2.filter((entry) => {
       if (!entry.date?.day) return false
 
       const entryDate = toDate(entry.date)
@@ -98,8 +96,8 @@ const notes = useMemo(() => {
 
       remaining.push({
         id: category.id,
-        category: category.category, 
-        amount: budget-total
+        category: category.category,
+        amount: budget - total,
       })
     })
 
@@ -107,35 +105,32 @@ const notes = useMemo(() => {
   }, [budgetCategoriesV2, weeklyTransactions])
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
 
   return (
     <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Remaining Budget"/>
-          <Tab label="Budget Entires"/>
+          <Tab label="Remaining Budget" />
+          <Tab label="Budget Entires" />
         </Tabs>
       </Box>
 
@@ -150,12 +145,12 @@ const notes = useMemo(() => {
             label="Week"
             value={week}
             name={"week"}
-            onChange={e => setWeek(e.target.value)}
+            onChange={(e) => setWeek(e.target.value)}
           >
             <MenuItem key={"prev"} value={"prev"}>
               {`${prevWeek.start} - ${prevWeek.end}`}
             </MenuItem>
-            
+
             <MenuItem key={"current"} value={"current"}>
               {`${currentWeek.start} - ${currentWeek.end}`}
             </MenuItem>
@@ -163,7 +158,7 @@ const notes = useMemo(() => {
         </FormControl>
       </Box>
 
-      <hr style={{width: "100%"}}/>
+      <hr style={{ width: "100%" }} />
 
       <TabPanel value={value} index={0}>
         <RemainingBudget

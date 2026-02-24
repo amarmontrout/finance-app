@@ -1,16 +1,16 @@
 "use client"
 
 import { Box, Divider, Stack, Typography } from "@mui/material"
-import PageLink from "./PageLink";
-import Logo from "@/components/Logo";
-import { 
-  NAV_QUICK_INFO, 
-  NAV_SETTINGS, 
-  NAV_TRANSACTIONS 
-} from "@/globals/globals";
-import { usePathname } from "next/navigation";
-import { useTheme } from "next-themes";
-import { darkMode, lightMode } from "@/globals/colors";
+import PageLink from "./PageLink"
+import Logo from "@/components/Logo"
+import {
+  NAV_QUICK_INFO,
+  NAV_SETTINGS,
+  NAV_TRANSACTIONS,
+} from "@/globals/globals"
+import { usePathname } from "next/navigation"
+import { useTheme } from "next-themes"
+import { darkMode, lightMode } from "@/globals/colors"
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -21,14 +21,14 @@ export const Navbar = () => {
       <Box>
         <Box
           className="hidden md:flex"
-          bgcolor={"background.default"} 
-          minHeight={"70px"} 
+          bgcolor={"background.default"}
+          minHeight={"70px"}
           height={"100%"}
           width={"100%"}
-          justifyContent={"center"} 
+          justifyContent={"center"}
           alignItems={"center"}
         >
-          <Logo/>
+          <Logo />
         </Box>
       </Box>
 
@@ -39,66 +39,62 @@ export const Navbar = () => {
         gap={1}
         overflow={"hidden"}
         style={{
-          overflowY: "scroll"
+          overflowY: "scroll",
         }}
       >
-        <Typography 
-          className="hidden md:flex" 
-          variant={"h5"}
-        >
+        <Typography className="hidden md:flex" variant={"h5"}>
           Quick Info
         </Typography>
         {NAV_QUICK_INFO.map((item) => {
           return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
+            <PageLink
+              item={item}
+              active={pathname === item.link}
               key={item.name}
             />
           )
         })}
 
-        <Divider 
-          orientation="horizontal" 
-          sx={{ 
-            borderColor: currentTheme === "light" ?
-              lightMode.borderStrong 
-              : darkMode.borderStrong,
-            borderRightWidth: 2
+        <Divider
+          orientation="horizontal"
+          sx={{
+            borderColor:
+              currentTheme === "light"
+                ? lightMode.borderStrong
+                : darkMode.borderStrong,
+            borderRightWidth: 2,
           }}
         />
 
-        <Typography 
-          className="hidden md:flex" 
-          variant={"h5"}
-        >
+        <Typography className="hidden md:flex" variant={"h5"}>
           Transactions
         </Typography>
         {NAV_TRANSACTIONS.map((item) => {
           return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
+            <PageLink
+              item={item}
+              active={pathname === item.link}
               key={item.name}
             />
           )
         })}
 
-        <Divider 
-          orientation="horizontal" 
-          sx={{ 
-            borderColor: currentTheme === "light" ?
-              lightMode.borderStrong 
-              : darkMode.borderStrong,
-            borderRightWidth: 2
+        <Divider
+          orientation="horizontal"
+          sx={{
+            borderColor:
+              currentTheme === "light"
+                ? lightMode.borderStrong
+                : darkMode.borderStrong,
+            borderRightWidth: 2,
           }}
         />
 
         {NAV_SETTINGS.map((item) => {
           return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
+            <PageLink
+              item={item}
+              active={pathname === item.link}
               key={item.name}
             />
           )
@@ -121,34 +117,34 @@ export const HorizontalNavbar = () => {
       justifyContent={"center"}
     >
       {NAV_TRANSACTIONS.map((item) => {
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}
+        return (
+          <PageLink
+            item={item}
+            active={pathname === item.link}
+            key={item.name}
+          />
+        )
+      })}
       {NAV_QUICK_INFO.map((item) => {
         if (item.link !== "/") return
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}        
+        return (
+          <PageLink
+            item={item}
+            active={pathname === item.link}
+            key={item.name}
+          />
+        )
+      })}
       {NAV_QUICK_INFO.map((item) => {
         if (item.link === "/") return
-          return (
-            <PageLink 
-              item={item} 
-              active={pathname === item.link} 
-              key={item.name}
-            />
-          )
-        })}
+        return (
+          <PageLink
+            item={item}
+            active={pathname === item.link}
+            key={item.name}
+          />
+        )
+      })}
     </Stack>
   )
 }

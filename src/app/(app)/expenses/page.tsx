@@ -3,10 +3,8 @@ import Expenses from "./Expenses"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
-      <Expenses/>
+    <Box width={"100%"}>
+      <Expenses />
     </Box>
   )
 }

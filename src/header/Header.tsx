@@ -1,30 +1,23 @@
 "use client"
 
-import { Box, Stack, Typography } from "@mui/material";
-import HeaderDropdown from "./HeaderDropdown";
+import { Box, Stack, Typography } from "@mui/material"
+import HeaderDropdown from "./HeaderDropdown"
 
 const Header = () => {
   return (
-    <Stack
-      direction={"row"}
-      height={"100%"}
-      justifyContent={"space-between"}
-    >
+    <Stack direction={"row"} height={"100%"} justifyContent={"space-between"}>
       <Box
         minWidth={"fit-content"}
         alignContent={"center"}
         marginLeft={"1rem"}
         marginRight={"5px"}
       >
-        <Typography
-          variant="h5" 
-          color={"white"}
-        >
+        <Typography variant="h5" color={"white"}>
           Finance Tracker
         </Typography>
       </Box>
 
-      <HeaderDropdown/>
+      <HeaderDropdown />
     </Stack>
   )
 }

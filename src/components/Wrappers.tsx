@@ -3,7 +3,7 @@ import { Box } from "@mui/material"
 export const FlexColWrapper = ({
   children,
   gap,
-  toRowBreak
+  toRowBreak,
 }: {
   children: React.ReactNode
   gap?: number | undefined
@@ -11,19 +11,13 @@ export const FlexColWrapper = ({
 }) => {
   const toRow = toRowBreak ? `${toRowBreak}:flex-row` : ""
   const hasGap = gap ? `gap-${gap}` : ""
-  return (
-    <Box
-      className={`flex flex-col ${hasGap} ${toRow}`}
-    >
-      {children}
-    </Box>
-  )
+  return <Box className={`flex flex-col ${hasGap} ${toRow}`}>{children}</Box>
 }
 
 export const FlexRowWrapper = ({
   children,
   gap,
-  toColBreak
+  toColBreak,
 }: {
   children: React.ReactNode
   gap?: number | undefined
@@ -31,32 +25,24 @@ export const FlexRowWrapper = ({
 }) => {
   const toCol = toColBreak ? `${toColBreak}:flex-row` : ""
   const hasGap = gap ? `gap-${gap}` : ""
-  return (
-    <Box
-      className={`flex flex-row ${hasGap} ${toCol}`}
-    >
-      {children}
-    </Box>
-  )
+  return <Box className={`flex flex-row ${hasGap} ${toCol}`}>{children}</Box>
 }
 
 export const FlexChildWrapper = ({
   children,
   gap,
-  hiddenToVisibleBp
+  hiddenToVisibleBp,
 }: {
   children: React.ReactNode
   gap?: number | undefined
   hiddenToVisibleBp?: "sm" | "md" | "lg" | "xl" | "2xl" | undefined
 }) => {
   const hasGap = gap ? `gap-${gap}` : ""
-  const hiddenToVisible = hiddenToVisibleBp ?
-    `hidden ${hiddenToVisibleBp}:flex` 
+  const hiddenToVisible = hiddenToVisibleBp
+    ? `hidden ${hiddenToVisibleBp}:flex`
     : "flex"
   return (
-    <Box
-      className={`${hiddenToVisible} flex-1 flex-col ${hasGap} min-w-0`}
-    >
+    <Box className={`${hiddenToVisible} flex-1 flex-col ${hasGap} min-w-0`}>
       {children}
     </Box>
   )

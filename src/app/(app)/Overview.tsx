@@ -14,19 +14,18 @@ import YearNetCash from "./YearNetCash"
 import { Box, Tab, Tabs } from "@mui/material"
 
 const Overview = () => {
-  const { 
-    incomeTransactionsV2, 
-    expenseTransactionsV2 
-  } = useTransactionContext()
+  const { incomeTransactionsV2, expenseTransactionsV2 } =
+    useTransactionContext()
   const { excludedSet } = useCategoryContext()
   const { currentYear, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
   const [value, setValue] = useState(0)
 
-  const lineColor = currentTheme === "light" 
-    ? [lightMode.success, lightMode.error] 
-    : [darkMode.success, darkMode.error]
+  const lineColor =
+    currentTheme === "light"
+      ? [lightMode.success, lightMode.error]
+      : [darkMode.success, darkMode.error]
   const chartDataV2 = useMemo(() => {
     return buildMultiColumnDataV2({
       firstData: incomeTransactionsV2,
@@ -34,40 +33,37 @@ const Overview = () => {
       selectedYear: currentYear,
       firstColumnTitle: "Month",
       method: "compare",
-      excludedSet: excludedSet
+      excludedSet: excludedSet,
     })
   }, [incomeTransactionsV2, expenseTransactionsV2])
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setValue(newValue)
   }
-  
-  const TabPanel = ({ 
-    children, 
-    value, 
-    index, 
-    ...other 
+
+  const TabPanel = ({
+    children,
+    value,
+    index,
+    ...other
   }: {
     children?: React.ReactNode
     index: number
     value: number
   }) => {
     return (
-      <div hidden={value !== index} {...other} >
-        {
-          value === index 
-            && <Box>{children}</Box>
-        }
+      <div hidden={value !== index} {...other}>
+        {value === index && <Box>{children}</Box>}
       </div>
     )
   }
-    
+
   return (
     <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
-          <Tab label="Annual Totals"/>
-          <Tab label="Annual Net Cash"/>
+          <Tab label="Annual Totals" />
+          <Tab label="Annual Net Cash" />
         </Tabs>
       </Box>
 
@@ -93,10 +89,7 @@ const Overview = () => {
         />
       </TabPanel>
 
-      <LineChart
-        multiColumnData={chartDataV2}
-        lineColors={lineColor}
-      /> 
+      <LineChart multiColumnData={chartDataV2} lineColors={lineColor} />
     </FlexColWrapper>
   )
 }

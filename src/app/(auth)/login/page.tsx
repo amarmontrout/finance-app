@@ -10,7 +10,7 @@ const Page = () => {
       justifyContent={"center"}
       alignItems={"center"}
     >
-      <LoginForm/>
+      <LoginForm />
     </Box>
   )
 }

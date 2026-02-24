@@ -8,13 +8,13 @@ import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
 import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
-import { 
-  Box, 
-  Divider, 
-  FormControl, 
-  InputLabel, 
-  MenuItem, 
-  Select 
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
 } from "@mui/material"
 import { useMemo, useState } from "react"
 
@@ -24,7 +24,7 @@ const Projections = ({
   expenseCategories,
   excludedSet,
   currentYear,
-  currentMonth
+  currentMonth,
 }: {
   expenseTransactions: TransactionTypeV2[]
   currentTheme: string | undefined
@@ -42,8 +42,7 @@ const Projections = ({
     const projectionMap = new Map<string, number>()
     const relevantTransactions = expenseTransactions.filter((t) => {
       return (
-        t.year === currentYear &&
-        MONTHS.indexOf(t.month) + 1 <= passedMonths
+        t.year === currentYear && MONTHS.indexOf(t.month) + 1 <= passedMonths
       )
     })
 
@@ -57,10 +56,7 @@ const Projections = ({
       const projectedValue = category.isRecurring
         ? getAnnualProjection(total, passedMonths)
         : total
-      projectionMap.set(
-        category.name,
-        projectedValue
-      )
+      projectionMap.set(category.name, projectedValue)
     }
 
     return projectionMap
@@ -77,12 +73,12 @@ const Projections = ({
     if (view === "annual") {
       return total
     } else {
-      return total/12
+      return total / 12
     }
   }, [annualProjectionPerCategory, view])
 
   return (
-    <ShowCaseCard 
+    <ShowCaseCard
       title={`${currentYear} Projections`}
       secondaryTitle={`Total: $${formattedStringNumber(totalProj)}`}
     >
@@ -94,7 +90,7 @@ const Projections = ({
             label="View"
             value={view}
             name={"view"}
-            onChange={e => setView(e.target.value)}
+            onChange={(e) => setView(e.target.value)}
           >
             <MenuItem key={"annual"} value={"annual"}>
               Annual Projection
@@ -105,38 +101,35 @@ const Projections = ({
           </Select>
         </FormControl>
 
-        <Divider 
+        <Divider
           className="flex w-full"
-          sx={{ 
-            borderColor: currentTheme === "light" ?
-              lightMode.borderStrong 
-              : darkMode.borderStrong,
-            borderWidth: 1
+          sx={{
+            borderColor:
+              currentTheme === "light"
+                ? lightMode.borderStrong
+                : darkMode.borderStrong,
+            borderWidth: 1,
           }}
         />
 
-        <Box
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2"
-        >
-          {
-            expenseCategories.map((category) => {
-              const proj = annualProjectionPerCategory.get(category.name) ?? 0
-              if (proj === 0) return
+        <Box className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+          {expenseCategories.map((category) => {
+            const proj = annualProjectionPerCategory.get(category.name) ?? 0
+            if (proj === 0) return
 
-              const annual = formattedStringNumber(proj)
-              const monthly = formattedStringNumber(proj/12)
+            const annual = formattedStringNumber(proj)
+            const monthly = formattedStringNumber(proj / 12)
 
-              return (
-                <FlexChildWrapper key={category.name}>
-                  <ColoredInfoCard
-                    cardColors={defaultColor}
-                    title={category.name}
-                    info={`$${view === "annual" ? annual : monthly}`}
-                  />
-                </FlexChildWrapper>
-              )
-            })
-          }
+            return (
+              <FlexChildWrapper key={category.name}>
+                <ColoredInfoCard
+                  cardColors={defaultColor}
+                  title={category.name}
+                  info={`$${view === "annual" ? annual : monthly}`}
+                />
+              </FlexChildWrapper>
+            )
+          })}
         </Box>
       </FlexColWrapper>
     </ShowCaseCard>

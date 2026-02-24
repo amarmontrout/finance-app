@@ -1,15 +1,15 @@
 import { Box, Typography } from "@mui/material"
 
 export type CardColorsType = {
-    background: string,
-    textIcon: string,
-    border: string  
+  background: string
+  textIcon: string
+  border: string
 }
 
 const ColoredInfoCard = ({
   cardColors,
   title,
-  info
+  info,
 }: {
   cardColors: CardColorsType
   title: string
@@ -18,38 +18,38 @@ const ColoredInfoCard = ({
   return (
     <Box
       className="flex flex-col"
-      border={`2px solid ${cardColors.border}`} 
-      borderRadius={"15px"} 
+      border={`2px solid ${cardColors.border}`}
+      borderRadius={"15px"}
       padding={"15px"}
       minWidth={"fit-content"}
       width={"100%"}
       sx={{ backgroundColor: cardColors.background }}
     >
-      <Typography 
+      <Typography
         color={cardColors.textIcon}
         sx={{
           fontSize: {
             xs: "1rem",
-            md: "1.25rem"
-          }
+            md: "1.25rem",
+          },
         }}
       >
         {title}
       </Typography>
 
-      <Typography 
+      <Typography
         color={cardColors.textIcon}
         sx={{
           fontSize: {
             xs: "2rem",
-            md: "2.25rem"
+            md: "2.25rem",
           },
-          textAlign: "right"
+          textAlign: "right",
         }}
       >
         {info}
       </Typography>
-    </Box>    
+    </Box>
   )
 }
 

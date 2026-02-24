@@ -1,4 +1,8 @@
-import { getBudget, getExpenses, getIncome } from "@/app/api/Transactions/requests"
+import {
+  getBudget,
+  getExpenses,
+  getIncome,
+} from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { BudgetTransactionTypeV2, TransactionTypeV2 } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
@@ -21,55 +25,64 @@ export const useTransactionContext = () => {
   const context = useContext(TransactionContext)
 
   if (!context) {
-    throw new Error("useTransactionContext must be used within a TransactionProvider")
+    throw new Error(
+      "useTransactionContext must be used within a TransactionProvider",
+    )
   }
 
   return context
 }
 
-export const TransactionProvider = (props: {
-  children: React.ReactNode
-}) => {
+export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
 
-  const [incomeTransactionsV2, setIncomeTransactionsV2] = 
-    useState<TransactionTypeV2[]>([])
-  const [expenseTransactionsV2, setExpenseTransactionsV2] = 
-    useState<TransactionTypeV2[]>([])
-  const [budgetTransactionsV2, setBudgetTransactionsV2] = 
-    useState<BudgetTransactionTypeV2[]>([])
+  const [incomeTransactionsV2, setIncomeTransactionsV2] = useState<
+    TransactionTypeV2[]
+  >([])
+  const [expenseTransactionsV2, setExpenseTransactionsV2] = useState<
+    TransactionTypeV2[]
+  >([])
+  const [budgetTransactionsV2, setBudgetTransactionsV2] = useState<
+    BudgetTransactionTypeV2[]
+  >([])
   const [incomeLoading, setIncomeLoading] = useState(false)
   const [expenseLoading, setExpenseLoading] = useState(false)
   const [budgetLoading, setBudgetLoading] = useState(false)
 
   const refreshIncomeTransactionsV2 = async () => {
-    if (!user) { return }
+    if (!user) {
+      return
+    }
     console.log("Pulling Income Transactions...")
     setIncomeLoading(true)
     const incomeResult = await getIncome({
-      userId: user.id
+      userId: user.id,
     })
     setIncomeTransactionsV2(incomeResult ?? [])
     setIncomeLoading(false)
   }
 
   const refreshExpenseTransactionsV2 = async () => {
-    if (!user) { return }
+    if (!user) {
+      return
+    }
     console.log("Pulling Expenses Transactions...")
     setExpenseLoading(true)
     const expenseResult = await getExpenses({
-      userId: user.id
+      userId: user.id,
     })
     setExpenseTransactionsV2(expenseResult ?? [])
     setExpenseLoading(false)
   }
 
   const refreshBudgetTransactionsV2 = async () => {
-    if (!user) { return }
+    if (!user) {
+      return
+    }
     console.log("Pulling Budget Transactions...")
     setBudgetLoading(true)
     const budgetResult = await getBudget({
-      userId: user.id
+      userId: user.id,
     })
     setBudgetTransactionsV2(budgetResult ?? [])
     setBudgetLoading(false)
@@ -82,17 +95,19 @@ export const TransactionProvider = (props: {
   }, [user])
 
   return (
-    <TransactionContext.Provider value={{
-      incomeTransactionsV2,
-      refreshIncomeTransactionsV2,
-      expenseTransactionsV2,
-      refreshExpenseTransactionsV2,
-      budgetTransactionsV2,
-      refreshBudgetTransactionsV2,
-      incomeLoading,
-      expenseLoading,
-      budgetLoading
-    }}>
+    <TransactionContext.Provider
+      value={{
+        incomeTransactionsV2,
+        refreshIncomeTransactionsV2,
+        expenseTransactionsV2,
+        refreshExpenseTransactionsV2,
+        budgetTransactionsV2,
+        refreshBudgetTransactionsV2,
+        incomeLoading,
+        expenseLoading,
+        budgetLoading,
+      }}
+    >
       {props.children}
     </TransactionContext.Provider>
   )

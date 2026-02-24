@@ -10,7 +10,7 @@ const TransactionTotals = ({
   selectedYear,
   incomeTransactionsV2,
   expenseTransactionsV2,
-  excludedSet
+  excludedSet,
 }: {
   selectedYear: number
   incomeTransactionsV2: TransactionTypeV2[]
@@ -18,89 +18,75 @@ const TransactionTotals = ({
   excludedSet: Set<string>
 }) => {
   const yearIncomeTotal = useMemo(() => {
-    return getYearTotalV2(
-        selectedYear, 
-        incomeTransactionsV2,
-        excludedSet
-      )
+    return getYearTotalV2(selectedYear, incomeTransactionsV2, excludedSet)
   }, [selectedYear, incomeTransactionsV2, excludedSet])
 
   const yearExpenseTotal = useMemo(() => {
-     return getYearTotalV2(
-        selectedYear, 
-        expenseTransactionsV2,
-        excludedSet
-      )
+    return getYearTotalV2(selectedYear, expenseTransactionsV2, excludedSet)
   }, [selectedYear, expenseTransactionsV2, excludedSet])
 
   return (
-    <ShowCaseCard 
-      title={`Totals for ${selectedYear}`}
-    >
+    <ShowCaseCard title={`Totals for ${selectedYear}`}>
       <Stack direction={"row"} width={"100%"}>
         <Stack direction={"column"} width={"30%"}>
           <Typography variant={"h6"}>{selectedYear}</Typography>
-          {
-            MONTHS.map((month) => {
-              return (
-                <Typography key={month} variant={"h6"}>{month}</Typography>
-              )
-            })
-          }
+          {MONTHS.map((month) => {
+            return (
+              <Typography key={month} variant={"h6"}>
+                {month}
+              </Typography>
+            )
+          })}
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
           <Typography variant={"h6"}>{`+ $${yearIncomeTotal}`}</Typography>
-          {
-            MONTHS.map((month) => {
-              const total = incomeTransactionsV2.reduce((acc, income) => {
-                if (
-                  income.month === month &&
-                  income.year === selectedYear &&
-                  !excludedSet.has(income.category)
-                ) {
-                  return acc + income.amount
-                }
-                return acc
-              }, 0)
-              return (
-                <Typography 
-                  key={`${month}-${total}`} 
-                  color={"success"} 
-                  variant={"h6"}
-                >
-                  {`+  $${formattedStringNumber(total)}`}
-                </Typography>
-              )
-            })
-          }
+          {MONTHS.map((month) => {
+            const total = incomeTransactionsV2.reduce((acc, income) => {
+              if (
+                income.month === month &&
+                income.year === selectedYear &&
+                !excludedSet.has(income.category)
+              ) {
+                return acc + income.amount
+              }
+              return acc
+            }, 0)
+            return (
+              <Typography
+                key={`${month}-${total}`}
+                color={"success"}
+                variant={"h6"}
+              >
+                {`+  $${formattedStringNumber(total)}`}
+              </Typography>
+            )
+          })}
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
           <Typography variant={"h6"}>{`- $${yearExpenseTotal}`}</Typography>
-          {
-            MONTHS.map((month) => {
-              const total = expenseTransactionsV2.reduce((acc, expense) => {
-                if (
-                  expense.month === month &&
-                  expense.year === selectedYear &&
-                  !excludedSet.has(expense.category)
-                ) {
-                  return acc + expense.amount
-                }
-                return acc
-              }, 0)
-              return (
-                <Typography 
-                  key={`${month}-${total}`} 
-                  color={"error"} 
-                  variant={"h6"}
-                >
-                  {`-  $${formattedStringNumber(total)}`}
-                </Typography>
-              )
-            })
-          }
+          {MONTHS.map((month) => {
+            const total = expenseTransactionsV2.reduce((acc, expense) => {
+              if (
+                expense.month === month &&
+                expense.year === selectedYear &&
+                !excludedSet.has(expense.category)
+              ) {
+                return acc + expense.amount
+              }
+              return acc
+            }, 0)
+            return (
+              <Typography
+                key={`${month}-${total}`}
+                color={"error"}
+                variant={"h6"}
+              >
+                {`-  $${formattedStringNumber(total)}`}
+              </Typography>
+            )
+          })}
         </Stack>
       </Stack>
     </ShowCaseCard>

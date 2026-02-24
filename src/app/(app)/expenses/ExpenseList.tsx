@@ -29,16 +29,16 @@ const ExpenseList = ({
 }) => {
   const monthExpense = useMemo(() => {
     return getMonthTotalV2(
-      selectedYear, 
-      selectedMonth, 
+      selectedYear,
+      selectedMonth,
       expenseTransactions,
-      excludedSet
+      excludedSet,
     )
   }, [selectedYear, selectedMonth, expenseTransactions])
 
   return (
     <ShowCaseCard
-      title={`Expenses for ${selectedMonth} ${selectedYear}`} 
+      title={`Expenses for ${selectedMonth} ${selectedYear}`}
       secondaryTitle={`$${monthExpense}`}
     >
       <TransactionsList

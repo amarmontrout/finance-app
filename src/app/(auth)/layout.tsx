@@ -1,45 +1,49 @@
-import type { Metadata } from "next";
-import { Box } from "@mui/material";
-import Header from "@/header/Header";
+import type { Metadata } from "next"
+import { Box } from "@mui/material"
+import Header from "@/header/Header"
 import "../../globals.css"
-import Providers from "../providers";
+import Providers from "../providers"
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
   description: "Personal project to track finances.",
-};
+}
 
-export default function AuthLayout({ children }: { children: React.ReactNode }) {
+export default function AuthLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body 
+      <body
         suppressHydrationWarning
         style={{
           height: "100dvh",
           width: "100dvw",
           overflow: "hidden",
           margin: 0,
-          padding: 0
+          padding: 0,
         }}
       >
         <Providers>
-          <Box 
-              sx={{ 
-                display: "flex", 
-                flexDirection: "row", 
-                minWidth: 0,
-                minHeight: 0,
-                height: "100%"
-              }}
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              minWidth: 0,
+              minHeight: 0,
+              height: "100%",
+            }}
           >
             {/* Main column */}
-            <Box 
-              sx={{ 
-                display: "flex", 
-                flex: 1, 
-                minWidth: 0, 
+            <Box
+              sx={{
+                display: "flex",
+                flex: 1,
+                minWidth: 0,
                 minHeight: 0,
-                flexDirection: "column"
+                flexDirection: "column",
               }}
             >
               {/* Header */}
@@ -62,7 +66,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
                   flex: 1,
                   bgcolor: "background.default",
                   color: "text.primary",
-                  overflow: "hidden"
+                  overflow: "hidden",
                 }}
               >
                 {/* Inner scroller */}
@@ -82,6 +86,5 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         </Providers>
       </body>
     </html>
-
-  );
+  )
 }

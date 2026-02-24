@@ -1,21 +1,21 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import DeleteIcon from '@mui/icons-material/Delete'
-import CancelIcon from '@mui/icons-material/Cancel'
-import EditIcon from '@mui/icons-material/Edit'
+import DeleteIcon from "@mui/icons-material/Delete"
+import CancelIcon from "@mui/icons-material/Cancel"
+import EditIcon from "@mui/icons-material/Edit"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
-import { 
-  Box, 
-  Button, 
-  FormControl, 
-  IconButton, 
-  InputLabel, 
-  List, 
-  ListItem, 
-  ListItemText, 
-  OutlinedInput, 
-  Stack
+import {
+  Box,
+  Button,
+  FormControl,
+  IconButton,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemText,
+  OutlinedInput,
+  Stack,
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
@@ -23,45 +23,48 @@ import { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetTypeV2, HookSetter } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { deleteBudgetCategory, saveBudgetCategory } from "@/app/api/Choices/requests"
+import {
+  deleteBudgetCategory,
+  saveBudgetCategory,
+} from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
 
 const BUDGET_INIT: BudgetTypeV2 = {
   id: Number(makeId(8)),
   category: "",
-  amount: 0
+  amount: 0,
 }
 
-const AddBudget = ({ 
+const AddBudget = ({
   confirmSelection,
   setConfirmSelection,
   setBudgetEditDialogOpen,
-  setConfirmEdit
-}: { 
+  setConfirmEdit,
+}: {
   confirmSelection: BudgetTypeV2 | null
   setConfirmSelection: HookSetter<BudgetTypeV2 | null>
   setBudgetEditDialogOpen: HookSetter<boolean>
   setConfirmEdit: HookSetter<BudgetTypeV2 | null>
 }) => {
-  const { budgetCategoriesV2, refreshBudgetCategoryChoicesV2 } = useCategoryContext()
+  const { budgetCategoriesV2, refreshBudgetCategoryChoicesV2 } =
+    useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
-  const [budgetCategory, setBudgetCategory] = 
+  const [budgetCategory, setBudgetCategory] =
     useState<BudgetTypeV2>(BUDGET_INIT)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const listItemColor = currentTheme === "light" ?
-    lightMode.elevatedBg 
-    : darkMode.elevatedBg
+  const listItemColor =
+    currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
 
   const handleCategory = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
-    setBudgetCategory(prev => ({
+    setBudgetCategory((prev) => ({
       ...prev,
       category: e.target.value,
-    }));
+    }))
   }
 
   const resetFormData = () => {
@@ -73,7 +76,7 @@ const AddBudget = ({
     setIsLoading(true)
     await saveBudgetCategory({
       userId: user.id,
-      body: budgetCategory
+      body: budgetCategory,
     })
     setIsLoading(false)
     refreshBudgetCategoryChoicesV2()
@@ -84,39 +87,33 @@ const AddBudget = ({
     if (!user || !confirmSelection) return
     await deleteBudgetCategory({
       userId: user.id,
-      rowId: confirmSelection.id
+      rowId: confirmSelection.id,
     })
     refreshBudgetCategoryChoicesV2()
   }
 
-  const EditDeleteButton = ({ selection }: {
-    selection: BudgetTypeV2
-  }) => {
+  const EditDeleteButton = ({ selection }: { selection: BudgetTypeV2 }) => {
     return (
       <Stack direction={"row"} gap={2}>
         {
-          <IconButton 
+          <IconButton
             edge="end"
-            onClick={
-              () => {
-                if (setBudgetEditDialogOpen && setConfirmEdit) {
-                  setBudgetEditDialogOpen(true)
-                  setConfirmEdit(selection)
-                }
+            onClick={() => {
+              if (setBudgetEditDialogOpen && setConfirmEdit) {
+                setBudgetEditDialogOpen(true)
+                setConfirmEdit(selection)
               }
-            }
+            }}
           >
-            <EditIcon/>
+            <EditIcon />
           </IconButton>
         }
 
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setConfirmSelection(selection)
-            }
-          }
+          onClick={() => {
+            setConfirmSelection(selection)
+          }}
         >
           <DeleteIcon />
         </IconButton>
@@ -127,26 +124,22 @@ const AddBudget = ({
   const ConfirmCancel = () => {
     return (
       <Stack direction={"row"} gap={2}>
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              handleDeleteItem()
-            }
-          }
+          onClick={() => {
+            handleDeleteItem()
+          }}
         >
-          <DeleteIcon/>
+          <DeleteIcon />
         </IconButton>
 
-        <IconButton 
+        <IconButton
           edge="end"
-          onClick={
-            () => {
-              setConfirmSelection(null)
-            }
-          }
+          onClick={() => {
+            setConfirmSelection(null)
+          }}
         >
-          <CancelIcon/>
+          <CancelIcon />
         </IconButton>
       </Stack>
     )
@@ -169,8 +162,8 @@ const AddBudget = ({
               label={"Category"}
               value={budgetCategory.category}
               name={"category"}
-              onChange={e => handleCategory(e)}
-              />
+              onChange={(e) => handleCategory(e)}
+            />
           </FormControl>
 
           <MoneyInputV2
@@ -179,14 +172,13 @@ const AddBudget = ({
           />
 
           <Button
-            variant={"contained"} 
+            variant={"contained"}
             disabled={
-              budgetCategory.category === ""
-              || budgetCategory.amount === 0
+              budgetCategory.category === "" || budgetCategory.amount === 0
             }
             onClick={save}
             sx={{
-              backgroundColor: accentColorSecondary
+              backgroundColor: accentColorSecondary,
             }}
             loading={isLoading}
           >
@@ -196,33 +188,31 @@ const AddBudget = ({
 
         <hr style={{ width: "100%" }} />
 
-        <Box
-          flex={1}
-          overflow={"auto"}
-        >
+        <Box flex={1} overflow={"auto"}>
           <List className="flex flex-col gap-2">
-            { budgetCategoriesV2 &&
-              (budgetCategoriesV2).map((budget) => {                 
+            {budgetCategoriesV2 &&
+              budgetCategoriesV2.map((budget) => {
                 return (
                   <ListItem
-                    key={budget.category} 
+                    key={budget.category}
                     secondaryAction={
-                      confirmSelection === budget
-                      ? <ConfirmCancel/> 
-                      : <EditDeleteButton selection={budget}/>
+                      confirmSelection === budget ? (
+                        <ConfirmCancel />
+                      ) : (
+                        <EditDeleteButton selection={budget} />
+                      )
                     }
-                    sx={{ 
+                    sx={{
                       backgroundColor: listItemColor,
-                      borderRadius: "15px"
+                      borderRadius: "15px",
                     }}
                   >
-                    <ListItemText 
+                    <ListItemText
                       primary={`${budget.category} - $${budget.amount}`}
                     />
                   </ListItem>
                 )
-              })
-            }
+              })}
           </List>
         </Box>
       </Box>

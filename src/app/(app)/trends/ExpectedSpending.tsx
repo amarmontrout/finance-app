@@ -40,20 +40,20 @@
 //               (currentMonthTotals[t.month] ?? 0) + cleanNumber(t.amount)
 //           }
 //         })
-  
+
 //         const currentAmounts = MONTHS
 //           .slice(0, passedMonths)
 //           .map((month) => currentMonthTotals[month] ?? 0)
 //           const actual = currentAmounts.at(-1) ?? 0
 //           const expected = getAverage(currentAmounts).toFixed(2)
-    
+
 //           expectedAverage.push([category.name, Number(expected)])
 //           realAmount.push([category.name, actual])
 //       }
 //     })
 
 //     return { expectedAverage, realAmount }
-//   }, [flatExpenseTransactions, expenseCategories, currentYear, currentMonth])  
+//   }, [flatExpenseTransactions, expenseCategories, currentYear, currentMonth])
 
 //   const expectedColumnData = useMemo(() => {
 //     return buildTwoColumnData({
@@ -72,7 +72,7 @@
 //   }, [realAmount])
 
 //   return (
-//     <ShowCaseCard 
+//     <ShowCaseCard
 //       title={`Expected VS Actual Spending`}
 //     >
 //       <Box>

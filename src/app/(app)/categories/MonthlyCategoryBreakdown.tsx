@@ -28,27 +28,23 @@ const MonthlyCategoryBreakdown = ({
               key={category}
               cardColors={defaultCardColor}
               info={`$${formattedStringNumber(Number(amount))}`}
-              title={`${idx+1}) ${category}`}
+              title={`${idx + 1}) ${category}`}
             />
           ))}
         </FlexColWrapper>
       </ShowCaseCard>
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        <ShowCaseCard 
+        <ShowCaseCard
           title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}
         >
-          <PieChart
-            data={monthIncomeCategoryTotals}
-          />
+          <PieChart data={monthIncomeCategoryTotals} />
         </ShowCaseCard>
 
-        <ShowCaseCard 
+        <ShowCaseCard
           title={`${selectedMonth} ${selectedYear} Expense Category Breakdown`}
         >
-          <PieChart
-            data={monthExpenseCategoryTotals}
-          />
+          <PieChart data={monthExpenseCategoryTotals} />
         </ShowCaseCard>
       </FlexColWrapper>
     </FlexColWrapper>

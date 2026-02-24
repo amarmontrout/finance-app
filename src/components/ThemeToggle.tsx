@@ -1,15 +1,15 @@
-"use client";
+"use client"
 
-import { useTheme } from "next-themes";
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { Box } from "@mui/material";
+import { useTheme } from "next-themes"
+import LightModeIcon from "@mui/icons-material/LightMode"
+import DarkModeIcon from "@mui/icons-material/DarkMode"
+import { Box } from "@mui/material"
 
 const ThemeToggle = () => {
-  const { theme, setTheme, systemTheme } = useTheme();
-  
-  const current = theme === "system" ? systemTheme : theme;
-  const isDark = current === "dark";
+  const { theme, setTheme, systemTheme } = useTheme()
+
+  const current = theme === "system" ? systemTheme : theme
+  const isDark = current === "dark"
 
   return (
     <Box
@@ -27,7 +27,7 @@ const ThemeToggle = () => {
     >
       {isDark ? <DarkModeIcon /> : <LightModeIcon />}
     </Box>
-  );
-};
+  )
+}
 
-export default ThemeToggle;
+export default ThemeToggle

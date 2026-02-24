@@ -1,16 +1,16 @@
-import { 
-  Box, 
-  IconButton, 
-  ListItemIcon, 
-  ListItemText, 
-  Menu, 
-  MenuItem 
+import {
+  Box,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
 } from "@mui/material"
-import MenuIcon from '@mui/icons-material/Menu'
-import LightModeIcon from '@mui/icons-material/LightMode'
-import DarkModeIcon from '@mui/icons-material/DarkMode'
-import LogoutIcon from '@mui/icons-material/Logout'
-import SettingsIcon from '@mui/icons-material/Settings';
+import MenuIcon from "@mui/icons-material/Menu"
+import LightModeIcon from "@mui/icons-material/LightMode"
+import DarkModeIcon from "@mui/icons-material/DarkMode"
+import LogoutIcon from "@mui/icons-material/Logout"
+import SettingsIcon from "@mui/icons-material/Settings"
 import React from "react"
 import { doLogout } from "@/app/api/Auth/requests"
 import { AuthError } from "@supabase/supabase-js"
@@ -50,7 +50,7 @@ const HeaderDropdown = () => {
       router: router,
       errorHandler: (error: AuthError) => {
         console.error(error.message)
-      }
+      },
     })
     handleCloseMenu()
   }
@@ -62,17 +62,11 @@ const HeaderDropdown = () => {
       marginRight={"1rem"}
       height={"100%"}
     >
-      <IconButton
-        onClick={handleOpenMenu}
-      >
-        <MenuIcon fontSize={"large"} sx={{color: "white"}}/>
+      <IconButton onClick={handleOpenMenu}>
+        <MenuIcon fontSize={"large"} sx={{ color: "white" }} />
       </IconButton>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleCloseMenu}
-      >
+      <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
         <MenuItem onClick={handleTheme}>
           <ListItemIcon>
             {current !== "dark" ? <DarkModeIcon /> : <LightModeIcon />}
@@ -83,29 +77,25 @@ const HeaderDropdown = () => {
           </ListItemText>
         </MenuItem>
 
-        {pathname !== "/login" && 
+        {pathname !== "/login" && (
           <MenuItem onClick={handleSettings}>
             <ListItemIcon>
-              <SettingsIcon/>
+              <SettingsIcon />
             </ListItemIcon>
 
-            <ListItemText>
-              Settings
-            </ListItemText>
+            <ListItemText>Settings</ListItemText>
           </MenuItem>
-        }
+        )}
 
-        {pathname !== "/login" && 
+        {pathname !== "/login" && (
           <MenuItem onClick={handleLogOut}>
             <ListItemIcon>
-              <LogoutIcon/>
+              <LogoutIcon />
             </ListItemIcon>
 
-            <ListItemText>
-              Logout
-            </ListItemText>
+            <ListItemText>Logout</ListItemText>
           </MenuItem>
-        }
+        )}
       </Menu>
     </Box>
   )

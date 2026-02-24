@@ -3,10 +3,8 @@ import Transactions from "./Transactions"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
-      <Transactions/>
+    <Box width={"100%"}>
+      <Transactions />
     </Box>
   )
 }

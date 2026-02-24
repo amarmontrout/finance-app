@@ -18,23 +18,19 @@ const Settings = () => {
 
   const [choice, setChoice] = useState<ChoiceTypeV2 | null>(null)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
-  const [budgetEditDialogOpen, setBudgetEditDialogOpen] = 
+  const [budgetEditDialogOpen, setBudgetEditDialogOpen] =
     useState<boolean>(false)
-  const [confirmSelection, setConfirmSelection] = 
-    useState<BudgetTypeV2 | null>(null)
-  const [confirmEdit, setConfirmEdit] = 
-    useState<BudgetTypeV2 | null>(null)
+  const [confirmSelection, setConfirmSelection] = useState<BudgetTypeV2 | null>(
+    null,
+  )
+  const [confirmEdit, setConfirmEdit] = useState<BudgetTypeV2 | null>(null)
 
   return (
-    <Box
-      className="flex flex-col gap-2 h-full"
-    >
-      <Box
-        className="flex flex-col xl:flex-row gap-2 h-full"
-      >
-        <AddYear/>
+    <Box className="flex flex-col gap-2 h-full">
+      <Box className="flex flex-col xl:flex-row gap-2 h-full">
+        <AddYear />
 
-        <AddIncomeCategory/>
+        <AddIncomeCategory />
 
         <AddExpenseCategory
           setCategoryDialogOpen={setCategoryDialogOpen}
@@ -42,9 +38,7 @@ const Settings = () => {
         />
       </Box>
 
-      <Box
-        className="flex flex-col xl:flex-row xl:w-[33%] gap-2 h-full"
-      >
+      <Box className="flex flex-col xl:flex-row xl:w-[33%] gap-2 h-full">
         <AddBudget
           confirmSelection={confirmSelection}
           setConfirmSelection={setConfirmSelection}

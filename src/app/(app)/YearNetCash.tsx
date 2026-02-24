@@ -2,10 +2,10 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getYearUpToMonthTotalV2 } from "@/utils/getTotals"
-import { 
-  cleanNumber, 
-  getCardColor, 
-  getSavingsHealthState 
+import {
+  cleanNumber,
+  getCardColor,
+  getSavingsHealthState,
 } from "@/utils/helperFunctions"
 import { TransactionTypeV2 } from "@/utils/type"
 
@@ -15,7 +15,7 @@ const YearNetCash = ({
   currentTheme,
   excludedSet,
   incomeTransactionsV2,
-  expenseTransactionsV2
+  expenseTransactionsV2,
 }: {
   currentYear: number
   passedMonths: string[]
@@ -27,29 +27,29 @@ const YearNetCash = ({
   const annualIncome = getYearUpToMonthTotalV2(
     currentYear,
     passedMonths,
-    incomeTransactionsV2, 
-    excludedSet
+    incomeTransactionsV2,
+    excludedSet,
   )
   const annualExpense = getYearUpToMonthTotalV2(
     currentYear,
     passedMonths,
-    expenseTransactionsV2, 
-    excludedSet
+    expenseTransactionsV2,
+    excludedSet,
   )
   const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
   const savingsHealthState = getSavingsHealthState(
-    cleanNumber(annualNetIncome), 
-    cleanNumber(annualIncome)
+    cleanNumber(annualNetIncome),
+    cleanNumber(annualIncome),
   )
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
 
   return (
     <ShowCaseCard title={`${currentYear} Net Cash`}>
-        <ColoredInfoCard
-          cardColors={savingsColor}
-          info={`Net Cash: $${annualNetIncome}`}
-          title={`Net Cash Rating: ${savingsHealthState}`}
-        />
+      <ColoredInfoCard
+        cardColors={savingsColor}
+        info={`Net Cash: $${annualNetIncome}`}
+        title={`Net Cash Rating: ${savingsHealthState}`}
+      />
     </ShowCaseCard>
   )
 }

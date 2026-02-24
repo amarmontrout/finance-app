@@ -15,7 +15,7 @@ const AverageExpenses = ({
   expenseCategories,
   currentTheme,
   currentYear,
-  currentMonth
+  currentMonth,
 }: {
   expenseTransactions: TransactionTypeV2[]
   expenseCategories: ChoiceTypeV2[]
@@ -23,12 +23,9 @@ const AverageExpenses = ({
   currentYear: number
   currentMonth: string
 }) => {
-  const badColor = currentTheme === "light" ?
-    lightMode.error 
-    : darkMode.error
-  const goodColor = currentTheme === "light" ?
-    lightMode.success 
-    : darkMode.success
+  const badColor = currentTheme === "light" ? lightMode.error : darkMode.error
+  const goodColor =
+    currentTheme === "light" ? lightMode.success : darkMode.success
   const { currentAvg, prevAvg, percentChangeAvg } = useMemo(() => {
     const passedMonths = MONTHS.indexOf(currentMonth) + 1
 
@@ -49,25 +46,19 @@ const AverageExpenses = ({
             (currentMonthTotals[t.month] ?? 0) + t.amount
         }
       })
-      const currentAmounts = MONTHS
-        .slice(0, passedMonths)
-        .map((month) => currentMonthTotals[month] ?? 0)
+      const currentAmounts = MONTHS.slice(0, passedMonths).map(
+        (month) => currentMonthTotals[month] ?? 0,
+      )
       const currentAverage = getAverage(currentAmounts)
 
       // ---- PREVIOUS YEAR ----
       const prevMonthTotals: Record<string, number> = {}
       expenseTransactions.forEach((t) => {
-        if (
-          t.category === category.name &&
-          t.year === currentYear - 1
-        ) {
-          prevMonthTotals[t.month] =
-            (prevMonthTotals[t.month] ?? 0) + t.amount
+        if (t.category === category.name && t.year === currentYear - 1) {
+          prevMonthTotals[t.month] = (prevMonthTotals[t.month] ?? 0) + t.amount
         }
       })
-      const prevAmounts = MONTHS.map(
-        (month) => prevMonthTotals[month] ?? 0
-      )
+      const prevAmounts = MONTHS.map((month) => prevMonthTotals[month] ?? 0)
       const prevAverage = getAverage(prevAmounts)
 
       currentAvg.push([category.name, currentAverage])
@@ -82,11 +73,9 @@ const AverageExpenses = ({
     <ShowCaseCard title={"Expense Averages"}>
       <FlexColWrapper gap={5} toRowBreak={"sm"}>
         <FlexChildWrapper gap={1} hiddenToVisibleBp={"sm"}>
-          <Typography textAlign={"center"}>
-            Categories
-          </Typography> 
+          <Typography textAlign={"center"}>Categories</Typography>
 
-          <hr/>
+          <hr />
 
           <ul>
             {expenseCategories.map((category) => (
@@ -94,10 +83,7 @@ const AverageExpenses = ({
                 key={category.name}
                 className="flex items-center justify-between"
               >
-                <Typography 
-                  className="hidden sm:flex"
-                  variant="h6"
-                >
+                <Typography className="hidden sm:flex" variant="h6">
                   {`${category.name}`}
                 </Typography>
               </li>
@@ -106,22 +92,14 @@ const AverageExpenses = ({
         </FlexChildWrapper>
 
         <FlexChildWrapper gap={1}>
-          <Typography textAlign={"center"}>
-            {currentYear-1}
-          </Typography> 
+          <Typography textAlign={"center"}>{currentYear - 1}</Typography>
 
-          <hr/>
+          <hr />
 
           <ul>
             {prevAvg.map(([category, amount]) => (
-              <li
-                key={category}
-                className="flex items-center justify-between"
-              >
-                <Typography 
-                  className="sm:hidden"
-                  variant="h6"
-                >
+              <li key={category} className="flex items-center justify-between">
+                <Typography className="sm:hidden" variant="h6">
                   {`${category}`}
                 </Typography>
                 <Typography variant="h6">
@@ -133,11 +111,9 @@ const AverageExpenses = ({
         </FlexChildWrapper>
 
         <FlexChildWrapper gap={1}>
-          <Typography textAlign={"center"}>
-            {currentYear}
-          </Typography>
+          <Typography textAlign={"center"}>{currentYear}</Typography>
 
-          <hr/>
+          <hr />
 
           <ul>
             {currentAvg.map(([category, amount]) => {
@@ -146,16 +122,11 @@ const AverageExpenses = ({
                   key={category}
                   className="flex items-center justify-between"
                 >
-                  <Typography 
-                    className="sm:hidden"
-                    variant="h6"
-                  >
+                  <Typography className="sm:hidden" variant="h6">
                     {`${category}`}
                   </Typography>
 
-                  <Typography 
-                    variant="h6"
-                  >
+                  <Typography variant="h6">
                     {`$${formattedStringNumber(amount)}`}
                   </Typography>
                 </li>
@@ -165,11 +136,9 @@ const AverageExpenses = ({
         </FlexChildWrapper>
 
         <FlexChildWrapper gap={1}>
-          <Typography textAlign={"center"}>
-            Change
-          </Typography>
+          <Typography textAlign={"center"}>Change</Typography>
 
-          <hr/>
+          <hr />
 
           <ul>
             {percentChangeAvg.map(([category, diff]) => {
@@ -178,21 +147,16 @@ const AverageExpenses = ({
                   key={category}
                   className="flex items-center justify-between"
                 >
-                  <Typography 
-                    className="sm:hidden"
-                    variant="h6"
-                  >
+                  <Typography className="sm:hidden" variant="h6">
                     {`${category}`}
                   </Typography>
 
-                  <Typography 
+                  <Typography
                     variant="h6"
                     color={diff <= 0 ? goodColor : badColor}
                   >
-                    {
-                    `${diff < 0 ? '-' : '+'}
-                    $${formattedStringNumber(Math.abs(diff))}`
-                    }
+                    {`${diff < 0 ? "-" : "+"}
+                    $${formattedStringNumber(Math.abs(diff))}`}
                   </Typography>
                 </li>
               )

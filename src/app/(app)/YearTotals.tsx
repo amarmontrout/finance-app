@@ -11,7 +11,7 @@ const YearTotals = ({
   currentTheme,
   excludedSet,
   incomeTransactionsV2,
-  expenseTransactionsV2
+  expenseTransactionsV2,
 }: {
   currentYear: number
   passedMonths: string[]
@@ -22,16 +22,16 @@ const YearTotals = ({
 }) => {
   const defaultCardColor = getCardColor(currentTheme, "default")
   const totalIncome = getYearUpToMonthTotalV2(
-    currentYear, 
+    currentYear,
     passedMonths,
-    incomeTransactionsV2, 
-    excludedSet
+    incomeTransactionsV2,
+    excludedSet,
   )
   const totalExpenses = getYearUpToMonthTotalV2(
-    currentYear, 
+    currentYear,
     passedMonths,
-    expenseTransactionsV2, 
-    excludedSet
+    expenseTransactionsV2,
+    excludedSet,
   )
 
   return (

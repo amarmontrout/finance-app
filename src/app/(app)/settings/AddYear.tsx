@@ -22,8 +22,8 @@ const AddYear = () => {
       userId: user.id,
       body: {
         id: Number(makeId(8)),
-        name: yearsInput
-      }
+        name: yearsInput,
+      },
     })
     setIsLoading(false)
     refreshYearChoicesV2()
@@ -42,19 +42,16 @@ const AddYear = () => {
         <SimpleForm
           label={"Year"}
           value={yearsInput}
-          onChange={
-            (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-              {setYearsInput(e.target.value)}
-          }
+          onChange={(
+            e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+          ) => {
+            setYearsInput(e.target.value)
+          }}
           onSubmit={save}
           isLoading={isLoading}
         />
         <hr style={{ width: "100%" }} />
-        <Box
-          flex={1}
-          overflow={"auto"}
-          paddingRight={"10px"}
-        >
+        <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"year"}
             items={yearsV2}

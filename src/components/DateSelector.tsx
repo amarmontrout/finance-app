@@ -9,7 +9,7 @@ const DateSelector = ({
   setSelectedYear,
   selectedMonth,
   setSelectedMonth,
-  years
+  years,
 }: {
   view: "annual" | "month"
   setView: (v: "annual" | "month") => void
@@ -20,10 +20,7 @@ const DateSelector = ({
   years: ChoiceTypeV2[]
 }) => {
   return (
-    <Box
-      className="flex flex-col sm:flex-row gap-3 h-full"
-      paddingTop={"10px"}
-    >
+    <Box className="flex flex-col sm:flex-row gap-3 h-full" paddingTop={"10px"}>
       <FormControl>
         <InputLabel>View</InputLabel>
         <Select
@@ -31,13 +28,17 @@ const DateSelector = ({
           label="View"
           value={view}
           name={"view"}
-          onChange={e => setView(e.target.value)}
+          onChange={(e) => setView(e.target.value)}
         >
-          <MenuItem key={"annual"} value={"annual"}>By Year</MenuItem>
-          <MenuItem key={"month"} value={"month"}>By Month</MenuItem>
+          <MenuItem key={"annual"} value={"annual"}>
+            By Year
+          </MenuItem>
+          <MenuItem key={"month"} value={"month"}>
+            By Month
+          </MenuItem>
         </Select>
       </FormControl>
-      
+
       <FormControl>
         <InputLabel>Year</InputLabel>
         <Select
@@ -45,24 +46,19 @@ const DateSelector = ({
           label="Year"
           value={selectedYear}
           name={"year"}
-          onChange={e => setSelectedYear(e.target.value)}
+          onChange={(e) => setSelectedYear(e.target.value)}
         >
-          {
-            years.map((year) => {
-              return (
-                <MenuItem 
-                  key={year.name} 
-                  value={year.name}
-                >
-                  {year.name}
-                </MenuItem>
-              )
-            })
-          }
+          {years.map((year) => {
+            return (
+              <MenuItem key={year.name} value={year.name}>
+                {year.name}
+              </MenuItem>
+            )
+          })}
         </Select>
       </FormControl>
 
-      {view === "month" &&
+      {view === "month" && (
         <FormControl>
           <InputLabel>Month</InputLabel>
           <Select
@@ -70,17 +66,19 @@ const DateSelector = ({
             label="Month"
             value={selectedMonth}
             name={"month"}
-            onChange={e => setSelectedMonth(e.target.value)}
+            onChange={(e) => setSelectedMonth(e.target.value)}
           >
-            {
-            MONTHS.map((month) => {
-                return <MenuItem key={month} value={month}>{month}</MenuItem>
-              })
-            }
+            {MONTHS.map((month) => {
+              return (
+                <MenuItem key={month} value={month}>
+                  {month}
+                </MenuItem>
+              )
+            })}
           </Select>
         </FormControl>
-      }
-    </Box>    
+      )}
+    </Box>
   )
 }
 

@@ -1,9 +1,9 @@
-import { 
-  Button, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogTitle 
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material"
 import { darkMode, lightMode } from "@/globals/colors"
 import { ChoiceTypeV2, HookSetter } from "@/utils/type"
@@ -16,7 +16,7 @@ const AddIncomeDialog = ({
   refreshIncomeTransactions,
   years,
   openAddIncomeDialog,
-  setOpenAddIncomeDialog
+  setOpenAddIncomeDialog,
 }: {
   incomeCategories: ChoiceTypeV2[]
   income: "income"
@@ -28,9 +28,7 @@ const AddIncomeDialog = ({
   const { theme: currentTheme } = useTheme()
   return (
     <Dialog open={openAddIncomeDialog} fullWidth>
-      <DialogTitle>
-        {"Enter Income"}
-      </DialogTitle>
+      <DialogTitle>{"Enter Income"}</DialogTitle>
 
       <DialogContent>
         <TransactionForm
@@ -42,16 +40,15 @@ const AddIncomeDialog = ({
       </DialogContent>
 
       <DialogActions>
-        <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
-          onClick={() => {setOpenAddIncomeDialog(false)}}
+        <Button
+          variant={"contained"}
+          disabled={false}
+          onClick={() => {
+            setOpenAddIncomeDialog(false)
+          }}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.error] 
-              : [darkMode.error]
+            backgroundColor:
+              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
           }}
         >
           {"Cancel"}

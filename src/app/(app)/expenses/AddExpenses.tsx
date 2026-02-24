@@ -6,7 +6,7 @@ const AddExpenses = ({
   expenseCategories,
   expenses,
   refreshExpenseTransactions,
-  years
+  years,
 }: {
   expenseCategories: ChoiceTypeV2[]
   expenses: "expenses"

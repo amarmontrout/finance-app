@@ -1,38 +1,42 @@
-import type { Metadata } from "next";
+import type { Metadata } from "next"
 import { Analytics } from "@vercel/analytics/next"
-import Providers from "../providers";
-import { Box, Stack } from "@mui/material";
-import Header from "@/header/Header";
+import Providers from "../providers"
+import { Box } from "@mui/material"
+import Header from "@/header/Header"
 import "../../globals.css"
-import { HorizontalNavbar, Navbar } from "@/navigation/Navbar";
-import PageName from "@/navigation/PageName";
+import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
+import PageName from "@/navigation/PageName"
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
   description: "Personal project to track finances.",
-};
+}
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body 
+      <body
         suppressHydrationWarning
         style={{
           height: "100dvh",
           width: "100dvw",
           overflow: "hidden",
           margin: 0,
-          padding: 0
+          padding: 0,
         }}
       >
         <Providers>
-          <Box 
-            sx={{ 
-              display: "flex", 
-              flexDirection: "row", 
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "row",
               minWidth: 0,
               minHeight: 0,
-              height: "100%"
+              height: "100%",
             }}
           >
             {/* Nav / Sidebar */}
@@ -45,15 +49,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 borderColor: "divider",
               }}
             >
-              <Navbar/>
+              <Navbar />
             </Box>
 
             {/* Main column */}
-            <Box 
-              sx={{ 
-                display: "flex", 
-                flex: 1, 
-                minWidth: 0, 
+            <Box
+              sx={{
+                display: "flex",
+                flex: 1,
+                minWidth: 0,
                 minHeight: 0,
                 flexDirection: "column",
                 bgcolor: "background.default",
@@ -79,7 +83,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   display: "flex",
                   flex: 1,
                   color: "text.primary",
-                  overflow: "hidden"
+                  overflow: "hidden",
                 }}
               >
                 {/* Inner scroller */}
@@ -88,7 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   sx={{
                     flex: 1,
                     minWidth: 0,
-                    overflowY: "auto"
+                    overflowY: "auto",
                   }}
                 >
                   {children}
@@ -109,15 +113,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   borderTopLeftRadius: "15px",
                   borderTopRightRadius: "15px",
                   boxShadow: 3,
-                  zIndex: 1000
+                  zIndex: 1000,
                 }}
               >
-                <HorizontalNavbar/>
+                <HorizontalNavbar />
 
-                <Box
-                  className="flex md:hidden w-full"
-                >
-                  <PageName/>
+                <Box className="flex md:hidden w-full">
+                  <PageName />
                 </Box>
               </Box>
             </Box>
@@ -126,5 +128,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Analytics />
       </body>
     </html>
-  );
+  )
 }

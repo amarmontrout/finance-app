@@ -9,14 +9,11 @@ import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
 const AddIncomeCategory = () => {
-  const { 
-    incomeCategoriesV2, 
-    refreshIncomeCategoryChoicesV2 
-  } = useCategoryContext()
+  const { incomeCategoriesV2, refreshIncomeCategoryChoicesV2 } =
+    useCategoryContext()
   const user = useUser()
 
-  const [incomeCategoriesInput, setIncomeCategoriesInput] = 
-    useState<string>("")
+  const [incomeCategoriesInput, setIncomeCategoriesInput] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const save = async () => {
@@ -26,8 +23,8 @@ const AddIncomeCategory = () => {
       userId: user.id,
       body: {
         id: Number(makeId(8)),
-        name: incomeCategoriesInput
-      }
+        name: incomeCategoriesInput,
+      },
     })
     setIsLoading(false)
     refreshIncomeCategoryChoicesV2()
@@ -46,24 +43,21 @@ const AddIncomeCategory = () => {
         <SimpleForm
           label={"Income Category"}
           value={incomeCategoriesInput}
-          onChange={
-            (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => 
-              {setIncomeCategoriesInput(e.target.value)}
-          }
+          onChange={(
+            e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+          ) => {
+            setIncomeCategoriesInput(e.target.value)
+          }}
           onSubmit={save}
           isLoading={isLoading}
         />
         <hr style={{ width: "100%" }} />
-        <Box
-          flex={1}
-          overflow={"auto"}
-          paddingRight={"10px"}
-        >
+        <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"income"}
             items={incomeCategoriesV2}
             refresh={refreshIncomeCategoryChoicesV2}
-          />          
+          />
         </Box>
       </Box>
     </ShowCaseCard>

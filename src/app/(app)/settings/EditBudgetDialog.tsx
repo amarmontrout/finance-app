@@ -4,27 +4,27 @@ import { useCategoryContext } from "@/contexts/categories-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
 import { BudgetTypeV2, HookSetter } from "@/utils/type"
-import { 
-  Dialog, 
-  DialogTitle, 
-  Box, 
-  DialogActions, 
+import {
+  Dialog,
+  DialogTitle,
+  Box,
+  DialogActions,
   Button,
-  DialogContent, 
+  DialogContent,
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
-  const UPDATE_BUDGET_INIT: BudgetTypeV2 = {
-    id: 0,
-    category: "",
-    amount: 0,
-  }
+const UPDATE_BUDGET_INIT: BudgetTypeV2 = {
+  id: 0,
+  category: "",
+  amount: 0,
+}
 
 const EditBudgetDialog = ({
   budgetEditDialogOpen,
   setBudgetEditDialogOpen,
   confirmEdit,
-  currentTheme
+  currentTheme,
 }: {
   budgetEditDialogOpen: boolean
   setBudgetEditDialogOpen: HookSetter<boolean>
@@ -48,7 +48,7 @@ const EditBudgetDialog = ({
     await updateBudgetCategory({
       userId: user.id,
       rowId: confirmEdit.id,
-      body: updateBudget
+      body: updateBudget,
     })
     setBudgetEditDialogOpen(false)
     refreshBudgetCategoryChoicesV2()
@@ -56,9 +56,7 @@ const EditBudgetDialog = ({
   if (!updateBudget) return null
   return (
     <Dialog open={budgetEditDialogOpen}>
-      <DialogTitle>
-        {`Edit ${confirmEdit?.category}`}
-      </DialogTitle>
+      <DialogTitle>{`Edit ${confirmEdit?.category}`}</DialogTitle>
 
       <DialogContent>
         <Box padding={"10px"}>
@@ -69,32 +67,28 @@ const EditBudgetDialog = ({
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
+        <Button
+          variant={"contained"}
+          disabled={false}
           onClick={handleUpdateBudgetData}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.success] 
-              : [darkMode.success]
+            backgroundColor:
+              currentTheme === "light"
+                ? [lightMode.success]
+                : [darkMode.success],
           }}
         >
           {"Update"}
         </Button>
-        <Button 
-          variant={"contained"} 
-          disabled={
-            false
-          }
+        <Button
+          variant={"contained"}
+          disabled={false}
           onClick={() => {
             setBudgetEditDialogOpen(false)
           }}
           sx={{
-            backgroundColor: currentTheme === "light" 
-              ? [lightMode.error] 
-              : [darkMode.error]
+            backgroundColor:
+              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
           }}
         >
           {"Cancel"}

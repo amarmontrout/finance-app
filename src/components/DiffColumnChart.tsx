@@ -6,28 +6,27 @@ import Chart from "react-google-charts"
 
 const DiffColumnChart = ({
   oldData,
-  newData
+  newData,
 }: {
   oldData: TwoColumnDataType
   newData: TwoColumnDataType
 }) => {
   const { theme: currentTheme } = useTheme()
-  const backgroundColor = currentTheme === "light" ?
-    lightMode.elevatedBg 
-    : darkMode.elevatedBg
-  const textColor = currentTheme === "light"? "#000" : "#FFF"
+  const backgroundColor =
+    currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
+  const textColor = currentTheme === "light" ? "#000" : "#FFF"
 
   const options = {
     backgroundColor: backgroundColor,
     titleTextStyle: { color: textColor },
     legend: {
       textStyle: { color: textColor },
-      position: "right"
+      position: "right",
     },
     hAxis: {
       textStyle: { color: textColor },
       titleTextStyle: { color: textColor },
-      slantedText: true
+      slantedText: true,
     },
     vAxis: {
       baseline: 0,
@@ -35,11 +34,11 @@ const DiffColumnChart = ({
       titleTextStyle: { color: textColor },
       gridlines: {
         count: 10,
-        color: textColor
+        color: textColor,
       },
       minorGridlines: {
-        count: 0
-      }
+        count: 0,
+      },
     },
   }
 

@@ -1,24 +1,24 @@
-import { saveBudget } from "@/app/api/Transactions/requests";
-import FullDate from "@/components/FullDate";
-import { MoneyInputV2 } from "@/components/MoneyInput";
-import { accentColorSecondary } from "@/globals/colors";
-import { makeId } from "@/utils/helperFunctions";
-import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type";
-import { 
-  Box, 
-  FormControl, 
-  InputLabel, 
-  Select, 
-  MenuItem, 
-  Autocomplete, 
-  TextField, 
-  FormControlLabel, 
-  Checkbox, 
-  Button, 
-  SelectChangeEvent
-} from "@mui/material";
-import { User } from "@supabase/supabase-js";
-import { ChangeEvent, useState } from "react";
+import { saveBudget } from "@/app/api/Transactions/requests"
+import FullDate from "@/components/FullDate"
+import { MoneyInputV2 } from "@/components/MoneyInput"
+import { accentColorSecondary } from "@/globals/colors"
+import { makeId } from "@/utils/helperFunctions"
+import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Autocomplete,
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  SelectChangeEvent,
+} from "@mui/material"
+import { User } from "@supabase/supabase-js"
+import { ChangeEvent, useState } from "react"
 
 const BudgetEntryForm = ({
   budgetCategories,
@@ -26,7 +26,7 @@ const BudgetEntryForm = ({
   user,
   refreshBudgetTransactions,
   week,
-  notes
+  notes,
 }: {
   budgetCategories: BudgetTypeV2[]
   today: DateType
@@ -35,29 +35,26 @@ const BudgetEntryForm = ({
   week: "prev" | "current"
   notes: string[]
 }) => {
-
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
     id: Number(makeId(8)),
     category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
     note: "",
     amount: 0,
     isReturn: false,
-    date: today
+    date: today,
   }
 
-  const [budgetEntry, setBudgetEntry] = 
+  const [budgetEntry, setBudgetEntry] =
     useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  
-  const handleCategory = (
-    e: SelectChangeEvent
-  ) => {
+
+  const handleCategory = (e: SelectChangeEvent) => {
     const { value } = e.target
-    setBudgetEntry(prev => ({
+    setBudgetEntry((prev) => ({
       ...prev,
       category: value,
-    }));
+    }))
   }
 
   const resetFormData = () => {
@@ -71,7 +68,7 @@ const BudgetEntryForm = ({
       userId: user.id,
       body: {
         ...budgetEntry,
-      }
+      },
     })
     setIsLoading(false)
     refreshBudgetTransactions()
@@ -93,16 +90,12 @@ const BudgetEntryForm = ({
           label="Category"
           value={budgetEntry.category}
           name={"category"}
-          onChange={e => handleCategory(e)}
+          onChange={(e) => handleCategory(e)}
           disabled={week === "prev"}
         >
           {budgetCategories.map((budget) => {
             return (
-              <MenuItem 
-                value={budget.category}
-              >
-                {budget.category}
-              </MenuItem>
+              <MenuItem value={budget.category}>{budget.category}</MenuItem>
             )
           })}
         </Select>
@@ -116,21 +109,16 @@ const BudgetEntryForm = ({
           options={notes.map((option) => option)}
           value={noteValue}
           onChange={(event: any, newValue: string | null) => {
-            setNoteValue(newValue);
+            setNoteValue(newValue)
           }}
           inputValue={budgetEntry.note}
           onInputChange={(event, newInputValue) => {
-            setBudgetEntry(prev => ({
+            setBudgetEntry((prev) => ({
               ...prev,
               note: newInputValue,
-            }));
+            }))
           }}
-          renderInput={(params) => 
-            <TextField
-              {...params} 
-              label="Note" 
-            />
-          }
+          renderInput={(params) => <TextField {...params} label="Note" />}
         />
       </FormControl>
 
@@ -141,28 +129,28 @@ const BudgetEntryForm = ({
         disabled={week === "prev"}
       />
 
-      <FormControlLabel 
+      <FormControlLabel
         control={
-          <Checkbox 
+          <Checkbox
             checked={budgetEntry.isReturn}
-            sx={{'& .MuiSvgIcon-root': {fontSize: 28}}}
+            sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
             onChange={(e: ChangeEvent<HTMLInputElement>) => {
-              setBudgetEntry(prev => ({
+              setBudgetEntry((prev) => ({
                 ...prev,
-                isReturn: e.target.checked
+                isReturn: e.target.checked,
               }))
             }}
           />
-        } 
-        label="Is a return?" 
+        }
+        label="Is a return?"
       />
 
       <Button
-        variant={"contained"} 
+        variant={"contained"}
         disabled={week === "prev"}
         onClick={save}
         sx={{
-          backgroundColor: accentColorSecondary
+          backgroundColor: accentColorSecondary,
         }}
         loading={isLoading}
       >

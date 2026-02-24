@@ -3,10 +3,8 @@ import Trends from "./Trends"
 
 const Page = () => {
   return (
-    <Box
-      width={"100%"}
-    >
-      <Trends/>
+    <Box width={"100%"}>
+      <Trends />
     </Box>
   )
 }

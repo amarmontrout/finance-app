@@ -14,15 +14,20 @@ import {
 } from "@mui/material"
 import { useEffect, useState } from "react"
 import { MoneyInputV2 } from "./MoneyInput"
-import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { 
+  ChoiceTypeV2, 
+  HookSetter, 
+  SelectedTransactionType, 
+  TransactionTypeV2 
+} from "@/utils/type"
 import { updateExpense, updateIncome } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 
 const EditTransactionDetailDialog = ({
     openEditDialog,
     setOpenEditDialog,
-    type,
-    selectedId,
+    selectedTransaction,
+    setSelectedTransaction,
     transactions,
     categories,
     currentTheme,
@@ -33,8 +38,8 @@ const EditTransactionDetailDialog = ({
   }: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
-  type: string
-  selectedId: number | null,
+  selectedTransaction: SelectedTransactionType | null
+  setSelectedTransaction: HookSetter<SelectedTransactionType | null>
   transactions: TransactionTypeV2[]
   categories: ChoiceTypeV2[]
   currentTheme: string | undefined
@@ -57,20 +62,20 @@ const EditTransactionDetailDialog = ({
     useState<TransactionTypeV2>(UPDATE_TRANSACTION_INIT)
 
   useEffect(() => {
-    if (!selectedId || !selectedYear || !selectedMonth) return
+    if (!selectedTransaction || !selectedYear || !selectedMonth) return
 
-    const transaction = transactions.find(t => t.id === selectedId)
+    const transaction = transactions.find(t => t.id === selectedTransaction.id)
 
     if (!transaction) return
 
     setUpdateTransaction({
       id: transaction.id,
-      month: selectedMonth,
-      year: selectedYear,
+      month: transaction.month,
+      year: transaction.year,
       category: transaction.category,
       amount: transaction.amount,
     })
-  }, [selectedId, transactions])
+  }, [selectedTransaction, transactions, selectedYear, selectedMonth])
 
   const handleCategory = (e: SelectChangeEvent) => {
     const { value } = e.target
@@ -82,20 +87,20 @@ const EditTransactionDetailDialog = ({
   }
 
   const handleUpdateTransactionData = async () => {
-    if (!selectedYear || !selectedMonth || !selectedId || !user) return
-    if (type === "income") {
+    if (!selectedYear || !selectedMonth || !selectedTransaction || !user) return
+    if (selectedTransaction.type === "income") {
       await updateIncome({
         userId: user.id,
-        rowId: selectedId,
+        rowId: selectedTransaction.id,
         body: updateTransaction
 
       })
       if (refreshIncomeTransactions) 
         refreshIncomeTransactions()
-    } else if (type === "expenses") {
+    } else if (selectedTransaction.type === "expenses") {
       await updateExpense({
         userId: user.id,
-        rowId: selectedId,
+        rowId: selectedTransaction.id,
         body: updateTransaction
 
       })
@@ -103,12 +108,13 @@ const EditTransactionDetailDialog = ({
         refreshExpenseTransactions()
     }
     setOpenEditDialog(false)
+    setSelectedTransaction(null)
   }
 
   return (
     <Dialog open={openEditDialog}>
       <DialogTitle>
-        {`Edit ${type === "income" ? "Income" : "Expense"} Detail`}
+        {`Edit ${selectedTransaction?.type === "income" ? "Income" : "Expense"} Detail`}
       </DialogTitle>
       
       <DialogContent>
@@ -128,6 +134,7 @@ const EditTransactionDetailDialog = ({
               {categories.map((category) => {
                 return (
                 <MenuItem 
+                  key={category.name} 
                   value={category.name}
                 >
                   {category.name}
@@ -149,7 +156,8 @@ const EditTransactionDetailDialog = ({
         <Button 
           variant={"contained"} 
           disabled={
-            false
+            !updateTransaction.category 
+            || updateTransaction.amount <= 0
           }
           onClick={handleUpdateTransactionData}
           sx={{
@@ -168,6 +176,7 @@ const EditTransactionDetailDialog = ({
           }
           onClick={() => {
             setOpenEditDialog(false)
+            setSelectedTransaction(null)
           }}
           sx={{
             backgroundColor: currentTheme === "light" 

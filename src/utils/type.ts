@@ -35,3 +35,8 @@ export type DateType = {
   day: number | undefined, 
   year: number
 }
+
+export type SelectedTransactionType = { 
+  id: number,
+  type: "income" | "expenses" 
+}

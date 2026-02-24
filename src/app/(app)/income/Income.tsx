@@ -133,7 +133,7 @@ const Income = () => {
         setOpenAddIncomeDialog={setOpenAddIncomeDialog}
       />
 
-      <EditTransactionDetailDialog
+      {/* <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
         type={"income"}
@@ -144,7 +144,7 @@ const Income = () => {
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
         refreshIncomeTransactions={refreshIncomeTransactionsV2}
-      />
+      /> */}
     </FlexColWrapper>
   )
 }

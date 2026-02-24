@@ -134,7 +134,7 @@ const Expenses = () => {
         setOpenAddExpenseDialog={setOpenAddExpenseDialog}
       />
 
-      <EditTransactionDetailDialog
+      {/* <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
         type={"expenses"}
@@ -145,7 +145,7 @@ const Expenses = () => {
         selectedYear={selectedYear}
         selectedMonth={selectedMonth}
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
-      />
+      /> */}
     </FlexColWrapper>
   )
 }

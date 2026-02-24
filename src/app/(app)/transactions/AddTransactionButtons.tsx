@@ -1,8 +1,4 @@
-import {
-  accentColorPrimarySelected,
-  lightMode,
-  darkMode,
-} from "@/globals/colors"
+import { lightMode, darkMode, accentColorSecondary } from "@/globals/colors"
 import { Stack, Button } from "@mui/material"
 import AddIcon from "@mui/icons-material/Add"
 import { HookSetter } from "@/utils/type"
@@ -24,7 +20,7 @@ const AddTransactionButtons = ({
         }}
         size="large"
         sx={{
-          backgroundColor: accentColorPrimarySelected,
+          backgroundColor: accentColorSecondary,
           color:
             currentTheme === "light"
               ? lightMode.primaryText
@@ -41,7 +37,7 @@ const AddTransactionButtons = ({
         }}
         size="large"
         sx={{
-          backgroundColor: accentColorPrimarySelected,
+          backgroundColor: accentColorSecondary,
           color:
             currentTheme === "light"
               ? lightMode.primaryText

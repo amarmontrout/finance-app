@@ -24,7 +24,6 @@ import EditTransactionDetailDialog from "@/components/EditTransactionDetailDialo
 import { SelectedTransactionType } from "@/utils/type"
 import AddTransactionButtons from "./AddTransactionButtons"
 import TransactionTotals from "./TransactionTotals"
-import ModifyTransactions from "./ModifyTransactions"
 
 const Transactions = () => {
   const {
@@ -76,17 +75,10 @@ const Transactions = () => {
 
   return (
     <FlexColWrapper gap={3}>
-      <AddTransactionButtons
-        setOpenAddIncomeDialog={setOpenAddIncomeDialog}
-        setOpenAddExpenseDialog={setOpenAddExpenseDialog}
-        currentTheme={currentTheme}
-      />
-
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tab} onChange={handleChangeTab}>
           <Tab label="Totals" />
           <Tab label="Transactions" />
-          <Tab label="Modify" />
         </Tabs>
       </Box>
 
@@ -131,6 +123,12 @@ const Transactions = () => {
         </FormControl>
       </Stack>
 
+      <AddTransactionButtons
+        setOpenAddIncomeDialog={setOpenAddIncomeDialog}
+        setOpenAddExpenseDialog={setOpenAddExpenseDialog}
+        currentTheme={currentTheme}
+      />
+
       <TabPanel value={tab} index={0}>
         <TransactionTotals
           selectedYear={selectedYear}
@@ -144,21 +142,10 @@ const Transactions = () => {
         <TransactionFeed
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
-        />
-      </TabPanel>
-
-      <TabPanel value={tab} index={2}>
-        <ModifyTransactions
           currentTheme={currentTheme}
           selectedTransaction={selectedTransaction}
           setSelectedTransaction={setSelectedTransaction}
-          refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
-          refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
           setOpenEditDialog={setOpenEditDialog}
-          selectedMonth={selectedMonth}
-          selectedYear={selectedYear}
-          incomeTransactionsV2={incomeTransactionsV2}
-          expenseTransactionsV2={expenseTransactionsV2}
         />
       </TabPanel>
 

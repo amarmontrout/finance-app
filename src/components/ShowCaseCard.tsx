@@ -36,9 +36,11 @@ const ShowCaseCard = ({
           </Typography>
         </Stack>
 
-        <hr/>
+        {title !== "" && <hr/>}
         
-        <Box paddingTop={"10px"}>
+        <Box 
+          paddingTop={title !== "" ? "10px" : 0}
+        >
           {children}
         </Box>
       </CardContent>

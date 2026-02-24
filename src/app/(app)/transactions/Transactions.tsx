@@ -9,43 +9,24 @@ import {
   MenuItem, 
   Box, 
   Tabs, 
-  Tab, 
-  Button,
+  Tab,
   Stack, 
-  Typography, 
-  List,
-  ListItem,
-  ListItemText,
-  IconButton
 } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { useMemo, useState } from "react"
-import { 
-  formattedStringNumber, 
-  getCurrentDateInfo 
-} from "@/utils/helperFunctions"
-import AddIcon from '@mui/icons-material/Add';
-import { 
-  accentColorPrimarySelected, 
-  darkMode, 
-  lightMode 
-} from "@/globals/colors"
+import { useState } from "react"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { MONTHS } from "@/globals/globals"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { getYearTotalV2 } from "@/utils/getTotals"
-import { deleteIncome, deleteExpense } from "@/app/api/Transactions/requests"
-import DeleteIcon from '@mui/icons-material/Delete'
-import CancelIcon from '@mui/icons-material/Cancel'
-import EditIcon from '@mui/icons-material/Edit'
 import AddIncomeDialog from "../income/AddIncomeDialog"
 import AddExpenseDialog from "../expenses/AddExpenseDialog"
 import 
   EditTransactionDetailDialog 
 from "@/components/EditTransactionDetailDialog"
-import { useUser } from "@/hooks/useUser"
 import { SelectedTransactionType } from "@/utils/type"
+import AddTransactionButtons from "./AddTransactionButtons"
+import TransactionTotals from "./TransactionTotals"
+import ModifyTransactions from "./ModifyTransactions"
 
 const Transactions = () => {
   const { 
@@ -62,37 +43,16 @@ const Transactions = () => {
   } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
-  const user = useUser()
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
   const [openAddIncomeDialog, setOpenAddIncomeDialog] = useState<boolean>(false)
   const [openAddExpenseDialog, setOpenAddExpenseDialog] = 
-      useState<boolean>(false)
+    useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [tab, setTab] = useState(0)
   const [selectedTransaction, setSelectedTransaction] = 
     useState<SelectedTransactionType | null>(null)
-
-  const yearIncomeTotal = useMemo(() => {
-    return getYearTotalV2(
-        selectedYear, 
-        incomeTransactionsV2,
-        excludedSet
-      )
-  }, [selectedYear, incomeTransactionsV2, excludedSet])
-
-  const yearExpenseTotal = useMemo(() => {
-     return getYearTotalV2(
-        selectedYear, 
-        expenseTransactionsV2,
-        excludedSet
-      )
-  }, [selectedYear, expenseTransactionsV2, excludedSet])
-
-  const listItemColor = currentTheme === "light" ?
-    lightMode.elevatedBg 
-    : darkMode.elevatedBg
 
   const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
     setTab(newValue);
@@ -118,156 +78,13 @@ const Transactions = () => {
     )
   }
 
-  const handleDeleteTransaction = async (id: number) => {
-    if (!user || !selectedTransaction) return
-
-    if (selectedTransaction.type === "income") {
-      await deleteIncome({
-        userId: user.id,
-        rowId: id
-      })
-      refreshIncomeTransactionsV2()
-    } else {
-      await deleteExpense({
-        userId: user.id,
-        rowId: id
-      })
-      refreshExpenseTransactionsV2()
-    }
-
-    setSelectedTransaction(null)
-  }
-
-  const EditDeleteButton = ({ id, transactionType }: {id: number, transactionType: "income" | "expenses"}) => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        <IconButton 
-          edge="end"
-          onClick={
-            () => {
-              setOpenEditDialog(true)
-              setSelectedTransaction({id: id, type: transactionType})
-            }
-          }
-        >
-          <EditIcon/>
-        </IconButton>
-
-        <IconButton 
-          edge="end"
-          onClick={
-            () => {
-              setSelectedTransaction({id: id, type: transactionType})
-            }
-          }
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Stack>
-    )
-  }
-
-  const ConfirmCancel = ({ id }: { id: number }) => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        <IconButton 
-          edge="end"
-          onClick={() => {
-            if (!selectedYear || !selectedMonth) return
-            handleDeleteTransaction(id)
-          }}
-        >
-          <DeleteIcon/>
-        </IconButton>
-
-        <IconButton 
-          edge="end"
-          onClick={
-            () => {
-              setSelectedTransaction(null)
-            }
-          }
-        >
-          <CancelIcon/>
-        </IconButton>
-      </Stack>
-    )
-  }
-
   return (
     <FlexColWrapper gap={3}>
-      <Stack direction={"row"} justifyContent={"space-evenly"}>
-        <Button
-          onClick={() => {setOpenAddIncomeDialog(true)}}
-          size="large"
-          sx={{
-            backgroundColor: accentColorPrimarySelected,
-            color: currentTheme === "light" 
-              ? lightMode.primaryText
-              : darkMode.primaryText
-          }}
-        >
-          <AddIcon/>
-          Add Income
-        </Button>
-
-        <Button
-          onClick={() => {setOpenAddExpenseDialog(true)}}
-          size="large"
-          sx={{
-            backgroundColor: accentColorPrimarySelected,
-            color: currentTheme === "light" 
-              ? lightMode.primaryText
-              : darkMode.primaryText
-          }}
-        >
-          <AddIcon/>
-          Add Expense
-        </Button>
-      </Stack>
-
-      <FormControl fullWidth>
-        <InputLabel>Year</InputLabel>
-        <Select
-          className="w-full sm:w-[175px]"
-          label="Year"
-          value={selectedYear}
-          name={"year"}
-          onChange={e => setSelectedYear(Number(e.target.value))}
-        >
-          {
-            yearsV2.map((year) => {
-              return (
-                <MenuItem key={year.name} value={year.name}>
-                  {year.name}
-                </MenuItem>
-              )
-            })
-          }
-        </Select>
-      </FormControl>
-
-      <FormControl fullWidth>
-        <InputLabel>Month</InputLabel>
-        <Select
-          className="w-full sm:w-[175px]"
-          label="Month"
-          value={selectedMonth}
-          name={"month"}
-          onChange={e => setSelectedMonth(e.target.value)}
-          disabled={tab === 0}
-        >
-          {
-            MONTHS.map((month) => {
-              return (
-                <MenuItem key={month} value={month} >
-                  {month}
-                </MenuItem>
-              )
-            })
-          }
-        </Select>
-      </FormControl>
+      <AddTransactionButtons
+        setOpenAddIncomeDialog={setOpenAddIncomeDialog}
+        setOpenAddExpenseDialog={setOpenAddExpenseDialog}
+        currentTheme={currentTheme}
+      />
 
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs value={tab} onChange={handleChangeTab}>
@@ -277,74 +94,58 @@ const Transactions = () => {
         </Tabs>
       </Box>
 
+      <Stack direction={"row"} spacing={2}>
+        <FormControl fullWidth>
+          <InputLabel>Month</InputLabel>
+          <Select
+            className="w-full sm:w-[175px]"
+            label="Month"
+            value={selectedMonth}
+            name={"month"}
+            onChange={e => setSelectedMonth(e.target.value)}
+            disabled={tab === 0}
+          >
+            {
+              MONTHS.map((month) => {
+                return (
+                  <MenuItem key={month} value={month} >
+                    {month}
+                  </MenuItem>
+                )
+              })
+            }
+          </Select>
+        </FormControl> 
+
+        <FormControl fullWidth>
+          <InputLabel>Year</InputLabel>
+          <Select
+            className="w-full sm:w-[175px]"
+            label="Year"
+            value={selectedYear}
+            name={"year"}
+            onChange={e => setSelectedYear(Number(e.target.value))}
+          >
+            {
+              yearsV2.map((year) => {
+                return (
+                  <MenuItem key={year.name} value={year.name}>
+                    {year.name}
+                  </MenuItem>
+                )
+              })
+            }
+          </Select>
+        </FormControl>
+      </Stack>
+
       <TabPanel value={tab} index={0}>
-        <ShowCaseCard 
-          title={`Totals for ${selectedYear}`}
-        >
-          <Stack direction={"row"} width={"100%"}>
-            <Stack direction={"column"} width={"34%"}>
-              <Typography>{selectedYear}</Typography>
-
-              {
-                MONTHS.map((month) => {
-                  return (
-                    <Typography key={month}>{month}</Typography>
-                  )
-                })
-              }
-            </Stack>
-
-            <Stack direction={"column"} width={"33%"}>
-              <Typography>{`+ $${yearIncomeTotal}`}</Typography>
-
-              {
-                MONTHS.map((month) => {
-                  const total = incomeTransactionsV2.reduce((acc, income) => {
-                    if (
-                      income.month === month &&
-                      income.year === selectedYear &&
-                      !excludedSet.has(income.category)
-                    ) {
-                      return acc + income.amount
-                    }
-                    return acc
-                  }, 0)
-
-                  return (
-                    <Typography key={`${month}-${total}`} color={"success"}>
-                      {`+  $${formattedStringNumber(total)}`}
-                    </Typography>
-                  )
-                })
-              }
-            </Stack>
-
-            <Stack direction={"column"} width={"33%"}>
-              <Typography>{`- $${yearExpenseTotal}`}</Typography>
-
-              {
-                MONTHS.map((month) => {
-                  const total = expenseTransactionsV2.reduce((acc, expense) => {
-                    if (
-                      expense.month === month &&
-                      expense.year === selectedYear &&
-                      !excludedSet.has(expense.category)
-                    ) {
-                      return acc + expense.amount
-                    }
-                    return acc
-                  }, 0)
-
-                  return (
-                    <Typography key={`${month}-${total}`} color={"error"}>
-                      {`-  $${formattedStringNumber(total)}`}
-                    </Typography>
-                  )
-                })
-              }
-            </Stack>
-          </Stack>
-        </ShowCaseCard>
+        <TransactionTotals
+          selectedYear={selectedYear}
+          incomeTransactionsV2={incomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
+          excludedSet={excludedSet}
+        />
       </TabPanel>
 
       <TabPanel value={tab} index={1}>
@@ -355,87 +156,18 @@ const Transactions = () => {
       </TabPanel>
 
       <TabPanel value={tab} index={2}>
-        <ShowCaseCard title={"Modify Transactions"}>
-          <Stack direction={"column"} spacing={2}>
-            <Box>
-              {
-                <List className="flex flex-col gap-2">
-                  {incomeTransactionsV2.map((details) => {
-                    if (
-                      details.year !== selectedYear 
-                      || details.month !== selectedMonth
-                    ) return
-
-                      return (
-                        <ListItem
-                          key={details.id}
-                          secondaryAction={
-                            selectedTransaction?.id === details.id
-                              ? <ConfirmCancel id={details.id}/> 
-                              : <EditDeleteButton id={details.id} transactionType={"income"}/>
-                          }
-                          sx={{
-                            backgroundColor: listItemColor,
-                            borderRadius: "15px",
-                            minWidth: "fit-content"
-                          }}
-                        >
-                          <ListItemText
-                            primary={`$${
-                              formattedStringNumber(
-                                details.amount
-                              )
-                            }`}
-                            secondary={details.category}
-                          />
-                        </ListItem>
-                      )
-                    })
-                  }
-                </List>
-              }
-            </Box>
-
-            <Box>
-              {
-                <List className="flex flex-col gap-2">
-                  {expenseTransactionsV2.map((details) => {
-                    if (
-                      details.year !== selectedYear 
-                      || details.month !== selectedMonth
-                    ) return
-
-                      return (
-                        <ListItem
-                          key={details.id}
-                          secondaryAction={
-                            selectedTransaction?.id === details.id
-                              ? <ConfirmCancel id={details.id}/> 
-                              : <EditDeleteButton id={details.id} transactionType={"expenses"}/>
-                          }
-                          sx={{
-                            backgroundColor: listItemColor,
-                            borderRadius: "15px",
-                            minWidth: "fit-content"
-                          }}
-                        >
-                          <ListItemText
-                            primary={`$${
-                              formattedStringNumber(
-                                details.amount
-                              )
-                            }`}
-                            secondary={details.category}
-                          />
-                        </ListItem>
-                      )
-                    })
-                  }
-                </List>
-              }
-            </Box>
-          </Stack>
-        </ShowCaseCard>
+        <ModifyTransactions
+          currentTheme={currentTheme}
+          selectedTransaction={selectedTransaction}
+          setSelectedTransaction={setSelectedTransaction}
+          refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
+          refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
+          setOpenEditDialog={setOpenEditDialog}
+          selectedMonth={selectedMonth}
+          selectedYear={selectedYear}
+          incomeTransactionsV2={incomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
+        />
       </TabPanel>
 
       <AddIncomeDialog

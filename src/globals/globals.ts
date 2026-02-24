@@ -7,6 +7,7 @@ import MultilineChartIcon from '@mui/icons-material/MultilineChart';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import HomeIcon from '@mui/icons-material/Home';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 export const DAYS = [
   "Sunday",
@@ -38,8 +39,9 @@ export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
 ]
 export const NAV_TRANSACTIONS: PageLinkType[] = [
-  {"name": "Income", "link": "/income", icon: TrendingUpIcon},
-  {"name": "Expenses", "link": "/expenses", icon: TrendingDownIcon},
+  // {"name": "Income", "link": "/income", icon: TrendingUpIcon},
+  // {"name": "Expenses", "link": "/expenses", icon: TrendingDownIcon},
+  {"name": "Transactions", "link": "/transactions", icon: AccountBalanceIcon},
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
 export const NAV_SETTINGS: PageLinkType[] = [

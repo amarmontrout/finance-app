@@ -98,7 +98,7 @@ const EditTransactionDetailDialog = ({
         body: updateTransaction,
       })
       if (refreshIncomeTransactions) refreshIncomeTransactions()
-    } else if (selectedTransaction.type === "expenses") {
+    } else if (selectedTransaction.type === "expense") {
       await updateExpense({
         userId: user.id,
         rowId: selectedTransaction.id,

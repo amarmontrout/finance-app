@@ -86,6 +86,12 @@ export const MoneyInputV2 = <T extends { amount: number }>({
       <InputLabel>Amount</InputLabel>
       <OutlinedInput
         className={`w-full ${smallWidthBp ? `${smallWidthBp}:w-[175px]` : ""}`}
+        type={"text"}
+        inputMode={"decimal"}
+        inputProps={{
+          inputMode: "decimal",
+          pattern: "[0-9]*[.]?[0-9]*",
+        }}
         label="Amount"
         value={value.toFixed(2)}
         name="amount"

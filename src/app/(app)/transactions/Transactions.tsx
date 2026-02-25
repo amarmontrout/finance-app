@@ -25,6 +25,23 @@ import { SelectedTransactionType } from "@/utils/type"
 import AddTransactionButtons from "./AddTransactionButtons"
 import TransactionTotals from "./TransactionTotals"
 
+const TabPanel = ({
+  children,
+  value,
+  index,
+  ...other
+}: {
+  children?: React.ReactNode
+  index: number
+  value: number
+}) => {
+  return (
+    <div hidden={value !== index} {...other}>
+      {value === index && <Box>{children}</Box>}
+    </div>
+  )
+}
+
 const Transactions = () => {
   const {
     incomeTransactionsV2,
@@ -56,23 +73,6 @@ const Transactions = () => {
     setTab(newValue)
   }
 
-  const TabPanel = ({
-    children,
-    value,
-    index,
-    ...other
-  }: {
-    children?: React.ReactNode
-    index: number
-    value: number
-  }) => {
-    return (
-      <div hidden={value !== index} {...other}>
-        {value === index && <Box>{children}</Box>}
-      </div>
-    )
-  }
-
   return (
     <FlexColWrapper gap={3}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
@@ -83,25 +83,26 @@ const Transactions = () => {
       </Box>
 
       <Stack direction={"row"} spacing={2}>
-        <FormControl fullWidth>
-          <InputLabel>Month</InputLabel>
-          <Select
-            className="w-full sm:w-[175px]"
-            label="Month"
-            value={selectedMonth}
-            name={"month"}
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            disabled={tab === 0}
-          >
-            {MONTHS.map((month) => {
-              return (
-                <MenuItem key={month} value={month}>
-                  {month}
-                </MenuItem>
-              )
-            })}
-          </Select>
-        </FormControl>
+        {tab !== 0 && (
+          <FormControl fullWidth>
+            <InputLabel>Month</InputLabel>
+            <Select
+              className="w-full sm:w-[175px]"
+              label="Month"
+              value={selectedMonth}
+              name={"month"}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              {MONTHS.map((month) => {
+                return (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
+        )}
 
         <FormControl fullWidth>
           <InputLabel>Year</InputLabel>

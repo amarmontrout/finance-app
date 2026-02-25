@@ -87,7 +87,7 @@ export default function RootLayout({
               >
                 {/* Inner scroller */}
                 <Box
-                  className="p-[1rem] pb-[120px] md:pb-[1rem] lg:p-[2.5rem]"
+                  className="p-[1rem] pb-[110px] md:pb-[1rem] lg:p-[2.5rem]"
                   sx={{
                     flex: 1,
                     minWidth: 0,

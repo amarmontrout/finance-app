@@ -26,8 +26,8 @@ const TransactionTotals = ({
   }, [selectedYear, expenseTransactionsV2, excludedSet])
 
   return (
-    <ShowCaseCard title={`Totals for ${selectedYear}`}>
-      <Stack direction={"row"} width={"100%"}>
+    <ShowCaseCard title={""}>
+      <Stack direction={"row"} width={"100%"} spacing={1}>
         <Stack direction={"column"} width={"30%"}>
           {MONTHS.map((month) => {
             return (
@@ -36,6 +36,7 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
+          <hr />
           <Typography variant={"h6"}>{selectedYear}</Typography>
         </Stack>
 
@@ -61,7 +62,8 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
-          <Typography variant={"h6"}>{`+ $${yearIncomeTotal}`}</Typography>
+          <hr />
+          <Typography variant={"h6"}>{`$${yearIncomeTotal}`}</Typography>
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
@@ -86,7 +88,8 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
-          <Typography variant={"h6"}>{`- $${yearExpenseTotal}`}</Typography>
+          <hr />
+          <Typography variant={"h6"}>{`$${yearExpenseTotal}`}</Typography>
         </Stack>
       </Stack>
     </ShowCaseCard>

@@ -38,5 +38,5 @@ export type DateType = {
 
 export type SelectedTransactionType = { 
   id: number,
-  type: "income" | "expenses" 
+  type: "income" | "expense" 
 }

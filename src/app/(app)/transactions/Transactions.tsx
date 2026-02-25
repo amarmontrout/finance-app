@@ -146,6 +146,7 @@ const Transactions = () => {
           currentTheme={currentTheme}
           selectedTransaction={selectedTransaction}
           setSelectedTransaction={setSelectedTransaction}
+          openEditDialog={openEditDialog}
           setOpenEditDialog={setOpenEditDialog}
         />
       </TabPanel>

@@ -29,7 +29,6 @@ const TransactionTotals = ({
     <ShowCaseCard title={`Totals for ${selectedYear}`}>
       <Stack direction={"row"} width={"100%"}>
         <Stack direction={"column"} width={"30%"}>
-          <Typography variant={"h6"}>{selectedYear}</Typography>
           {MONTHS.map((month) => {
             return (
               <Typography key={month} variant={"h6"}>
@@ -37,10 +36,10 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
+          <Typography variant={"h6"}>{selectedYear}</Typography>
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
-          <Typography variant={"h6"}>{`+ $${yearIncomeTotal}`}</Typography>
           {MONTHS.map((month) => {
             const total = incomeTransactionsV2.reduce((acc, income) => {
               if (
@@ -62,10 +61,10 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
+          <Typography variant={"h6"}>{`+ $${yearIncomeTotal}`}</Typography>
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
-          <Typography variant={"h6"}>{`- $${yearExpenseTotal}`}</Typography>
           {MONTHS.map((month) => {
             const total = expenseTransactionsV2.reduce((acc, expense) => {
               if (
@@ -87,6 +86,7 @@ const TransactionTotals = ({
               </Typography>
             )
           })}
+          <Typography variant={"h6"}>{`- $${yearExpenseTotal}`}</Typography>
         </Stack>
       </Stack>
     </ShowCaseCard>

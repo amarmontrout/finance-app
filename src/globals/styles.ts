@@ -18,10 +18,6 @@ export const navSelection = {
     borderRadius: "15px",
     zIndex: 0,
   },
-  "&:hover::before": {
-    width: "100%",
-    backgroundColor: accentColorPrimaryHover,
-  },
   "& *": {
     position: "relative",
     zIndex: 1,

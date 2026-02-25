@@ -10,7 +10,7 @@ export type PageLinkType = {
   icon: SvgIconComponent
 }
 
-const PageLink = ({
+export const PageLink = ({
   item,
   active,
 }: {
@@ -35,7 +35,7 @@ const PageLink = ({
         height={"100%"}
       >
         <item.icon fontSize="large" />
-        <Typography className="hidden md:flex" variant={"h6"}>
+        <Typography className="flex" variant={"h6"}>
           {item.name}
         </Typography>
       </Box>
@@ -43,4 +43,32 @@ const PageLink = ({
   )
 }
 
-export default PageLink
+export const HorizontalPageLink = ({
+  item,
+  active,
+}: {
+  item: PageLinkType
+  active: boolean
+}) => {
+  return (
+    <Link href={item.link}>
+      <Box
+        sx={{
+          cursor: "pointer",
+          borderRadius: "15px",
+          bgcolor: active ? accentColorPrimarySelected : "transparent",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "8px",
+        }}
+      >
+        <item.icon />
+        <Typography fontSize="10px" sx={{ mt: 0.25 }}>
+          {item.name}
+        </Typography>
+      </Box>
+    </Link>
+  )
+}

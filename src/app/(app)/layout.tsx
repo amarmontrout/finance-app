@@ -88,7 +88,7 @@ export default function RootLayout({
               >
                 {/* Inner scroller */}
                 <Box
-                  className="p-[1rem] pb-[113px] md:pb-[1rem] lg:p-[2.5rem]"
+                  className="p-[1rem] pb-[120px] md:pb-[1rem] lg:p-[2.5rem]"
                   sx={{
                     flex: 1,
                     minWidth: 0,
@@ -103,24 +103,20 @@ export default function RootLayout({
               <Box
                 className="flex flex-col md:hidden"
                 component="nav"
-                bottom={0}
-                width={"100%"}
-                height={"97px"}
+                bottom={30}
+                width={"fit-content"}
                 position={"absolute"}
+                left={"50%"}
                 sx={{
-                  bgcolor: "rgba(255, 255, 255, 0.12)",
-                  backdropFilter: "blur(4px) saturate(160%)",
-                  borderTopLeftRadius: "15px",
-                  borderTopRightRadius: "15px",
+                  transform: "translateX(-50%)",
+                  bgcolor: "rgba(255, 255, 255, 0.15)",
+                  backdropFilter: "blur(6px) saturate(160%)",
+                  borderRadius: "15px",
                   boxShadow: 3,
                   zIndex: 1000,
                 }}
               >
                 <HorizontalNavbar />
-
-                <Box className="flex md:hidden w-full">
-                  <PageName />
-                </Box>
               </Box>
             </Box>
           </Box>

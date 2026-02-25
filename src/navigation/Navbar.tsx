@@ -1,7 +1,6 @@
 "use client"
 
 import { Box, Divider, Stack, Typography } from "@mui/material"
-import PageLink from "./PageLink"
 import Logo from "@/components/Logo"
 import {
   NAV_QUICK_INFO,
@@ -11,6 +10,7 @@ import {
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { darkMode, lightMode } from "@/globals/colors"
+import { HorizontalPageLink, PageLink } from "./PageLink"
 
 export const Navbar = () => {
   const pathname = usePathname()
@@ -113,32 +113,19 @@ export const HorizontalNavbar = () => {
       direction={"row"}
       spacing={1}
       width={"100%"}
-      height={"67px"}
-      justifyContent={"center"}
     >
+      {NAV_QUICK_INFO.map((item) => {
+        return (
+          <HorizontalPageLink
+            item={item}
+            active={pathname === item.link}
+            key={item.name}
+          />
+        )
+      })}
       {NAV_TRANSACTIONS.map((item) => {
         return (
-          <PageLink
-            item={item}
-            active={pathname === item.link}
-            key={item.name}
-          />
-        )
-      })}
-      {NAV_QUICK_INFO.map((item) => {
-        if (item.link !== "/") return
-        return (
-          <PageLink
-            item={item}
-            active={pathname === item.link}
-            key={item.name}
-          />
-        )
-      })}
-      {NAV_QUICK_INFO.map((item) => {
-        if (item.link === "/") return
-        return (
-          <PageLink
+          <HorizontalPageLink
             item={item}
             active={pathname === item.link}
             key={item.name}

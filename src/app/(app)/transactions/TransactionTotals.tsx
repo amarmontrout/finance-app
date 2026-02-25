@@ -29,6 +29,9 @@ const TransactionTotals = ({
     <ShowCaseCard title={""}>
       <Stack direction={"row"} width={"100%"} spacing={1}>
         <Stack direction={"column"} width={"30%"}>
+          <Typography width={"100%"} textAlign={"center"}>
+            Month
+          </Typography>
           {MONTHS.map((month) => {
             return (
               <Typography key={month} variant={"h6"}>
@@ -41,6 +44,9 @@ const TransactionTotals = ({
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
+          <Typography width={"100%"} textAlign={"center"}>
+            Income
+          </Typography>
           {MONTHS.map((month) => {
             const total = incomeTransactionsV2.reduce((acc, income) => {
               if (
@@ -67,6 +73,9 @@ const TransactionTotals = ({
         </Stack>
 
         <Stack direction={"column"} width={"35%"} textAlign={"right"}>
+          <Typography width={"100%"} textAlign={"center"}>
+            Expense
+          </Typography>
           {MONTHS.map((month) => {
             const total = expenseTransactionsV2.reduce((acc, expense) => {
               if (

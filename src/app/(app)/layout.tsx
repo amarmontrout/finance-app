@@ -5,7 +5,6 @@ import { Box } from "@mui/material"
 import Header from "@/header/Header"
 import "../../globals.css"
 import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
-import PageName from "@/navigation/PageName"
 
 export const metadata: Metadata = {
   title: "Finance Tracker",

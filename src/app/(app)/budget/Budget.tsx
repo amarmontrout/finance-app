@@ -19,12 +19,34 @@ import {
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
+import AddBudgetEntryButton from "./AddBudgetEntryButton"
+
+import { useUser } from "@/hooks/useUser"
+import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
+
+const TabPanel = ({
+  children,
+  value,
+  index,
+  ...other
+}: {
+  children?: React.ReactNode
+  index: number
+  value: number
+}) => {
+  return (
+    <div hidden={value !== index} {...other}>
+      {value === index && <Box>{children}</Box>}
+    </div>
+  )
+}
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2 } =
     useTransactionContext()
   const { budgetCategoriesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
+  const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
   const TODAY: DateType = {
     month: currentMonth,
@@ -53,6 +75,8 @@ const Budget = () => {
   const [selectedEntry, setSelectedEntry] =
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
+    useState<boolean>(false)
   const [value, setValue] = useState(0)
 
   const notes = useMemo(() => {
@@ -108,29 +132,12 @@ const Budget = () => {
     setValue(newValue)
   }
 
-  const TabPanel = ({
-    children,
-    value,
-    index,
-    ...other
-  }: {
-    children?: React.ReactNode
-    index: number
-    value: number
-  }) => {
-    return (
-      <div hidden={value !== index} {...other}>
-        {value === index && <Box>{children}</Box>}
-      </div>
-    )
-  }
-
   return (
     <FlexColWrapper gap={2}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Remaining Budget" />
-          <Tab label="Budget Entires" />
+          <Tab label="Entries" />
         </Tabs>
       </Box>
 
@@ -160,6 +167,10 @@ const Budget = () => {
 
       <hr style={{ width: "100%" }} />
 
+      <AddBudgetEntryButton
+        setOpenAddBudgetEntryDialog={setOpenAddBudgetEntryDialog}
+      />
+
       <TabPanel value={value} index={0}>
         <RemainingBudget
           budgetCategories={remainingBudgetCategories}
@@ -169,17 +180,25 @@ const Budget = () => {
 
       <TabPanel value={value} index={1}>
         <BudgetEntries
-          budgetCategories={budgetCategoriesV2}
           budgetTransactions={weeklyTransactions}
           refreshBudgetTransactions={refreshBudgetTransactionsV2}
-          notes={notes}
           setOpenEditDialog={setOpenEditDialog}
           setSelectedEntry={setSelectedEntry}
           currentTheme={currentTheme}
-          week={week}
-          today={TODAY}
         />
       </TabPanel>
+
+      <AddBudgetEntryDialog
+        openAddBudgetEntryDialog={openAddBudgetEntryDialog}
+        setOpenAddBudgetEntryDialog={setOpenAddBudgetEntryDialog}
+        budgetCategories={budgetCategoriesV2}
+        today={TODAY}
+        user={user}
+        week={week}
+        refreshBudgetTransactions={refreshBudgetTransactionsV2}
+        notes={notes}
+        currentTheme={currentTheme}
+      />
 
       <EditBudgetEntryDialog
         openEditDialog={openEditDialog}

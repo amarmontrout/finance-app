@@ -6,7 +6,6 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import EditIcon from "@mui/icons-material/Edit"
 import {
-  Box,
   List,
   ListItem,
   ListItemText,
@@ -14,38 +13,24 @@ import {
   Stack,
   Typography,
 } from "@mui/material"
-import {
-  BudgetTransactionTypeV2,
-  BudgetTypeV2,
-  DateType,
-  HookSetter,
-} from "@/utils/type"
+import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
-import BudgetEntryForm from "./BudgetEntryForm"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useState } from "react"
 
 const BudgetEntries = ({
-  budgetCategories,
   budgetTransactions,
   refreshBudgetTransactions,
-  notes,
   setOpenEditDialog,
   setSelectedEntry,
   currentTheme,
-  week,
-  today,
 }: {
-  budgetCategories: BudgetTypeV2[]
   budgetTransactions: BudgetTransactionTypeV2[]
   refreshBudgetTransactions: () => void
-  notes: string[]
   setOpenEditDialog: HookSetter<boolean>
   setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
   currentTheme: string | undefined
-  week: "prev" | "current"
-  today: DateType
 }) => {
   const user = useUser()
   const [noteId, setNoteId] = useState<number | null>(null)
@@ -121,17 +106,6 @@ const BudgetEntries = ({
 
   return (
     <FlexColWrapper gap={2}>
-      <ShowCaseCard title={"Budget Entry Form"}>
-        <BudgetEntryForm
-          budgetCategories={budgetCategories}
-          today={today}
-          user={user}
-          refreshBudgetTransactions={refreshBudgetTransactions}
-          week={week}
-          notes={notes}
-        />
-      </ShowCaseCard>
-
       <ShowCaseCard title={"Budget Entries"}>
         <List className="flex flex-col gap-2">
           {budgetTransactions.length === 0 ? (

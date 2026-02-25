@@ -76,7 +76,11 @@ const BudgetEntryForm = ({
   }
 
   return (
-    <Box className="flex flex-col lg:flex-row gap-3 mt-1">
+    <Box
+      className="flex flex-col lg:flex-row gap-5 mt-1"
+      paddingTop={"10px"}
+      margin={"0 auto"}
+    >
       <FullDate
         today={today}
         setBudgetEntry={setBudgetEntry}

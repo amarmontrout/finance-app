@@ -1,4 +1,4 @@
-import { lightMode, darkMode, accentColorPrimary } from "@/globals/colors"
+import { accentColorPrimary } from "@/globals/colors"
 import {
   IconButton,
   Menu,

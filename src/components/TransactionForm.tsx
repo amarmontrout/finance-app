@@ -123,8 +123,22 @@ const TransactionForm = ({
       paddingTop={"10px"}
       margin={"0 auto"}
     >
-      <Box className="flex flex-col sm:flex-row gap-5">
-        <FormControl>
+      <Box className="flex flex-row gap-5">
+        <FormControl fullWidth>
+          <InputLabel>Month</InputLabel>
+          <Select
+            className="w-full sm:w-[175px]"
+            label="Month"
+            value={transaction.month}
+            name={"month"}
+            onChange={(e) => handleMonth(e)}
+          >
+            {MONTHS.map((month) => {
+              return <MenuItem value={month}>{month}</MenuItem>
+            })}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth>
           <InputLabel>Year</InputLabel>
           <Select
             className="w-full sm:w-[175px]"
@@ -139,21 +153,6 @@ const TransactionForm = ({
                   {year.name.toString()}
                 </MenuItem>
               )
-            })}
-          </Select>
-        </FormControl>
-
-        <FormControl>
-          <InputLabel>Month</InputLabel>
-          <Select
-            className="w-full sm:w-[175px]"
-            label="Month"
-            value={transaction.month}
-            name={"month"}
-            onChange={(e) => handleMonth(e)}
-          >
-            {MONTHS.map((month) => {
-              return <MenuItem value={month}>{month}</MenuItem>
             })}
           </Select>
         </FormControl>

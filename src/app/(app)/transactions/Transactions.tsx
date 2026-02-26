@@ -51,7 +51,7 @@ const Transactions = () => {
   } = useTransactionContext()
   const { yearsV2, incomeCategoriesV2, expenseCategoriesV2, excludedSet } =
     useCategoryContext()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
+  const { currentYear, currentMonth, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
@@ -133,6 +133,8 @@ const Transactions = () => {
       <TabPanel value={tab} index={0}>
         <TransactionTotals
           selectedYear={selectedYear}
+          currentYear={currentYear}
+          passedMonths={passedMonths}
           incomeTransactionsV2={incomeTransactionsV2}
           expenseTransactionsV2={expenseTransactionsV2}
           excludedSet={excludedSet}

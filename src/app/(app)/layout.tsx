@@ -87,7 +87,7 @@ export default function RootLayout({
               >
                 {/* Inner scroller */}
                 <Box
-                  className="p-[1rem] pb-[110px] md:pb-[1rem] lg:p-[2.5rem]"
+                  className="p-[1rem] pb-[100px] md:pb-[1rem] lg:p-[2.5rem]"
                   sx={{
                     flex: 1,
                     minWidth: 0,
@@ -102,7 +102,7 @@ export default function RootLayout({
               <Box
                 className="flex flex-col md:hidden"
                 component="nav"
-                bottom={30}
+                bottom={20}
                 width={"fit-content"}
                 position={"absolute"}
                 left={"50%"}

@@ -16,6 +16,7 @@ import {
   ListItemText,
   OutlinedInput,
   Stack,
+  Typography,
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
@@ -146,76 +147,79 @@ const AddBudget = ({
   }
 
   return (
-    <ShowCaseCard title={"Add Weekly Budget"}>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        overflow={"hidden"}
-        paddingTop={"5px"}
-        height={"325px"}
-      >
-        <Box className="flex flex-row xl:flex-col gap-3 pb-[12px]">
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <OutlinedInput
-              className="w-full"
-              label={"Category"}
-              value={budgetCategory.category}
-              name={"category"}
-              onChange={(e) => handleCategory(e)}
+    <ShowCaseCard title={""}>
+      <Stack direction={"column"} spacing={1}>
+        <Typography>Weekly Budget Categories</Typography>
+        <Box
+          display={"flex"}
+          flexDirection={"column"}
+          overflow={"hidden"}
+          paddingTop={"5px"}
+          height={"325px"}
+        >
+          <Box className="flex flex-row xl:flex-col gap-3 pb-[12px]">
+            <FormControl>
+              <InputLabel>Category</InputLabel>
+              <OutlinedInput
+                className="w-full"
+                label={"Category"}
+                value={budgetCategory.category}
+                name={"category"}
+                onChange={(e) => handleCategory(e)}
+              />
+            </FormControl>
+
+            <MoneyInputV2
+              value={budgetCategory.amount}
+              setValue={setBudgetCategory}
             />
-          </FormControl>
 
-          <MoneyInputV2
-            value={budgetCategory.amount}
-            setValue={setBudgetCategory}
-          />
+            <Button
+              variant={"contained"}
+              disabled={
+                budgetCategory.category === "" || budgetCategory.amount === 0
+              }
+              onClick={save}
+              sx={{
+                backgroundColor: accentColorSecondary,
+              }}
+              loading={isLoading}
+            >
+              {"Add"}
+            </Button>
+          </Box>
 
-          <Button
-            variant={"contained"}
-            disabled={
-              budgetCategory.category === "" || budgetCategory.amount === 0
-            }
-            onClick={save}
-            sx={{
-              backgroundColor: accentColorSecondary,
-            }}
-            loading={isLoading}
-          >
-            {"Add"}
-          </Button>
+          <hr style={{ width: "100%" }} />
+
+          <Box flex={1} overflow={"auto"}>
+            <List className="flex flex-col gap-2">
+              {budgetCategoriesV2 &&
+                budgetCategoriesV2.map((budget) => {
+                  return (
+                    <ListItem
+                      key={budget.category}
+                      secondaryAction={
+                        confirmSelection === budget ? (
+                          <ConfirmCancel />
+                        ) : (
+                          <EditDeleteButton selection={budget} />
+                        )
+                      }
+                      sx={{
+                        backgroundColor: listItemColor,
+                        borderRadius: "15px",
+                      }}
+                    >
+                      <ListItemText
+                        primary={`${budget.category} - $${budget.amount} a week`}
+                      />
+                    </ListItem>
+                  )
+                })}
+            </List>
+          </Box>
         </Box>
-
-        <hr style={{ width: "100%" }} />
-
-        <Box flex={1} overflow={"auto"}>
-          <List className="flex flex-col gap-2">
-            {budgetCategoriesV2 &&
-              budgetCategoriesV2.map((budget) => {
-                return (
-                  <ListItem
-                    key={budget.category}
-                    secondaryAction={
-                      confirmSelection === budget ? (
-                        <ConfirmCancel />
-                      ) : (
-                        <EditDeleteButton selection={budget} />
-                      )
-                    }
-                    sx={{
-                      backgroundColor: listItemColor,
-                      borderRadius: "15px",
-                    }}
-                  >
-                    <ListItemText
-                      primary={`${budget.category} - $${budget.amount}`}
-                    />
-                  </ListItem>
-                )
-              })}
-          </List>
-        </Box>
-      </Box>
+      </Stack>
     </ShowCaseCard>
   )
 }

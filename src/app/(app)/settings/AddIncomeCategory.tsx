@@ -32,7 +32,7 @@ const AddIncomeCategory = () => {
   }
 
   return (
-    <ShowCaseCard title={"Add Income Category"}>
+    <ShowCaseCard title={""}>
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -41,7 +41,7 @@ const AddIncomeCategory = () => {
         paddingTop={"1px"}
       >
         <SimpleForm
-          label={"Income Category"}
+          label={"Add An Income Category"}
           value={incomeCategoriesInput}
           onChange={(
             e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

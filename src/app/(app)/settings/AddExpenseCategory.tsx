@@ -40,7 +40,7 @@ const AddExpenseCategory = ({
   }
 
   return (
-    <ShowCaseCard title={"Add Expense Category"}>
+    <ShowCaseCard title={""}>
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -49,7 +49,7 @@ const AddExpenseCategory = ({
         paddingTop={"1px"}
       >
         <SimpleForm
-          label={"Expense Category"}
+          label={"Add An Expense Category"}
           value={expenseCategoriesInput}
           onChange={(
             e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

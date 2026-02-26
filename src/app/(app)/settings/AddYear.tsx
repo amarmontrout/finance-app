@@ -31,7 +31,7 @@ const AddYear = () => {
   }
 
   return (
-    <ShowCaseCard title={"Add Year"}>
+    <ShowCaseCard title={""}>
       <Box
         display={"flex"}
         flexDirection={"column"}
@@ -40,7 +40,7 @@ const AddYear = () => {
         paddingTop={"1px"}
       >
         <SimpleForm
-          label={"Year"}
+          label={"Add A Year"}
           value={yearsInput}
           onChange={(
             e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,

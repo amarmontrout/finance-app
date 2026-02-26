@@ -1,6 +1,6 @@
 "use client"
 
-import { Box } from "@mui/material"
+import { Box, Typography } from "@mui/material"
 import { useState } from "react"
 import { useTheme } from "next-themes"
 import { useCategoryContext } from "@/contexts/categories-context"
@@ -11,6 +11,7 @@ import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
 import EditBudgetDialog from "./EditBudgetDialog"
 import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
+import { accentColorPrimarySelected } from "@/globals/colors"
 
 const Settings = () => {
   const { refreshExpenseCategoryChoicesV2 } = useCategoryContext()
@@ -26,8 +27,18 @@ const Settings = () => {
   const [confirmEdit, setConfirmEdit] = useState<BudgetTypeV2 | null>(null)
 
   return (
-    <Box className="flex flex-col gap-2 h-full">
-      <Box className="flex flex-col xl:flex-row gap-2 h-full">
+    <Box className="flex flex-col gap-5 h-full">
+      <Typography variant={"h5"} width={"100%"} textAlign={"center"}>
+        Manage Your Categories
+      </Typography>
+
+      <hr
+        style={{
+          border: `1px solid ${accentColorPrimarySelected}`,
+        }}
+      />
+
+      <Box className="flex flex-col xl:flex-row gap-5 h-full">
         <AddYear />
 
         <AddIncomeCategory />

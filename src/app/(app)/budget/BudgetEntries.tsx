@@ -12,12 +12,87 @@ import {
   IconButton,
   Stack,
   Typography,
+  Box,
 } from "@mui/material"
 import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { useState } from "react"
+import { useMemo, useState } from "react"
+import { formattedStringNumber } from "@/utils/helperFunctions"
+
+const EditDeleteButton = ({
+  id,
+  entry,
+  setOpenEditDialog,
+  setSelectedEntry,
+  setNoteId,
+}: {
+  id: number
+  entry: BudgetTransactionTypeV2
+  setOpenEditDialog: HookSetter<boolean>
+  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
+  setNoteId: HookSetter<number | null>
+}) => {
+  return (
+    <Stack direction={"row"} gap={2}>
+      <IconButton
+        edge="end"
+        onClick={() => {
+          setOpenEditDialog(true)
+          setSelectedEntry(entry)
+        }}
+      >
+        <EditIcon />
+      </IconButton>
+
+      <IconButton
+        edge="end"
+        onClick={() => {
+          setNoteId(id)
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Stack>
+  )
+}
+
+const ConfirmCancelButton = ({
+  id,
+  deleteEntry,
+  setNoteId,
+  setSelectedEntry,
+}: {
+  id: number
+  deleteEntry: (id: number) => void
+  setNoteId: HookSetter<number | null>
+  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
+}) => {
+  return (
+    <Stack direction={"row"} gap={2}>
+      <IconButton
+        edge="end"
+        onClick={() => {
+          deleteEntry(id)
+          setNoteId(null)
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+
+      <IconButton
+        edge="end"
+        onClick={() => {
+          setSelectedEntry(null)
+          setNoteId(null)
+        }}
+      >
+        <CancelIcon />
+      </IconButton>
+    </Stack>
+  )
+}
 
 const BudgetEntries = ({
   budgetTransactions,
@@ -47,94 +122,87 @@ const BudgetEntries = ({
     refreshBudgetTransactions()
   }
 
-  const EditDeleteButton = ({
-    id,
-    entry,
-  }: {
-    id: number
-    entry: BudgetTransactionTypeV2
-  }) => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        <IconButton
-          edge="end"
-          onClick={() => {
-            setOpenEditDialog(true)
-            setSelectedEntry(entry)
-          }}
-        >
-          <EditIcon />
-        </IconButton>
+  const groupedTransactions = useMemo(() => {
+    return budgetTransactions.reduce(
+      (acc, transaction) => {
+        const category = transaction.category
 
-        <IconButton
-          edge="end"
-          onClick={() => {
-            setNoteId(id)
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Stack>
+        if (!acc[category]) {
+          acc[category] = []
+        }
+
+        acc[category].push(transaction)
+
+        return acc
+      },
+      {} as Record<string, BudgetTransactionTypeV2[]>,
     )
-  }
-
-  const ConfirmCancel = ({ id }: { id: number }) => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        <IconButton
-          edge="end"
-          onClick={() => {
-            deleteEntry(id)
-            setNoteId(null)
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-
-        <IconButton
-          edge="end"
-          onClick={() => {
-            setSelectedEntry(null)
-            setNoteId(null)
-          }}
-        >
-          <CancelIcon />
-        </IconButton>
-      </Stack>
-    )
-  }
+  }, [budgetTransactions])
 
   return (
     <FlexColWrapper gap={2}>
-      <ShowCaseCard title={"Budget Entries"}>
-        <List className="flex flex-col gap-2">
+      <ShowCaseCard title={""}>
+        <List className="flex flex-col gap-2" disablePadding={true}>
           {budgetTransactions.length === 0 ? (
-            <Typography>The are no budget entries</Typography>
+            <Typography>The are no budget entries yet</Typography>
           ) : (
-            budgetTransactions.map((entry) => {
-              return (
-                <ListItem
-                  key={entry.id}
-                  secondaryAction={
-                    noteId === entry.id ? (
-                      <ConfirmCancel id={entry.id} />
-                    ) : (
-                      <EditDeleteButton id={entry.id} entry={entry} />
-                    )
-                  }
-                  sx={{
-                    backgroundColor: listItemColor,
-                    borderRadius: "15px",
-                  }}
-                >
-                  <ListItemText
-                    primary={`$${entry.amount.toFixed(2)} - ${entry.note}
-                      ${entry.isReturn ? " - RETURNED" : ""}`}
-                    secondary={entry.category}
-                  />
-                </ListItem>
-              )
-            })
+            Object.entries(groupedTransactions)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([category, entries]) => {
+                const total = entries.reduce((sum, entry) => {
+                  return entry.isReturn
+                    ? sum - entry.amount
+                    : sum + entry.amount
+                }, 0)
+
+                return (
+                  <Box key={category}>
+                    <Stack direction={"row"} justifyContent={"space-around"}>
+                      <Typography variant="h6">{category}</Typography>
+                      <Typography variant="h6">
+                        {`$${formattedStringNumber(total)}`}
+                      </Typography>
+                    </Stack>
+
+                    <Stack direction={"column"} spacing={1}>
+                      {entries.map((entry) => {
+                        return (
+                          <ListItem
+                            key={entry.id}
+                            secondaryAction={
+                              noteId === entry.id ? (
+                                <ConfirmCancelButton
+                                  id={entry.id}
+                                  deleteEntry={deleteEntry}
+                                  setNoteId={setNoteId}
+                                  setSelectedEntry={setSelectedEntry}
+                                />
+                              ) : (
+                                <EditDeleteButton
+                                  id={entry.id}
+                                  entry={entry}
+                                  setOpenEditDialog={setOpenEditDialog}
+                                  setSelectedEntry={setSelectedEntry}
+                                  setNoteId={setNoteId}
+                                />
+                              )
+                            }
+                            sx={{
+                              backgroundColor: listItemColor,
+                              borderRadius: "15px",
+                            }}
+                          >
+                            <ListItemText
+                              primary={`$${entry.amount.toFixed(2)} - ${entry.note}`}
+                              secondary={`${entry.isReturn ? "RETURNED" : ""}`}
+                            />
+                          </ListItem>
+                        )
+                      })}
+                    </Stack>
+                  </Box>
+                )
+              })
           )}
         </List>
       </ShowCaseCard>

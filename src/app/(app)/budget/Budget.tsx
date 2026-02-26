@@ -15,6 +15,7 @@ import {
   Select,
   Tab,
   Tabs,
+  Typography,
 } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
@@ -23,23 +24,24 @@ import AddBudgetEntryButton from "./AddBudgetEntryButton"
 
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
+import { accentColorPrimarySelected } from "@/globals/colors"
 
-const TabPanel = ({
-  children,
-  value,
-  index,
-  ...other
-}: {
-  children?: React.ReactNode
-  index: number
-  value: number
-}) => {
-  return (
-    <div hidden={value !== index} {...other}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  )
-}
+// const TabPanel = ({
+//   children,
+//   value,
+//   index,
+//   ...other
+// }: {
+//   children?: React.ReactNode
+//   index: number
+//   value: number
+// }) => {
+//   return (
+//     <div hidden={value !== index} {...other}>
+//       {value === index && <Box>{children}</Box>}
+//     </div>
+//   )
+// }
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2 } =
@@ -77,7 +79,7 @@ const Budget = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
     useState<boolean>(false)
-  const [value, setValue] = useState(0)
+  // const [value, setValue] = useState(0)
 
   const notes = useMemo(() => {
     return [...new Set(budgetTransactionsV2.map((e) => e.note))]
@@ -101,50 +103,54 @@ const Budget = () => {
     })
   }, [budgetTransactionsV2, start, end, prevStart, prevEnd, week])
 
-  const remainingBudgetCategories = useMemo(() => {
-    let remaining: BudgetTypeV2[] = []
+  // const remainingBudgetCategories = useMemo(() => {
+  //   let remaining: BudgetTypeV2[] = []
 
-    budgetCategoriesV2.map((category) => {
-      let budget = category.amount
-      let total = 0
+  //   budgetCategoriesV2.map((category) => {
+  //     let budget = category.amount
+  //     let total = 0
 
-      weeklyTransactions.map((entry) => {
-        if (entry.category === category.category) {
-          if (entry.isReturn) {
-            total -= entry.amount
-          } else {
-            total += entry.amount
-          }
-        }
-      })
+  //     weeklyTransactions.map((entry) => {
+  //       if (entry.category === category.category) {
+  //         if (entry.isReturn) {
+  //           total -= entry.amount
+  //         } else {
+  //           total += entry.amount
+  //         }
+  //       }
+  //     })
 
-      remaining.push({
-        id: category.id,
-        category: category.category,
-        amount: budget - total,
-      })
-    })
+  //     remaining.push({
+  //       id: category.id,
+  //       category: category.category,
+  //       amount: budget - total,
+  //     })
+  //   })
 
-    return remaining
-  }, [budgetCategoriesV2, weeklyTransactions])
+  //   return remaining
+  // }, [budgetCategoriesV2, weeklyTransactions])
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-  }
+  // const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+  //   setValue(newValue)
+  // }
 
   return (
-    <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <FlexColWrapper gap={3}>
+      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Remaining Budget" />
           <Tab label="Entries" />
         </Tabs>
+      </Box> */}
+      <Box
+        height={"48px"}
+        borderBottom={`1px solid ${accentColorPrimarySelected}`}
+        alignContent={"center"}
+      >
+        <Typography variant={"h6"}>Budget Entries</Typography>
       </Box>
 
-      <Box
-        className="flex flex-col sm:flex-row gap-3 h-full"
-        paddingTop={"10px"}
-      >
+      <Box className="flex flex-col sm:flex-row gap-3 h-full">
         <FormControl>
           <InputLabel>Week</InputLabel>
           <Select
@@ -171,22 +177,22 @@ const Budget = () => {
         setOpenAddBudgetEntryDialog={setOpenAddBudgetEntryDialog}
       />
 
-      <TabPanel value={value} index={0}>
+      {/* <TabPanel value={value} index={0}>
         <RemainingBudget
           budgetCategories={remainingBudgetCategories}
           currentTheme={currentTheme}
         />
-      </TabPanel>
+      </TabPanel> */}
 
-      <TabPanel value={value} index={1}>
-        <BudgetEntries
-          budgetTransactions={weeklyTransactions}
-          refreshBudgetTransactions={refreshBudgetTransactionsV2}
-          setOpenEditDialog={setOpenEditDialog}
-          setSelectedEntry={setSelectedEntry}
-          currentTheme={currentTheme}
-        />
-      </TabPanel>
+      {/* <TabPanel value={value} index={1}> */}
+      <BudgetEntries
+        budgetTransactions={weeklyTransactions}
+        refreshBudgetTransactions={refreshBudgetTransactionsV2}
+        setOpenEditDialog={setOpenEditDialog}
+        setSelectedEntry={setSelectedEntry}
+        currentTheme={currentTheme}
+      />
+      {/* </TabPanel> */}
 
       <AddBudgetEntryDialog
         openAddBudgetEntryDialog={openAddBudgetEntryDialog}

@@ -38,22 +38,10 @@ const YearTotals = ({
     expenseTransactionsV2,
     excludedSet,
   )
-  const annualIncome = getYearUpToMonthTotalV2(
-    currentYear,
-    passedMonths,
-    incomeTransactionsV2,
-    excludedSet,
-  )
-  const annualExpense = getYearUpToMonthTotalV2(
-    currentYear,
-    passedMonths,
-    expenseTransactionsV2,
-    excludedSet,
-  )
-  const annualNetIncome = getNetCashFlow(annualIncome, annualExpense)
+  const annualNetIncome = getNetCashFlow(totalIncome, totalExpenses)
   const savingsHealthState = getSavingsHealthState(
     cleanNumber(annualNetIncome),
-    cleanNumber(annualIncome),
+    cleanNumber(totalIncome),
   )
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
 

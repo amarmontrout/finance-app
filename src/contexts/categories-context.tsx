@@ -19,10 +19,7 @@ type CategoryContextType = {
   refreshExpenseCategoryChoicesV2: () => void
   budgetCategoriesV2: BudgetTypeV2[]
   refreshBudgetCategoryChoicesV2: () => void
-  yearChoiceLoading: boolean
-  incomeCategoryLoading: boolean
-  expenseCategoryLoading: boolean
-  budgetLoading: boolean
+  isLoading: boolean
 }
 
 const CategoryContext = createContext<CategoryContextType | null>(null)
@@ -50,10 +47,7 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
   const [budgetCategoriesV2, setBudgetCategoriesV2] = useState<BudgetTypeV2[]>(
     [],
   )
-  const [yearChoiceLoading, setYearChoiceLoading] = useState(false)
-  const [incomeCategoryLoading, setIncomeCategoryLoading] = useState(false)
-  const [expenseCategoryLoading, setexpenseCategoryLoading] = useState(false)
-  const [budgetLoading, setBudgetLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const excludedSet = getExcludedCategorySet(expenseCategoriesV2)
 
@@ -62,7 +56,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Year Choices...")
-    setYearChoiceLoading(true)
     const yearsResult = await getYearChoices({
       userId: user.id,
     })
@@ -74,7 +67,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       (a, b) => Number(b.name) - Number(a.name),
     )
     setYearsV2(sortedYears)
-    setYearChoiceLoading(false)
   }
 
   const refreshIncomeCategoryChoicesV2 = async () => {
@@ -82,7 +74,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Income Category Choices...")
-    setIncomeCategoryLoading(true)
     const incomeCategoryResult = await getIncomeCategories({
       userId: user.id,
     })
@@ -94,7 +85,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       a.name.localeCompare(b.name),
     )
     setIncomeCategoriesV2(sortedIncomeCategories)
-    setIncomeCategoryLoading(false)
   }
 
   const refreshExpenseCategoryChoicesV2 = async () => {
@@ -102,7 +92,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Expense Category Choices...")
-    setexpenseCategoryLoading(true)
     const expenseCategoryResult = await getExpenseCategories({
       userId: user.id,
     })
@@ -114,7 +103,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       a.name.localeCompare(b.name),
     )
     setExpenseCategoriesV2(sortedExpenseCategories)
-    setexpenseCategoryLoading(false)
   }
 
   const refreshBudgetCategoryChoicesV2 = async () => {
@@ -122,7 +110,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Budget Category Choices...")
-    setBudgetLoading(true)
     const budgetCategoryResult = await getBudgetCategories({
       userId: user.id,
     })
@@ -134,14 +121,27 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       a.category.localeCompare(b.category),
     )
     setBudgetCategoriesV2(sortedBudgetCategories)
-    setBudgetLoading(false)
   }
 
   useEffect(() => {
-    refreshYearChoicesV2()
-    refreshIncomeCategoryChoicesV2()
-    refreshExpenseCategoryChoicesV2()
-    refreshBudgetCategoryChoicesV2()
+    if (!user) {
+      return
+    }
+
+    const load = async () => {
+      setIsLoading(true)
+
+      await Promise.all([
+        refreshYearChoicesV2(),
+        refreshIncomeCategoryChoicesV2(),
+        refreshExpenseCategoryChoicesV2(),
+        refreshBudgetCategoryChoicesV2(),
+      ])
+
+      setIsLoading(false)
+    }
+
+    load()
   }, [user])
 
   return (
@@ -156,10 +156,7 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
         refreshExpenseCategoryChoicesV2,
         budgetCategoriesV2,
         refreshBudgetCategoryChoicesV2,
-        yearChoiceLoading,
-        incomeCategoryLoading,
-        expenseCategoryLoading,
-        budgetLoading,
+        isLoading,
       }}
     >
       {props.children}

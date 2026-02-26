@@ -14,9 +14,7 @@ type TransactionsContextType = {
   refreshExpenseTransactionsV2: () => void
   budgetTransactionsV2: BudgetTransactionTypeV2[]
   refreshBudgetTransactionsV2: () => void
-  incomeLoading: boolean
-  expenseLoading: boolean
-  budgetLoading: boolean
+  isLoading: boolean
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -45,21 +43,17 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const [budgetTransactionsV2, setBudgetTransactionsV2] = useState<
     BudgetTransactionTypeV2[]
   >([])
-  const [incomeLoading, setIncomeLoading] = useState(false)
-  const [expenseLoading, setExpenseLoading] = useState(false)
-  const [budgetLoading, setBudgetLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const refreshIncomeTransactionsV2 = async () => {
     if (!user) {
       return
     }
     console.log("Pulling Income Transactions...")
-    setIncomeLoading(true)
     const incomeResult = await getIncome({
       userId: user.id,
     })
     setIncomeTransactionsV2(incomeResult ?? [])
-    setIncomeLoading(false)
   }
 
   const refreshExpenseTransactionsV2 = async () => {
@@ -67,12 +61,10 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Expenses Transactions...")
-    setExpenseLoading(true)
     const expenseResult = await getExpenses({
       userId: user.id,
     })
     setExpenseTransactionsV2(expenseResult ?? [])
-    setExpenseLoading(false)
   }
 
   const refreshBudgetTransactionsV2 = async () => {
@@ -80,18 +72,30 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
       return
     }
     console.log("Pulling Budget Transactions...")
-    setBudgetLoading(true)
     const budgetResult = await getBudget({
       userId: user.id,
     })
     setBudgetTransactionsV2(budgetResult ?? [])
-    setBudgetLoading(false)
   }
 
   useEffect(() => {
-    refreshIncomeTransactionsV2()
-    refreshExpenseTransactionsV2()
-    refreshBudgetTransactionsV2()
+    if (!user) {
+      return
+    }
+
+    const load = async () => {
+      setIsLoading(true)
+
+      await Promise.all([
+        refreshIncomeTransactionsV2(),
+        refreshExpenseTransactionsV2(),
+        refreshBudgetTransactionsV2(),
+      ])
+
+      setIsLoading(false)
+    }
+
+    load()
   }, [user])
 
   return (
@@ -103,9 +107,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
         refreshExpenseTransactionsV2,
         budgetTransactionsV2,
         refreshBudgetTransactionsV2,
-        incomeLoading,
-        expenseLoading,
-        budgetLoading,
+        isLoading,
       }}
     >
       {props.children}

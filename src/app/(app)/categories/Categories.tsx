@@ -6,8 +6,7 @@ import {
   getAnnualCategoryTotalsV2,
   getMonthCategoryTotalsV2,
 } from "@/utils/getTotals"
-import { getCardColor, getCurrentDateInfo } from "@/utils/helperFunctions"
-import { useTheme } from "next-themes"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useEffect, useMemo, useState } from "react"
 import MonthlyCategoryBreakdown from "./MonthlyCategoryBreakdown"
 import AnnualCategoryBreakdown from "./AnnualCategoryBreakdown"
@@ -22,10 +21,7 @@ const Categories = () => {
     refreshExpenseTransactionsV2,
   } = useTransactionContext()
   const { yearsV2 } = useCategoryContext()
-  const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
-
-  const defaultCardColor = getCardColor(currentTheme, "default")
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
@@ -64,17 +60,6 @@ const Categories = () => {
     [selectedYear, selectedMonth, expenseTransactionsV2],
   )
 
-  const topThreeExpenses = useMemo(() => {
-    if (view !== "month") return []
-    if (!monthExpenseCategoryTotals || monthExpenseCategoryTotals.length <= 1) {
-      return []
-    }
-    return monthExpenseCategoryTotals
-      .slice(1)
-      .sort((a, b) => Number(b[1]) - Number(a[1]))
-      .slice(0, 3)
-  }, [monthExpenseCategoryTotals, view])
-
   return (
     <FlexColWrapper gap={2}>
       <DateSelector
@@ -103,8 +88,6 @@ const Categories = () => {
           selectedYear={selectedYear}
           monthIncomeCategoryTotals={monthIncomeCategoryTotals}
           monthExpenseCategoryTotals={monthExpenseCategoryTotals}
-          topThreeExpenses={topThreeExpenses}
-          defaultCardColor={defaultCardColor}
         />
       )}
     </FlexColWrapper>

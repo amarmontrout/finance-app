@@ -1,39 +1,20 @@
-import ColoredInfoCard from "@/components/ColoredInfoCard"
 import PieChart from "@/components/PieChart"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { formattedStringNumber } from "@/utils/helperFunctions"
 
 const MonthlyCategoryBreakdown = ({
   selectedMonth,
   selectedYear,
   monthIncomeCategoryTotals,
   monthExpenseCategoryTotals,
-  topThreeExpenses,
-  defaultCardColor,
 }: {
   selectedMonth: string
   selectedYear: number
   monthIncomeCategoryTotals: any[]
   monthExpenseCategoryTotals: any[]
-  topThreeExpenses: [string, string | number][]
-  defaultCardColor: any
 }) => {
   return (
     <FlexColWrapper gap={2}>
-      <ShowCaseCard title={`Top Expenses for ${selectedMonth} ${selectedYear}`}>
-        <FlexColWrapper gap={2} toRowBreak={"lg"}>
-          {topThreeExpenses.map(([category, amount], idx) => (
-            <ColoredInfoCard
-              key={category}
-              cardColors={defaultCardColor}
-              info={`$${formattedStringNumber(Number(amount))}`}
-              title={`${idx + 1}) ${category}`}
-            />
-          ))}
-        </FlexColWrapper>
-      </ShowCaseCard>
-
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
         <ShowCaseCard
           title={`${selectedMonth} ${selectedYear} Income Category Breakdown`}

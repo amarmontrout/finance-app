@@ -25,14 +25,12 @@ const BudgetEntryForm = ({
   today,
   user,
   refreshBudgetTransactions,
-  week,
   notes,
 }: {
   budgetCategories: BudgetTypeV2[]
   today: DateType
   user: User | null
   refreshBudgetTransactions: () => void
-  week: "prev" | "current"
   notes: string[]
 }) => {
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
@@ -81,11 +79,7 @@ const BudgetEntryForm = ({
       paddingTop={"10px"}
       margin={"0 auto"}
     >
-      <FullDate
-        today={today}
-        setBudgetEntry={setBudgetEntry}
-        disabled={week === "prev"}
-      />
+      <FullDate today={today} setBudgetEntry={setBudgetEntry} />
 
       <FormControl>
         <InputLabel>Category</InputLabel>
@@ -95,7 +89,6 @@ const BudgetEntryForm = ({
           value={budgetEntry.category}
           name={"category"}
           onChange={(e) => handleCategory(e)}
-          disabled={week === "prev"}
         >
           {budgetCategories.map((budget) => {
             return (
@@ -109,7 +102,6 @@ const BudgetEntryForm = ({
         <Autocomplete
           className="w-full lg:w-[175px]"
           freeSolo
-          disabled={week === "prev"}
           options={notes.map((option) => option)}
           value={noteValue}
           onChange={(event: any, newValue: string | null) => {
@@ -130,7 +122,6 @@ const BudgetEntryForm = ({
         value={budgetEntry.amount}
         setValue={setBudgetEntry}
         smallWidthBp={"lg"}
-        disabled={week === "prev"}
       />
 
       <FormControlLabel
@@ -151,7 +142,6 @@ const BudgetEntryForm = ({
 
       <Button
         variant={"contained"}
-        disabled={week === "prev"}
         onClick={save}
         sx={{
           backgroundColor: accentColorSecondary,

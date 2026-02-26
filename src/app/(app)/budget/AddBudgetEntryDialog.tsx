@@ -16,7 +16,6 @@ const AddBudgetEntryDialog = ({
   budgetCategories,
   today,
   user,
-  week,
   refreshBudgetTransactions,
   notes,
   currentTheme,
@@ -26,7 +25,6 @@ const AddBudgetEntryDialog = ({
   budgetCategories: BudgetTypeV2[]
   today: DateType
   user: User | null
-  week: "current" | "prev"
   refreshBudgetTransactions: () => void
   notes: string[]
   currentTheme: string | undefined
@@ -41,7 +39,6 @@ const AddBudgetEntryDialog = ({
           today={today}
           user={user}
           refreshBudgetTransactions={refreshBudgetTransactions}
-          week={week}
           notes={notes}
         />
       </DialogContent>

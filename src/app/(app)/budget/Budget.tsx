@@ -194,7 +194,6 @@ const Budget = () => {
         budgetCategories={budgetCategoriesV2}
         today={TODAY}
         user={user}
-        week={week}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         notes={notes}
         currentTheme={currentTheme}

@@ -1,6 +1,13 @@
 import { MONTHS } from "@/globals/globals"
 import { ChoiceTypeV2, HookSetter } from "@/utils/type"
-import { Box, FormControl, InputLabel, Select, MenuItem } from "@mui/material"
+import {
+  Box,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Stack,
+} from "@mui/material"
 
 const DateSelector = ({
   view,
@@ -39,45 +46,47 @@ const DateSelector = ({
         </Select>
       </FormControl>
 
-      <FormControl>
-        <InputLabel>Year</InputLabel>
-        <Select
-          className="w-full sm:w-[175px]"
-          label="Year"
-          value={selectedYear}
-          name={"year"}
-          onChange={(e) => setSelectedYear(e.target.value)}
-        >
-          {years.map((year) => {
-            return (
-              <MenuItem key={year.name} value={year.name}>
-                {year.name}
-              </MenuItem>
-            )
-          })}
-        </Select>
-      </FormControl>
+      <Stack direction={"row"} spacing={2}>
+        {view === "month" && (
+          <FormControl fullWidth>
+            <InputLabel>Month</InputLabel>
+            <Select
+              className="w-full sm:w-[175px]"
+              label="Month"
+              value={selectedMonth}
+              name={"month"}
+              onChange={(e) => setSelectedMonth(e.target.value)}
+            >
+              {MONTHS.map((month) => {
+                return (
+                  <MenuItem key={month} value={month}>
+                    {month}
+                  </MenuItem>
+                )
+              })}
+            </Select>
+          </FormControl>
+        )}
 
-      {view === "month" && (
-        <FormControl>
-          <InputLabel>Month</InputLabel>
+        <FormControl fullWidth>
+          <InputLabel>Year</InputLabel>
           <Select
             className="w-full sm:w-[175px]"
-            label="Month"
-            value={selectedMonth}
-            name={"month"}
-            onChange={(e) => setSelectedMonth(e.target.value)}
+            label="Year"
+            value={selectedYear}
+            name={"year"}
+            onChange={(e) => setSelectedYear(e.target.value)}
           >
-            {MONTHS.map((month) => {
+            {years.map((year) => {
               return (
-                <MenuItem key={month} value={month}>
-                  {month}
+                <MenuItem key={year.name} value={year.name}>
+                  {year.name}
                 </MenuItem>
               )
             })}
           </Select>
         </FormControl>
-      )}
+      </Stack>
     </Box>
   )
 }

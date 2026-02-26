@@ -2,11 +2,7 @@
 
 import { Box, Divider, Stack, Typography } from "@mui/material"
 import Logo from "@/components/Logo"
-import {
-  NAV_QUICK_INFO,
-  NAV_SETTINGS,
-  NAV_TRANSACTIONS,
-} from "@/globals/globals"
+import { NAV_QUICK_INFO, NAV_TRANSACTIONS } from "@/globals/globals"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { darkMode, lightMode } from "@/globals/colors"
@@ -70,27 +66,6 @@ export const Navbar = () => {
           Transactions
         </Typography>
         {NAV_TRANSACTIONS.map((item) => {
-          return (
-            <PageLink
-              item={item}
-              active={pathname === item.link}
-              key={item.name}
-            />
-          )
-        })}
-
-        <Divider
-          orientation="horizontal"
-          sx={{
-            borderColor:
-              currentTheme === "light"
-                ? lightMode.borderStrong
-                : darkMode.borderStrong,
-            borderRightWidth: 2,
-          }}
-        />
-
-        {NAV_SETTINGS.map((item) => {
           return (
             <PageLink
               item={item}

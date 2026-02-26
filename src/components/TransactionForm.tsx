@@ -22,13 +22,6 @@ const today = new Date()
 const currentMonth = today.getMonth()
 const currentYear = today.getFullYear()
 
-export type TransactionType = {
-  month: string
-  year: string
-  category: string
-  amount: string
-}
-
 const TransactionForm = ({
   categories,
   type,

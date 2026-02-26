@@ -104,11 +104,11 @@ const BudgetEntryForm = ({
           freeSolo
           options={notes.map((option) => option)}
           value={noteValue}
-          onChange={(event: any, newValue: string | null) => {
+          onChange={(_: any, newValue: string | null) => {
             setNoteValue(newValue)
           }}
           inputValue={budgetEntry.note}
-          onInputChange={(event, newInputValue) => {
+          onInputChange={(_, newInputValue) => {
             setBudgetEntry((prev) => ({
               ...prev,
               note: newInputValue,
@@ -147,6 +147,7 @@ const BudgetEntryForm = ({
           backgroundColor: accentColorSecondary,
         }}
         loading={isLoading}
+        disabled={budgetEntry.amount === 0 || budgetEntry.note === ""}
       >
         {"Add"}
       </Button>

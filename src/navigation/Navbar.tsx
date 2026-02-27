@@ -84,29 +84,20 @@ export const HorizontalNavbar = () => {
 
   return (
     <Stack
-      className="p-[.25rem] w-full"
-      direction={"row"}
-      spacing={1}
-      width={"100%"}
+      direction="row"
+      justifyContent="space-around"
+      alignItems="top"
+      height="100%"
+      width={"fit-content"}
+      px={1}
     >
-      {NAV_QUICK_INFO.map((item) => {
-        return (
-          <HorizontalPageLink
-            item={item}
-            active={pathname === item.link}
-            key={item.name}
-          />
-        )
-      })}
-      {NAV_TRANSACTIONS.map((item) => {
-        return (
-          <HorizontalPageLink
-            item={item}
-            active={pathname === item.link}
-            key={item.name}
-          />
-        )
-      })}
+      {NAV_QUICK_INFO.concat(NAV_TRANSACTIONS).map((item) => (
+        <HorizontalPageLink
+          item={item}
+          active={pathname === item.link}
+          key={item.name}
+        />
+      ))}
     </Stack>
   )
 }

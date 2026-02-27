@@ -31,9 +31,9 @@ export const MONTHS = [
 ]
 export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: HomeIcon},
-  {"name": "Insights", "link": "/insights", icon: InsightsIcon},
-  {"name": "Trends", "link": "/trends", icon: MultilineChartIcon},
-  {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
+  // {"name": "Insights", "link": "/insights", icon: InsightsIcon},
+  // {"name": "Trends", "link": "/trends", icon: MultilineChartIcon},
+  // {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
 ]
 export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Transactions", "link": "/transactions", icon: AccountBalanceIcon},

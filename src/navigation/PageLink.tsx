@@ -1,7 +1,7 @@
 import { accentColorPrimarySelected } from "@/globals/colors"
 import { linkStyle, navSelection } from "@/globals/styles"
 import { SvgIconComponent } from "@mui/icons-material"
-import { Box, Typography } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 import Link from "next/link"
 
 export type PageLinkType = {
@@ -51,24 +51,26 @@ export const HorizontalPageLink = ({
   active: boolean
 }) => {
   return (
-    <Link href={item.link}>
-      <Box
+    <Link key={item.name} href={item.link} style={{ textDecoration: "none" }}>
+      <Stack
+        direction="column"
+        spacing={0.5}
+        alignItems="center"
+        justifyContent="center"
         sx={{
-          cursor: "pointer",
-          borderRadius: "15px",
-          bgcolor: active ? accentColorPrimarySelected : "transparent",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "8px",
+          py: 1,
+          px: 2,
+          borderRadius: 2,
+          color: active ? "primary.main" : "text.secondary",
+          transition: "all 0.2s ease-in-out",
+          "&:active": {
+            transform: "scale(0.95)",
+          },
         }}
       >
-        <item.icon />
-        <Typography fontSize="10px" sx={{ mt: 0.25 }}>
-          {item.name}
-        </Typography>
-      </Box>
+        <item.icon fontSize="medium" />
+        <Typography fontSize={11}>{item.name}</Typography>
+      </Stack>
     </Link>
   )
 }

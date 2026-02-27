@@ -102,16 +102,16 @@ export default function RootLayout({
               <Box
                 className="flex flex-col md:hidden"
                 component="nav"
-                bottom={20}
-                width={"fit-content"}
-                position={"absolute"}
-                left={"50%"}
+                position="fixed"
+                bottom={0}
+                width="100%"
+                height="85px"
+                alignItems={"center"}
                 sx={{
-                  transform: "translateX(-50%)",
-                  bgcolor: "rgba(255, 255, 255, 0.15)",
-                  backdropFilter: "blur(6px) saturate(160%)",
-                  borderRadius: "15px",
-                  boxShadow: 3,
+                  bgcolor: "background.paper",
+                  borderTop: 1,
+                  borderColor: "divider",
+                  boxShadow: "0 -2px 8px rgba(0,0,0,0.1)",
                   zIndex: 1000,
                 }}
               >

@@ -109,7 +109,7 @@ const TransactionRow = ({
   const [isActioning, setIsActioning] = useState(false)
   const [isSwiping, setIsSwiping] = useState(false)
 
-  const EDGE_WIDTH = 20
+  const EDGE_WIDTH = 100
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touchX = e.touches[0].clientX
@@ -220,6 +220,7 @@ const TransactionRow = ({
             bgcolor: "background.paper",
             border: "1px solid",
             borderColor: "divider",
+            borderRadius: 2,
           }}
         >
           <Stack>

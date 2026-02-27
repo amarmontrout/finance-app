@@ -66,7 +66,7 @@ const SelectYearChoices = ({
                   textTransform: "none",
                 }}
               >
-                {year}
+                <Typography variant="h6">{year}</Typography>
               </ToggleButton>
             ))}
           </Box>
@@ -115,7 +115,7 @@ const SelectIncomeCategories = ({
                   textTransform: "none",
                 }}
               >
-                {category}
+                <Typography variant="h6">{category}</Typography>
               </ToggleButton>
             ))}
           </Box>
@@ -165,7 +165,7 @@ const SelectExpenseCategories = ({
                   textTransform: "none",
                 }}
               >
-                {category}
+                <Typography variant="h6">{category}</Typography>
               </ToggleButton>
             ))}
           </Box>

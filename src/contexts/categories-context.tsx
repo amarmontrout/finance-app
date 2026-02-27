@@ -19,6 +19,7 @@ type CategoryContextType = {
   refreshExpenseCategoryChoicesV2: () => void
   budgetCategoriesV2: BudgetTypeV2[]
   refreshBudgetCategoryChoicesV2: () => void
+  loadCategories: () => void
   isLoading: boolean
 }
 
@@ -123,25 +124,25 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
     setBudgetCategoriesV2(sortedBudgetCategories)
   }
 
+  const loadCategories = async () => {
+    setIsLoading(true)
+
+    await Promise.all([
+      refreshYearChoicesV2(),
+      refreshIncomeCategoryChoicesV2(),
+      refreshExpenseCategoryChoicesV2(),
+      refreshBudgetCategoryChoicesV2(),
+    ])
+
+    setIsLoading(false)
+  }
+
   useEffect(() => {
     if (!user) {
       return
     }
 
-    const load = async () => {
-      setIsLoading(true)
-
-      await Promise.all([
-        refreshYearChoicesV2(),
-        refreshIncomeCategoryChoicesV2(),
-        refreshExpenseCategoryChoicesV2(),
-        refreshBudgetCategoryChoicesV2(),
-      ])
-
-      setIsLoading(false)
-    }
-
-    load()
+    loadCategories()
   }, [user])
 
   return (
@@ -156,6 +157,7 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
         refreshExpenseCategoryChoicesV2,
         budgetCategoriesV2,
         refreshBudgetCategoryChoicesV2,
+        loadCategories,
         isLoading,
       }}
     >

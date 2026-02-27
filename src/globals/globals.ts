@@ -39,3 +39,27 @@ export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Transactions", "link": "/transactions", icon: AccountBalanceIcon},
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
+export const INITIAL_INCOME_CATEGORIES = [
+  "Paycheck",
+  "Bonus",
+  "Side Hustle",
+  "Dividends",
+  "Interest",
+  "Rental Income",
+  "Captial Gains",
+  "Gift",
+  "Refund",
+  "Cash"
+]
+export const INITIAL_EXPENSE_CATEGORIES = [
+  "Mortgage",
+  "Rent",
+  "HOA",
+  "Credit Card",
+  "Electric",
+  "Internet",
+  "Phone",
+  "Trash",
+  "Water",
+  "Car"
+]

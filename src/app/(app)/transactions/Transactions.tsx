@@ -77,13 +77,13 @@ const Transactions = () => {
     <FlexColWrapper gap={3}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tab} onChange={handleChangeTab}>
-          <Tab label="Totals" />
           <Tab label="Transactions" />
+          <Tab label="Totals" />
         </Tabs>
       </Box>
 
       <Stack direction={"row"} spacing={2}>
-        {tab !== 0 && (
+        {tab === 0 && (
           <FormControl fullWidth>
             <InputLabel>Month</InputLabel>
             <Select
@@ -131,17 +131,6 @@ const Transactions = () => {
       />
 
       <TabPanel value={tab} index={0}>
-        <TransactionTotals
-          selectedYear={selectedYear}
-          currentYear={currentYear}
-          passedMonths={passedMonths}
-          incomeTransactionsV2={incomeTransactionsV2}
-          expenseTransactionsV2={expenseTransactionsV2}
-          excludedSet={excludedSet}
-        />
-      </TabPanel>
-
-      <TabPanel value={tab} index={1}>
         <TransactionFeed
           selectedMonth={selectedMonth}
           selectedYear={selectedYear}
@@ -150,6 +139,17 @@ const Transactions = () => {
           setSelectedTransaction={setSelectedTransaction}
           openEditDialog={openEditDialog}
           setOpenEditDialog={setOpenEditDialog}
+        />
+      </TabPanel>
+
+      <TabPanel value={tab} index={1}>
+        <TransactionTotals
+          selectedYear={selectedYear}
+          currentYear={currentYear}
+          passedMonths={passedMonths}
+          incomeTransactionsV2={incomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
+          excludedSet={excludedSet}
         />
       </TabPanel>
 

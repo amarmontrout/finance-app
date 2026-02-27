@@ -1,10 +1,9 @@
-import { accentColorSecondary } from "@/globals/colors"
+import { accentColorPrimary } from "@/globals/colors"
 import { HookSetter } from "@/utils/type"
 import {
   Box,
   Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Stack,
@@ -25,6 +24,9 @@ import {
   saveYearChoice,
 } from "../api/Choices/requests"
 import { makeId } from "@/utils/helperFunctions"
+import { doLogout } from "../api/Auth/requests"
+import { AuthError } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
 
 const SelectYearChoices = ({
   initialYears,
@@ -44,6 +46,7 @@ const SelectYearChoices = ({
         <ToggleButtonGroup
           value={yearChoices}
           onChange={handleSelectYearChoices}
+          color="primary"
           fullWidth
         >
           <Box
@@ -92,6 +95,7 @@ const SelectIncomeCategories = ({
         <ToggleButtonGroup
           value={incomeChoices}
           onChange={handleSelectIncomeChoices}
+          color="secondary"
           fullWidth
         >
           <Box
@@ -141,6 +145,7 @@ const SelectExpenseCategories = ({
         <ToggleButtonGroup
           value={expenseChoices}
           onChange={handleSelectExpenseChoices}
+          color="error"
           fullWidth
         >
           <Box
@@ -185,6 +190,7 @@ const SetUpDialog = ({
   loadCategories: () => void
 }) => {
   const user = useUser()
+  const router = useRouter()
 
   const [yearChoices, setYearChoices] = useState<number[]>([currentYear])
   const [incomeChoices, setIncomeChoices] = useState<string[]>([])
@@ -265,13 +271,19 @@ const SetUpDialog = ({
     <Dialog open={setUpDialogOpen} fullScreen>
       <DialogTitle textAlign={"center"}>
         <Stack>
-          <Typography variant="h5">{"Welcome"}</Typography>
-          <Typography>{"Set up your account"}</Typography>
+          <Typography variant="h5">{"Initial Account Setup"}</Typography>
         </Stack>
       </DialogTitle>
 
       <DialogContent>
-        <Stack direction={"column"} padding={"24px 0"} gap={2}>
+        <Stack
+          sx={{
+            paddingTop: 0,
+          }}
+          direction={"column"}
+          padding={"24px 0"}
+          gap={2}
+        >
           <SelectYearChoices
             initialYears={initialYears}
             yearChoices={yearChoices}
@@ -287,28 +299,45 @@ const SetUpDialog = ({
             expenseChoices={expenseChoices}
             handleSelectExpenseChoices={handleSelectExpenseChoices}
           />
+          <Stack direction={"row"} spacing={1}>
+            <Button
+              variant={"outlined"}
+              size="large"
+              color="error"
+              onClick={() => {
+                doLogout({
+                  router: router,
+                  errorHandler: (error: AuthError) => {
+                    console.error(error.message)
+                  },
+                })
+              }}
+            >
+              {"Logout"}
+            </Button>
+
+            <Button
+              fullWidth
+              variant={"contained"}
+              size="large"
+              loading={isLoading}
+              disabled={
+                yearChoices.length === 0 ||
+                incomeChoices.length === 0 ||
+                expenseChoices.length === 0
+              }
+              onClick={() => {
+                save()
+              }}
+              sx={{
+                backgroundColor: accentColorPrimary,
+              }}
+            >
+              {"Save"}
+            </Button>
+          </Stack>
         </Stack>
       </DialogContent>
-
-      <DialogActions>
-        <Button
-          variant={"contained"}
-          loading={isLoading}
-          disabled={
-            yearChoices.length === 0 ||
-            incomeChoices.length === 0 ||
-            expenseChoices.length === 0
-          }
-          onClick={() => {
-            save()
-          }}
-          sx={{
-            backgroundColor: accentColorSecondary,
-          }}
-        >
-          {"Save"}
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }

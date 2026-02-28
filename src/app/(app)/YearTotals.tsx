@@ -44,6 +44,10 @@ const YearTotals = ({
     cleanNumber(totalIncome),
   )
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
+  const hasNet = Number(annualNetIncome) !== 0
+  const netTitle = `${currentMonth} Net Cash${
+    hasNet ? ` (${savingsHealthState.toUpperCase()})` : ""
+  }`
 
   return (
     <ShowCaseCard title={"Monthly Summary"}>
@@ -61,8 +65,7 @@ const YearTotals = ({
         <ColoredInfoCard
           cardColors={savingsColor}
           info={`$${annualNetIncome}`}
-          title={`${currentMonth} Net Cash 
-          (${savingsHealthState.toUpperCase()})`}
+          title={netTitle}
         />
       </FlexColWrapper>
     </ShowCaseCard>

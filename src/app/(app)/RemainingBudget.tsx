@@ -7,6 +7,7 @@ import {
   getWeekBounds,
 } from "@/utils/helperFunctions"
 import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
+import { Typography } from "@mui/material"
 import { useMemo } from "react"
 
 const RemainingBudget = ({
@@ -83,21 +84,27 @@ const RemainingBudget = ({
   return (
     <ShowCaseCard title={"Remaining Weekly Budget"}>
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        {remainingBudgetCategories.map((entry) => {
-          const category = entry.category
-          const remaining = entry.amount
-          const cardColor =
-            remaining < 0 ? negativeCardColor : positiveCardColor
+        {remainingBudgetCategories.length === 0 ? (
+          <Typography width={"100%"} textAlign={"center"}>
+            Set up your budget in settings
+          </Typography>
+        ) : (
+          remainingBudgetCategories.map((entry) => {
+            const category = entry.category
+            const remaining = entry.amount
+            const cardColor =
+              remaining < 0 ? negativeCardColor : positiveCardColor
 
-          return (
-            <ColoredInfoCard
-              key={category}
-              cardColors={cardColor}
-              title={category}
-              info={`$${formattedStringNumber(remaining)}`}
-            />
-          )
-        })}
+            return (
+              <ColoredInfoCard
+                key={category}
+                cardColors={cardColor}
+                title={category}
+                info={`$${formattedStringNumber(remaining)}`}
+              />
+            )
+          })
+        )}
       </FlexColWrapper>
     </ShowCaseCard>
   )

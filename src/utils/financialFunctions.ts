@@ -6,6 +6,7 @@ export const getNetCashFlow = (
 ) => {
   const incomeNumber = cleanNumber(income)
   const expenseNumber = cleanNumber(expense)
+  console.log(formattedStringNumber(incomeNumber-expenseNumber))
   return formattedStringNumber(incomeNumber-expenseNumber)
 }
 

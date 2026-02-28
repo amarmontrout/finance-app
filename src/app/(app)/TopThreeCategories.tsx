@@ -81,9 +81,15 @@ const TopThreeExpenses = ({
             title={`${idx + 1}) ${category}`}
           />
         ))}
-        <Typography width={"100%"} textAlign={"center"}>
-          {`TOTALING ${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
-        </Typography>
+        {topThree.length !== 0 ? (
+          <Typography width={"100%"} textAlign={"center"}>
+            {`TOTALING ${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
+          </Typography>
+        ) : (
+          <Typography width={"100%"} textAlign={"center"}>
+            Enter your expenses in transactions
+          </Typography>
+        )}
       </FlexColWrapper>
     </ShowCaseCard>
   )

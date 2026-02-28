@@ -117,7 +117,7 @@ export const makeId = (
  * @returns A string depicting the health state
  */
 export const getSavingsHealthState = (net: number, total: number) => {
-  if (total === 0) return "concerning"
+  if (total === 0) return "default"
 
   const percent = net / total
 

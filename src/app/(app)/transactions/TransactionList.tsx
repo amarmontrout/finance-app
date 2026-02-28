@@ -62,35 +62,41 @@ const TransactionList = ({
       <Typography variant={"h5"} mb={"5px"}>
         {title}
       </Typography>
-
-      <Stack spacing={1}>
-        {transactions.map((transaction) => (
-          <ListItemSwipe
-            key={transaction.id}
-            mainTitle={transaction.category}
-            secondaryTitle={""}
-            amount={`$${formattedStringNumber(transaction.amount)}`}
-            amountColor={type === "income" ? "success.main" : "error.main"}
-            buttonCondition={
-              selectedTransaction?.id === transaction.id && !openEditDialog
-            }
-            onDelete={() => {
-              handleDeleteTransaction(transaction.id, type)
-            }}
-            onSetDelete={() => {
-              setSelectedTransaction({ id: transaction.id, type: type })
-            }}
-            onCancelDelete={() => {
-              setSelectedTransaction(null)
-            }}
-            onEdit={() => {
-              setOpenEditDialog(true)
-              setSelectedTransaction({ id: transaction.id, type: type })
-            }}
-            currentTheme={currentTheme}
-          />
-        ))}
-      </Stack>
+      {transactions.length === 0 ? (
+        <Typography
+          width={"100%"}
+          textAlign={"center"}
+        >{`There are no ${type} transactions yet`}</Typography>
+      ) : (
+        <Stack spacing={1}>
+          {transactions.map((transaction) => (
+            <ListItemSwipe
+              key={transaction.id}
+              mainTitle={transaction.category}
+              secondaryTitle={""}
+              amount={`$${formattedStringNumber(transaction.amount)}`}
+              amountColor={type === "income" ? "success.main" : "error.main"}
+              buttonCondition={
+                selectedTransaction?.id === transaction.id && !openEditDialog
+              }
+              onDelete={() => {
+                handleDeleteTransaction(transaction.id, type)
+              }}
+              onSetDelete={() => {
+                setSelectedTransaction({ id: transaction.id, type: type })
+              }}
+              onCancelDelete={() => {
+                setSelectedTransaction(null)
+              }}
+              onEdit={() => {
+                setOpenEditDialog(true)
+                setSelectedTransaction({ id: transaction.id, type: type })
+              }}
+              currentTheme={currentTheme}
+            />
+          ))}
+        </Stack>
+      )}
     </Stack>
   )
 }

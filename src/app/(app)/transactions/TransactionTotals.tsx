@@ -75,50 +75,100 @@ const TransactionTotals = ({
   }, [expenseTransactionsV2, selectedYear, excludedSet])
 
   return (
-    <ShowCaseCard title={""}>
-      <Stack direction={"row"} width={"100%"} spacing={1}>
-        <Stack direction={"column"} width={"30%"}>
-          <Typography width={"100%"} textAlign={"center"}>
-            Month
-          </Typography>
-          {MONTHS.map((month) => {
-            return (
-              <Typography key={month} variant={"h6"}>
-                {month}
-              </Typography>
-            )
-          })}
-          <hr />
-          <Typography variant={"h6"}>
+    <ShowCaseCard title="">
+      <Stack spacing={2} width="100%">
+        {/* Header */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          px={1}
+          pb={1}
+          sx={{ borderBottom: "1px solid", borderColor: "divider" }}
+        >
+          <Typography fontWeight={700}>Month</Typography>
+          <Stack direction="row" spacing={9}>
+            <Typography fontWeight={700} color="success.main">
+              Income
+            </Typography>
+            <Typography fontWeight={700} color="error.main">
+              Expense
+            </Typography>
+          </Stack>
+        </Stack>
+
+        {/* Monthly Rows */}
+        <Stack spacing={1}>
+          {MONTHS.map((month) => (
+            <Stack
+              key={month}
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+              px={1}
+            >
+              <Typography>{month}</Typography>
+
+              <Stack direction="row" spacing={6}>
+                <Typography
+                  fontWeight={500}
+                  color="success.main"
+                  textAlign="right"
+                  minWidth={90}
+                >
+                  ${formattedStringNumber(incomeByMonth[month] ?? 0)}
+                </Typography>
+
+                <Typography
+                  fontWeight={500}
+                  color="error.main"
+                  textAlign="right"
+                  minWidth={90}
+                >
+                  ${formattedStringNumber(ExpenseByMonth[month] ?? 0)}
+                </Typography>
+              </Stack>
+            </Stack>
+          ))}
+        </Stack>
+
+        {/* Summary Footer */}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          pt={2}
+          mt={1}
+          sx={{
+            borderTop: "1px solid",
+            borderColor: "divider",
+          }}
+        >
+          <Typography fontWeight={700} fontSize="1.1rem">
             {selectedYear === currentYear && "YTD "}
             {selectedYear}
           </Typography>
-        </Stack>
 
-        <Stack direction={"column"} width={"35%"} textAlign={"right"}>
-          <Typography width={"100%"} textAlign={"center"}>
-            Income
-          </Typography>
-          {MONTHS.map((month) => (
-            <Typography key={month} color="success" variant="h6">
-              ${formattedStringNumber(incomeByMonth[month] ?? 0)}
+          <Stack direction="row" spacing={6}>
+            <Typography
+              fontWeight={700}
+              fontSize="1.1rem"
+              color="success.main"
+              minWidth={90}
+              textAlign="right"
+            >
+              ${yearIncomeTotal}
             </Typography>
-          ))}
-          <hr />
-          <Typography variant={"h6"}>{`$${yearIncomeTotal}`}</Typography>
-        </Stack>
 
-        <Stack direction={"column"} width={"35%"} textAlign={"right"}>
-          <Typography width={"100%"} textAlign={"center"}>
-            Expense
-          </Typography>
-          {MONTHS.map((month) => (
-            <Typography key={month} color="error" variant="h6">
-              ${formattedStringNumber(ExpenseByMonth[month] ?? 0)}
+            <Typography
+              fontWeight={700}
+              fontSize="1.1rem"
+              color="error.main"
+              minWidth={90}
+              textAlign="right"
+            >
+              ${yearExpenseTotal}
             </Typography>
-          ))}
-          <hr />
-          <Typography variant={"h6"}>{`$${yearExpenseTotal}`}</Typography>
+          </Stack>
         </Stack>
       </Stack>
     </ShowCaseCard>

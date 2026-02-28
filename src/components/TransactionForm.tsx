@@ -1,58 +1,40 @@
 "use client"
 
 import {
-  Box,
-  Button,
   FormControl,
   InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
+  Stack,
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { MONTHS } from "@/globals/globals"
-import { accentColorSecondary } from "@/globals/colors"
 import { MoneyInputV2 } from "./MoneyInput"
-import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
-import { saveExpenses, saveIncome } from "@/app/api/Transactions/requests"
-import { useUser } from "@/hooks/useUser"
+import { ChoiceTypeV2, HookSetter, TransactionTypeV2 } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
 
-const today = new Date()
-const currentMonth = today.getMonth()
-const currentYear = today.getFullYear()
-
 const TransactionForm = ({
+  transaction,
+  setTransaction,
   categories,
-  type,
-  refreshTransactions,
   years,
+  currentMonth,
+  currentYear,
 }: {
+  transaction: TransactionTypeV2
+  setTransaction: HookSetter<TransactionTypeV2>
   categories: ChoiceTypeV2[]
-  type: "income" | "expenses"
-  refreshTransactions: () => void
   years: ChoiceTypeV2[]
+  currentMonth: string
+  currentYear: number
 }) => {
-  const TRANSACTION_INIT: TransactionTypeV2 = {
-    id: Number(makeId(8)),
-    month: MONTHS[currentMonth],
-    year: currentYear,
-    category: "",
-    amount: 0,
-  }
-
-  const user = useUser()
-
-  const [transaction, setTransaction] =
-    useState<TransactionTypeV2>(TRANSACTION_INIT)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
-
   useEffect(() => {
     if (!categories.length) return
 
     setTransaction({
       id: Number(makeId(8)),
-      month: MONTHS[currentMonth],
+      month: currentMonth,
       year: currentYear,
       category: categories[0].name,
       amount: 0,
@@ -83,40 +65,11 @@ const TransactionForm = ({
     }))
   }
 
-  const resetFormData = () => {
-    setTransaction(TRANSACTION_INIT)
-  }
-
-  const save = async () => {
-    if (!user) return
-
-    setIsLoading(true)
-
-    if (type === "income") {
-      await saveIncome({
-        userId: user?.id,
-        body: transaction,
-      })
-      setIsLoading(false)
-    } else if (type === "expenses") {
-      await saveExpenses({
-        userId: user.id,
-        body: transaction,
-      })
-      setIsLoading(false)
-    }
-
-    refreshTransactions()
-    resetFormData()
-  }
-
   return (
-    <Box
-      className="flex flex-col xl:flex-row gap-5 sm:w-fit"
-      paddingTop={"10px"}
-      margin={"0 auto"}
-    >
-      <Box className="flex flex-row gap-5">
+    <Stack spacing={3}>
+      <MoneyInputV2 value={transaction.amount} setValue={setTransaction} />
+
+      <Stack direction={"row"} spacing={1}>
         <FormControl fullWidth>
           <InputLabel>Month</InputLabel>
           <Select
@@ -131,6 +84,7 @@ const TransactionForm = ({
             })}
           </Select>
         </FormControl>
+
         <FormControl fullWidth>
           <InputLabel>Year</InputLabel>
           <Select
@@ -149,43 +103,23 @@ const TransactionForm = ({
             })}
           </Select>
         </FormControl>
-      </Box>
+      </Stack>
 
-      <Box className="flex flex-col sm:flex-row gap-5">
-        <FormControl>
-          <InputLabel>Category</InputLabel>
-          <Select
-            className="w-full sm:w-[175px]"
-            label="Category"
-            value={transaction.category}
-            name={"category"}
-            onChange={(e) => handleCategory(e)}
-          >
-            {categories.map((category) => {
-              return <MenuItem value={category.name}>{category.name}</MenuItem>
-            })}
-          </Select>
-        </FormControl>
-
-        <MoneyInputV2
-          value={transaction.amount}
-          setValue={setTransaction}
-          smallWidthBp={"sm"}
-        />
-      </Box>
-
-      <Button
-        variant={"contained"}
-        disabled={transaction.amount === 0}
-        onClick={save}
-        sx={{
-          backgroundColor: accentColorSecondary,
-        }}
-        loading={isLoading}
-      >
-        {`Add ${type}`}
-      </Button>
-    </Box>
+      <FormControl>
+        <InputLabel>Category</InputLabel>
+        <Select
+          className="w-full sm:w-[175px]"
+          label="Category"
+          value={transaction.category}
+          name={"category"}
+          onChange={(e) => handleCategory(e)}
+        >
+          {categories.map((category) => {
+            return <MenuItem value={category.name}>{category.name}</MenuItem>
+          })}
+        </Select>
+      </FormControl>
+    </Stack>
   )
 }
 

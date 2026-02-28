@@ -30,7 +30,7 @@ const AddBudgetEntryDialog = ({
   currentTheme: string | undefined
 }) => {
   return (
-    <Dialog open={openAddBudgetEntryDialog} fullWidth>
+    <Dialog open={openAddBudgetEntryDialog} fullScreen>
       <DialogTitle>{"Add Budget Entry"}</DialogTitle>
 
       <DialogContent>

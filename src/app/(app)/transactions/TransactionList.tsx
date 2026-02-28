@@ -69,7 +69,7 @@ const TransactionList = ({
             key={transaction.id}
             mainTitle={transaction.category}
             secondaryTitle={""}
-            amount={`${formattedStringNumber(transaction.amount)}`}
+            amount={`$${formattedStringNumber(transaction.amount)}`}
             amountColor={type === "income" ? "success.main" : "error.main"}
             buttonCondition={
               selectedTransaction?.id === transaction.id && !openEditDialog

@@ -1,14 +1,24 @@
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  Stack,
+  Typography,
 } from "@mui/material"
 import BudgetEntryForm from "./BudgetEntryForm"
-import { darkMode, lightMode } from "@/globals/colors"
-import { BudgetTypeV2, DateType, HookSetter } from "@/utils/type"
+import {
+  BudgetTransactionTypeV2,
+  BudgetTypeV2,
+  DateType,
+  HookSetter,
+} from "@/utils/type"
 import { User } from "@supabase/supabase-js"
+import CloseIcon from "@mui/icons-material/Close"
+import SaveIcon from "@mui/icons-material/Save"
+import { useState } from "react"
+import { makeId } from "@/utils/helperFunctions"
+import { saveBudget } from "@/app/api/Transactions/requests"
 
 const AddBudgetEntryDialog = ({
   openAddBudgetEntryDialog,
@@ -18,7 +28,6 @@ const AddBudgetEntryDialog = ({
   user,
   refreshBudgetTransactions,
   notes,
-  currentTheme,
 }: {
   openAddBudgetEntryDialog: boolean
   setOpenAddBudgetEntryDialog: HookSetter<boolean>
@@ -27,37 +36,79 @@ const AddBudgetEntryDialog = ({
   user: User | null
   refreshBudgetTransactions: () => void
   notes: string[]
-  currentTheme: string | undefined
 }) => {
+  const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
+    id: Number(makeId(8)),
+    category: "",
+    note: "",
+    amount: 0,
+    isReturn: false,
+    date: today,
+  }
+
+  const [budgetEntry, setBudgetEntry] =
+    useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
+  const [noteValue, setNoteValue] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  const resetFormData = () => {
+    setBudgetEntry(BUDGET_ENTRY_INIT)
+  }
+
+  const save = async () => {
+    if (!user) return
+    setIsLoading(true)
+    await saveBudget({
+      userId: user.id,
+      body: {
+        ...budgetEntry,
+      },
+    })
+    setIsLoading(false)
+    refreshBudgetTransactions()
+    resetFormData()
+    setOpenAddBudgetEntryDialog(false)
+  }
+
   return (
     <Dialog open={openAddBudgetEntryDialog} fullScreen>
-      <DialogTitle>{"Add Budget Entry"}</DialogTitle>
+      <DialogTitle>
+        <Stack
+          width={"100%"}
+          height={"100%"}
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <IconButton
+            onClick={() => {
+              setOpenAddBudgetEntryDialog(false)
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography>{"Add Budget Entry"}</Typography>
+          <IconButton
+            loading={isLoading}
+            disabled={budgetEntry.amount === 0 || budgetEntry.note === ""}
+            onClick={save}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
 
       <DialogContent>
         <BudgetEntryForm
+          budgetEntry={budgetEntry}
+          setBudgetEntry={setBudgetEntry}
+          noteValue={noteValue}
+          setNoteValue={setNoteValue}
           budgetCategories={budgetCategories}
           today={today}
-          user={user}
-          refreshBudgetTransactions={refreshBudgetTransactions}
           notes={notes}
         />
       </DialogContent>
-
-      <DialogActions>
-        <Button
-          variant={"contained"}
-          disabled={false}
-          onClick={() => {
-            setOpenAddBudgetEntryDialog(false)
-          }}
-          sx={{
-            backgroundColor:
-              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
-          }}
-        >
-          {"Cancel"}
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }

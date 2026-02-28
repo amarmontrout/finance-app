@@ -60,6 +60,7 @@ const AddTransactionDialog = ({
   }
 
   const resetFormData = () => {
+    setType("expense")
     setTransaction(TRANSACTION_INIT)
   }
 

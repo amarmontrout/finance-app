@@ -9,6 +9,7 @@ import { useTheme } from "next-themes"
 import {
   Box,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -17,10 +18,13 @@ import {
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, DateType } from "@/utils/type"
-import AddBudgetEntryButton from "./AddBudgetEntryButton"
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
-import { accentColorPrimarySelected } from "@/globals/colors"
+import {
+  accentColorPrimary,
+  accentColorPrimarySelected,
+} from "@/globals/colors"
+import AddIcon from "@mui/icons-material/Add"
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2 } =
@@ -92,6 +96,36 @@ const Budget = () => {
         <Typography variant={"h6"}>Budget Entries</Typography>
       </Box>
 
+      <IconButton
+        onClick={() => {
+          setOpenAddBudgetEntryDialog(true)
+        }}
+        size="large"
+        disableRipple
+        sx={{
+          position: "fixed",
+          right: "20px",
+          top: "78px",
+          backgroundColor: accentColorPrimary,
+          color: "white",
+          zIndex: 100,
+          boxShadow: `
+            0 6px 12px rgba(0,0,0,0.18),
+            0 12px 24px rgba(0,0,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.25)
+          `,
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          "&:active": {
+            boxShadow: `
+              0 3px 6px rgba(0,0,0,0.25),
+              inset 0 3px 6px rgba(0,0,0,0.25)
+            `,
+          },
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+
       <Box className="flex flex-col sm:flex-row gap-3 h-full">
         <FormControl>
           <InputLabel>Week</InputLabel>
@@ -115,10 +149,6 @@ const Budget = () => {
 
       <hr style={{ width: "100%" }} />
 
-      <AddBudgetEntryButton
-        setOpenAddBudgetEntryDialog={setOpenAddBudgetEntryDialog}
-      />
-
       <BudgetEntries
         budgetTransactions={weeklyTransactions}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
@@ -137,7 +167,6 @@ const Budget = () => {
         user={user}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         notes={notes}
-        currentTheme={currentTheme}
       />
 
       <EditBudgetEntryDialog

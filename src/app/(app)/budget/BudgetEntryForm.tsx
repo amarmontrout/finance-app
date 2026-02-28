@@ -1,9 +1,12 @@
-import { saveBudget } from "@/app/api/Transactions/requests"
 import FullDate from "@/components/FullDate"
 import { MoneyInputV2 } from "@/components/MoneyInput"
-import { accentColorSecondary } from "@/globals/colors"
 import { makeId } from "@/utils/helperFunctions"
-import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
+import {
+  BudgetTransactionTypeV2,
+  BudgetTypeV2,
+  DateType,
+  HookSetter,
+} from "@/utils/type"
 import {
   Box,
   FormControl,
@@ -14,38 +17,39 @@ import {
   TextField,
   FormControlLabel,
   Checkbox,
-  Button,
   SelectChangeEvent,
 } from "@mui/material"
-import { User } from "@supabase/supabase-js"
-import { ChangeEvent, useState } from "react"
+import { ChangeEvent, useEffect } from "react"
 
 const BudgetEntryForm = ({
+  budgetEntry,
+  setBudgetEntry,
+  noteValue,
+  setNoteValue,
   budgetCategories,
   today,
-  user,
-  refreshBudgetTransactions,
   notes,
 }: {
+  budgetEntry: BudgetTransactionTypeV2
+  setBudgetEntry: HookSetter<BudgetTransactionTypeV2>
+  noteValue: string | null
+  setNoteValue: HookSetter<string | null>
   budgetCategories: BudgetTypeV2[]
   today: DateType
-  user: User | null
-  refreshBudgetTransactions: () => void
   notes: string[]
 }) => {
-  const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
-    id: Number(makeId(8)),
-    category: budgetCategories.length !== 0 ? budgetCategories[0].category : "",
-    note: "",
-    amount: 0,
-    isReturn: false,
-    date: today,
-  }
+  useEffect(() => {
+    if (!budgetCategories.length) return
 
-  const [budgetEntry, setBudgetEntry] =
-    useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
-  const [noteValue, setNoteValue] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
+    setBudgetEntry({
+      id: Number(makeId(8)),
+      category: budgetCategories[0].category,
+      note: "",
+      amount: 0,
+      isReturn: false,
+      date: today,
+    })
+  }, [budgetCategories])
 
   const handleCategory = (e: SelectChangeEvent) => {
     const { value } = e.target
@@ -55,30 +59,14 @@ const BudgetEntryForm = ({
     }))
   }
 
-  const resetFormData = () => {
-    setBudgetEntry(BUDGET_ENTRY_INIT)
-  }
-
-  const save = async () => {
-    if (!user) return
-    setIsLoading(true)
-    await saveBudget({
-      userId: user.id,
-      body: {
-        ...budgetEntry,
-      },
-    })
-    setIsLoading(false)
-    refreshBudgetTransactions()
-    resetFormData()
-  }
-
   return (
     <Box
       className="flex flex-col lg:flex-row gap-5 mt-1"
       paddingTop={"10px"}
       margin={"0 auto"}
     >
+      <MoneyInputV2 value={budgetEntry.amount} setValue={setBudgetEntry} />
+
       <FullDate today={today} setBudgetEntry={setBudgetEntry} />
 
       <FormControl>
@@ -118,12 +106,6 @@ const BudgetEntryForm = ({
         />
       </FormControl>
 
-      <MoneyInputV2
-        value={budgetEntry.amount}
-        setValue={setBudgetEntry}
-        smallWidthBp={"lg"}
-      />
-
       <FormControlLabel
         control={
           <Checkbox
@@ -139,18 +121,6 @@ const BudgetEntryForm = ({
         }
         label="Is a return?"
       />
-
-      <Button
-        variant={"contained"}
-        onClick={save}
-        sx={{
-          backgroundColor: accentColorSecondary,
-        }}
-        loading={isLoading}
-        disabled={budgetEntry.amount === 0 || budgetEntry.note === ""}
-      >
-        {"Add"}
-      </Button>
     </Box>
   )
 }

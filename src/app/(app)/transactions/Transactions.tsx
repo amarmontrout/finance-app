@@ -82,6 +82,36 @@ const Transactions = () => {
         </Tabs>
       </Box>
 
+      <IconButton
+        onClick={() => {
+          setOpenAddTransactionDialog(true)
+        }}
+        size="large"
+        disableRipple
+        sx={{
+          position: "fixed",
+          right: "20px",
+          top: "78px",
+          backgroundColor: accentColorPrimary,
+          color: "white",
+          zIndex: 100,
+          boxShadow: `
+            0 6px 12px rgba(0,0,0,0.18),
+            0 12px 24px rgba(0,0,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.25)
+          `,
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          "&:active": {
+            boxShadow: `
+              0 3px 6px rgba(0,0,0,0.25),
+              inset 0 3px 6px rgba(0,0,0,0.25)
+            `,
+          },
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+
       <Stack direction={"row"} spacing={2}>
         {tab === 0 && (
           <FormControl fullWidth>
@@ -124,36 +154,6 @@ const Transactions = () => {
         </FormControl>
       </Stack>
 
-      <IconButton
-        onClick={() => {
-          setOpenAddTransactionDialog(true)
-        }}
-        size="large"
-        disableRipple
-        sx={{
-          position: "fixed",
-          right: "20px",
-          top: "78px",
-          backgroundColor: accentColorPrimary,
-          color: "white",
-          zIndex: 100,
-          boxShadow: `
-            0 6px 12px rgba(0,0,0,0.18),
-            0 12px 24px rgba(0,0,0,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.25)
-          `,
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          "&:active": {
-            boxShadow: `
-              0 3px 6px rgba(0,0,0,0.25),
-              inset 0 3px 6px rgba(0,0,0,0.25)
-            `,
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
-
       <TabPanel value={tab} index={0}>
         <TransactionFeed
           selectedMonth={selectedMonth}
@@ -186,24 +186,6 @@ const Transactions = () => {
         refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
         yearsV2={yearsV2}
       />
-
-      {/* <AddIncomeDialog
-        incomeCategories={incomeCategoriesV2}
-        income={"income"}
-        refreshIncomeTransactions={refreshIncomeTransactionsV2}
-        years={yearsV2}
-        openAddIncomeDialog={openAddIncomeDialog}
-        setOpenAddIncomeDialog={setOpenAddIncomeDialog}
-      />
-
-      <AddExpenseDialog
-        expenseCategories={expenseCategoriesV2}
-        expenses={"expenses"}
-        refreshExpenseTransactions={refreshExpenseTransactionsV2}
-        years={yearsV2}
-        openAddExpenseDialog={openAddExpenseDialog}
-        setOpenAddExpenseDialog={setOpenAddExpenseDialog}
-      /> */}
 
       <EditTransactionDetailDialog
         openEditDialog={openEditDialog}

@@ -5,7 +5,7 @@ import {
   HookSetter,
 } from "@/utils/type"
 import { Box, IconButton, Stack, Typography } from "@mui/material"
-import { useState } from "react"
+import { useRef, useState } from "react"
 import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import EditIcon from "@mui/icons-material/Edit"
@@ -107,6 +107,7 @@ const TransactionRow = ({
   selectedYear: number
   currentTheme: string | undefined
 }) => {
+  const startEdgeRef = useRef<"left" | "right" | null>(null)
   const [startX, setStartX] = useState(0)
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
@@ -128,26 +129,40 @@ const TransactionRow = ({
       return
     }
 
+    if (isLeftEdge) {
+      startEdgeRef.current = "left"
+    } else if (isRightEdge) {
+      startEdgeRef.current = "right"
+    } else {
+      startEdgeRef.current = null
+      return
+    }
+
     setIsSwiping(true)
     setStartX(touchX)
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isSwiping) return
+    if (!isSwiping || !startEdgeRef.current) return
 
     const deltaX = e.touches[0].clientX - startX
 
-    setOffset(Math.max(Math.min(deltaX, 120), -120))
+    if (startEdgeRef.current === "left") {
+      setOffset(Math.max(0, Math.min(deltaX, 110)))
+    }
+
+    if (startEdgeRef.current === "right") {
+      setOffset(Math.min(0, Math.max(deltaX, -110)))
+    }
   }
 
   const handleTouchEnd = async () => {
-    if (!isSwiping) return
-    if (isActioning) return
+    if (!isSwiping || isActioning) return
 
-    if (offset < -80) {
+    if (offset < -100) {
       setIsActioning(true)
       await handleDeleteTransaction(transaction.id, type)
-    } else if (offset > 80) {
+    } else if (offset > 100) {
       setIsActioning(true)
       setOpenEditDialog(true)
       setSelectedTransaction({ id: transaction.id, type })
@@ -156,6 +171,7 @@ const TransactionRow = ({
     setOffset(0)
     setIsSwiping(false)
     setIsActioning(false)
+    startEdgeRef.current = null
   }
 
   return (
@@ -182,7 +198,7 @@ const TransactionRow = ({
           alignItems: "center",
           justifyContent: "center",
           color: "white",
-          opacity: offset < 0 ? Math.min(Math.abs(offset) / 80, 1) : 0,
+          opacity: offset < 0 ? Math.min(Math.abs(offset) / 100, 1) : 0,
         }}
       >
         <DeleteIcon />
@@ -200,7 +216,7 @@ const TransactionRow = ({
           alignItems: "center",
           justifyContent: "center",
           color: "white",
-          opacity: offset > 0 ? Math.min(offset / 80, 1) : 0,
+          opacity: offset > 0 ? Math.min(offset / 100, 1) : 0,
         }}
       >
         <EditIcon />
@@ -230,9 +246,6 @@ const TransactionRow = ({
         >
           <Stack>
             <Typography fontWeight={700}>{transaction.category}</Typography>
-            <Typography fontSize={12} color="text.secondary">
-              {selectedMonth} {selectedYear}
-            </Typography>
           </Stack>
 
           <Stack direction="row" alignItems="center" spacing={2}>

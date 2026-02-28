@@ -43,20 +43,20 @@ const Overview = () => {
     }
   }, [isLoading, yearsV2, incomeCategoriesV2, expenseCategoriesV2])
 
-  const lineColor =
-    currentTheme === "light"
-      ? [lightMode.success, lightMode.error]
-      : [darkMode.success, darkMode.error]
-  const chartDataV2 = useMemo(() => {
-    return buildMultiColumnDataV2({
-      firstData: incomeTransactionsV2,
-      secondData: expenseTransactionsV2,
-      selectedYear: currentYear,
-      firstColumnTitle: "Month",
-      method: "compare",
-      excludedSet: excludedSet,
-    })
-  }, [incomeTransactionsV2, expenseTransactionsV2])
+  // const lineColor =
+  //   currentTheme === "light"
+  //     ? [lightMode.success, lightMode.error]
+  //     : [darkMode.success, darkMode.error]
+  // const chartDataV2 = useMemo(() => {
+  //   return buildMultiColumnDataV2({
+  //     firstData: incomeTransactionsV2,
+  //     secondData: expenseTransactionsV2,
+  //     selectedYear: currentYear,
+  //     firstColumnTitle: "Month",
+  //     method: "compare",
+  //     excludedSet: excludedSet,
+  //   })
+  // }, [incomeTransactionsV2, expenseTransactionsV2])
 
   return (
     <FlexColWrapper gap={2}>
@@ -83,7 +83,7 @@ const Overview = () => {
         excludedSet={excludedSet}
       />
 
-      <LineChart multiColumnData={chartDataV2} lineColors={lineColor} />
+      {/* <LineChart multiColumnData={chartDataV2} lineColors={lineColor} /> */}
 
       <SetUpDialog
         setUpDialogOpen={setUpDialogOpen}

@@ -89,8 +89,6 @@ const TransactionRow = ({
   openEditDialog,
   setOpenEditDialog,
   handleDeleteTransaction,
-  selectedMonth,
-  selectedYear,
   currentTheme,
 }: {
   transaction: TransactionTypeV2
@@ -103,8 +101,6 @@ const TransactionRow = ({
     id: number,
     type: "income" | "expense",
   ) => Promise<void>
-  selectedMonth: string
-  selectedYear: number
   currentTheme: string | undefined
 }) => {
   const startEdgeRef = useRef<"left" | "right" | null>(null)

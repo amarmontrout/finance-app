@@ -19,8 +19,6 @@ const TransactionList = ({
   setOpenEditDialog,
   refreshIncomeTransactionsV2,
   refreshExpenseTransactionsV2,
-  selectedMonth,
-  selectedYear,
   currentTheme,
 }: {
   title: "Income" | "Expense"
@@ -33,8 +31,6 @@ const TransactionList = ({
   setOpenEditDialog: HookSetter<boolean>
   refreshIncomeTransactionsV2: () => void
   refreshExpenseTransactionsV2: () => void
-  selectedMonth: string
-  selectedYear: number
   currentTheme: string | undefined
 }) => {
   const handleDeleteTransaction = async (
@@ -77,8 +73,6 @@ const TransactionList = ({
             openEditDialog={openEditDialog}
             setOpenEditDialog={setOpenEditDialog}
             handleDeleteTransaction={handleDeleteTransaction}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
             currentTheme={currentTheme}
           />
         ))}

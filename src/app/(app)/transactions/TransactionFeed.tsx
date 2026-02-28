@@ -60,8 +60,6 @@ const TransactionFeed = ({
             setOpenEditDialog={setOpenEditDialog}
             refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
             refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
             currentTheme={currentTheme}
           />
 
@@ -76,8 +74,6 @@ const TransactionFeed = ({
             setOpenEditDialog={setOpenEditDialog}
             refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
             refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-            selectedMonth={selectedMonth}
-            selectedYear={selectedYear}
             currentTheme={currentTheme}
           />
         </Stack>

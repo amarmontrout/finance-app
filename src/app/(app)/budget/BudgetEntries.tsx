@@ -1,98 +1,14 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { darkMode, lightMode } from "@/globals/colors"
-import DeleteIcon from "@mui/icons-material/Delete"
-import CancelIcon from "@mui/icons-material/Cancel"
-import EditIcon from "@mui/icons-material/Edit"
-import {
-  List,
-  ListItem,
-  ListItemText,
-  IconButton,
-  Stack,
-  Typography,
-  Box,
-} from "@mui/material"
+import { List, Stack, Typography, Box } from "@mui/material"
 import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { useMemo, useState } from "react"
+import { useMemo } from "react"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-
-const EditDeleteButton = ({
-  id,
-  entry,
-  setOpenEditDialog,
-  setSelectedEntry,
-  setNoteId,
-}: {
-  id: number
-  entry: BudgetTransactionTypeV2
-  setOpenEditDialog: HookSetter<boolean>
-  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
-  setNoteId: HookSetter<number | null>
-}) => {
-  return (
-    <Stack direction={"row"} gap={2}>
-      <IconButton
-        edge="end"
-        onClick={() => {
-          setOpenEditDialog(true)
-          setSelectedEntry(entry)
-        }}
-      >
-        <EditIcon />
-      </IconButton>
-
-      <IconButton
-        edge="end"
-        onClick={() => {
-          setNoteId(id)
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </Stack>
-  )
-}
-
-const ConfirmCancelButton = ({
-  id,
-  deleteEntry,
-  setNoteId,
-  setSelectedEntry,
-}: {
-  id: number
-  deleteEntry: (id: number) => void
-  setNoteId: HookSetter<number | null>
-  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
-}) => {
-  return (
-    <Stack direction={"row"} gap={2}>
-      <IconButton
-        edge="end"
-        onClick={() => {
-          deleteEntry(id)
-          setNoteId(null)
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-
-      <IconButton
-        edge="end"
-        onClick={() => {
-          setSelectedEntry(null)
-          setNoteId(null)
-        }}
-      >
-        <CancelIcon />
-      </IconButton>
-    </Stack>
-  )
-}
+import BudgetEntryRow from "./BudgetEntryRow"
 
 const BudgetEntries = ({
   budgetTransactions,
@@ -108,12 +24,8 @@ const BudgetEntries = ({
   currentTheme: string | undefined
 }) => {
   const user = useUser()
-  const [noteId, setNoteId] = useState<number | null>(null)
 
-  const listItemColor =
-    currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
-
-  const deleteEntry = async (id: number) => {
+  const handleDeleteEntry = async (id: number) => {
     if (!user) return
     await deleteBudget({
       userId: user?.id,
@@ -165,40 +77,16 @@ const BudgetEntries = ({
                     </Stack>
 
                     <Stack direction={"column"} spacing={1}>
-                      {entries.map((entry) => {
-                        return (
-                          <ListItem
-                            key={entry.id}
-                            secondaryAction={
-                              noteId === entry.id ? (
-                                <ConfirmCancelButton
-                                  id={entry.id}
-                                  deleteEntry={deleteEntry}
-                                  setNoteId={setNoteId}
-                                  setSelectedEntry={setSelectedEntry}
-                                />
-                              ) : (
-                                <EditDeleteButton
-                                  id={entry.id}
-                                  entry={entry}
-                                  setOpenEditDialog={setOpenEditDialog}
-                                  setSelectedEntry={setSelectedEntry}
-                                  setNoteId={setNoteId}
-                                />
-                              )
-                            }
-                            sx={{
-                              backgroundColor: listItemColor,
-                              borderRadius: "15px",
-                            }}
-                          >
-                            <ListItemText
-                              primary={`$${entry.amount.toFixed(2)} - ${entry.note}`}
-                              secondary={`${entry.isReturn ? "RETURNED" : ""}`}
-                            />
-                          </ListItem>
-                        )
-                      })}
+                      {entries.map((entry) => (
+                        <BudgetEntryRow
+                          key={entry.id}
+                          entry={entry}
+                          handleDeleteEntry={handleDeleteEntry}
+                          setOpenEditDialog={setOpenEditDialog}
+                          setSelectedEntry={setSelectedEntry}
+                          currentTheme={currentTheme}
+                        />
+                      ))}
                     </Stack>
                   </Box>
                 )

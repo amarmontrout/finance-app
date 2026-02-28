@@ -1,45 +1,44 @@
-import { formattedStringNumber } from "@/utils/helperFunctions"
-import {
-  TransactionTypeV2,
-  SelectedTransactionType,
-  HookSetter,
-} from "@/utils/type"
-import { Box, IconButton, Stack, Typography } from "@mui/material"
-import { useState } from "react"
+import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
+import { Stack, IconButton, Box, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import EditIcon from "@mui/icons-material/Edit"
+import { useState } from "react"
+import { formattedStringNumber } from "@/utils/helperFunctions"
 import { darkMode, lightMode } from "@/globals/colors"
 
 const EditDeleteButton = ({
   id,
-  type,
+  entry,
   setOpenEditDialog,
-  setSelectedTransaction,
+  setSelectedEntry,
+  setNoteId,
 }: {
   id: number
-  type: "income" | "expense"
+  entry: BudgetTransactionTypeV2
   setOpenEditDialog: HookSetter<boolean>
-  setSelectedTransaction: HookSetter<SelectedTransactionType | null>
+  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
+  setNoteId: HookSetter<number | null>
 }) => {
   return (
-    <Stack direction={"row"} gap={2} sx={{ flexShrink: 0 }}>
+    <Stack direction={"row"} gap={2}>
       <IconButton
-        size="small"
+        edge="end"
         onClick={() => {
           setOpenEditDialog(true)
-          setSelectedTransaction({ id: id, type: type })
+          setSelectedEntry(entry)
         }}
       >
-        <EditIcon fontSize="small" />
+        <EditIcon />
       </IconButton>
+
       <IconButton
-        size="small"
+        edge="end"
         onClick={() => {
-          setSelectedTransaction({ id: id, type: type })
+          setNoteId(id)
         }}
       >
-        <DeleteIcon fontSize="small" />
+        <DeleteIcon />
       </IconButton>
     </Stack>
   )
@@ -47,74 +46,63 @@ const EditDeleteButton = ({
 
 const ConfirmCancelButton = ({
   id,
-  type,
-  handleDeleteTransaction,
-  setSelectedTransaction,
+  handleDeleteEntry,
+  setNoteId,
+  setSelectedEntry,
 }: {
   id: number
-  type: "income" | "expense"
-  handleDeleteTransaction: (
-    id: number,
-    type: "income" | "expense",
-  ) => Promise<void>
-  setSelectedTransaction: HookSetter<SelectedTransactionType | null>
+  handleDeleteEntry: (id: number) => void
+  setNoteId: HookSetter<number | null>
+  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
 }) => {
   return (
     <Stack direction={"row"} gap={2}>
       <IconButton
-        size="small"
+        edge="end"
         onClick={() => {
-          handleDeleteTransaction(id, type)
+          handleDeleteEntry(id)
+          setNoteId(null)
         }}
       >
-        <DeleteIcon fontSize="small" />
+        <DeleteIcon />
       </IconButton>
+
       <IconButton
-        size="small"
+        edge="end"
         onClick={() => {
-          setSelectedTransaction(null)
+          setSelectedEntry(null)
+          setNoteId(null)
         }}
       >
-        <CancelIcon fontSize="small" />
+        <CancelIcon />
       </IconButton>
     </Stack>
   )
 }
 
-const TransactionRow = ({
-  transaction,
-  type,
-  selectedTransaction,
-  setSelectedTransaction,
-  openEditDialog,
+const BudgetEntryRow = ({
+  entry,
+  handleDeleteEntry,
   setOpenEditDialog,
-  handleDeleteTransaction,
-  selectedMonth,
-  selectedYear,
+  setSelectedEntry,
   currentTheme,
 }: {
-  transaction: TransactionTypeV2
-  type: "income" | "expense"
-  selectedTransaction: SelectedTransactionType | null
-  setSelectedTransaction: HookSetter<SelectedTransactionType | null>
-  openEditDialog: boolean
+  entry: BudgetTransactionTypeV2
+  handleDeleteEntry: (id: number) => Promise<void>
   setOpenEditDialog: HookSetter<boolean>
-  handleDeleteTransaction: (
-    id: number,
-    type: "income" | "expense",
-  ) => Promise<void>
-  selectedMonth: string
-  selectedYear: number
+  setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
   currentTheme: string | undefined
 }) => {
   const [startX, setStartX] = useState(0)
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
   const [isSwiping, setIsSwiping] = useState(false)
+  const [noteId, setNoteId] = useState<number | null>(null)
 
   const EDGE_WIDTH = 100
   const listItemColor =
     currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
+  const entryDate = `${entry.date.month} ${entry.date.day} ${entry.date.year}`
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touchX = e.touches[0].clientX
@@ -146,11 +134,11 @@ const TransactionRow = ({
 
     if (offset < -80) {
       setIsActioning(true)
-      await handleDeleteTransaction(transaction.id, type)
+      await handleDeleteEntry(entry.id)
     } else if (offset > 80) {
       setIsActioning(true)
       setOpenEditDialog(true)
-      setSelectedTransaction({ id: transaction.id, type })
+      setSelectedEntry(entry)
     }
 
     setOffset(0)
@@ -229,34 +217,33 @@ const TransactionRow = ({
           }}
         >
           <Stack>
-            <Typography fontWeight={700}>{transaction.category}</Typography>
+            <Typography fontWeight={700}>{entry.note}</Typography>
+
             <Typography fontSize={12} color="text.secondary">
-              {selectedMonth} {selectedYear}
+              {entryDate}
             </Typography>
           </Stack>
 
           <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography
-              fontSize="1.2rem"
-              color={type === "income" ? "success.main" : "error.main"}
-            >
-              ${formattedStringNumber(transaction.amount)}
+            <Typography fontSize="1.2rem">
+              {`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
             </Typography>
 
             <Box className="hidden sm:flex">
-              {selectedTransaction?.id === transaction.id && !openEditDialog ? (
+              {noteId === entry.id ? (
                 <ConfirmCancelButton
-                  id={transaction.id}
-                  type={type}
-                  handleDeleteTransaction={handleDeleteTransaction}
-                  setSelectedTransaction={setSelectedTransaction}
+                  id={entry.id}
+                  handleDeleteEntry={handleDeleteEntry}
+                  setNoteId={setNoteId}
+                  setSelectedEntry={setSelectedEntry}
                 />
               ) : (
                 <EditDeleteButton
-                  id={transaction.id}
-                  type={type}
+                  id={entry.id}
+                  entry={entry}
                   setOpenEditDialog={setOpenEditDialog}
-                  setSelectedTransaction={setSelectedTransaction}
+                  setSelectedEntry={setSelectedEntry}
+                  setNoteId={setNoteId}
                 />
               )}
             </Box>
@@ -266,4 +253,5 @@ const TransactionRow = ({
     </Box>
   )
 }
-export default TransactionRow
+
+export default BudgetEntryRow

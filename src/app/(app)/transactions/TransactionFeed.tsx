@@ -62,6 +62,7 @@ const TransactionFeed = ({
             refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
+            currentTheme={currentTheme}
           />
 
           <TransactionList
@@ -77,6 +78,7 @@ const TransactionFeed = ({
             refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
             selectedMonth={selectedMonth}
             selectedYear={selectedYear}
+            currentTheme={currentTheme}
           />
         </Stack>
       </ShowCaseCard>

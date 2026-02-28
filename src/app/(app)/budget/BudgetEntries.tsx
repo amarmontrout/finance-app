@@ -8,7 +8,6 @@ import { useUser } from "@/hooks/useUser"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useMemo } from "react"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-// import BudgetEntryRow from "./BudgetEntryRow"
 import ListItemSwipe from "@/components/ListItemSwipe"
 
 const BudgetEntries = ({
@@ -84,14 +83,7 @@ const BudgetEntries = ({
                     <Stack direction={"column"} spacing={1}>
                       {entries.map((entry) => {
                         const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
-                        // <BudgetEntryRow
-                        //   key={entry.id}
-                        //   entry={entry}
-                        //   handleDeleteEntry={handleDeleteEntry}
-                        //   setOpenEditDialog={setOpenEditDialog}
-                        //   setSelectedEntry={setSelectedEntry}
-                        //   currentTheme={currentTheme}
-                        // />
+
                         return (
                           <ListItemSwipe
                             key={entry.id}

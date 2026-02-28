@@ -6,7 +6,6 @@ import {
 import { Stack, Typography } from "@mui/material"
 import { deleteExpense, deleteIncome } from "@/app/api/Transactions/requests"
 import { User } from "@supabase/supabase-js"
-// import TransactionRow from "./TransactionRow"
 import ListItemSwipe from "@/components/ListItemSwipe"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 
@@ -63,22 +62,6 @@ const TransactionList = ({
       <Typography variant={"h5"} mb={"5px"}>
         {title}
       </Typography>
-
-      {/* <Stack spacing={1}>
-        {transactions.map((transaction) => (
-          <TransactionRow
-            key={transaction.id}
-            transaction={transaction}
-            type={type}
-            selectedTransaction={selectedTransaction}
-            setSelectedTransaction={setSelectedTransaction}
-            openEditDialog={openEditDialog}
-            setOpenEditDialog={setOpenEditDialog}
-            handleDeleteTransaction={handleDeleteTransaction}
-            currentTheme={currentTheme}
-          />
-        ))}
-      </Stack> */}
 
       <Stack spacing={1}>
         {transactions.map((transaction) => (

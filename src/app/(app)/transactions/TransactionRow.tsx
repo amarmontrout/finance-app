@@ -108,70 +108,95 @@ const TransactionRow = ({
   currentTheme: string | undefined
 }) => {
   const startEdgeRef = useRef<"left" | "right" | null>(null)
-  const [startX, setStartX] = useState(0)
+  const startXRef = useRef(0)
+  const startYRef = useRef(0)
+  const gestureLockRef = useRef<"horizontal" | "vertical" | null>(null)
+
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
-  const [isSwiping, setIsSwiping] = useState(false)
 
   const EDGE_WIDTH = 100
+  const SWIPE_THRESHOLD = 100
+  const DIRECTION_THRESHOLD = 10
   const listItemColor =
     currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    const touchX = e.touches[0].clientX
+    const touch = e.touches[0]
     const element = e.currentTarget.getBoundingClientRect()
+
+    const touchX = touch.clientX
+    const touchY = touch.clientY
 
     const isLeftEdge = touchX - element.left <= EDGE_WIDTH
     const isRightEdge = element.right - touchX <= EDGE_WIDTH
 
     if (!isLeftEdge && !isRightEdge) {
-      setIsSwiping(false)
-      return
-    }
-
-    if (isLeftEdge) {
-      startEdgeRef.current = "left"
-    } else if (isRightEdge) {
-      startEdgeRef.current = "right"
-    } else {
       startEdgeRef.current = null
       return
     }
 
-    setIsSwiping(true)
-    setStartX(touchX)
+    startEdgeRef.current = isLeftEdge ? "left" : "right"
+
+    startXRef.current = touchX
+    startYRef.current = touchY
+    gestureLockRef.current = null
   }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!isSwiping || !startEdgeRef.current) return
+    if (!startEdgeRef.current) return
 
-    const deltaX = e.touches[0].clientX - startX
+    const touch = e.touches[0]
 
-    if (startEdgeRef.current === "left") {
-      setOffset(Math.max(0, Math.min(deltaX, 110)))
+    const deltaX = touch.clientX - startXRef.current
+    const deltaY = touch.clientY - startYRef.current
+
+    // Determine gesture direction once threshold exceeded
+    if (!gestureLockRef.current) {
+      if (
+        Math.abs(deltaX) > DIRECTION_THRESHOLD ||
+        Math.abs(deltaY) > DIRECTION_THRESHOLD
+      ) {
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+          gestureLockRef.current = "horizontal"
+        } else {
+          gestureLockRef.current = "vertical"
+        }
+      }
     }
 
-    if (startEdgeRef.current === "right") {
-      setOffset(Math.min(0, Math.max(deltaX, -110)))
+    // If vertical scroll → ignore swipe
+    if (gestureLockRef.current === "vertical") return
+
+    // If horizontal → apply edge restriction
+    if (gestureLockRef.current === "horizontal") {
+      if (startEdgeRef.current === "left") {
+        setOffset(Math.max(0, Math.min(deltaX, 110)))
+      }
+
+      if (startEdgeRef.current === "right") {
+        setOffset(Math.min(0, Math.max(deltaX, -110)))
+      }
     }
   }
 
   const handleTouchEnd = async () => {
-    if (!isSwiping || isActioning) return
+    if (isActioning) return
 
-    if (offset < -100) {
+    if (offset <= -SWIPE_THRESHOLD) {
       setIsActioning(true)
       await handleDeleteTransaction(transaction.id, type)
-    } else if (offset > 100) {
+    } else if (offset >= SWIPE_THRESHOLD) {
       setIsActioning(true)
       setOpenEditDialog(true)
       setSelectedTransaction({ id: transaction.id, type })
     }
 
     setOffset(0)
-    setIsSwiping(false)
-    setIsActioning(false)
+
     startEdgeRef.current = null
+    gestureLockRef.current = null
+    setIsActioning(false)
   }
 
   return (

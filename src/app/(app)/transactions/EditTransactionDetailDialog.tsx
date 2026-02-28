@@ -13,7 +13,7 @@ import {
   DialogContent,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import { MoneyInputV2 } from "./MoneyInput"
+import { MoneyInputV2 } from "../../../components/MoneyInput"
 import {
   ChoiceTypeV2,
   HookSetter,
@@ -140,7 +140,6 @@ const EditTransactionDetailDialog = ({
           <MoneyInputV2
             value={updateTransaction.amount}
             setValue={setUpdateTransaction}
-            smallWidthBp={"sm"}
           />
         </Box>
       </DialogContent>

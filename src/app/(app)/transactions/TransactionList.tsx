@@ -6,7 +6,9 @@ import {
 import { Stack, Typography } from "@mui/material"
 import { deleteExpense, deleteIncome } from "@/app/api/Transactions/requests"
 import { User } from "@supabase/supabase-js"
-import TransactionRow from "./TransactionRow"
+// import TransactionRow from "./TransactionRow"
+import ListItemSwipe from "@/components/ListItemSwipe"
+import { formattedStringNumber } from "@/utils/helperFunctions"
 
 const TransactionList = ({
   title,
@@ -62,7 +64,7 @@ const TransactionList = ({
         {title}
       </Typography>
 
-      <Stack spacing={1}>
+      {/* <Stack spacing={1}>
         {transactions.map((transaction) => (
           <TransactionRow
             key={transaction.id}
@@ -73,6 +75,35 @@ const TransactionList = ({
             openEditDialog={openEditDialog}
             setOpenEditDialog={setOpenEditDialog}
             handleDeleteTransaction={handleDeleteTransaction}
+            currentTheme={currentTheme}
+          />
+        ))}
+      </Stack> */}
+
+      <Stack spacing={1}>
+        {transactions.map((transaction) => (
+          <ListItemSwipe
+            key={transaction.id}
+            mainTitle={transaction.category}
+            secondaryTitle={""}
+            amount={`${formattedStringNumber(transaction.amount)}`}
+            amountColor={type === "income" ? "success.main" : "error.main"}
+            buttonCondition={
+              selectedTransaction?.id === transaction.id && !openEditDialog
+            }
+            onDelete={() => {
+              handleDeleteTransaction(transaction.id, type)
+            }}
+            onSetDelete={() => {
+              setSelectedTransaction({ id: transaction.id, type: type })
+            }}
+            onCancelDelete={() => {
+              setSelectedTransaction(null)
+            }}
+            onEdit={() => {
+              setOpenEditDialog(true)
+              setSelectedTransaction({ id: transaction.id, type: type })
+            }}
             currentTheme={currentTheme}
           />
         ))}

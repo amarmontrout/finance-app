@@ -58,6 +58,7 @@ const Budget = () => {
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
     useState<boolean>(false)
+  const [noteId, setNoteId] = useState<number | null>(null)
 
   const notes = useMemo(() => {
     return [...new Set(budgetTransactionsV2.map((e) => e.note))]
@@ -123,6 +124,8 @@ const Budget = () => {
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         setOpenEditDialog={setOpenEditDialog}
         setSelectedEntry={setSelectedEntry}
+        noteId={noteId}
+        setNoteId={setNoteId}
         currentTheme={currentTheme}
       />
 

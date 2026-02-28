@@ -8,19 +8,24 @@ import { useUser } from "@/hooks/useUser"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useMemo } from "react"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import BudgetEntryRow from "./BudgetEntryRow"
+// import BudgetEntryRow from "./BudgetEntryRow"
+import ListItemSwipe from "@/components/ListItemSwipe"
 
 const BudgetEntries = ({
   budgetTransactions,
   refreshBudgetTransactions,
   setOpenEditDialog,
   setSelectedEntry,
+  noteId,
+  setNoteId,
   currentTheme,
 }: {
   budgetTransactions: BudgetTransactionTypeV2[]
   refreshBudgetTransactions: () => void
   setOpenEditDialog: HookSetter<boolean>
   setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
+  noteId: number | null
+  setNoteId: HookSetter<number | null>
   currentTheme: string | undefined
 }) => {
   const user = useUser()
@@ -77,16 +82,44 @@ const BudgetEntries = ({
                     </Stack>
 
                     <Stack direction={"column"} spacing={1}>
-                      {entries.map((entry) => (
-                        <BudgetEntryRow
-                          key={entry.id}
-                          entry={entry}
-                          handleDeleteEntry={handleDeleteEntry}
-                          setOpenEditDialog={setOpenEditDialog}
-                          setSelectedEntry={setSelectedEntry}
-                          currentTheme={currentTheme}
-                        />
-                      ))}
+                      {entries.map((entry) => {
+                        const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
+                        // <BudgetEntryRow
+                        //   key={entry.id}
+                        //   entry={entry}
+                        //   handleDeleteEntry={handleDeleteEntry}
+                        //   setOpenEditDialog={setOpenEditDialog}
+                        //   setSelectedEntry={setSelectedEntry}
+                        //   currentTheme={currentTheme}
+                        // />
+                        return (
+                          <ListItemSwipe
+                            key={entry.id}
+                            mainTitle={entry.note}
+                            secondaryTitle={entryDate}
+                            amount={`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
+                            amountColor={
+                              entry.isReturn ? "error.main" : "inherit"
+                            }
+                            buttonCondition={noteId === entry.id}
+                            onDelete={() => {
+                              handleDeleteEntry(entry.id)
+                            }}
+                            onSetDelete={() => {
+                              setNoteId(entry.id)
+                            }}
+                            onCancelDelete={() => {
+                              setSelectedEntry(null)
+                              setNoteId(null)
+                            }}
+                            onEdit={() => {
+                              setOpenEditDialog(true)
+                              setSelectedEntry(entry)
+                            }}
+                            currentTheme={currentTheme}
+                          />
+                        )
+                      })}
                     </Stack>
                   </Box>
                 )

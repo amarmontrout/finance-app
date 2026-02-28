@@ -1,21 +1,12 @@
-import {
-  FormControl,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-} from "@mui/material"
+import { FormControl, OutlinedInput } from "@mui/material"
 import { ChangeEvent } from "react"
 
 export const MoneyInputV2 = <T extends { amount: number }>({
   value,
   setValue,
-  smallWidthBp,
-  disabled,
 }: {
   value: number
   setValue: React.Dispatch<React.SetStateAction<T>>
-  smallWidthBp?: "sm" | "md" | "lg" | "xl" | "2xl"
-  disabled?: boolean
 }) => {
   const handleAmount = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -34,22 +25,33 @@ export const MoneyInputV2 = <T extends { amount: number }>({
   }
 
   return (
-    <FormControl>
-      <InputLabel>Amount</InputLabel>
+    <FormControl fullWidth>
       <OutlinedInput
-        className={`w-full ${smallWidthBp ? `${smallWidthBp}:w-[175px]` : ""}`}
-        type={"text"}
-        inputMode={"decimal"}
+        type="text"
+        inputMode="decimal"
         inputProps={{
           inputMode: "decimal",
           pattern: "[0-9]*[.]?[0-9]*",
+          style: {
+            textAlign: "center",
+            fontSize: "2.5rem",
+            padding: 0,
+          },
         }}
-        label="Amount"
-        value={value.toFixed(2)}
-        name="amount"
-        disabled={disabled}
+        value={`$${value.toFixed(2)}`}
         onChange={handleAmount}
-        startAdornment={<InputAdornment position="start">$</InputAdornment>}
+        sx={{
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          backgroundColor: "transparent",
+        }}
       />
     </FormControl>
   )

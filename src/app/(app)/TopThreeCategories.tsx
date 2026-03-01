@@ -2,7 +2,7 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { getMonthCategoryTotalsV2, getMonthTotalV2 } from "@/utils/getTotals"
+import { getMonthCategoryTotalsV2 } from "@/utils/getTotals"
 import {
   formattedStringNumber,
   getCardColor,
@@ -50,27 +50,13 @@ const TopThreeExpenses = ({
 
     const topThreeSum = topThree.reduce((sum, [, amount]) => sum + amount, 0)
 
-    const monthTotal = getMonthTotalV2(
-      currentYear,
-      currentMonth,
-      expenseTransactionsV2,
-      excludedSet,
-    )
-
-    const topThreeTotalPercent = monthTotal
-      ? (topThreeSum / monthTotal) * 100
-      : 0
-
     return {
       topThree,
       topThreeSum,
-      monthTotal,
-      topThreeTotalPercent,
     }
   }, [currentYear, currentMonth, expenseTransactionsV2, excludedSet])
 
-  const { topThree, topThreeSum, monthTotal, topThreeTotalPercent } =
-    topThreeData
+  const { topThree, topThreeSum } = topThreeData
 
   return (
     <ShowCaseCard title={`Top Monthly Expenses`}>
@@ -89,8 +75,8 @@ const TopThreeExpenses = ({
             ))}
           </FlexColWrapper>
           {topThree.length !== 0 ? (
-            <Typography width={"100%"} textAlign={"center"}>
-              {`${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
+            <Typography variant={"h6"} width={"100%"} textAlign={"center"}>
+              {`A total of $${formattedStringNumber(topThreeSum)}`}
             </Typography>
           ) : (
             <Typography width={"100%"} textAlign={"center"}>

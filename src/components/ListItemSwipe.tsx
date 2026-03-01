@@ -2,7 +2,7 @@ import { Stack, IconButton, Box, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import EditIcon from "@mui/icons-material/Edit"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { darkMode, lightMode } from "@/globals/colors"
 
 const EditDeleteButton = ({

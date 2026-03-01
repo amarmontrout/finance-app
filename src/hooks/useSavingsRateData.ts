@@ -1,7 +1,6 @@
 import { useMemo } from "react"
 import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
 import { getSavingRate } from "@/utils/financialFunctions"
-import { cleanNumber } from "@/utils/helperFunctions"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { TransactionTypeV2 } from "@/utils/type"
 
@@ -56,21 +55,21 @@ export const useSavingsRateData = (
     [previousYear, expenseTransactions]
   )
 
-  const monthRate = cleanNumber(
+  const monthRate = 
     getSavingRate(monthIncome, monthExpense)
-  )
+  
 
-  const prevMonthRate = cleanNumber(
+  const prevMonthRate = 
     getSavingRate(prevMonthIncome, prevMonthExpense)
-  )
+  
 
-  const annualRate = cleanNumber(
+  const annualRate = 
     getSavingRate(annualIncome, annualExpense)
-  )
+  
 
-  const prevAnnualRate = cleanNumber(
+  const prevAnnualRate = 
     getSavingRate(prevAnnualIncome, prevAnnualExpense)
-  )
+  
   
   return {
     previousYear,

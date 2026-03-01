@@ -10,11 +10,9 @@ import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
 import {
-  cleanNumber,
   formattedStringNumber,
   getCardColor,
   getSavingsHealthState,
-  removeCommas,
 } from "@/utils/helperFunctions"
 import { TransactionTypeV2 } from "@/utils/type"
 import { useMemo } from "react"
@@ -56,7 +54,7 @@ const NetCashFlow = ({
     incomeTransactions,
     excludedSet,
   )
-  const eachMonthNetIncome: [string, string][] = useMemo(() => {
+  const eachMonthNetIncome: [string, number][] = useMemo(() => {
     return MONTHS.map((month) => {
       const incomeTotal = getMonthTotalV2(
         selectedYear,
@@ -71,7 +69,7 @@ const NetCashFlow = ({
         excludedSet,
       )
       const net = getNetCashFlow(incomeTotal, expenseTotal)
-      return [month, removeCommas(net)]
+      return [month, net]
     })
   }, [selectedYear, incomeTransactions, expenseTransactions])
   const annualNetIncome = useMemo(() => {
@@ -82,12 +80,12 @@ const NetCashFlow = ({
   }, [eachMonthNetIncome])
 
   const monthSavingsHealthState = getSavingsHealthState(
-    cleanNumber(monthNetIncome),
-    cleanNumber(monthIncome),
+    monthNetIncome,
+    monthIncome,
   )
   const annualSavingsHealthState = getSavingsHealthState(
     annualNetIncome,
-    cleanNumber(annualIncome),
+    annualIncome,
   )
   const monthSavingsColor = getCardColor(currentTheme, monthSavingsHealthState)
   const annualSavingsColor = getCardColor(
@@ -111,7 +109,7 @@ const NetCashFlow = ({
         {view === "month" && (
           <ColoredInfoCard
             cardColors={monthSavingsColor}
-            info={`Net Cash: $${monthNetIncome}`}
+            info={`Net Cash: $${formattedStringNumber(monthNetIncome)}`}
             title={`${selectedMonth} ${selectedYear} 
               Net Cash Rating: ${monthSavingsHealthState}`}
           />

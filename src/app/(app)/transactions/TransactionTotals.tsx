@@ -156,7 +156,7 @@ const TransactionTotals = ({
               minWidth={90}
               textAlign="right"
             >
-              ${yearIncomeTotal}
+              ${formattedStringNumber(yearIncomeTotal)}
             </Typography>
 
             <Typography
@@ -166,7 +166,7 @@ const TransactionTotals = ({
               minWidth={90}
               textAlign="right"
             >
-              ${yearExpenseTotal}
+              ${formattedStringNumber(yearExpenseTotal)}
             </Typography>
           </Stack>
         </Stack>

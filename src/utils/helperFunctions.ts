@@ -86,14 +86,6 @@ export const formattedStringNumber = (
 }
 
 /**
- * This helper function removes commas from a string.
- * 
- * @param value 
- * @returns A string without the commas
- */
-export const removeCommas = (value: string) => value.replace(/,/g, "")
-
-/**
  * This helper function creates a random string id.
  * 
  * @param length
@@ -129,6 +121,17 @@ export const getSavingsHealthState = (net: number, total: number) => {
   return "excellent"
 }
 
+export const getCardColor = (
+  currentTheme: string | undefined, 
+  state: keyof typeof healthStateLightMode
+) => {
+  if (currentTheme === "light") {
+    return healthStateLightMode[state]
+  }
+  
+  return healthStateDarkMode[state]
+}
+
 /**
  * This helper function gets the previous month info for comparison
  * 
@@ -158,14 +161,3 @@ export const getExcludedCategorySet = (
       .filter((c) => c.isExcluded)
       .map((c) => c.name)
   )
-
-export const getCardColor = (
-  currentTheme: string | undefined, 
-  state: keyof typeof healthStateLightMode
-) => {
-  if (currentTheme === "light") {
-    return healthStateLightMode[state]
-  }
-  
-  return healthStateDarkMode[state]
-}

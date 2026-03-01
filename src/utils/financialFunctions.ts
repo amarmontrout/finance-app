@@ -1,24 +1,22 @@
-import { cleanNumber, formattedStringNumber } from "./helperFunctions"
-
 export const getNetCashFlow = (
-  income: string, 
-  expense: string
+  income: number, 
+  expense: number
 ) => {
-  const incomeNumber = cleanNumber(income)
-  const expenseNumber = cleanNumber(expense)
-  console.log(formattedStringNumber(incomeNumber-expenseNumber))
-  return formattedStringNumber(incomeNumber-expenseNumber)
+  const incomeNumber = income
+  const expenseNumber = expense
+
+  return incomeNumber-expenseNumber
 }
 
 export const getSavingRate = (
-  income: string, 
-  expense: string
+  income: number, 
+  expense: number
 ) => {
-  const incomeNumber = cleanNumber(income)
-  const expenseNumber = cleanNumber(expense)
-  if (incomeNumber === 0) return "0.00"
+  const incomeNumber = income
+  const expenseNumber = expense
+  if (incomeNumber === 0) return 0
   const savingsRate = (incomeNumber-expenseNumber)/incomeNumber
-  return formattedStringNumber(savingsRate * 100)
+  return savingsRate * 100
 }
 
 export const getAnnualProjection = (
@@ -32,6 +30,7 @@ export const getAverage = (
   ytdAmounts: number[],
 ): number => {
   if (ytdAmounts.length === 0) return 0
+  
   const total = ytdAmounts.reduce(
     (sum, amount) => sum + amount,
     0

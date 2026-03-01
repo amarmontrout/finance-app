@@ -4,7 +4,7 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { getMonthTotalV2 } from "@/utils/getTotals"
 import {
-  cleanNumber,
+  formattedStringNumber,
   getCardColor,
   getSavingsHealthState,
 } from "@/utils/helperFunctions"
@@ -39,10 +39,7 @@ const YearTotals = ({
     excludedSet,
   )
   const annualNetIncome = getNetCashFlow(totalIncome, totalExpenses)
-  const savingsHealthState = getSavingsHealthState(
-    cleanNumber(annualNetIncome),
-    cleanNumber(totalIncome),
-  )
+  const savingsHealthState = getSavingsHealthState(annualNetIncome, totalIncome)
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
   const hasNet = Number(annualNetIncome) !== 0
   const netTitle = `${currentMonth} Net Cash${
@@ -54,17 +51,17 @@ const YearTotals = ({
       <FlexColWrapper gap={2} toRowBreak={"md"}>
         <ColoredInfoCard
           cardColors={defaultCardColor}
-          info={`$${totalIncome}`}
+          info={`$${formattedStringNumber(totalIncome)}`}
           title={`${currentMonth} Income`}
         />
         <ColoredInfoCard
           cardColors={defaultCardColor}
-          info={`$${totalExpenses}`}
+          info={`$${formattedStringNumber(totalExpenses)}`}
           title={`${currentMonth} Expenses`}
         />
         <ColoredInfoCard
           cardColors={savingsColor}
-          info={`$${annualNetIncome}`}
+          info={`$${formattedStringNumber(annualNetIncome)}`}
           title={netTitle}
         />
       </FlexColWrapper>

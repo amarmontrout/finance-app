@@ -3,7 +3,6 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { getMonthCategoryTotalsV2, getMonthTotalV2 } from "@/utils/getTotals"
 import {
-  cleanNumber,
   formattedStringNumber,
   getCardColor,
   getCurrentDateInfo,
@@ -56,7 +55,7 @@ const TopThreeExpenses = ({
     )
 
     const topThreeTotalPercent = monthTotal
-      ? (topThreeSum / cleanNumber(monthTotal)) * 100
+      ? (topThreeSum / monthTotal) * 100
       : 0
 
     return {

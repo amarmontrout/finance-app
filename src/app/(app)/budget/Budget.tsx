@@ -6,15 +6,7 @@ import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
-import {
-  Box,
-  FormControl,
-  IconButton,
-  InputLabel,
-  MenuItem,
-  Select,
-  Typography,
-} from "@mui/material"
+import { Box, IconButton, Stack, Typography } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, DateType } from "@/utils/type"
@@ -25,6 +17,8 @@ import {
   accentColorPrimarySelected,
 } from "@/globals/colors"
 import AddIcon from "@mui/icons-material/Add"
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2, isLoading } =
@@ -38,31 +32,21 @@ const Budget = () => {
     day: currentDay,
     year: currentYear,
   }
-  const { start, end, prevStart, prevEnd } = useMemo(() => {
-    return getWeekBounds({
-      month: currentMonth,
-      day: currentDay,
-      year: currentYear,
-    })
-  }, [])
 
-  const prevWeek = {
-    start: `${prevStart.month} ${prevStart.day}, ${prevStart.year}`,
-    end: `${prevEnd.month} ${prevEnd.day}, ${prevEnd.year}`,
-  }
-
-  const currentWeek = {
-    start: `${start.month} ${start.day}, ${start.year}`,
-    end: `${end.month} ${end.day}, ${end.year}`,
-  }
-
-  const [week, setWeek] = useState<"prev" | "current">("current")
+  const [weekOffset, setWeekOffset] = useState(0)
   const [selectedEntry, setSelectedEntry] =
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
     useState<boolean>(false)
   const [noteId, setNoteId] = useState<number | null>(null)
+
+  const week = getWeekBounds(TODAY, weekOffset)
+
+  const currentWeek = {
+    start: `${week.start.month} ${week.start.day}`,
+    end: `${week.end.month} ${week.end.day}`,
+  }
 
   const notes = useMemo(() => {
     return [...new Set(budgetTransactionsV2.map((e) => e.note))]
@@ -74,8 +58,8 @@ const Budget = () => {
       return new Date(date.year, monthIndex, date.day)
     }
 
-    const weekStart = toDate(week === "prev" ? prevStart : start)
-    const weekEnd = toDate(week === "prev" ? prevEnd : end)
+    const weekStart = toDate(week.start)
+    const weekEnd = toDate(week.end)
 
     return budgetTransactionsV2.filter((entry) => {
       if (!entry.date?.day) return false
@@ -84,7 +68,7 @@ const Budget = () => {
 
       return entryDate >= weekStart && entryDate <= weekEnd
     })
-  }, [budgetTransactionsV2, start, end, prevStart, prevEnd, week])
+  }, [budgetTransactionsV2, week.start, week.end])
 
   return (
     <FlexColWrapper gap={3}>
@@ -127,24 +111,26 @@ const Budget = () => {
       </IconButton>
 
       <Box className="flex flex-col sm:flex-row gap-3 h-full">
-        <FormControl>
-          <InputLabel>Week</InputLabel>
-          <Select
-            className="w-full sm:w-[175px]"
-            label="Week"
-            value={week}
-            name={"week"}
-            onChange={(e) => setWeek(e.target.value)}
-          >
-            <MenuItem key={"prev"} value={"prev"}>
-              {`${prevWeek.start} - ${prevWeek.end}`}
-            </MenuItem>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={"space-between"}
+        >
+          <IconButton onClick={() => setWeekOffset((w) => w - 1)}>
+            <ChevronLeftIcon />
+          </IconButton>
 
-            <MenuItem key={"current"} value={"current"}>
-              {`${currentWeek.start} - ${currentWeek.end}`}
-            </MenuItem>
-          </Select>
-        </FormControl>
+          <Typography onClick={() => setWeekOffset(0)}>
+            {currentWeek.start} – {currentWeek.end}
+          </Typography>
+
+          <IconButton
+            onClick={() => setWeekOffset((w) => w + 1)}
+            disabled={weekOffset === 0}
+          >
+            <ChevronRightIcon />
+          </IconButton>
+        </Stack>
       </Box>
 
       <hr style={{ width: "100%" }} />

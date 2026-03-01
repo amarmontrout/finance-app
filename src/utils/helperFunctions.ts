@@ -23,10 +23,15 @@ export const getCurrentDateInfo = () => {
  * 
  * @returns The current week's beginning and end time
 */
-export const getWeekBounds = (date: DateType) => {
+export const getWeekBounds = (
+  date: DateType,
+  weekOffset: number = 0
+) => {
   const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
   const d = new Date(date.year, monthIndex, date.day)
   d.setHours(0, 0, 0, 0)
+
+  d.setDate(d.getDate() + weekOffset * 7)
   
   const toDateType = (d: Date): DateType => ({
     month: d.toLocaleString("default", { month: "long" }),
@@ -34,24 +39,16 @@ export const getWeekBounds = (date: DateType) => {
     year: d.getFullYear(),
   })
 
-  const day = d.getDay() // 0 = Sunday
+  const day = d.getDay()
   const startOfWeek = new Date(d)
   startOfWeek.setDate(d.getDate() - day)
 
   const endOfWeek = new Date(startOfWeek)
   endOfWeek.setDate(startOfWeek.getDate() + 6)
 
-  const prevStartOfWeek = new Date(startOfWeek)
-  prevStartOfWeek.setDate(startOfWeek.getDate() - 7)
-
-  const prevEndOfWeek = new Date(startOfWeek)
-  prevEndOfWeek.setDate(startOfWeek.getDate() - 1)
-
   return {
     start: toDateType(startOfWeek),
-    end: toDateType(endOfWeek),
-    prevStart: toDateType(prevStartOfWeek),
-    prevEnd: toDateType(prevEndOfWeek),
+    end: toDateType(endOfWeek)
   }
 }
 

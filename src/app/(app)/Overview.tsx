@@ -1,7 +1,6 @@
 "use client"
 
 import LineChart from "@/components/LineChart"
-import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { darkMode, lightMode } from "@/globals/colors"
@@ -13,6 +12,7 @@ import YearTotals from "./YearTotals"
 import RemainingBudget from "./RemainingBudget"
 import TopThreeExpenses from "./TopThreeCategories"
 import SetUpDialog from "./SetUpDialog"
+import { Stack } from "@mui/material"
 
 const Overview = () => {
   const { incomeTransactionsV2, expenseTransactionsV2, budgetTransactionsV2 } =
@@ -59,7 +59,7 @@ const Overview = () => {
   // }, [incomeTransactionsV2, expenseTransactionsV2])
 
   return (
-    <FlexColWrapper gap={2}>
+    <Stack spacing={1}>
       <YearTotals
         currentYear={currentYear}
         currentMonth={currentMonth}
@@ -94,7 +94,7 @@ const Overview = () => {
         currentYear={currentYear}
         loadCategories={loadCategories}
       />
-    </FlexColWrapper>
+    </Stack>
   )
 }
 

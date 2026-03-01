@@ -29,7 +29,7 @@ const Settings = () => {
   return (
     <Box className="flex flex-col gap-5 h-full">
       <Typography variant={"h5"} width={"100%"} textAlign={"center"}>
-        Manage Your Categories
+        Settings
       </Typography>
 
       <hr

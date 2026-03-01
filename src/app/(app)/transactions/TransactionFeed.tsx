@@ -58,78 +58,76 @@ const TransactionFeed = ({
   }, [expenseTransactionsV2, selectedYear, selectedMonth])
 
   return (
-    <Stack direction={"column"} spacing={2}>
-      <ShowCaseCard title={""}>
-        <Stack spacing={2}>
-          <ToggleButtonGroup
-            value={type}
-            exclusive
-            size={"small"}
-            onChange={handleSelectType}
-            sx={{
-              width: "100%",
-              justifyContent: "center",
-              gap: 3,
-              "& .MuiToggleButton-root": {
-                borderRadius: "15px",
-                border: "1px solid",
-                px: 3,
-                textTransform: "none",
+    <ShowCaseCard title={""}>
+      <Stack spacing={2}>
+        <ToggleButtonGroup
+          value={type}
+          exclusive
+          size={"small"}
+          onChange={handleSelectType}
+          sx={{
+            width: "100%",
+            justifyContent: "center",
+            gap: 3,
+            "& .MuiToggleButton-root": {
+              borderRadius: "15px",
+              border: "1px solid",
+              px: 3,
+              textTransform: "none",
+            },
+            "& .MuiToggleButtonGroup-grouped": {
+              margin: 0,
+              border: "1px solid",
+              "&:not(:first-of-type)": {
+                borderLeft: "1px solid",
               },
-              "& .MuiToggleButtonGroup-grouped": {
-                margin: 0,
-                border: "1px solid",
-                "&:not(:first-of-type)": {
-                  borderLeft: "1px solid",
-                },
-              },
-            }}
-          >
-            <ToggleButton value={"income"} color={"success"}>
-              Income
-            </ToggleButton>
+            },
+          }}
+        >
+          <ToggleButton value={"income"} color={"success"}>
+            Income
+          </ToggleButton>
 
-            <ToggleButton value={"expense"} color={"error"}>
-              Expense
-            </ToggleButton>
-          </ToggleButtonGroup>
+          <ToggleButton value={"expense"} color={"error"}>
+            Expense
+          </ToggleButton>
+        </ToggleButtonGroup>
 
-          {type === "income" && (
-            <TransactionList
-              title={"Income"}
-              transactions={filteredIncome}
-              type={"income"}
-              user={user}
-              selectedTransaction={selectedTransaction}
-              setSelectedTransaction={setSelectedTransaction}
-              openEditDialog={openEditDialog}
-              setOpenEditDialog={setOpenEditDialog}
-              refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
-              refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-              currentTheme={currentTheme}
-              isLoading={isLoading}
-            />
-          )}
+        {type === "income" && (
+          <TransactionList
+            title={"Income"}
+            transactions={filteredIncome}
+            type={"income"}
+            user={user}
+            selectedTransaction={selectedTransaction}
+            setSelectedTransaction={setSelectedTransaction}
+            openEditDialog={openEditDialog}
+            setOpenEditDialog={setOpenEditDialog}
+            refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
+            refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
+            currentTheme={currentTheme}
+            isLoading={isLoading}
+          />
+        )}
 
-          {type === "expense" && (
-            <TransactionList
-              title={"Expense"}
-              transactions={filteredExpense}
-              type={"expense"}
-              user={user}
-              selectedTransaction={selectedTransaction}
-              setSelectedTransaction={setSelectedTransaction}
-              openEditDialog={openEditDialog}
-              setOpenEditDialog={setOpenEditDialog}
-              refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
-              refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-              currentTheme={currentTheme}
-              isLoading={isLoading}
-            />
-          )}
-        </Stack>
-      </ShowCaseCard>
-    </Stack>
+        {type === "expense" && (
+          <TransactionList
+            title={"Expense"}
+            transactions={filteredExpense}
+            type={"expense"}
+            user={user}
+            selectedTransaction={selectedTransaction}
+            setSelectedTransaction={setSelectedTransaction}
+            openEditDialog={openEditDialog}
+            setOpenEditDialog={setOpenEditDialog}
+            refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
+            refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
+            currentTheme={currentTheme}
+            isLoading={isLoading}
+          />
+        )}
+      </Stack>
+    </ShowCaseCard>
   )
 }
 

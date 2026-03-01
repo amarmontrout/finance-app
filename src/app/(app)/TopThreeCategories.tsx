@@ -1,4 +1,5 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
+import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { getMonthCategoryTotalsV2, getMonthTotalV2 } from "@/utils/getTotals"
@@ -15,9 +16,11 @@ import { useMemo } from "react"
 const TopThreeExpenses = ({
   expenseTransactionsV2,
   excludedSet,
+  isLoading,
 }: {
   expenseTransactionsV2: TransactionTypeV2[]
   excludedSet: Set<string>
+  isLoading: boolean
 }) => {
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -71,25 +74,29 @@ const TopThreeExpenses = ({
 
   return (
     <ShowCaseCard title={`Top Monthly Expenses`}>
-      <FlexColWrapper gap={2} toRowBreak={"lg"}>
-        {topThree.map(([category, amount], idx) => (
-          <ColoredInfoCard
-            key={category}
-            cardColors={defaultCardColor}
-            info={`$${formattedStringNumber(Number(amount))}`}
-            title={`${idx + 1}) ${category}`}
-          />
-        ))}
-        {topThree.length !== 0 ? (
-          <Typography width={"100%"} textAlign={"center"}>
-            {`TOTALING ${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
-          </Typography>
-        ) : (
-          <Typography width={"100%"} textAlign={"center"}>
-            Enter your expenses in transactions
-          </Typography>
-        )}
-      </FlexColWrapper>
+      {isLoading ? (
+        <LoadingCircle />
+      ) : (
+        <FlexColWrapper gap={2} toRowBreak={"lg"}>
+          {topThree.map(([category, amount], idx) => (
+            <ColoredInfoCard
+              key={category}
+              cardColors={defaultCardColor}
+              info={`$${formattedStringNumber(Number(amount))}`}
+              title={`${idx + 1}) ${category}`}
+            />
+          ))}
+          {topThree.length !== 0 ? (
+            <Typography width={"100%"} textAlign={"center"}>
+              {`TOTALING ${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
+            </Typography>
+          ) : (
+            <Typography width={"100%"} textAlign={"center"}>
+              Enter your expenses in transactions
+            </Typography>
+          )}
+        </FlexColWrapper>
+      )}
     </ShowCaseCard>
   )
 }

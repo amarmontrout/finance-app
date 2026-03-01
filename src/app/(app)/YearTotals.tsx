@@ -1,4 +1,5 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
+import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { getNetCashFlow } from "@/utils/financialFunctions"
@@ -17,6 +18,7 @@ const YearTotals = ({
   excludedSet,
   incomeTransactionsV2,
   expenseTransactionsV2,
+  isLoading,
 }: {
   currentYear: number
   currentMonth: string
@@ -24,6 +26,7 @@ const YearTotals = ({
   excludedSet: Set<string>
   incomeTransactionsV2: TransactionTypeV2[]
   expenseTransactionsV2: TransactionTypeV2[]
+  isLoading: boolean
 }) => {
   const defaultCardColor = getCardColor(currentTheme, "default")
   const totalIncome = getMonthTotalV2(
@@ -48,23 +51,27 @@ const YearTotals = ({
 
   return (
     <ShowCaseCard title={"Monthly Summary"}>
-      <FlexColWrapper gap={2} toRowBreak={"md"}>
-        <ColoredInfoCard
-          cardColors={defaultCardColor}
-          info={`$${formattedStringNumber(totalIncome)}`}
-          title={`${currentMonth} Income`}
-        />
-        <ColoredInfoCard
-          cardColors={defaultCardColor}
-          info={`$${formattedStringNumber(totalExpenses)}`}
-          title={`${currentMonth} Expenses`}
-        />
-        <ColoredInfoCard
-          cardColors={savingsColor}
-          info={`$${formattedStringNumber(annualNetIncome)}`}
-          title={netTitle}
-        />
-      </FlexColWrapper>
+      {isLoading ? (
+        <LoadingCircle />
+      ) : (
+        <FlexColWrapper gap={2} toRowBreak={"md"}>
+          <ColoredInfoCard
+            cardColors={defaultCardColor}
+            info={`$${formattedStringNumber(totalIncome)}`}
+            title={`${currentMonth} Income`}
+          />
+          <ColoredInfoCard
+            cardColors={defaultCardColor}
+            info={`$${formattedStringNumber(totalExpenses)}`}
+            title={`${currentMonth} Expenses`}
+          />
+          <ColoredInfoCard
+            cardColors={savingsColor}
+            info={`$${formattedStringNumber(annualNetIncome)}`}
+            title={netTitle}
+          />
+        </FlexColWrapper>
+      )}
     </ShowCaseCard>
   )
 }

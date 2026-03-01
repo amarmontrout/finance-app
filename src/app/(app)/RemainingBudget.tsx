@@ -1,4 +1,5 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
+import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import {
@@ -17,6 +18,7 @@ const RemainingBudget = ({
   currentMonth,
   currentDay,
   currentYear,
+  isLoading,
 }: {
   budgetCategoriesV2: BudgetTypeV2[]
   budgetTransactionsV2: BudgetTransactionTypeV2[]
@@ -24,6 +26,7 @@ const RemainingBudget = ({
   currentMonth: string
   currentDay: number
   currentYear: number
+  isLoading: boolean
 }) => {
   const positiveCardColor = getCardColor(currentTheme, "great")
   const negativeCardColor = getCardColor(currentTheme, "concerning")
@@ -83,29 +86,33 @@ const RemainingBudget = ({
 
   return (
     <ShowCaseCard title={"Remaining Weekly Budget"}>
-      <FlexColWrapper gap={2} toRowBreak={"xl"}>
-        {remainingBudgetCategories.length === 0 ? (
-          <Typography width={"100%"} textAlign={"center"}>
-            Set up your budget in settings
-          </Typography>
-        ) : (
-          remainingBudgetCategories.map((entry) => {
-            const category = entry.category
-            const remaining = entry.amount
-            const cardColor =
-              remaining < 0 ? negativeCardColor : positiveCardColor
+      {isLoading ? (
+        <LoadingCircle />
+      ) : (
+        <FlexColWrapper gap={2} toRowBreak={"xl"}>
+          {remainingBudgetCategories.length === 0 ? (
+            <Typography width={"100%"} textAlign={"center"}>
+              Set up your budget in settings
+            </Typography>
+          ) : (
+            remainingBudgetCategories.map((entry) => {
+              const category = entry.category
+              const remaining = entry.amount
+              const cardColor =
+                remaining < 0 ? negativeCardColor : positiveCardColor
 
-            return (
-              <ColoredInfoCard
-                key={category}
-                cardColors={cardColor}
-                title={category}
-                info={`$${formattedStringNumber(remaining)}`}
-              />
-            )
-          })
-        )}
-      </FlexColWrapper>
+              return (
+                <ColoredInfoCard
+                  key={category}
+                  cardColors={cardColor}
+                  title={category}
+                  info={`$${formattedStringNumber(remaining)}`}
+                />
+              )
+            })
+          )}
+        </FlexColWrapper>
+      )}
     </ShowCaseCard>
   )
 }

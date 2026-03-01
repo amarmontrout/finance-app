@@ -67,6 +67,7 @@ const Overview = () => {
         excludedSet={excludedSet}
         incomeTransactionsV2={incomeTransactionsV2}
         expenseTransactionsV2={expenseTransactionsV2}
+        isLoading={isLoading}
       />
 
       <RemainingBudget
@@ -76,11 +77,13 @@ const Overview = () => {
         currentMonth={currentMonth}
         currentDay={currentDay}
         currentYear={currentYear}
+        isLoading={isLoading}
       />
 
       <TopThreeExpenses
         expenseTransactionsV2={expenseTransactionsV2}
         excludedSet={excludedSet}
+        isLoading={isLoading}
       />
 
       {/* <LineChart multiColumnData={chartDataV2} lineColors={lineColor} /> */}

@@ -1,14 +1,15 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { List, Stack, Typography, Box } from "@mui/material"
+import { Stack, Typography, Box } from "@mui/material"
 import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
-import { FlexColWrapper } from "@/components/Wrappers"
 import { useMemo } from "react"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import ListItemSwipe from "@/components/ListItemSwipe"
+import LoadingCircle from "@/components/LoadingCircle"
+import { accentColorPrimarySelected } from "@/globals/colors"
 
 const BudgetEntries = ({
   budgetTransactions,
@@ -18,6 +19,7 @@ const BudgetEntries = ({
   noteId,
   setNoteId,
   currentTheme,
+  isLoading,
 }: {
   budgetTransactions: BudgetTransactionTypeV2[]
   refreshBudgetTransactions: () => void
@@ -26,6 +28,7 @@ const BudgetEntries = ({
   noteId: number | null
   setNoteId: HookSetter<number | null>
   currentTheme: string | undefined
+  isLoading: boolean
 }) => {
   const user = useUser()
 
@@ -56,9 +59,11 @@ const BudgetEntries = ({
   }, [budgetTransactions])
 
   return (
-    <FlexColWrapper gap={2}>
-      <ShowCaseCard title={""}>
-        <List className="flex flex-col gap-2" disablePadding={true}>
+    <ShowCaseCard title={""}>
+      {isLoading ? (
+        <LoadingCircle />
+      ) : (
+        <Stack spacing={2.5}>
           {budgetTransactions.length === 0 ? (
             <Typography>The are no budget entries yet</Typography>
           ) : (
@@ -72,14 +77,20 @@ const BudgetEntries = ({
                 }, 0)
 
                 return (
-                  <Box key={category}>
-                    <Stack direction={"row"} justifyContent={"space-around"}>
-                      <Typography variant="h6">{category}</Typography>
-                      <Typography variant="h6">
+                  <Stack key={category} spacing={0.5}>
+                    <Stack direction={"row"} justifyContent={"space-between"}>
+                      <Typography variant={"h5"} fontWeight={700}>
+                        {category}
+                      </Typography>
+                      <Typography variant={"h5"} fontWeight={700}>
                         {`$${formattedStringNumber(total)}`}
                       </Typography>
                     </Stack>
-
+                    <hr
+                      style={{
+                        border: `1px solid ${accentColorPrimarySelected}`,
+                      }}
+                    />
                     <Stack direction={"column"} spacing={1}>
                       {entries.map((entry) => {
                         const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
@@ -113,13 +124,13 @@ const BudgetEntries = ({
                         )
                       })}
                     </Stack>
-                  </Box>
+                  </Stack>
                 )
               })
           )}
-        </List>
-      </ShowCaseCard>
-    </FlexColWrapper>
+        </Stack>
+      )}
+    </ShowCaseCard>
   )
 }
 

@@ -121,6 +121,7 @@ const AddTransactionDialog = ({
           <ToggleButtonGroup
             value={type}
             exclusive
+            size={"small"}
             onChange={handleSelectType}
             sx={{
               width: "100%",

@@ -27,7 +27,7 @@ import {
 import AddIcon from "@mui/icons-material/Add"
 
 const Budget = () => {
-  const { budgetTransactionsV2, refreshBudgetTransactionsV2 } =
+  const { budgetTransactionsV2, refreshBudgetTransactionsV2, isLoading } =
     useTransactionContext()
   const { budgetCategoriesV2 } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
@@ -157,6 +157,7 @@ const Budget = () => {
         noteId={noteId}
         setNoteId={setNoteId}
         currentTheme={currentTheme}
+        isLoading={isLoading}
       />
 
       <AddBudgetEntryDialog

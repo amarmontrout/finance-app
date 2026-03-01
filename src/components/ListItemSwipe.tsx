@@ -2,7 +2,7 @@ import { Stack, IconButton, Box, Typography } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import EditIcon from "@mui/icons-material/Edit"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { darkMode, lightMode } from "@/globals/colors"
 
 const EditDeleteButton = ({
@@ -72,7 +72,6 @@ const ListItemSwipe = ({
   const startXRef = useRef(0)
   const startYRef = useRef(0)
   const gestureLockRef = useRef<"horizontal" | "vertical" | null>(null)
-  const hasVibratedRef = useRef(false)
 
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
@@ -136,19 +135,13 @@ const ListItemSwipe = ({
     // If horizontal → apply edge restriction
     if (gestureLockRef.current === "horizontal") {
       e.preventDefault()
+
       const newOffset =
         startEdgeRef.current === "left"
           ? Math.max(0, Math.min(deltaX, 110))
           : Math.min(0, Math.max(deltaX, -110))
 
       setOffset(newOffset)
-
-      if (!hasVibratedRef.current) {
-        if (newOffset <= -SWIPE_THRESHOLD || newOffset >= SWIPE_THRESHOLD) {
-          navigator.vibrate?.(10)
-          hasVibratedRef.current = true
-        }
-      }
     }
   }
 
@@ -166,7 +159,6 @@ const ListItemSwipe = ({
     setOffset(0)
     startEdgeRef.current = null
     gestureLockRef.current = null
-    hasVibratedRef.current = false
     setIsActioning(false)
   }
 
@@ -178,6 +170,8 @@ const ListItemSwipe = ({
       sx={{
         position: "relative",
         overflow: "hidden",
+        border: "1px solid",
+        borderColor: "divider",
         borderRadius: 2,
       }}
     >
@@ -239,8 +233,6 @@ const ListItemSwipe = ({
             px: 2,
             py: 1.5,
             bgcolor: listItemColor,
-            border: "1px solid",
-            borderColor: "divider",
             borderRadius: 2,
           }}
         >

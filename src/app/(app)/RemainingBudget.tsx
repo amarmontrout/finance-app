@@ -8,8 +8,9 @@ import {
   getWeekBounds,
 } from "@/utils/helperFunctions"
 import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
-import { Typography } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
+import BudgetProgressBar from "./budget/BudgetProgressBar"
 
 const RemainingBudget = ({
   budgetCategoriesV2,
@@ -84,34 +85,55 @@ const RemainingBudget = ({
     return remaining
   }, [budgetCategoriesV2, weeklyTransactions])
 
+  const budgetTotal = budgetCategoriesV2.reduce((sum, c) => sum + c.amount, 0)
+  const actualTotal = weeklyTransactions.reduce(
+    (sum, t) => sum + (t.isReturn ? -t.amount : t.amount),
+    0,
+  )
+  const netTotal = budgetTotal - actualTotal
+
   return (
-    <ShowCaseCard title={"Remaining Weekly Budget"}>
+    <ShowCaseCard title={""}>
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <FlexColWrapper gap={2} toRowBreak={"xl"}>
-          {remainingBudgetCategories.length === 0 ? (
-            <Typography width={"100%"} textAlign={"center"}>
-              Set up your budget in settings
-            </Typography>
-          ) : (
-            remainingBudgetCategories.map((entry) => {
-              const category = entry.category
-              const remaining = entry.amount
-              const cardColor =
-                remaining < 0 ? negativeCardColor : positiveCardColor
+        <Stack spacing={1.5}>
+          <BudgetProgressBar
+            label={"Weekly Budget"}
+            actual={actualTotal}
+            budget={budgetTotal}
+          />
+          <FlexColWrapper gap={2} toRowBreak={"xl"}>
+            {remainingBudgetCategories.length === 0 ? (
+              <Typography width={"100%"} textAlign={"center"}>
+                Set up your budget in settings
+              </Typography>
+            ) : (
+              remainingBudgetCategories.map((entry) => {
+                const category = entry.category
+                const remaining = entry.amount
+                const cardColor =
+                  remaining < 0 ? negativeCardColor : positiveCardColor
 
-              return (
-                <ColoredInfoCard
-                  key={category}
-                  cardColors={cardColor}
-                  title={category}
-                  info={`$${formattedStringNumber(remaining)}`}
-                />
-              )
-            })
+                return (
+                  <ColoredInfoCard
+                    key={category}
+                    cardColors={cardColor}
+                    title={category}
+                    info={`$${formattedStringNumber(remaining)}`}
+                  />
+                )
+              })
+            )}
+          </FlexColWrapper>
+
+          {weeklyTransactions.length !== 0 && (
+            <Typography variant={"h6"} textAlign={"right"}>
+              {`${netTotal < 0 ? "Overspent" : "Saved"}
+              $${formattedStringNumber(Math.abs(netTotal))} for the week`}
+            </Typography>
           )}
-        </FlexColWrapper>
+        </Stack>
       )}
     </ShowCaseCard>
   )

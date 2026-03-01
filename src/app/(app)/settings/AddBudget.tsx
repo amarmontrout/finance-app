@@ -193,7 +193,7 @@ const AddBudget = ({
 
           <hr style={{ width: "100%", marginTop: "10px" }} />
 
-          <Box flex={1} overflow={"auto"}>
+          <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
             <List className="flex flex-col gap-2">
               {budgetCategoriesV2 &&
                 budgetCategoriesV2.map((budget) => {

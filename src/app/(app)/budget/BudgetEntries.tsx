@@ -94,7 +94,7 @@ const BudgetEntries = ({
                               entry.isReturn ? "error.main" : "inherit"
                             }
                             buttonCondition={noteId === entry.id}
-                            onDelete={() => {
+                            onDelete={async () => {
                               handleDeleteEntry(entry.id)
                             }}
                             onSetDelete={() => {

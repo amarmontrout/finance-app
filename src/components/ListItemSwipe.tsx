@@ -62,7 +62,7 @@ const ListItemSwipe = ({
   amount: string
   amountColor: string
   buttonCondition: boolean
-  onDelete: () => void
+  onDelete: () => Promise<void>
   onSetDelete: () => void
   onCancelDelete: () => void
   onEdit: () => void
@@ -72,6 +72,7 @@ const ListItemSwipe = ({
   const startXRef = useRef(0)
   const startYRef = useRef(0)
   const gestureLockRef = useRef<"horizontal" | "vertical" | null>(null)
+  const hasVibratedRef = useRef(false)
 
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
@@ -81,6 +82,9 @@ const ListItemSwipe = ({
   const DIRECTION_THRESHOLD = 10
   const listItemColor =
     currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
+
+  const isDeleteActive = offset <= -SWIPE_THRESHOLD
+  const isEditActive = offset >= SWIPE_THRESHOLD
 
   const handleTouchStart = (e: React.TouchEvent) => {
     const touch = e.touches[0]
@@ -131,12 +135,19 @@ const ListItemSwipe = ({
 
     // If horizontal → apply edge restriction
     if (gestureLockRef.current === "horizontal") {
-      if (startEdgeRef.current === "left") {
-        setOffset(Math.max(0, Math.min(deltaX, 110)))
-      }
+      e.preventDefault()
+      const newOffset =
+        startEdgeRef.current === "left"
+          ? Math.max(0, Math.min(deltaX, 110))
+          : Math.min(0, Math.max(deltaX, -110))
 
-      if (startEdgeRef.current === "right") {
-        setOffset(Math.min(0, Math.max(deltaX, -110)))
+      setOffset(newOffset)
+
+      if (!hasVibratedRef.current) {
+        if (newOffset <= -SWIPE_THRESHOLD || newOffset >= SWIPE_THRESHOLD) {
+          navigator.vibrate?.(10)
+          hasVibratedRef.current = true
+        }
       }
     }
   }
@@ -146,16 +157,16 @@ const ListItemSwipe = ({
 
     if (offset <= -SWIPE_THRESHOLD) {
       setIsActioning(true)
-      onDelete()
+      await onDelete()
     } else if (offset >= SWIPE_THRESHOLD) {
       setIsActioning(true)
       onEdit()
     }
 
     setOffset(0)
-
     startEdgeRef.current = null
     gestureLockRef.current = null
+    hasVibratedRef.current = false
     setIsActioning(false)
   }
 
@@ -184,6 +195,8 @@ const ListItemSwipe = ({
           justifyContent: "center",
           color: "white",
           opacity: offset < 0 ? Math.min(Math.abs(offset) / 100, 1) : 0,
+          transform: isDeleteActive ? "scale(1.5)" : "scale(1)",
+          transition: "transform 0.15s ease",
         }}
       >
         <DeleteIcon />
@@ -202,6 +215,8 @@ const ListItemSwipe = ({
           justifyContent: "center",
           color: "white",
           opacity: offset > 0 ? Math.min(offset / 100, 1) : 0,
+          transform: isEditActive ? "scale(1.5)" : "scale(1)",
+          transition: "transform 0.15s ease",
         }}
       >
         <EditIcon />

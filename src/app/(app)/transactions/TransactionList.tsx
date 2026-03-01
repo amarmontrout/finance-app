@@ -79,7 +79,7 @@ const TransactionList = ({
               buttonCondition={
                 selectedTransaction?.id === transaction.id && !openEditDialog
               }
-              onDelete={() => {
+              onDelete={async () => {
                 handleDeleteTransaction(transaction.id, type)
               }}
               onSetDelete={() => {

@@ -63,9 +63,11 @@ const BudgetEntries = ({
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <Stack spacing={2.5}>
+        <Stack className="xl:w-[50%]" spacing={2.5} margin={"0 auto"}>
           {budgetTransactions.length === 0 ? (
-            <Typography>The are no budget entries yet</Typography>
+            <Typography width={"100%"} textAlign={"center"}>
+              The are no budget entries for this week
+            </Typography>
           ) : (
             Object.entries(groupedTransactions)
               .sort(([a], [b]) => a.localeCompare(b))

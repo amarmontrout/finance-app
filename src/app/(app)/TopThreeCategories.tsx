@@ -9,7 +9,7 @@ import {
   getCurrentDateInfo,
 } from "@/utils/helperFunctions"
 import { TransactionTypeV2 } from "@/utils/type"
-import { Typography } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { useMemo } from "react"
 
@@ -77,25 +77,27 @@ const TopThreeExpenses = ({
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <FlexColWrapper gap={2} toRowBreak={"lg"}>
-          {topThree.map(([category, amount], idx) => (
-            <ColoredInfoCard
-              key={category}
-              cardColors={defaultCardColor}
-              info={`$${formattedStringNumber(Number(amount))}`}
-              title={`${idx + 1}) ${category}`}
-            />
-          ))}
+        <Stack spacing={2}>
+          <FlexColWrapper gap={2} toRowBreak={"xl"}>
+            {topThree.map(([category, amount], idx) => (
+              <ColoredInfoCard
+                key={category}
+                cardColors={defaultCardColor}
+                info={`$${formattedStringNumber(Number(amount))}`}
+                title={`${idx + 1}) ${category}`}
+              />
+            ))}
+          </FlexColWrapper>
           {topThree.length !== 0 ? (
             <Typography width={"100%"} textAlign={"center"}>
-              {`TOTALING ${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
+              {`${topThreeTotalPercent.toFixed(1)}% OF ALL EXPENSES`}
             </Typography>
           ) : (
             <Typography width={"100%"} textAlign={"center"}>
               Enter your expenses in transactions
             </Typography>
           )}
-        </FlexColWrapper>
+        </Stack>
       )}
     </ShowCaseCard>
   )

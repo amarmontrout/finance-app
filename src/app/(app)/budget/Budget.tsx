@@ -44,8 +44,8 @@ const Budget = () => {
   const week = getWeekBounds(TODAY, weekOffset)
 
   const currentWeek = {
-    start: `${week.start.month} ${week.start.day}`,
-    end: `${week.end.month} ${week.end.day}`,
+    start: `${week.start.month} ${week.start.day}, ${week.start.year}`,
+    end: `${week.end.month} ${week.end.day}, ${week.end.year}`,
   }
 
   const notes = useMemo(() => {
@@ -110,28 +110,28 @@ const Budget = () => {
         <AddIcon />
       </IconButton>
 
-      <Box className="flex flex-col sm:flex-row gap-3 h-full">
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent={"space-between"}
+      <Stack
+        className="w-full md:w-[75%] xl:w-[50%] 2xl:w-[40%]"
+        direction="row"
+        alignItems="center"
+        justifyContent={"space-between"}
+        margin={"0 auto"}
+      >
+        <IconButton onClick={() => setWeekOffset((w) => w - 1)}>
+          <ChevronLeftIcon />
+        </IconButton>
+
+        <Typography onClick={() => setWeekOffset(0)}>
+          {currentWeek.start} - {currentWeek.end}
+        </Typography>
+
+        <IconButton
+          onClick={() => setWeekOffset((w) => w + 1)}
+          disabled={weekOffset === 0}
         >
-          <IconButton onClick={() => setWeekOffset((w) => w - 1)}>
-            <ChevronLeftIcon />
-          </IconButton>
-
-          <Typography onClick={() => setWeekOffset(0)}>
-            {currentWeek.start} – {currentWeek.end}
-          </Typography>
-
-          <IconButton
-            onClick={() => setWeekOffset((w) => w + 1)}
-            disabled={weekOffset === 0}
-          >
-            <ChevronRightIcon />
-          </IconButton>
-        </Stack>
-      </Box>
+          <ChevronRightIcon />
+        </IconButton>
+      </Stack>
 
       <hr style={{ width: "100%" }} />
 

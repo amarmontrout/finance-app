@@ -112,12 +112,17 @@ const Transactions = () => {
         <AddIcon />
       </IconButton>
 
-      <Stack direction={"row"} spacing={2}>
+      <Stack
+        className="w-full md:w-[50%] 2xl:w-[30%]"
+        direction={"row"}
+        spacing={2}
+        margin={"0 auto"}
+      >
         {tab === 0 && (
           <FormControl fullWidth>
             <InputLabel>Month</InputLabel>
             <Select
-              className="w-full sm:w-[175px]"
+              className="w-full"
               label="Month"
               value={selectedMonth}
               name={"month"}
@@ -137,7 +142,7 @@ const Transactions = () => {
         <FormControl fullWidth>
           <InputLabel>Year</InputLabel>
           <Select
-            className="w-full sm:w-[175px]"
+            className="w-full"
             label="Year"
             value={selectedYear}
             name={"year"}

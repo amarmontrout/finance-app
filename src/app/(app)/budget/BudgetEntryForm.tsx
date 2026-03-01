@@ -61,7 +61,7 @@ const BudgetEntryForm = ({
 
   return (
     <Box
-      className="flex flex-col lg:flex-row gap-5 mt-1"
+      className="flex flex-col md:w-[50%] 2xl:w-[30%] gap-5 mt-1"
       paddingTop={"10px"}
       margin={"0 auto"}
     >
@@ -72,7 +72,7 @@ const BudgetEntryForm = ({
       <FormControl>
         <InputLabel>Category</InputLabel>
         <Select
-          className="w-full lg:w-[175px]"
+          className="w-full"
           label="Category"
           value={budgetEntry.category}
           name={"category"}
@@ -88,7 +88,7 @@ const BudgetEntryForm = ({
 
       <FormControl>
         <Autocomplete
-          className="w-full lg:w-[175px]"
+          className="w-full"
           freeSolo
           options={notes.map((option) => option)}
           value={noteValue}

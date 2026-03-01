@@ -76,7 +76,7 @@ const TransactionTotals = ({
 
   return (
     <ShowCaseCard title="">
-      <Stack spacing={2} width="100%">
+      <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"}>
         {/* Header */}
         <Stack
           direction="row"

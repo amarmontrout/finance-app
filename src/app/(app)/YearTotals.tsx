@@ -54,7 +54,7 @@ const YearTotals = ({
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <FlexColWrapper gap={2} toRowBreak={"md"}>
+        <FlexColWrapper gap={2} toRowBreak={"xl"}>
           <ColoredInfoCard
             cardColors={defaultCardColor}
             info={`$${formattedStringNumber(totalIncome)}`}

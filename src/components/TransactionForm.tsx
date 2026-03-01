@@ -66,14 +66,14 @@ const TransactionForm = ({
   }
 
   return (
-    <Stack spacing={3}>
+    <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={3} margin={"0 auto"}>
       <MoneyInputV2 value={transaction.amount} setValue={setTransaction} />
 
       <Stack direction={"row"} spacing={1}>
         <FormControl fullWidth>
           <InputLabel>Month</InputLabel>
           <Select
-            className="w-full sm:w-[175px]"
+            className="w-full"
             label="Month"
             value={transaction.month}
             name={"month"}
@@ -88,7 +88,7 @@ const TransactionForm = ({
         <FormControl fullWidth>
           <InputLabel>Year</InputLabel>
           <Select
-            className="w-full sm:w-[175px]"
+            className="w-full"
             label="Year"
             value={transaction.year.toString()}
             name={"year"}
@@ -108,7 +108,7 @@ const TransactionForm = ({
       <FormControl>
         <InputLabel>Category</InputLabel>
         <Select
-          className="w-full sm:w-[175px]"
+          className="w-full"
           label="Category"
           value={transaction.category}
           name={"category"}

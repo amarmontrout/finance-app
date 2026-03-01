@@ -59,7 +59,7 @@ const TransactionFeed = ({
 
   return (
     <ShowCaseCard title={""}>
-      <Stack spacing={2}>
+      <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"}>
         <ToggleButtonGroup
           value={type}
           exclusive

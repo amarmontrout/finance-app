@@ -1,21 +1,17 @@
 "use client"
 
-import { FlexColWrapper } from "@/components/Wrappers"
 import { useMemo, useState } from "react"
 import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
-import { Box, IconButton, Stack, Typography } from "@mui/material"
+import { IconButton, Stack, Typography } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, DateType } from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
-import {
-  accentColorPrimary,
-  accentColorPrimarySelected,
-} from "@/globals/colors"
+import { accentColorPrimary } from "@/globals/colors"
 import AddIcon from "@mui/icons-material/Add"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
@@ -71,49 +67,11 @@ const Budget = () => {
   }, [budgetTransactionsV2, week.start, week.end])
 
   return (
-    <FlexColWrapper gap={3}>
-      <Box
-        height={"48px"}
-        borderBottom={`1px solid ${accentColorPrimarySelected}`}
-        alignContent={"center"}
-      >
-        <Typography variant={"h6"}>Budget Entries</Typography>
-      </Box>
-
-      <IconButton
-        onClick={() => {
-          setOpenAddBudgetEntryDialog(true)
-        }}
-        size="large"
-        disableRipple
-        sx={{
-          position: "fixed",
-          right: "20px",
-          top: "78px",
-          backgroundColor: accentColorPrimary,
-          color: "white",
-          zIndex: 100,
-          boxShadow: `
-            0 6px 12px rgba(0,0,0,0.18),
-            0 12px 24px rgba(0,0,0,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.25)
-          `,
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          "&:active": {
-            boxShadow: `
-              0 3px 6px rgba(0,0,0,0.25),
-              inset 0 3px 6px rgba(0,0,0,0.25)
-            `,
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
-
+    <Stack spacing={1.5}>
       <Stack
         className="w-full md:w-[75%] xl:w-[50%] 2xl:w-[40%]"
-        direction="row"
-        alignItems="center"
+        direction={"row"}
+        alignItems={"center"}
         justifyContent={"space-between"}
         margin={"0 auto"}
       >
@@ -133,10 +91,9 @@ const Budget = () => {
         </IconButton>
       </Stack>
 
-      <hr style={{ width: "100%" }} />
-
       <BudgetEntries
         budgetTransactions={weeklyTransactions}
+        budgetCategories={budgetCategoriesV2}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         setOpenEditDialog={setOpenEditDialog}
         setSelectedEntry={setSelectedEntry}
@@ -165,7 +122,37 @@ const Budget = () => {
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         today={TODAY}
       />
-    </FlexColWrapper>
+
+      <IconButton
+        onClick={() => {
+          setOpenAddBudgetEntryDialog(true)
+        }}
+        size="large"
+        disableRipple
+        sx={{
+          position: "fixed",
+          right: "16px",
+          bottom: "100px",
+          backgroundColor: accentColorPrimary,
+          color: "white",
+          zIndex: 100,
+          boxShadow: `
+            0 6px 12px rgba(0,0,0,0.18),
+            0 12px 24px rgba(0,0,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.25)
+          `,
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          "&:active": {
+            boxShadow: `
+              0 3px 6px rgba(0,0,0,0.25),
+              inset 0 3px 6px rgba(0,0,0,0.25)
+            `,
+          },
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+    </Stack>
   )
 }
 

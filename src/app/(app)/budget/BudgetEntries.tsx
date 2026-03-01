@@ -1,18 +1,19 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { Stack, Typography, Box } from "@mui/material"
-import { BudgetTransactionTypeV2, HookSetter } from "@/utils/type"
+import { Stack, Typography } from "@mui/material"
+import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { useMemo } from "react"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
-import { accentColorPrimarySelected } from "@/globals/colors"
+import BudgetProgressBar from "./BudgetProgressBar"
 
 const BudgetEntries = ({
   budgetTransactions,
+  budgetCategories,
   refreshBudgetTransactions,
   setOpenEditDialog,
   setSelectedEntry,
@@ -22,6 +23,7 @@ const BudgetEntries = ({
   isLoading,
 }: {
   budgetTransactions: BudgetTransactionTypeV2[]
+  budgetCategories: BudgetTypeV2[]
   refreshBudgetTransactions: () => void
   setOpenEditDialog: HookSetter<boolean>
   setSelectedEntry: HookSetter<BudgetTransactionTypeV2 | null>
@@ -58,12 +60,22 @@ const BudgetEntries = ({
     )
   }, [budgetTransactions])
 
+  const budgetLookup = useMemo(() => {
+    return budgetCategories.reduce(
+      (acc, budget) => {
+        acc[budget.category] = budget.amount
+        return acc
+      },
+      {} as Record<string, number>,
+    )
+  }, [budgetCategories])
+
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <Stack className="xl:w-[50%]" spacing={2.5} margin={"0 auto"}>
+        <Stack className="xl:w-[50%]" spacing={3} margin={"0 auto"}>
           {budgetTransactions.length === 0 ? (
             <Typography width={"100%"} textAlign={"center"}>
               The are no budget entries for this week
@@ -80,19 +92,12 @@ const BudgetEntries = ({
 
                 return (
                   <Stack key={category} spacing={0.5}>
-                    <Stack direction={"row"} justifyContent={"space-between"}>
-                      <Typography variant={"h5"} fontWeight={700}>
-                        {category}
-                      </Typography>
-                      <Typography variant={"h5"} fontWeight={700}>
-                        {`$${formattedStringNumber(total)}`}
-                      </Typography>
-                    </Stack>
-                    <hr
-                      style={{
-                        border: `1px solid ${accentColorPrimarySelected}`,
-                      }}
+                    <BudgetProgressBar
+                      label={category}
+                      actual={total}
+                      budget={budgetLookup[category] ?? 0}
                     />
+
                     <Stack direction={"column"} spacing={1}>
                       {entries.map((entry) => {
                         const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`

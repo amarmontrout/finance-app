@@ -157,22 +157,24 @@ const AddBudget = ({
           paddingTop={"5px"}
           height={"325px"}
         >
-          <Box className="flex flex-row xl:flex-col gap-3 pb-[12px]">
-            <FormControl>
-              <InputLabel>Category</InputLabel>
-              <OutlinedInput
-                className="w-full"
-                label={"Category"}
-                value={budgetCategory.category}
-                name={"category"}
-                onChange={(e) => handleCategory(e)}
-              />
-            </FormControl>
+          <Stack direction={"column"} spacing={1}>
+            <Stack direction={"row"} height={"100%"}>
+              <FormControl fullWidth>
+                <InputLabel>Category</InputLabel>
+                <OutlinedInput
+                  className="w-full h-full"
+                  label={"Category"}
+                  value={budgetCategory.category}
+                  name={"category"}
+                  onChange={(e) => handleCategory(e)}
+                />
+              </FormControl>
 
-            <MoneyInputV2
-              value={budgetCategory.amount}
-              setValue={setBudgetCategory}
-            />
+              <MoneyInputV2
+                value={budgetCategory.amount}
+                setValue={setBudgetCategory}
+              />
+            </Stack>
 
             <Button
               variant={"contained"}
@@ -187,9 +189,9 @@ const AddBudget = ({
             >
               {"Add"}
             </Button>
-          </Box>
+          </Stack>
 
-          <hr style={{ width: "100%" }} />
+          <hr style={{ width: "100%", marginTop: "10px" }} />
 
           <Box flex={1} overflow={"auto"}>
             <List className="flex flex-col gap-2">

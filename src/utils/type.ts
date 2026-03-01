@@ -5,7 +5,8 @@ export type TransactionTypeV2 = {
   month: string,
   year: number,
   category: string,
-  amount: number
+  amount: number,
+  isPaid?: boolean
 }
 
 export type BudgetTransactionTypeV2 = {

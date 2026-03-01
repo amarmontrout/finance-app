@@ -44,7 +44,7 @@ const YearTotals = ({
   const annualNetIncome = getNetCashFlow(totalIncome, totalExpenses)
   const savingsHealthState = getSavingsHealthState(annualNetIncome, totalIncome)
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
-  const hasNet = Number(annualNetIncome) !== 0
+  const hasNet = annualNetIncome !== 0
   const netTitle = `${currentMonth} Net Cash${
     hasNet ? ` (${savingsHealthState.toUpperCase()})` : ""
   }`

@@ -11,8 +11,10 @@ import {
   SelectChangeEvent,
   DialogActions,
   DialogContent,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { MoneyInputV2 } from "../../../components/MoneyInput"
 import {
   ChoiceTypeV2,
@@ -77,6 +79,7 @@ const EditTransactionDetailDialog = ({
       year: transaction.year,
       category: transaction.category,
       amount: transaction.amount,
+      isPaid: transaction.isPaid,
     })
   }, [selectedTransaction, transactions, selectedYear, selectedMonth])
 
@@ -118,6 +121,11 @@ const EditTransactionDetailDialog = ({
 
       <DialogContent>
         <Box className="flex flex-col gap-5" padding={"10px"}>
+          <MoneyInputV2
+            value={updateTransaction.amount}
+            setValue={setUpdateTransaction}
+          />
+
           <FormControl>
             <InputLabel>Category</InputLabel>
             <Select
@@ -137,10 +145,23 @@ const EditTransactionDetailDialog = ({
             </Select>
           </FormControl>
 
-          <MoneyInputV2
-            value={updateTransaction.amount}
-            setValue={setUpdateTransaction}
-          />
+          {selectedTransaction?.type === "expense" && (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={updateTransaction.isPaid}
+                  sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    setUpdateTransaction((prev) => ({
+                      ...prev,
+                      isPaid: e.target.checked,
+                    }))
+                  }}
+                />
+              }
+              label="Is paid?"
+            />
+          )}
         </Box>
       </DialogContent>
 
@@ -173,7 +194,7 @@ const EditTransactionDetailDialog = ({
               currentTheme === "light" ? [lightMode.error] : [darkMode.error],
           }}
         >
-          {"Cancel"}
+          {"Close"}
         </Button>
       </DialogActions>
     </Dialog>

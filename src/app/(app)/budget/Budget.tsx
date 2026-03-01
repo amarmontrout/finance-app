@@ -131,8 +131,8 @@ const Budget = () => {
         disableRipple
         sx={{
           position: "fixed",
-          right: "16px",
-          bottom: "100px",
+          right: "10px",
+          bottom: "95px",
           backgroundColor: accentColorPrimary,
           color: "white",
           zIndex: 100,

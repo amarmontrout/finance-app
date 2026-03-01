@@ -1,6 +1,5 @@
 "use client"
 
-import { FlexColWrapper } from "@/components/Wrappers"
 import TransactionFeed from "./TransactionFeed"
 import {
   FormControl,
@@ -74,43 +73,13 @@ const Transactions = () => {
   }
 
   return (
-    <FlexColWrapper gap={3}>
+    <Stack spacing={1.5}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tab} onChange={handleChangeTab}>
           <Tab label="Transactions" />
           <Tab label="Totals" />
         </Tabs>
       </Box>
-
-      <IconButton
-        onClick={() => {
-          setOpenAddTransactionDialog(true)
-        }}
-        size="large"
-        disableRipple
-        sx={{
-          position: "fixed",
-          right: "20px",
-          top: "78px",
-          backgroundColor: accentColorPrimary,
-          color: "white",
-          zIndex: 100,
-          boxShadow: `
-            0 6px 12px rgba(0,0,0,0.18),
-            0 12px 24px rgba(0,0,0,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.25)
-          `,
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          "&:active": {
-            boxShadow: `
-              0 3px 6px rgba(0,0,0,0.25),
-              inset 0 3px 6px rgba(0,0,0,0.25)
-            `,
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
 
       <Stack
         className="w-full md:w-[50%] 2xl:w-[30%]"
@@ -213,7 +182,37 @@ const Transactions = () => {
         refreshIncomeTransactions={refreshIncomeTransactionsV2}
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
       />
-    </FlexColWrapper>
+
+      <IconButton
+        onClick={() => {
+          setOpenAddTransactionDialog(true)
+        }}
+        size="large"
+        disableRipple
+        sx={{
+          position: "fixed",
+          right: "10px",
+          bottom: "95px",
+          backgroundColor: accentColorPrimary,
+          color: "white",
+          zIndex: 100,
+          boxShadow: `
+            0 6px 12px rgba(0,0,0,0.18),
+            0 12px 24px rgba(0,0,0,0.18),
+            inset 0 1px 0 rgba(255,255,255,0.25)
+          `,
+          transition: "transform 0.15s ease, box-shadow 0.15s ease",
+          "&:active": {
+            boxShadow: `
+              0 3px 6px rgba(0,0,0,0.25),
+              inset 0 3px 6px rgba(0,0,0,0.25)
+            `,
+          },
+        }}
+      >
+        <AddIcon />
+      </IconButton>
+    </Stack>
   )
 }
 

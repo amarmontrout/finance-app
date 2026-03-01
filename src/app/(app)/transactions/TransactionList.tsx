@@ -96,13 +96,11 @@ const TransactionList = ({
       ) : (
         <Stack spacing={1}>
           {transactions.map((transaction) => {
-            const mainTitle = `${transaction.category} ${transaction.isPaid ? "- Paid" : ""}`
-
             return (
               <ListItemSwipe
                 key={transaction.id}
-                mainTitle={mainTitle}
-                secondaryTitle={""}
+                mainTitle={transaction.category}
+                secondaryTitle={transaction.isPaid ? "Paid" : ""}
                 amount={`$${formattedStringNumber(transaction.amount)}`}
                 amountColor={type === "income" ? "success.main" : "error.main"}
                 buttonCondition={

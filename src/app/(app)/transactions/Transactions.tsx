@@ -3,7 +3,7 @@
 import TransactionFeed from "./TransactionFeed"
 import { Box, Tabs, Tab, Stack } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -47,6 +47,7 @@ const Transactions = () => {
     useCategoryContext()
   const { currentYear, currentMonth, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const CURRENT_DATE = {
     month: currentMonth,
@@ -125,6 +126,7 @@ const Transactions = () => {
         refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
         yearsV2={yearsV2}
         setAlertToast={setAlertToast}
+        inputRef={inputRef}
       />
 
       <EditTransactionDetailDialog
@@ -155,6 +157,9 @@ const Transactions = () => {
       <AddDataButton
         action={() => {
           setOpenAddTransactionDialog(true)
+          setTimeout(() => {
+            inputRef.current?.focus()
+          }, 50)
         }}
       />
     </Stack>

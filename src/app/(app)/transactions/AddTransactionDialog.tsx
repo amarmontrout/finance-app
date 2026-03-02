@@ -16,7 +16,7 @@ import {
   HookSetter,
   TransactionTypeV2,
 } from "@/utils/type"
-import { useState } from "react"
+import { RefObject, useState } from "react"
 import TransactionForm from "@/components/TransactionForm"
 import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
 import { saveExpense, saveIncome } from "@/app/api/Transactions/requests"
@@ -31,6 +31,7 @@ const AddTransactionDialog = ({
   refreshExpenseTransactionsV2,
   yearsV2,
   setAlertToast,
+  inputRef,
 }: {
   openAddTransactionDialog: boolean
   setOpenAddTransactionDialog: HookSetter<boolean>
@@ -40,6 +41,7 @@ const AddTransactionDialog = ({
   refreshExpenseTransactionsV2: () => void
   yearsV2: ChoiceTypeV2[]
   setAlertToast: HookSetter<AlertToastType | undefined>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const user = useUser()
@@ -182,6 +184,7 @@ const AddTransactionDialog = ({
             currentMonth={currentMonth}
             currentYear={currentYear}
             openAddTransactionDialog={openAddTransactionDialog}
+            inputRef={inputRef}
           />
         </Stack>
       </DialogContent>

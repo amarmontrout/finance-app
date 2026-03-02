@@ -8,7 +8,7 @@ import {
   SelectChangeEvent,
   Stack,
 } from "@mui/material"
-import { useEffect } from "react"
+import { RefObject, useEffect } from "react"
 import { MONTHS } from "@/globals/globals"
 import { MoneyInputV2 } from "./MoneyInput"
 import { ChoiceTypeV2, HookSetter, TransactionTypeV2 } from "@/utils/type"
@@ -22,6 +22,7 @@ const TransactionForm = ({
   currentMonth,
   currentYear,
   openAddTransactionDialog,
+  inputRef,
 }: {
   transaction: TransactionTypeV2
   setTransaction: HookSetter<TransactionTypeV2>
@@ -30,6 +31,7 @@ const TransactionForm = ({
   currentMonth: string
   currentYear: number
   openAddTransactionDialog: boolean
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   useEffect(() => {
     if (!categories.length) return
@@ -69,11 +71,14 @@ const TransactionForm = ({
 
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={3} margin={"0 auto"}>
-      <MoneyInputV2
-        value={transaction.amount}
-        setValue={setTransaction}
-        autoFocus={openAddTransactionDialog}
-      />
+      {openAddTransactionDialog && (
+        <MoneyInputV2
+          value={transaction.amount}
+          setValue={setTransaction}
+          inputRef={inputRef}
+          autoFocus={openAddTransactionDialog}
+        />
+      )}
 
       <Stack direction={"row"} spacing={1}>
         <FormControl fullWidth>

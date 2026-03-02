@@ -1,17 +1,17 @@
 import { FormControl, OutlinedInput } from "@mui/material"
-import { ChangeEvent, useEffect, useRef } from "react"
+import { ChangeEvent, RefObject, useRef } from "react"
 
 export const MoneyInputV2 = <T extends { amount: number }>({
   value,
   setValue,
+  inputRef,
   autoFocus,
 }: {
   value: number
   setValue: React.Dispatch<React.SetStateAction<T>>
+  inputRef: RefObject<HTMLInputElement | null>
   autoFocus?: boolean
 }) => {
-  const inputRef = useRef<HTMLInputElement | null>(null)
-
   const handleAmount = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -28,18 +28,11 @@ export const MoneyInputV2 = <T extends { amount: number }>({
     }
   }
 
-  useEffect(() => {
-    if (autoFocus) {
-      setTimeout(() => {
-        inputRef.current?.focus()
-      }, 0)
-    }
-  }, [autoFocus])
-
   return (
     <FormControl fullWidth>
       <OutlinedInput
         inputRef={inputRef}
+        autoFocus={autoFocus}
         type="text"
         inputMode="decimal"
         inputProps={{

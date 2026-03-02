@@ -2,6 +2,7 @@ import { Stack, IconButton, Typography } from "@mui/material"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import { HookSetter, WeekType } from "@/utils/type"
+import { useRef } from "react"
 
 const WeekSelector = ({
   week,
@@ -12,6 +13,38 @@ const WeekSelector = ({
   weekOffset: number
   setWeekOffset: HookSetter<number>
 }) => {
+  const clickLock = useRef(false)
+
+  const handlePrevWeek = () => {
+    if (clickLock.current) return
+    clickLock.current = true
+
+    setWeekOffset((offset) => {
+      return offset - 1
+    })
+
+    setTimeout(() => {
+      clickLock.current = false
+    }, 100)
+  }
+
+  const handleNextWeek = () => {
+    if (clickLock.current) return
+    clickLock.current = true
+
+    setWeekOffset((offset) => {
+      return offset + 1
+    })
+
+    setTimeout(() => {
+      clickLock.current = false
+    }, 100)
+  }
+
+  const handleResetWeek = () => {
+    setWeekOffset(0)
+  }
+
   const currentWeek = {
     start: `${week.start.month} ${week.start.day}, ${week.start.year}`,
     end: `${week.end.month} ${week.end.day}, ${week.end.year}`,
@@ -24,18 +57,15 @@ const WeekSelector = ({
       justifyContent={"space-between"}
       margin={"0 auto"}
     >
-      <IconButton onClick={() => setWeekOffset((w) => w - 1)}>
+      <IconButton onClick={handlePrevWeek}>
         <ChevronLeftIcon />
       </IconButton>
 
-      <Typography onClick={() => setWeekOffset(0)}>
+      <Typography onClick={handleResetWeek}>
         {currentWeek.start} - {currentWeek.end}
       </Typography>
 
-      <IconButton
-        onClick={() => setWeekOffset((w) => w + 1)}
-        disabled={weekOffset === 0}
-      >
+      <IconButton onClick={handleNextWeek} disabled={weekOffset === 0}>
         <ChevronRightIcon />
       </IconButton>
     </Stack>

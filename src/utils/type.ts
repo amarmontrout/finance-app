@@ -37,6 +37,16 @@ export type DateType = {
   year: number
 }
 
+export type SelectedDateType = {
+  month: string
+  year: number
+}
+
+export type WeekType = {
+  start: DateType
+  end: DateType
+}
+
 export type SelectedTransactionType = { 
   id: number,
   type: "income" | "expense" 

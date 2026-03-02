@@ -12,6 +12,23 @@ import { Box, Divider, Tab, Tabs } from "@mui/material"
 import { darkMode, lightMode } from "@/globals/colors"
 import { useTheme } from "next-themes"
 
+const TabPanel = ({
+  children,
+  value,
+  index,
+  ...other
+}: {
+  children?: React.ReactNode
+  index: number
+  value: number
+}) => {
+  return (
+    <div hidden={value !== index} {...other}>
+      {value === index && <Box>{children}</Box>}
+    </div>
+  )
+}
+
 const Insights = () => {
   const { incomeTransactionsV2, expenseTransactionsV2 } =
     useTransactionContext()
@@ -24,31 +41,15 @@ const Insights = () => {
   const [view, setView] = useState<"annual" | "month">("month")
   const [value, setValue] = useState(0)
 
-  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-  }
-
-  const TabPanel = ({
-    children,
-    value,
-    index,
-    ...other
-  }: {
-    children?: React.ReactNode
-    index: number
-    value: number
-  }) => {
-    return (
-      <div hidden={value !== index} {...other}>
-        {value === index && <Box>{children}</Box>}
-      </div>
-    )
-  }
-
   return (
     <FlexColWrapper gap={2}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={value} onChange={handleChange}>
+        <Tabs
+          value={value}
+          onChange={(_event: React.SyntheticEvent, newValue: number) => {
+            setValue(newValue)
+          }}
+        >
           <Tab label="Net Cash Flow" />
           <Tab label="Savings Rate" />
         </Tabs>

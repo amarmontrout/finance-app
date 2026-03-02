@@ -1,6 +1,6 @@
 import { MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { ChoiceTypeV2, DateType } from "./type"
+import { ChoiceTypeV2, DateType, WeekType } from "./type"
 
 /**
  * This helper function gets the current year and month.
@@ -26,7 +26,7 @@ export const getCurrentDateInfo = () => {
 export const getWeekBounds = (
   date: DateType,
   weekOffset: number = 0
-) => {
+): WeekType => {
   const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
   const d = new Date(date.year, monthIndex, date.day)
   d.setHours(0, 0, 0, 0)

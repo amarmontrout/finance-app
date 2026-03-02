@@ -1,7 +1,7 @@
 "use client"
 
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { Stack, Typography } from "@mui/material"
+import { Box, Collapse, Stack, Typography } from "@mui/material"
 import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
@@ -10,6 +10,7 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
 import BudgetProgressBar from "./BudgetProgressBar"
+import { TransitionGroup } from "react-transition-group"
 
 const BudgetEntries = ({
   budgetTransactions,
@@ -98,39 +99,42 @@ const BudgetEntries = ({
                       budget={budgetLookup[category] ?? 0}
                     />
 
-                    <Stack direction={"column"} spacing={1}>
-                      {entries.map((entry) => {
+                    <TransitionGroup>
+                      {entries.map((entry, index) => {
                         const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
-
+                        const isLast = index === entries.length - 1
                         return (
-                          <ListItemSwipe
-                            key={entry.id}
-                            mainTitle={entry.note}
-                            secondaryTitle={entryDate}
-                            amount={`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
-                            amountColor={
-                              entry.isReturn ? "error.main" : "inherit"
-                            }
-                            buttonCondition={noteId === entry.id}
-                            onDelete={async () => {
-                              handleDeleteEntry(entry.id)
-                            }}
-                            onSetDelete={() => {
-                              setNoteId(entry.id)
-                            }}
-                            onCancelDelete={() => {
-                              setSelectedEntry(null)
-                              setNoteId(null)
-                            }}
-                            onEdit={() => {
-                              setOpenEditDialog(true)
-                              setSelectedEntry(entry)
-                            }}
-                            currentTheme={currentTheme}
-                          />
+                          <Collapse key={entry.id}>
+                            <Box mb={isLast ? 0 : 1}>
+                              <ListItemSwipe
+                                mainTitle={entry.note}
+                                secondaryTitle={entryDate}
+                                amount={`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
+                                amountColor={
+                                  entry.isReturn ? "error.main" : "inherit"
+                                }
+                                buttonCondition={noteId === entry.id}
+                                onDelete={async () => {
+                                  handleDeleteEntry(entry.id)
+                                }}
+                                onSetDelete={() => {
+                                  setNoteId(entry.id)
+                                }}
+                                onCancelDelete={() => {
+                                  setSelectedEntry(null)
+                                  setNoteId(null)
+                                }}
+                                onEdit={() => {
+                                  setOpenEditDialog(true)
+                                  setSelectedEntry(entry)
+                                }}
+                                currentTheme={currentTheme}
+                              />
+                            </Box>
+                          </Collapse>
                         )
                       })}
-                    </Stack>
+                    </TransitionGroup>
                   </Stack>
                 )
               })

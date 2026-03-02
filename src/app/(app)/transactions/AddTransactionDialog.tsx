@@ -101,6 +101,7 @@ const AddTransactionDialog = ({
           <IconButton
             onClick={() => {
               setOpenAddTransactionDialog(false)
+              resetFormData()
             }}
           >
             <CloseIcon />
@@ -142,15 +143,17 @@ const AddTransactionDialog = ({
               },
             }}
           >
-            <ToggleButton value="expense" color="error">
-              Expense
-            </ToggleButton>
             <ToggleButton value="income" color="success">
               Income
+            </ToggleButton>
+
+            <ToggleButton value="expense" color="error">
+              Expense
             </ToggleButton>
           </ToggleButtonGroup>
 
           <TransactionForm
+            key={type}
             transaction={transaction}
             setTransaction={setTransaction}
             categories={
@@ -159,6 +162,7 @@ const AddTransactionDialog = ({
             years={yearsV2}
             currentMonth={currentMonth}
             currentYear={currentYear}
+            openAddTransactionDialog={openAddTransactionDialog}
           />
         </Stack>
       </DialogContent>

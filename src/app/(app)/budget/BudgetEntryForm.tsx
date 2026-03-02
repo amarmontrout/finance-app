@@ -29,6 +29,7 @@ const BudgetEntryForm = ({
   budgetCategories,
   today,
   notes,
+  openAddBudgetEntryDialog,
 }: {
   budgetEntry: BudgetTransactionTypeV2
   setBudgetEntry: HookSetter<BudgetTransactionTypeV2>
@@ -37,6 +38,7 @@ const BudgetEntryForm = ({
   budgetCategories: BudgetTypeV2[]
   today: DateType
   notes: string[]
+  openAddBudgetEntryDialog: boolean
 }) => {
   useEffect(() => {
     if (!budgetCategories.length) return
@@ -65,7 +67,11 @@ const BudgetEntryForm = ({
       paddingTop={"10px"}
       margin={"0 auto"}
     >
-      <MoneyInputV2 value={budgetEntry.amount} setValue={setBudgetEntry} />
+      <MoneyInputV2
+        value={budgetEntry.amount}
+        setValue={setBudgetEntry}
+        autoFocus={openAddBudgetEntryDialog}
+      />
 
       <FullDate today={today} setBudgetEntry={setBudgetEntry} />
 

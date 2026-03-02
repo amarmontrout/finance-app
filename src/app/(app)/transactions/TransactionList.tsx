@@ -3,7 +3,7 @@ import {
   SelectedTransactionType,
   TransactionTypeV2,
 } from "@/utils/type"
-import { Stack, Typography } from "@mui/material"
+import { Box, Collapse, Stack, Typography } from "@mui/material"
 import { deleteExpense, deleteIncome } from "@/app/api/Transactions/requests"
 import { User } from "@supabase/supabase-js"
 import ListItemSwipe from "@/components/ListItemSwipe"
@@ -11,6 +11,7 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import { accentColorPrimarySelected } from "@/globals/colors"
 import { useMemo } from "react"
 import LoadingCircle from "@/components/LoadingCircle"
+import { TransitionGroup } from "react-transition-group"
 
 const TransactionList = ({
   title,
@@ -94,36 +95,43 @@ const TransactionList = ({
           textAlign={"center"}
         >{`There are no ${type} transactions yet`}</Typography>
       ) : (
-        <Stack spacing={1}>
-          {transactions.map((transaction) => {
+        <TransitionGroup>
+          {transactions.map((transaction, index) => {
+            const isLast = index === transactions.length - 1
             return (
-              <ListItemSwipe
-                key={transaction.id}
-                mainTitle={transaction.category}
-                secondaryTitle={transaction.isPaid ? "Paid" : ""}
-                amount={`$${formattedStringNumber(transaction.amount)}`}
-                amountColor={type === "income" ? "success.main" : "error.main"}
-                buttonCondition={
-                  selectedTransaction?.id === transaction.id && !openEditDialog
-                }
-                onDelete={async () => {
-                  handleDeleteTransaction(transaction.id, type)
-                }}
-                onSetDelete={() => {
-                  setSelectedTransaction({ id: transaction.id, type: type })
-                }}
-                onCancelDelete={() => {
-                  setSelectedTransaction(null)
-                }}
-                onEdit={() => {
-                  setOpenEditDialog(true)
-                  setSelectedTransaction({ id: transaction.id, type: type })
-                }}
-                currentTheme={currentTheme}
-              />
+              <Collapse key={transaction.id}>
+                <Box mb={isLast ? 0 : 1}>
+                  <ListItemSwipe
+                    mainTitle={transaction.category}
+                    secondaryTitle={transaction.isPaid ? "Paid" : ""}
+                    amount={`$${formattedStringNumber(transaction.amount)}`}
+                    amountColor={
+                      type === "income" ? "success.main" : "error.main"
+                    }
+                    buttonCondition={
+                      selectedTransaction?.id === transaction.id &&
+                      !openEditDialog
+                    }
+                    onDelete={async () => {
+                      handleDeleteTransaction(transaction.id, type)
+                    }}
+                    onSetDelete={() => {
+                      setSelectedTransaction({ id: transaction.id, type: type })
+                    }}
+                    onCancelDelete={() => {
+                      setSelectedTransaction(null)
+                    }}
+                    onEdit={() => {
+                      setOpenEditDialog(true)
+                      setSelectedTransaction({ id: transaction.id, type: type })
+                    }}
+                    currentTheme={currentTheme}
+                  />
+                </Box>
+              </Collapse>
             )
           })}
-        </Stack>
+        </TransitionGroup>
       )}
     </Stack>
   )

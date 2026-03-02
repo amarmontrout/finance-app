@@ -83,6 +83,7 @@ const AddBudgetEntryDialog = ({
           <IconButton
             onClick={() => {
               setOpenAddBudgetEntryDialog(false)
+              resetFormData()
             }}
           >
             <CloseIcon />
@@ -107,6 +108,7 @@ const AddBudgetEntryDialog = ({
           budgetCategories={budgetCategories}
           today={today}
           notes={notes}
+          openAddBudgetEntryDialog={openAddBudgetEntryDialog}
         />
       </DialogContent>
     </Dialog>

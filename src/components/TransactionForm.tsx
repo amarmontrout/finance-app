@@ -21,6 +21,7 @@ const TransactionForm = ({
   years,
   currentMonth,
   currentYear,
+  openAddTransactionDialog,
 }: {
   transaction: TransactionTypeV2
   setTransaction: HookSetter<TransactionTypeV2>
@@ -28,6 +29,7 @@ const TransactionForm = ({
   years: ChoiceTypeV2[]
   currentMonth: string
   currentYear: number
+  openAddTransactionDialog: boolean
 }) => {
   useEffect(() => {
     if (!categories.length) return
@@ -67,7 +69,11 @@ const TransactionForm = ({
 
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={3} margin={"0 auto"}>
-      <MoneyInputV2 value={transaction.amount} setValue={setTransaction} />
+      <MoneyInputV2
+        value={transaction.amount}
+        setValue={setTransaction}
+        autoFocus={openAddTransactionDialog}
+      />
 
       <Stack direction={"row"} spacing={1}>
         <FormControl fullWidth>

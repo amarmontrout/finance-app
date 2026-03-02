@@ -9,7 +9,7 @@ export const MoneyInputV2 = <T extends { amount: number }>({
 }: {
   value: number
   setValue: React.Dispatch<React.SetStateAction<T>>
-  inputRef: RefObject<HTMLInputElement | null>
+  inputRef?: RefObject<HTMLInputElement | null>
   autoFocus?: boolean
 }) => {
   const handleAmount = (

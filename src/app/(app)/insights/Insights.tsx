@@ -2,53 +2,29 @@
 
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useEffect, useMemo, useState } from "react"
-import NetCashFlow from "./NetCashFlow"
-import SavingsRate from "./SavingsRate"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import DateSelector from "@/components/DateSelector"
-import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
-import {
-  Box,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  Tab,
-  Tabs,
-} from "@mui/material"
-import { darkMode, lightMode } from "@/globals/colors"
-import { useTheme } from "next-themes"
+import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { accentColorPrimary, lightMode } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
-import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
+import {
+  buildMultiColumnDataV2,
+  buildTwoColumnData,
+  TwoColumnDataType,
+} from "@/utils/buildChartData"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import { SelectedDateType } from "@/utils/type"
-
-const TabPanel = ({
-  children,
-  value,
-  index,
-  ...other
-}: {
-  children?: React.ReactNode
-  index: number
-  value: number
-}) => {
-  return (
-    <div hidden={value !== index} {...other}>
-      {value === index && <Box>{children}</Box>}
-    </div>
-  )
-}
+import { MONTHS } from "@/globals/globals"
+import { getMonthTotalV2 } from "@/utils/getTotals"
+import { getNetCashFlow } from "@/utils/financialFunctions"
+import ShowCaseCard from "@/components/ShowCaseCard"
+import LoadingCircle from "@/components/LoadingCircle"
 
 const Insights = () => {
-  const { incomeTransactionsV2, expenseTransactionsV2 } =
+  const { incomeTransactionsV2, expenseTransactionsV2, isLoading } =
     useTransactionContext()
-  const { excludedSet, yearsV2 } = useCategoryContext()
+  const { excludedSet } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
-  const { theme: currentTheme } = useTheme()
 
   const CURRENT_DATE = {
     month: currentMonth,
@@ -57,16 +33,9 @@ const Insights = () => {
 
   const [selectedDate, setSelectedDate] =
     useState<SelectedDateType>(CURRENT_DATE)
-  const [view, setView] = useState<"annual" | "month">("month")
-  const [value, setValue] = useState(0)
+  const [type, setType] = useState<"incomeExpense" | "net">("incomeExpense")
 
-  const barColors = useMemo(() => {
-    return currentTheme === "light"
-      ? [lightMode.success, lightMode.error]
-      : [darkMode.success, darkMode.error]
-  }, [currentTheme])
-
-  const chartDataV2 = useMemo(() => {
+  const IncomeExpenseData = useMemo(() => {
     return buildMultiColumnDataV2({
       firstData: incomeTransactionsV2,
       secondData: expenseTransactionsV2,
@@ -77,8 +46,46 @@ const Insights = () => {
     })
   }, [incomeTransactionsV2, expenseTransactionsV2, selectedDate])
 
+  const eachMonthNetIncome: [string, number][] = useMemo(() => {
+    return MONTHS.map((month) => {
+      const incomeTotal = getMonthTotalV2(
+        selectedDate.year,
+        month,
+        incomeTransactionsV2,
+        excludedSet,
+      )
+      const expenseTotal = getMonthTotalV2(
+        selectedDate.year,
+        month,
+        expenseTransactionsV2,
+        excludedSet,
+      )
+      const net = getNetCashFlow(incomeTotal, expenseTotal)
+      return [month, net]
+    })
+  }, [selectedDate.year, incomeTransactionsV2, expenseTransactionsV2])
+
+  const NetChartData: TwoColumnDataType = useMemo(() => {
+    return (
+      buildTwoColumnData({
+        data: eachMonthNetIncome,
+        firstColumnTitle: "Month",
+        secondColumnTitle: "Net Cash Flow",
+      }) || []
+    )
+  }, [eachMonthNetIncome])
+
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)
+  }
+
+  const handleSelectType = (
+    event: React.MouseEvent<HTMLElement>,
+    newType: "incomeExpense" | "net" | null,
+  ) => {
+    if (newType !== null) {
+      setType(newType)
+    }
   }
 
   useEffect(() => {
@@ -87,67 +94,79 @@ const Insights = () => {
 
   return (
     <Stack gap={1.5}>
-      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={(_event: React.SyntheticEvent, newValue: number) => {
-            setValue(newValue)
-          }}
-        >
-          <Tab label="Net Cash Flow" />
-          <Tab label="Savings Rate" />
-        </Tabs>
-      </Box> */}
-
-      <FormControl>
-        <InputLabel>View</InputLabel>
-        <Select
-          className="w-full sm:w-[175px]"
-          label="View"
-          value={view}
-          name={"view"}
-          onChange={(e) => setView(e.target.value)}
-        >
-          <MenuItem key={"annual"} value={"annual"}>
-            By Year
-          </MenuItem>
-          <MenuItem key={"month"} value={"month"}>
-            By Month
-          </MenuItem>
-        </Select>
-      </FormControl>
-
       <MonthYearSelector
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         resetSelectedDate={resetSelectedDate}
-        showMonth={view === "month"}
+        showMonth={false}
       />
 
-      <BarChart multiColumnData={chartDataV2} barColors={barColors} />
+      <ShowCaseCard title="">
+        <Stack spacing={3}>
+          <ToggleButtonGroup
+            value={type}
+            exclusive
+            size={"small"}
+            onChange={handleSelectType}
+            sx={{
+              width: "100%",
+              justifyContent: "center",
+              gap: 3,
+              "& .MuiToggleButton-root": {
+                borderRadius: "15px",
+                border: "1px solid",
+                px: 3,
+                textTransform: "none",
+              },
+              "& .MuiToggleButtonGroup-grouped": {
+                margin: 0,
+                border: "1px solid",
+                "&:not(:first-of-type)": {
+                  borderLeft: "1px solid",
+                },
+              },
+            }}
+          >
+            <ToggleButton value="incomeExpense">Income / Expense</ToggleButton>
 
-      {/* <TabPanel value={value} index={0}>
-        <NetCashFlow
-          incomeTransactions={incomeTransactionsV2}
-          expenseTransactions={expenseTransactionsV2}
-          selectedYear={selectedYear}
-          selectedMonth={selectedMonth}
-          view={view}
-          currentTheme={currentTheme}
-          excludedSet={excludedSet}
-        />
-      </TabPanel> */}
+            <ToggleButton value="net">Net Cash Flow</ToggleButton>
+          </ToggleButtonGroup>
 
-      {/* <TabPanel value={value} index={1}>
-        <SavingsRate
-          incomeTransactions={incomeTransactionsV2}
-          expenseTransactions={expenseTransactionsV2}
-          selectedYear={selectedYear}
-          selectedMonth={selectedMonth}
-          view={view}
-          currentTheme={currentTheme}
-        />
-      </TabPanel> */}
+          {isLoading ? (
+            <LoadingCircle />
+          ) : (
+            <BarChart
+              multiColumnData={
+                type === "incomeExpense" ? IncomeExpenseData : undefined
+              }
+              twoColumnData={type === "net" ? NetChartData : undefined}
+              barColors={
+                type === "incomeExpense"
+                  ? [lightMode.success, lightMode.error]
+                  : [accentColorPrimary]
+              }
+            />
+          )}
+        </Stack>
+      </ShowCaseCard>
+
+      {/* <NetCashFlow
+        incomeTransactions={incomeTransactionsV2}
+        expenseTransactions={expenseTransactionsV2}
+        selectedYear={selectedDate.year}
+        selectedMonth={selectedDate.month}
+        view={view}
+        currentTheme={currentTheme}
+        excludedSet={excludedSet}
+      />
+      <SavingsRate
+        incomeTransactions={incomeTransactionsV2}
+        expenseTransactions={expenseTransactionsV2}
+        selectedYear={selectedDate.year}
+        selectedMonth={selectedDate.month}
+        view={view}
+        currentTheme={currentTheme}
+      /> */}
     </Stack>
   )
 }

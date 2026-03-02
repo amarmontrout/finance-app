@@ -26,7 +26,7 @@ const BarChart = ({
     colors: barColors,
     chartArea: {
       top: 20,
-      left: 45,
+      left: 50,
       right: 0,
       bottom: 55,
       width: "100%",

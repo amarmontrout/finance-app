@@ -5,16 +5,14 @@ import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
 import { useTheme } from "next-themes"
-import { IconButton, Stack, Typography } from "@mui/material"
+import { Stack } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { BudgetTransactionTypeV2, DateType } from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
-import { accentColorPrimary } from "@/globals/colors"
-import AddIcon from "@mui/icons-material/Add"
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
-import ChevronRightIcon from "@mui/icons-material/ChevronRight"
+import AddDataButton from "@/components/AddDataButton"
+import WeekSelector from "@/components/WeekSelector"
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2, isLoading } =
@@ -23,13 +21,8 @@ const Budget = () => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
-  const TODAY: DateType = {
-    month: currentMonth,
-    day: currentDay,
-    year: currentYear,
-  }
 
-  const [weekOffset, setWeekOffset] = useState(0)
+  const [weekOffset, setWeekOffset] = useState<number>(0)
   const [selectedEntry, setSelectedEntry] =
     useState<BudgetTransactionTypeV2 | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
@@ -37,12 +30,12 @@ const Budget = () => {
     useState<boolean>(false)
   const [noteId, setNoteId] = useState<number | null>(null)
 
-  const week = getWeekBounds(TODAY, weekOffset)
-
-  const currentWeek = {
-    start: `${week.start.month} ${week.start.day}, ${week.start.year}`,
-    end: `${week.end.month} ${week.end.day}, ${week.end.year}`,
+  const TODAY: DateType = {
+    month: currentMonth,
+    day: currentDay,
+    year: currentYear,
   }
+  const week = getWeekBounds(TODAY, weekOffset)
 
   const notes = useMemo(() => {
     return [...new Set(budgetTransactionsV2.map((e) => e.note))]
@@ -68,28 +61,11 @@ const Budget = () => {
 
   return (
     <Stack spacing={1.5}>
-      <Stack
-        className="w-full md:w-[75%] xl:w-[50%] 2xl:w-[40%]"
-        direction={"row"}
-        alignItems={"center"}
-        justifyContent={"space-between"}
-        margin={"0 auto"}
-      >
-        <IconButton onClick={() => setWeekOffset((w) => w - 1)}>
-          <ChevronLeftIcon />
-        </IconButton>
-
-        <Typography onClick={() => setWeekOffset(0)}>
-          {currentWeek.start} - {currentWeek.end}
-        </Typography>
-
-        <IconButton
-          onClick={() => setWeekOffset((w) => w + 1)}
-          disabled={weekOffset === 0}
-        >
-          <ChevronRightIcon />
-        </IconButton>
-      </Stack>
+      <WeekSelector
+        week={week}
+        weekOffset={weekOffset}
+        setWeekOffset={setWeekOffset}
+      />
 
       <BudgetEntries
         budgetTransactions={weeklyTransactions}
@@ -123,35 +99,11 @@ const Budget = () => {
         today={TODAY}
       />
 
-      <IconButton
-        onClick={() => {
+      <AddDataButton
+        action={() => {
           setOpenAddBudgetEntryDialog(true)
         }}
-        size="large"
-        disableRipple
-        sx={{
-          position: "fixed",
-          right: "10px",
-          bottom: "95px",
-          backgroundColor: accentColorPrimary,
-          color: "white",
-          zIndex: 100,
-          boxShadow: `
-            0 6px 12px rgba(0,0,0,0.18),
-            0 12px 24px rgba(0,0,0,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.25)
-          `,
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          "&:active": {
-            boxShadow: `
-              0 3px 6px rgba(0,0,0,0.25),
-              inset 0 3px 6px rgba(0,0,0,0.25)
-            `,
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
+      />
     </Stack>
   )
 }

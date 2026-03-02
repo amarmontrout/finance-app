@@ -1,29 +1,18 @@
 "use client"
 
 import TransactionFeed from "./TransactionFeed"
-import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-  Tabs,
-  Tab,
-  Stack,
-  IconButton,
-} from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
+import { Box, Tabs, Tab, Stack } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useEffect, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { MONTHS } from "@/globals/globals"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/app/(app)/transactions/EditTransactionDetailDialog"
-import { SelectedTransactionType } from "@/utils/type"
+import { SelectedDateType, SelectedTransactionType } from "@/utils/type"
 import TransactionTotals from "./TransactionTotals"
 import AddTransactionDialog from "./AddTransactionDialog"
-import { accentColorPrimary } from "@/globals/colors"
+import MonthYearSelector from "@/components/MonthYearSelector"
+import AddDataButton from "@/components/AddDataButton"
 
 const TabPanel = ({
   children,
@@ -54,8 +43,13 @@ const Transactions = () => {
   const { currentYear, currentMonth, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
-  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
+  const CURRENT_DATE = {
+    month: currentMonth,
+    year: currentYear,
+  }
+
+  const [selectedDate, setSelectedDate] =
+    useState<SelectedDateType>(CURRENT_DATE)
   const [openAddTransactionDialog, setOpenAddTransactionDialog] =
     useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
@@ -63,75 +57,39 @@ const Transactions = () => {
   const [selectedTransaction, setSelectedTransaction] =
     useState<SelectedTransactionType | null>(null)
 
-  useEffect(() => {
-    setSelectedYear(currentYear)
-    setSelectedMonth(currentMonth)
-  }, [tab])
-
-  const handleChangeTab = (_event: React.SyntheticEvent, newValue: number) => {
-    setTab(newValue)
+  const resetSelectedDate = () => {
+    setSelectedDate(CURRENT_DATE)
   }
+
+  useEffect(() => {
+    resetSelectedDate()
+  }, [tab])
 
   return (
     <Stack spacing={1.5}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs value={tab} onChange={handleChangeTab}>
+        <Tabs
+          value={tab}
+          onChange={(_event: React.SyntheticEvent, newValue: number) => {
+            setTab(newValue)
+          }}
+        >
           <Tab label="Transactions" />
           <Tab label="Totals" />
         </Tabs>
       </Box>
 
-      <Stack
-        className="w-full md:w-[50%] 2xl:w-[30%]"
-        direction={"row"}
-        spacing={2}
-        margin={"0 auto"}
-      >
-        {tab === 0 && (
-          <FormControl fullWidth>
-            <InputLabel>Month</InputLabel>
-            <Select
-              className="w-full"
-              label="Month"
-              value={selectedMonth}
-              name={"month"}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-            >
-              {MONTHS.map((month) => {
-                return (
-                  <MenuItem key={month} value={month}>
-                    {month}
-                  </MenuItem>
-                )
-              })}
-            </Select>
-          </FormControl>
-        )}
-
-        <FormControl fullWidth>
-          <InputLabel>Year</InputLabel>
-          <Select
-            className="w-full"
-            label="Year"
-            value={selectedYear}
-            name={"year"}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-          >
-            {yearsV2.map((year) => {
-              return (
-                <MenuItem key={year.name} value={year.name}>
-                  {year.name}
-                </MenuItem>
-              )
-            })}
-          </Select>
-        </FormControl>
-      </Stack>
+      <MonthYearSelector
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        resetSelectedDate={resetSelectedDate}
+        showMonth={tab === 0}
+      />
 
       <TabPanel value={tab} index={0}>
         <TransactionFeed
-          selectedMonth={selectedMonth}
-          selectedYear={selectedYear}
+          selectedMonth={selectedDate.month}
+          selectedYear={selectedDate.year}
           currentTheme={currentTheme}
           selectedTransaction={selectedTransaction}
           setSelectedTransaction={setSelectedTransaction}
@@ -142,7 +100,7 @@ const Transactions = () => {
 
       <TabPanel value={tab} index={1}>
         <TransactionTotals
-          selectedYear={selectedYear}
+          selectedYear={selectedDate.year}
           currentYear={currentYear}
           passedMonths={passedMonths}
           incomeTransactionsV2={incomeTransactionsV2}
@@ -177,41 +135,17 @@ const Transactions = () => {
             : expenseCategoriesV2
         }
         currentTheme={currentTheme}
-        selectedYear={selectedYear}
-        selectedMonth={selectedMonth}
+        selectedYear={selectedDate.year}
+        selectedMonth={selectedDate.month}
         refreshIncomeTransactions={refreshIncomeTransactionsV2}
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
       />
 
-      <IconButton
-        onClick={() => {
+      <AddDataButton
+        action={() => {
           setOpenAddTransactionDialog(true)
         }}
-        size="large"
-        disableRipple
-        sx={{
-          position: "fixed",
-          right: "10px",
-          bottom: "95px",
-          backgroundColor: accentColorPrimary,
-          color: "white",
-          zIndex: 100,
-          boxShadow: `
-            0 6px 12px rgba(0,0,0,0.18),
-            0 12px 24px rgba(0,0,0,0.18),
-            inset 0 1px 0 rgba(255,255,255,0.25)
-          `,
-          transition: "transform 0.15s ease, box-shadow 0.15s ease",
-          "&:active": {
-            boxShadow: `
-              0 3px 6px rgba(0,0,0,0.25),
-              inset 0 3px 6px rgba(0,0,0,0.25)
-            `,
-          },
-        }}
-      >
-        <AddIcon />
-      </IconButton>
+      />
     </Stack>
   )
 }

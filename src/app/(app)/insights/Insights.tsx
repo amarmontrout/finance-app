@@ -1,16 +1,30 @@
 "use client"
 
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import NetCashFlow from "./NetCashFlow"
 import SavingsRate from "./SavingsRate"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import DateSelector from "@/components/DateSelector"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { Box, Divider, Tab, Tabs } from "@mui/material"
+import {
+  Box,
+  Divider,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  Tab,
+  Tabs,
+} from "@mui/material"
 import { darkMode, lightMode } from "@/globals/colors"
 import { useTheme } from "next-themes"
+import BarChart from "@/components/BarChart"
+import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
+import MonthYearSelector from "@/components/MonthYearSelector"
+import { SelectedDateType } from "@/utils/type"
 
 const TabPanel = ({
   children,
@@ -36,14 +50,44 @@ const Insights = () => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
-  const [selectedYear, setSelectedYear] = useState<number>(currentYear)
-  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth)
+  const CURRENT_DATE = {
+    month: currentMonth,
+    year: currentYear,
+  }
+
+  const [selectedDate, setSelectedDate] =
+    useState<SelectedDateType>(CURRENT_DATE)
   const [view, setView] = useState<"annual" | "month">("month")
   const [value, setValue] = useState(0)
 
+  const barColors = useMemo(() => {
+    return currentTheme === "light"
+      ? [lightMode.success, lightMode.error]
+      : [darkMode.success, darkMode.error]
+  }, [currentTheme])
+
+  const chartDataV2 = useMemo(() => {
+    return buildMultiColumnDataV2({
+      firstData: incomeTransactionsV2,
+      secondData: expenseTransactionsV2,
+      selectedYear: selectedDate.year,
+      firstColumnTitle: "Month",
+      method: "compare",
+      excludedSet: excludedSet,
+    })
+  }, [incomeTransactionsV2, expenseTransactionsV2, selectedDate])
+
+  const resetSelectedDate = () => {
+    setSelectedDate(CURRENT_DATE)
+  }
+
+  useEffect(() => {
+    resetSelectedDate()
+  }, [])
+
   return (
-    <FlexColWrapper gap={2}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+    <Stack gap={1.5}>
+      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={value}
           onChange={(_event: React.SyntheticEvent, newValue: number) => {
@@ -53,30 +97,36 @@ const Insights = () => {
           <Tab label="Net Cash Flow" />
           <Tab label="Savings Rate" />
         </Tabs>
-      </Box>
+      </Box> */}
 
-      <DateSelector
-        view={view}
-        setView={setView}
-        selectedYear={selectedYear}
-        setSelectedYear={setSelectedYear}
-        selectedMonth={selectedMonth}
-        setSelectedMonth={setSelectedMonth}
-        years={yearsV2}
+      <FormControl>
+        <InputLabel>View</InputLabel>
+        <Select
+          className="w-full sm:w-[175px]"
+          label="View"
+          value={view}
+          name={"view"}
+          onChange={(e) => setView(e.target.value)}
+        >
+          <MenuItem key={"annual"} value={"annual"}>
+            By Year
+          </MenuItem>
+          <MenuItem key={"month"} value={"month"}>
+            By Month
+          </MenuItem>
+        </Select>
+      </FormControl>
+
+      <MonthYearSelector
+        selectedDate={selectedDate}
+        setSelectedDate={setSelectedDate}
+        resetSelectedDate={resetSelectedDate}
+        showMonth={view === "month"}
       />
 
-      <Divider
-        className="flex w-full"
-        sx={{
-          borderColor:
-            currentTheme === "light"
-              ? lightMode.borderStrong
-              : darkMode.borderStrong,
-          borderWidth: 1,
-        }}
-      />
+      <BarChart multiColumnData={chartDataV2} barColors={barColors} />
 
-      <TabPanel value={value} index={0}>
+      {/* <TabPanel value={value} index={0}>
         <NetCashFlow
           incomeTransactions={incomeTransactionsV2}
           expenseTransactions={expenseTransactionsV2}
@@ -86,9 +136,9 @@ const Insights = () => {
           currentTheme={currentTheme}
           excludedSet={excludedSet}
         />
-      </TabPanel>
+      </TabPanel> */}
 
-      <TabPanel value={value} index={1}>
+      {/* <TabPanel value={value} index={1}>
         <SavingsRate
           incomeTransactions={incomeTransactionsV2}
           expenseTransactions={expenseTransactionsV2}
@@ -97,8 +147,8 @@ const Insights = () => {
           view={view}
           currentTheme={currentTheme}
         />
-      </TabPanel>
-    </FlexColWrapper>
+      </TabPanel> */}
+    </Stack>
   )
 }
 

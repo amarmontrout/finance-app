@@ -1,13 +1,10 @@
 "use client"
 
-import LineChart from "@/components/LineChart"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { darkMode, lightMode } from "@/globals/colors"
-import { buildMultiColumnDataV2 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useState } from "react"
 import YearTotals from "./YearTotals"
 import RemainingBudget from "./RemainingBudget"
 import TopThreeExpenses from "./TopThreeCategories"
@@ -43,21 +40,6 @@ const Overview = () => {
     }
   }, [isLoading, yearsV2, incomeCategoriesV2, expenseCategoriesV2])
 
-  // const lineColor =
-  //   currentTheme === "light"
-  //     ? [lightMode.success, lightMode.error]
-  //     : [darkMode.success, darkMode.error]
-  // const chartDataV2 = useMemo(() => {
-  //   return buildMultiColumnDataV2({
-  //     firstData: incomeTransactionsV2,
-  //     secondData: expenseTransactionsV2,
-  //     selectedYear: currentYear,
-  //     firstColumnTitle: "Month",
-  //     method: "compare",
-  //     excludedSet: excludedSet,
-  //   })
-  // }, [incomeTransactionsV2, expenseTransactionsV2])
-
   return (
     <Stack spacing={1}>
       <YearTotals
@@ -85,8 +67,6 @@ const Overview = () => {
         excludedSet={excludedSet}
         isLoading={isLoading}
       />
-
-      {/* <LineChart multiColumnData={chartDataV2} lineColors={lineColor} /> */}
 
       <SetUpDialog
         setUpDialogOpen={setUpDialogOpen}

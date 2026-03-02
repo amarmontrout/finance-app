@@ -8,7 +8,7 @@ export const saveIncome = async ({
   userId: string
   body: TransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "income",
     method: "POST",
@@ -16,12 +16,9 @@ export const saveIncome = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const getIncome = async ({
@@ -36,10 +33,7 @@ export const getIncome = async ({
     userId: userId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
   return data
 }
@@ -53,7 +47,7 @@ export const updateIncome = async ({
   rowId: number
   body: TransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "income",
     method: "PATCH",
@@ -62,12 +56,9 @@ export const updateIncome = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const deleteIncome = async ({
@@ -77,7 +68,7 @@ export const deleteIncome = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "income",
     method: "DELETE",
@@ -85,29 +76,20 @@ export const deleteIncome = async ({
     rowId: rowId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 
-export const saveExpenses = async ({
+export const saveExpense = async ({
   userId,
   body
 }: {
   userId: string
-  body: {
-    id: number,
-    month: string,
-    year: number,
-    category: string,
-    amount: number
-  }
+  body: TransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "expenses",
     method: "POST",
@@ -115,12 +97,9 @@ export const saveExpenses = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const getExpenses = async ({
@@ -135,10 +114,7 @@ export const getExpenses = async ({
     userId: userId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
   return data
 }
@@ -152,7 +128,7 @@ export const updateExpense = async ({
   rowId: number
   body: TransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "expenses",
     method: "PATCH",
@@ -161,12 +137,9 @@ export const updateExpense = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const deleteExpense = async ({
@@ -176,7 +149,7 @@ export const deleteExpense = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
     schema: "Transactions",
     table: "expenses",
     method: "DELETE",
@@ -184,12 +157,9 @@ export const deleteExpense = async ({
     rowId: rowId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 
@@ -200,7 +170,7 @@ export const saveBudget = async ({
   userId: string
   body: BudgetTransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
     schema: "Transactions",
     table: "budget",
     method: "POST",
@@ -208,12 +178,9 @@ export const saveBudget = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const getBudget = async ({
@@ -228,10 +195,7 @@ export const getBudget = async ({
     userId: userId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
   return data
 }
@@ -245,7 +209,7 @@ export const updateBudget = async ({
   rowId: number
   body: BudgetTransactionTypeV2
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
     schema: "Transactions",
     table: "budget",
     method: "PATCH",
@@ -254,12 +218,9 @@ export const updateBudget = async ({
     body: body
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }
 
 export const deleteBudget = async ({
@@ -269,7 +230,7 @@ export const deleteBudget = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
     schema: "Transactions",
     table: "budget",
     method: "DELETE",
@@ -277,10 +238,7 @@ export const deleteBudget = async ({
     rowId: rowId
   })
     
-  if (error) {
-    console.error(error)
-    return null
-  }
+  if (error) throw error
 
-  return data
+  return data?.[0] ?? null
 }

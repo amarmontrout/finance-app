@@ -10,11 +10,16 @@ import {
 } from "@mui/material"
 import CloseIcon from "@mui/icons-material/Close"
 import SaveIcon from "@mui/icons-material/Save"
-import { ChoiceTypeV2, HookSetter, TransactionTypeV2 } from "@/utils/type"
+import {
+  AlertToastType,
+  ChoiceTypeV2,
+  HookSetter,
+  TransactionTypeV2,
+} from "@/utils/type"
 import { useState } from "react"
 import TransactionForm from "@/components/TransactionForm"
 import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
-import { saveExpenses, saveIncome } from "@/app/api/Transactions/requests"
+import { saveExpense, saveIncome } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 
 const AddTransactionDialog = ({
@@ -25,6 +30,7 @@ const AddTransactionDialog = ({
   expenseCategoriesV2,
   refreshExpenseTransactionsV2,
   yearsV2,
+  setAlertToast,
 }: {
   openAddTransactionDialog: boolean
   setOpenAddTransactionDialog: HookSetter<boolean>
@@ -33,6 +39,7 @@ const AddTransactionDialog = ({
   expenseCategoriesV2: ChoiceTypeV2[]
   refreshExpenseTransactionsV2: () => void
   yearsV2: ChoiceTypeV2[]
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const { currentYear, currentMonth } = getCurrentDateInfo()
   const user = useUser()
@@ -66,26 +73,38 @@ const AddTransactionDialog = ({
 
   const save = async () => {
     if (!user) return
-
     setIsLoading(true)
-
-    if (type === "income") {
-      await saveIncome({
-        userId: user?.id,
-        body: transaction,
+    try {
+      if (type === "income") {
+        await saveIncome({ userId: user.id, body: transaction })
+        refreshIncomeTransactionsV2()
+      } else {
+        await saveExpense({ userId: user.id, body: transaction })
+        refreshExpenseTransactionsV2()
+      }
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Transaction saved successfully!",
       })
-      refreshIncomeTransactionsV2()
-      setIsLoading(false)
-    } else if (type === "expense") {
-      await saveExpenses({
-        userId: user.id,
-        body: transaction,
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Transaction could not be saved.",
       })
-      refreshExpenseTransactionsV2()
+    } finally {
+      resetFormData()
+      setOpenAddTransactionDialog(false)
       setIsLoading(false)
     }
-    resetFormData()
-    setOpenAddTransactionDialog(false)
   }
 
   return (

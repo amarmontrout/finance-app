@@ -17,6 +17,7 @@ import {
 import { ChangeEvent, useEffect, useState } from "react"
 import { MoneyInputV2 } from "../../../components/MoneyInput"
 import {
+  AlertToastType,
   ChoiceTypeV2,
   HookSetter,
   SelectedTransactionType,
@@ -37,6 +38,7 @@ const EditTransactionDetailDialog = ({
   selectedMonth,
   refreshIncomeTransactions,
   refreshExpenseTransactions,
+  setAlertToast,
 }: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
@@ -47,8 +49,9 @@ const EditTransactionDetailDialog = ({
   currentTheme: string | undefined
   selectedYear: number
   selectedMonth: string
-  refreshIncomeTransactions?: () => void
-  refreshExpenseTransactions?: () => void
+  refreshIncomeTransactions: () => void
+  refreshExpenseTransactions: () => void
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const UPDATE_TRANSACTION_INIT = {
     id: 0,
@@ -94,23 +97,44 @@ const EditTransactionDetailDialog = ({
 
   const handleUpdateTransactionData = async () => {
     if (!selectedYear || !selectedMonth || !selectedTransaction || !user) return
-    if (selectedTransaction.type === "income") {
-      await updateIncome({
-        userId: user.id,
-        rowId: selectedTransaction.id,
-        body: updateTransaction,
+    try {
+      if (selectedTransaction.type === "income") {
+        await updateIncome({
+          userId: user.id,
+          rowId: selectedTransaction.id,
+          body: updateTransaction,
+        })
+        refreshIncomeTransactions()
+      } else if (selectedTransaction.type === "expense") {
+        await updateExpense({
+          userId: user.id,
+          rowId: selectedTransaction.id,
+          body: updateTransaction,
+        })
+        refreshExpenseTransactions()
+      }
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Transaction updated successfully!",
       })
-      if (refreshIncomeTransactions) refreshIncomeTransactions()
-    } else if (selectedTransaction.type === "expense") {
-      await updateExpense({
-        userId: user.id,
-        rowId: selectedTransaction.id,
-        body: updateTransaction,
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Transaction could not be updated.",
       })
-      if (refreshExpenseTransactions) refreshExpenseTransactions()
+    } finally {
+      setOpenEditDialog(false)
+      setSelectedTransaction(null)
     }
-    setOpenEditDialog(false)
-    setSelectedTransaction(null)
   }
 
   return (

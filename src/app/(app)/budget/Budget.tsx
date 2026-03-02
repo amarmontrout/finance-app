@@ -8,11 +8,12 @@ import { useTheme } from "next-themes"
 import { Stack } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { BudgetTransactionTypeV2, DateType } from "@/utils/type"
+import { AlertToastType, BudgetTransactionTypeV2, DateType } from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
 import AddDataButton from "@/components/AddDataButton"
 import WeekSelector from "@/components/WeekSelector"
+import AlertToast from "@/components/AlertToast"
 
 const Budget = () => {
   const { budgetTransactionsV2, refreshBudgetTransactionsV2, isLoading } =
@@ -29,6 +30,7 @@ const Budget = () => {
   const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
     useState<boolean>(false)
   const [noteId, setNoteId] = useState<number | null>(null)
+  const [alertToast, setAlertToast] = useState<AlertToastType>()
 
   const TODAY: DateType = {
     month: currentMonth,
@@ -77,6 +79,7 @@ const Budget = () => {
         setNoteId={setNoteId}
         currentTheme={currentTheme}
         isLoading={isLoading}
+        setAlertToast={setAlertToast}
       />
 
       <AddBudgetEntryDialog
@@ -87,6 +90,7 @@ const Budget = () => {
         user={user}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         notes={notes}
+        setAlertToast={setAlertToast}
       />
 
       <EditBudgetEntryDialog
@@ -97,7 +101,10 @@ const Budget = () => {
         selectedEntry={selectedEntry}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         today={TODAY}
+        setAlertToast={setAlertToast}
       />
+
+      <AlertToast alertToast={alertToast} />
 
       <AddDataButton
         action={() => {

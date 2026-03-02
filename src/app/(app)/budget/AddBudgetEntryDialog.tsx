@@ -8,6 +8,7 @@ import {
 } from "@mui/material"
 import BudgetEntryForm from "./BudgetEntryForm"
 import {
+  AlertToastType,
   BudgetTransactionTypeV2,
   BudgetTypeV2,
   DateType,
@@ -28,6 +29,7 @@ const AddBudgetEntryDialog = ({
   user,
   refreshBudgetTransactions,
   notes,
+  setAlertToast,
 }: {
   openAddBudgetEntryDialog: boolean
   setOpenAddBudgetEntryDialog: HookSetter<boolean>
@@ -36,6 +38,7 @@ const AddBudgetEntryDialog = ({
   user: User | null
   refreshBudgetTransactions: () => void
   notes: string[]
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
     id: Number(makeId(8)),
@@ -58,16 +61,37 @@ const AddBudgetEntryDialog = ({
   const save = async () => {
     if (!user) return
     setIsLoading(true)
-    await saveBudget({
-      userId: user.id,
-      body: {
-        ...budgetEntry,
-      },
-    })
-    setIsLoading(false)
-    refreshBudgetTransactions()
-    resetFormData()
-    setOpenAddBudgetEntryDialog(false)
+    try {
+      await saveBudget({
+        userId: user.id,
+        body: {
+          ...budgetEntry,
+        },
+      })
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Budget entry saved successfully!",
+      })
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Budget entry could not be saved.",
+      })
+    } finally {
+      setIsLoading(false)
+      refreshBudgetTransactions()
+      resetFormData()
+      setOpenAddBudgetEntryDialog(false)
+    }
   }
 
   return (

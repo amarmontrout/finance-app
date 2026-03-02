@@ -2,7 +2,12 @@
 
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { Box, Collapse, Stack, Typography } from "@mui/material"
-import { BudgetTransactionTypeV2, BudgetTypeV2, HookSetter } from "@/utils/type"
+import {
+  AlertToastType,
+  BudgetTransactionTypeV2,
+  BudgetTypeV2,
+  HookSetter,
+} from "@/utils/type"
 import { deleteBudget } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { useMemo } from "react"
@@ -22,6 +27,7 @@ const BudgetEntries = ({
   setNoteId,
   currentTheme,
   isLoading,
+  setAlertToast,
 }: {
   budgetTransactions: BudgetTransactionTypeV2[]
   budgetCategories: BudgetTypeV2[]
@@ -32,16 +38,38 @@ const BudgetEntries = ({
   setNoteId: HookSetter<number | null>
   currentTheme: string | undefined
   isLoading: boolean
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const user = useUser()
 
   const handleDeleteEntry = async (id: number) => {
     if (!user) return
-    await deleteBudget({
-      userId: user?.id,
-      rowId: id,
-    })
-    refreshBudgetTransactions()
+    try {
+      await deleteBudget({
+        userId: user?.id,
+        rowId: id,
+      })
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Budget entry deleted successfully!",
+      })
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Budget entry could not be deleted.",
+      })
+    } finally {
+      refreshBudgetTransactions()
+    }
   }
 
   const groupedTransactions = useMemo(() => {

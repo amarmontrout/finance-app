@@ -3,6 +3,7 @@ import { MoneyInputV2 } from "@/components/MoneyInput"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
 import {
+  AlertToastType,
   BudgetTransactionTypeV2,
   BudgetTypeV2,
   DateType,
@@ -35,6 +36,7 @@ const EditBudgetEntryDialog = ({
   selectedEntry,
   refreshBudgetTransactions,
   today,
+  setAlertToast,
 }: {
   openEditDialog: boolean
   setOpenEditDialog: HookSetter<boolean>
@@ -43,6 +45,7 @@ const EditBudgetEntryDialog = ({
   selectedEntry: BudgetTransactionTypeV2 | null
   refreshBudgetTransactions: () => void
   today: DateType
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
@@ -73,15 +76,34 @@ const EditBudgetEntryDialog = ({
 
   const update = async () => {
     if (!user || !selectedEntry) return
-    await updateBudget({
-      userId: user.id,
-      rowId: selectedEntry.id,
-      body: updatedBudgetEntry,
-    })
-
-    refreshBudgetTransactions()
-    setOpenEditDialog(false)
-    setNoteValue(null)
+    try {
+      await updateBudget({
+        userId: user.id,
+        rowId: selectedEntry.id,
+        body: updatedBudgetEntry,
+      })
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Budget entry updated successfully!",
+      })
+    } catch (error) {
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Budget entry could not be updated.",
+      })
+    } finally {
+      refreshBudgetTransactions()
+      setOpenEditDialog(false)
+      setNoteValue(null)
+    }
   }
 
   return (

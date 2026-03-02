@@ -1,4 +1,5 @@
 import {
+  AlertToastType,
   HookSetter,
   SelectedTransactionType,
   TransactionTypeV2,
@@ -26,6 +27,7 @@ const TransactionList = ({
   refreshExpenseTransactionsV2,
   currentTheme,
   isLoading,
+  setAlertToast,
 }: {
   title: "Income" | "Expense"
   transactions: TransactionTypeV2[]
@@ -39,28 +41,48 @@ const TransactionList = ({
   refreshExpenseTransactionsV2: () => void
   currentTheme: string | undefined
   isLoading: boolean
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const handleDeleteTransaction = async (
     id: number,
     type: "income" | "expense",
   ) => {
     if (!user) return
-
-    if (type === "income") {
-      await deleteIncome({
-        userId: user.id,
-        rowId: id,
+    try {
+      if (type === "income") {
+        await deleteIncome({
+          userId: user.id,
+          rowId: id,
+        })
+        refreshIncomeTransactionsV2()
+      } else {
+        await deleteExpense({
+          userId: user.id,
+          rowId: id,
+        })
+        refreshExpenseTransactionsV2()
+      }
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Transaction deleted successfully!",
       })
-      refreshIncomeTransactionsV2()
-    } else {
-      await deleteExpense({
-        userId: user.id,
-        rowId: id,
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Transaction could not be deleted.",
       })
-      refreshExpenseTransactionsV2()
+    } finally {
+      setSelectedTransaction(null)
     }
-
-    setSelectedTransaction(null)
   }
 
   const total = useMemo(() => {

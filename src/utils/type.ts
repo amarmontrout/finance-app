@@ -1,3 +1,5 @@
+import { AlertColor } from "@mui/material"
+
 export type HookSetter<T> = React.Dispatch<React.SetStateAction<T>>
 
 export type TransactionTypeV2 = {
@@ -50,4 +52,11 @@ export type WeekType = {
 export type SelectedTransactionType = { 
   id: number,
   type: "income" | "expense" 
+}
+
+export type AlertToastType = {
+  open: boolean
+  onClose: () => void
+  severity: AlertColor
+  message: string
 }

@@ -8,11 +8,16 @@ import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "@/app/(app)/transactions/EditTransactionDetailDialog"
-import { SelectedDateType, SelectedTransactionType } from "@/utils/type"
+import {
+  AlertToastType,
+  SelectedDateType,
+  SelectedTransactionType,
+} from "@/utils/type"
 import TransactionTotals from "./TransactionTotals"
 import AddTransactionDialog from "./AddTransactionDialog"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import AddDataButton from "@/components/AddDataButton"
+import AlertToast from "@/components/AlertToast"
 
 const TabPanel = ({
   children,
@@ -53,6 +58,7 @@ const Transactions = () => {
   const [openAddTransactionDialog, setOpenAddTransactionDialog] =
     useState<boolean>(false)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [tab, setTab] = useState(0)
   const [selectedTransaction, setSelectedTransaction] =
     useState<SelectedTransactionType | null>(null)
@@ -95,6 +101,7 @@ const Transactions = () => {
           setSelectedTransaction={setSelectedTransaction}
           openEditDialog={openEditDialog}
           setOpenEditDialog={setOpenEditDialog}
+          setAlertToast={setAlertToast}
         />
       </TabPanel>
 
@@ -117,6 +124,7 @@ const Transactions = () => {
         expenseCategoriesV2={expenseCategoriesV2}
         refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
         yearsV2={yearsV2}
+        setAlertToast={setAlertToast}
       />
 
       <EditTransactionDetailDialog
@@ -139,7 +147,10 @@ const Transactions = () => {
         selectedMonth={selectedDate.month}
         refreshIncomeTransactions={refreshIncomeTransactionsV2}
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
+        setAlertToast={setAlertToast}
       />
+
+      <AlertToast alertToast={alertToast} />
 
       <AddDataButton
         action={() => {

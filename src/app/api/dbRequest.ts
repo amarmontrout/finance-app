@@ -1,11 +1,5 @@
 import { supabaseBrowser } from "@/utils/supabase/client"
-import {  
-  BudgetTransactionTypeV2,
-  BudgetTypeV2, 
-  ChoiceTypeV2, 
-  TransactionTypeV2 
-} from "@/utils/type"
-import { PostgrestResponse } from "@supabase/supabase-js"
+import { PostgrestError } from "@supabase/supabase-js"
 
 export const dbRequestBrowser = async <T>({
   schema,
@@ -20,48 +14,59 @@ export const dbRequestBrowser = async <T>({
   method: "POST" | "GET" | "PATCH" | "DELETE"
   userId: string
   rowId?: number
-  body?: TransactionTypeV2 | BudgetTransactionTypeV2 | BudgetTypeV2 | ChoiceTypeV2
-}): Promise<{ data: T[] | null; error: PostgrestResponse<T>["error"] }> => {
+  body?: Partial<T>
+}): Promise<{ data: T[] | null; error: PostgrestError | null }> => {
+
   const sb = supabaseBrowser()
-  let result: PostgrestResponse<T>
 
-  switch (method) {
-    case "POST":
-      result = await sb
-        .schema(schema)
-        .from(table)
-        .insert([{...body, user_id: userId}])
-        .select()
-      break
-    case "GET":
-      result = await sb
-        .schema(schema)
-        .from(table)
-        .select("*")
-        .eq("user_id", userId)
-      break
-    case "PATCH":
-      result = await sb
-        .schema(schema)
-        .from(table)
-        .update(body!)
-        .eq("id", rowId!)
-        .eq("user_id", userId)
-        .select()
-      break
-    case "DELETE":
-      result = await sb
-        .schema(schema)
-        .from(table)
-        .delete()
-        .eq("id", rowId)
-        .eq("user_id", userId)
-        .select()
-      break
-  }
+  try {
+    switch (method) {
+      case "POST":
+        return await sb
+          .schema(schema)
+          .from(table)
+          .insert([{ ...body, user_id: userId }])
+          .select()
 
-  return {
-    data: result.data,
-    error: result.error
+      case "GET":
+        return await sb
+          .schema(schema)
+          .from(table)
+          .select("*")
+          .eq("user_id", userId)
+
+      case "PATCH":
+        if (!rowId || !body) {
+          throw new Error("PATCH requires rowId and body")
+        }
+
+        return await sb
+          .schema(schema)
+          .from(table)
+          .update(body)
+          .eq("id", rowId)
+          .eq("user_id", userId)
+          .select()
+
+      case "DELETE":
+        if (!rowId) {
+          throw new Error("DELETE requires rowId")
+        }
+
+        return await sb
+          .schema(schema)
+          .from(table)
+          .delete()
+          .eq("id", rowId)
+          .eq("user_id", userId)
+          .select()
+    }
+  } catch (error: unknown) {
+    return {
+      data: null,
+      error: error instanceof Error
+        ? { message: error.message } as PostgrestError
+        : null
+    }
   }
 }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import BudgetEntries from "./BudgetEntries"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import EditBudgetEntryDialog from "./EditBudgetEntryDialog"
@@ -22,6 +22,7 @@ const Budget = () => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
+  const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [weekOffset, setWeekOffset] = useState<number>(0)
   const [selectedEntry, setSelectedEntry] =
@@ -91,6 +92,7 @@ const Budget = () => {
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         notes={notes}
         setAlertToast={setAlertToast}
+        inputRef={inputRef}
       />
 
       <EditBudgetEntryDialog
@@ -102,6 +104,7 @@ const Budget = () => {
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
         today={TODAY}
         setAlertToast={setAlertToast}
+        inputRef={inputRef}
       />
 
       <AlertToast alertToast={alertToast} />
@@ -109,6 +112,9 @@ const Budget = () => {
       <AddDataButton
         action={() => {
           setOpenAddBudgetEntryDialog(true)
+          setTimeout(() => {
+            inputRef.current?.focus()
+          }, 50)
         }}
       />
     </Stack>

@@ -14,7 +14,7 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, RefObject, useEffect, useState } from "react"
 import { MoneyInputV2 } from "../../../components/MoneyInput"
 import {
   AlertToastType,
@@ -39,6 +39,7 @@ const EditTransactionDetailDialog = ({
   refreshIncomeTransactions,
   refreshExpenseTransactions,
   setAlertToast,
+  inputRef,
 }: {
   openEditDialog: boolean
   setOpenEditDialog: React.Dispatch<React.SetStateAction<boolean>>
@@ -52,6 +53,7 @@ const EditTransactionDetailDialog = ({
   refreshIncomeTransactions: () => void
   refreshExpenseTransactions: () => void
   setAlertToast: HookSetter<AlertToastType | undefined>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const UPDATE_TRANSACTION_INIT = {
     id: 0,
@@ -145,10 +147,14 @@ const EditTransactionDetailDialog = ({
 
       <DialogContent>
         <Box className="flex flex-col gap-5" padding={"10px"}>
-          <MoneyInputV2
-            value={updateTransaction.amount}
-            setValue={setUpdateTransaction}
-          />
+          {openEditDialog && (
+            <MoneyInputV2
+              value={updateTransaction.amount}
+              setValue={setUpdateTransaction}
+              inputRef={inputRef}
+              autoFocus={openEditDialog}
+            />
+          )}
 
           <FormControl>
             <InputLabel>Category</InputLabel>

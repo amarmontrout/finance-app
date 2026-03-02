@@ -150,6 +150,7 @@ const Transactions = () => {
         refreshIncomeTransactions={refreshIncomeTransactionsV2}
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
         setAlertToast={setAlertToast}
+        inputRef={inputRef}
       />
 
       <AlertToast alertToast={alertToast} />

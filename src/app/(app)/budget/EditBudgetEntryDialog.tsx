@@ -26,7 +26,7 @@ import {
   Checkbox,
 } from "@mui/material"
 import { useTheme } from "next-themes"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, RefObject, useEffect, useState } from "react"
 
 const EditBudgetEntryDialog = ({
   openEditDialog,
@@ -37,6 +37,7 @@ const EditBudgetEntryDialog = ({
   refreshBudgetTransactions,
   today,
   setAlertToast,
+  inputRef,
 }: {
   openEditDialog: boolean
   setOpenEditDialog: HookSetter<boolean>
@@ -46,6 +47,7 @@ const EditBudgetEntryDialog = ({
   refreshBudgetTransactions: () => void
   today: DateType
   setAlertToast: HookSetter<AlertToastType | undefined>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
@@ -154,10 +156,14 @@ const EditBudgetEntryDialog = ({
             />
           </FormControl>
 
-          <MoneyInputV2
-            value={updatedBudgetEntry.amount}
-            setValue={setUpdatedBudgetEntry}
-          />
+          {openEditDialog && (
+            <MoneyInputV2
+              value={updatedBudgetEntry.amount}
+              setValue={setUpdatedBudgetEntry}
+              inputRef={inputRef}
+              autoFocus={openEditDialog}
+            />
+          )}
 
           <FormControlLabel
             control={

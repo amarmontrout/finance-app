@@ -17,7 +17,7 @@ import {
 import { User } from "@supabase/supabase-js"
 import CloseIcon from "@mui/icons-material/Close"
 import SaveIcon from "@mui/icons-material/Save"
-import { useState } from "react"
+import { RefObject, useState } from "react"
 import { makeId } from "@/utils/helperFunctions"
 import { saveBudget } from "@/app/api/Transactions/requests"
 
@@ -30,6 +30,7 @@ const AddBudgetEntryDialog = ({
   refreshBudgetTransactions,
   notes,
   setAlertToast,
+  inputRef,
 }: {
   openAddBudgetEntryDialog: boolean
   setOpenAddBudgetEntryDialog: HookSetter<boolean>
@@ -39,6 +40,7 @@ const AddBudgetEntryDialog = ({
   refreshBudgetTransactions: () => void
   notes: string[]
   setAlertToast: HookSetter<AlertToastType | undefined>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
     id: Number(makeId(8)),
@@ -133,6 +135,7 @@ const AddBudgetEntryDialog = ({
           today={today}
           notes={notes}
           openAddBudgetEntryDialog={openAddBudgetEntryDialog}
+          inputRef={inputRef}
         />
       </DialogContent>
     </Dialog>

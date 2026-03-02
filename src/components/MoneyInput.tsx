@@ -1,5 +1,5 @@
 import { FormControl, OutlinedInput } from "@mui/material"
-import { ChangeEvent, RefObject, useRef } from "react"
+import { ChangeEvent, RefObject } from "react"
 
 export const MoneyInputV2 = <T extends { amount: number }>({
   value,

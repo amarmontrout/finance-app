@@ -19,7 +19,7 @@ import {
   Checkbox,
   SelectChangeEvent,
 } from "@mui/material"
-import { ChangeEvent, useEffect } from "react"
+import { ChangeEvent, RefObject, useEffect } from "react"
 
 const BudgetEntryForm = ({
   budgetEntry,
@@ -30,6 +30,7 @@ const BudgetEntryForm = ({
   today,
   notes,
   openAddBudgetEntryDialog,
+  inputRef,
 }: {
   budgetEntry: BudgetTransactionTypeV2
   setBudgetEntry: HookSetter<BudgetTransactionTypeV2>
@@ -39,6 +40,7 @@ const BudgetEntryForm = ({
   today: DateType
   notes: string[]
   openAddBudgetEntryDialog: boolean
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   useEffect(() => {
     if (!budgetCategories.length) return
@@ -70,6 +72,7 @@ const BudgetEntryForm = ({
       <MoneyInputV2
         value={budgetEntry.amount}
         setValue={setBudgetEntry}
+        inputRef={inputRef}
         autoFocus={openAddBudgetEntryDialog}
       />
 

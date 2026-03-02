@@ -1,6 +1,5 @@
 import { updateBudget } from "@/app/api/Transactions/requests"
 import { MoneyInputV2 } from "@/components/MoneyInput"
-import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
 import {
   AlertToastType,
@@ -19,14 +18,16 @@ import {
   MenuItem,
   Autocomplete,
   TextField,
-  DialogActions,
-  Button,
   DialogContent,
   FormControlLabel,
   Checkbox,
+  Stack,
+  IconButton,
+  Typography,
 } from "@mui/material"
-import { useTheme } from "next-themes"
 import { ChangeEvent, RefObject, useEffect, useState } from "react"
+import CloseIcon from "@mui/icons-material/Close"
+import SaveIcon from "@mui/icons-material/Save"
 
 const EditBudgetEntryDialog = ({
   openEditDialog,
@@ -49,7 +50,6 @@ const EditBudgetEntryDialog = ({
   setAlertToast: HookSetter<AlertToastType | undefined>
   inputRef: RefObject<HTMLInputElement | null>
 }) => {
-  const { theme: currentTheme } = useTheme()
   const user = useUser()
 
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
@@ -64,6 +64,7 @@ const EditBudgetEntryDialog = ({
   const [updatedBudgetEntry, setUpdatedBudgetEntry] =
     useState<BudgetTransactionTypeV2>(BUDGET_ENTRY_INIT)
   const [noteValue, setNoteValue] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const refreshDialog = () => {
     if (selectedEntry) {
@@ -78,6 +79,7 @@ const EditBudgetEntryDialog = ({
 
   const update = async () => {
     if (!user || !selectedEntry) return
+    setIsLoading(true)
     try {
       await updateBudget({
         userId: user.id,
@@ -105,12 +107,42 @@ const EditBudgetEntryDialog = ({
       refreshBudgetTransactions()
       setOpenEditDialog(false)
       setNoteValue(null)
+      setIsLoading(false)
     }
   }
 
   return (
-    <Dialog open={openEditDialog}>
-      <DialogTitle>{`Edit Budget Transaction`}</DialogTitle>
+    <Dialog open={openEditDialog} fullScreen>
+      <DialogTitle>
+        <Stack
+          width={"100%"}
+          height={"100%"}
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <IconButton
+            onClick={() => {
+              setOpenEditDialog(false)
+              refreshDialog()
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <Typography>{`Edit Budget Transaction`}</Typography>
+
+          <IconButton
+            loading={isLoading}
+            disabled={
+              !updatedBudgetEntry.note || updatedBudgetEntry.amount <= 0
+            }
+            onClick={update}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
 
       <DialogContent>
         <Box className="flex flex-col gap-5" padding={"10px"}>
@@ -182,35 +214,6 @@ const EditBudgetEntryDialog = ({
           />
         </Box>
       </DialogContent>
-
-      <DialogActions>
-        <Button
-          variant={"contained"}
-          onClick={update}
-          sx={{
-            backgroundColor:
-              currentTheme === "light"
-                ? [lightMode.success]
-                : [darkMode.success],
-          }}
-        >
-          {"Update"}
-        </Button>
-
-        <Button
-          variant={"contained"}
-          onClick={() => {
-            setOpenEditDialog(false)
-            refreshDialog()
-          }}
-          sx={{
-            backgroundColor:
-              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
-          }}
-        >
-          {"Cancel"}
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }

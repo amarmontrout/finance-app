@@ -144,7 +144,6 @@ const Transactions = () => {
             ? incomeCategoriesV2
             : expenseCategoriesV2
         }
-        currentTheme={currentTheme}
         selectedYear={selectedDate.year}
         selectedMonth={selectedDate.month}
         refreshIncomeTransactions={refreshIncomeTransactionsV2}

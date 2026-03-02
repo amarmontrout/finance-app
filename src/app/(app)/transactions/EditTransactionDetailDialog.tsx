@@ -1,4 +1,3 @@
-import { lightMode, darkMode } from "@/globals/colors"
 import {
   Dialog,
   DialogTitle,
@@ -7,12 +6,13 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Button,
   SelectChangeEvent,
-  DialogActions,
   DialogContent,
   FormControlLabel,
   Checkbox,
+  Stack,
+  IconButton,
+  Typography,
 } from "@mui/material"
 import { ChangeEvent, RefObject, useEffect, useState } from "react"
 import { MoneyInputV2 } from "../../../components/MoneyInput"
@@ -25,6 +25,8 @@ import {
 } from "@/utils/type"
 import { updateExpense, updateIncome } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
+import CloseIcon from "@mui/icons-material/Close"
+import SaveIcon from "@mui/icons-material/Save"
 
 const EditTransactionDetailDialog = ({
   openEditDialog,
@@ -33,7 +35,6 @@ const EditTransactionDetailDialog = ({
   setSelectedTransaction,
   transactions,
   categories,
-  currentTheme,
   selectedYear,
   selectedMonth,
   refreshIncomeTransactions,
@@ -47,7 +48,6 @@ const EditTransactionDetailDialog = ({
   setSelectedTransaction: HookSetter<SelectedTransactionType | null>
   transactions: TransactionTypeV2[]
   categories: ChoiceTypeV2[]
-  currentTheme: string | undefined
   selectedYear: number
   selectedMonth: string
   refreshIncomeTransactions: () => void
@@ -68,6 +68,7 @@ const EditTransactionDetailDialog = ({
   const [updateTransaction, setUpdateTransaction] = useState<TransactionTypeV2>(
     UPDATE_TRANSACTION_INIT,
   )
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (!selectedTransaction || !selectedYear || !selectedMonth) return
@@ -99,6 +100,7 @@ const EditTransactionDetailDialog = ({
 
   const handleUpdateTransactionData = async () => {
     if (!selectedYear || !selectedMonth || !selectedTransaction || !user) return
+    setIsLoading(true)
     try {
       if (selectedTransaction.type === "income") {
         await updateIncome({
@@ -136,13 +138,43 @@ const EditTransactionDetailDialog = ({
     } finally {
       setOpenEditDialog(false)
       setSelectedTransaction(null)
+      setIsLoading(false)
     }
   }
 
   return (
-    <Dialog open={openEditDialog}>
+    <Dialog open={openEditDialog} fullScreen>
       <DialogTitle>
-        {`Edit ${selectedTransaction?.type === "income" ? "Income" : "Expense"} Detail`}
+        <Stack
+          width={"100%"}
+          height={"100%"}
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <IconButton
+            onClick={() => {
+              setOpenEditDialog(false)
+              setSelectedTransaction(null)
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+
+          <Typography>
+            {`Edit ${selectedTransaction?.type === "income" ? "Income" : "Expense"} Detail`}
+          </Typography>
+
+          <IconButton
+            loading={isLoading}
+            disabled={
+              !updateTransaction.category || updateTransaction.amount <= 0
+            }
+            onClick={handleUpdateTransactionData}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
       </DialogTitle>
 
       <DialogContent>
@@ -194,39 +226,6 @@ const EditTransactionDetailDialog = ({
           )}
         </Box>
       </DialogContent>
-
-      <DialogActions>
-        <Button
-          variant={"contained"}
-          disabled={
-            !updateTransaction.category || updateTransaction.amount <= 0
-          }
-          onClick={handleUpdateTransactionData}
-          sx={{
-            backgroundColor:
-              currentTheme === "light"
-                ? [lightMode.success]
-                : [darkMode.success],
-          }}
-        >
-          {"Update"}
-        </Button>
-
-        <Button
-          variant={"contained"}
-          disabled={false}
-          onClick={() => {
-            setOpenEditDialog(false)
-            setSelectedTransaction(null)
-          }}
-          sx={{
-            backgroundColor:
-              currentTheme === "light" ? [lightMode.error] : [darkMode.error],
-          }}
-        >
-          {"Close"}
-        </Button>
-      </DialogActions>
     </Dialog>
   )
 }

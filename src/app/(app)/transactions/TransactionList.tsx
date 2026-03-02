@@ -94,7 +94,7 @@ const TransactionList = ({
   }
 
   return (
-    <Stack spacing={0.5}>
+    <Stack spacing={1.5}>
       <Stack direction={"row"} justifyContent={"space-between"}>
         <Typography variant={"h5"} fontWeight={700}>
           {title}

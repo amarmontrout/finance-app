@@ -126,13 +126,6 @@ const RemainingBudget = ({
               })
             )}
           </FlexColWrapper>
-
-          {weeklyTransactions.length !== 0 && (
-            <Typography variant={"h6"} textAlign={"right"}>
-              {`${netTotal < 0 ? "Overspent" : "Saved"}
-              $${formattedStringNumber(Math.abs(netTotal))} for the week`}
-            </Typography>
-          )}
         </Stack>
       )}
     </ShowCaseCard>

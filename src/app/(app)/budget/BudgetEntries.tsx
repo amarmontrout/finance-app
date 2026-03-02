@@ -16,6 +16,7 @@ import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
 import BudgetProgressBar from "./BudgetProgressBar"
 import { TransitionGroup } from "react-transition-group"
+import { accentColorPrimary } from "@/globals/colors"
 
 const BudgetEntries = ({
   budgetTransactions,
@@ -99,6 +100,13 @@ const BudgetEntries = ({
     )
   }, [budgetCategories])
 
+  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
+  const actualTotal = budgetTransactions.reduce(
+    (sum, t) => sum + (t.isReturn ? -t.amount : t.amount),
+    0,
+  )
+  const netTotal = budgetTotal - actualTotal
+
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
@@ -110,62 +118,81 @@ const BudgetEntries = ({
               The are no budget entries for this week
             </Typography>
           ) : (
-            Object.entries(groupedTransactions)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([category, entries]) => {
-                const total = entries.reduce((sum, entry) => {
-                  return entry.isReturn
-                    ? sum - entry.amount
-                    : sum + entry.amount
-                }, 0)
+            <Stack spacing={5}>
+              {Object.entries(groupedTransactions)
+                .sort(([a], [b]) => a.localeCompare(b))
+                .map(([category, entries]) => {
+                  const total = entries.reduce((sum, entry) => {
+                    return entry.isReturn
+                      ? sum - entry.amount
+                      : sum + entry.amount
+                  }, 0)
 
-                return (
-                  <Stack key={category} spacing={0.5}>
-                    <BudgetProgressBar
-                      label={category}
-                      actual={total}
-                      budget={budgetLookup[category] ?? 0}
-                    />
+                  return (
+                    <Stack key={category} spacing={0.5}>
+                      <BudgetProgressBar
+                        label={category}
+                        actual={total}
+                        budget={budgetLookup[category] ?? 0}
+                      />
 
-                    <TransitionGroup>
-                      {entries.map((entry, index) => {
-                        const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
-                        const isLast = index === entries.length - 1
-                        return (
-                          <Collapse key={entry.id}>
-                            <Box mb={isLast ? 0 : 1}>
-                              <ListItemSwipe
-                                mainTitle={entry.note}
-                                secondaryTitle={entryDate}
-                                amount={`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
-                                amountColor={
-                                  entry.isReturn ? "error.main" : "inherit"
-                                }
-                                buttonCondition={noteId === entry.id}
-                                onDelete={async () => {
-                                  handleDeleteEntry(entry.id)
-                                }}
-                                onSetDelete={() => {
-                                  setNoteId(entry.id)
-                                }}
-                                onCancelDelete={() => {
-                                  setSelectedEntry(null)
-                                  setNoteId(null)
-                                }}
-                                onEdit={() => {
-                                  setOpenEditDialog(true)
-                                  setSelectedEntry(entry)
-                                }}
-                                currentTheme={currentTheme}
-                              />
-                            </Box>
-                          </Collapse>
-                        )
-                      })}
-                    </TransitionGroup>
-                  </Stack>
-                )
-              })
+                      <TransitionGroup>
+                        {entries.map((entry, index) => {
+                          const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
+                          const isLast = index === entries.length - 1
+                          return (
+                            <Collapse key={entry.id}>
+                              <Box mb={isLast ? 0 : 1}>
+                                <ListItemSwipe
+                                  mainTitle={entry.note}
+                                  secondaryTitle={entryDate}
+                                  amount={`${entry.isReturn ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
+                                  amountColor={
+                                    entry.isReturn ? "error.main" : "inherit"
+                                  }
+                                  buttonCondition={noteId === entry.id}
+                                  onDelete={async () => {
+                                    handleDeleteEntry(entry.id)
+                                  }}
+                                  onSetDelete={() => {
+                                    setNoteId(entry.id)
+                                  }}
+                                  onCancelDelete={() => {
+                                    setSelectedEntry(null)
+                                    setNoteId(null)
+                                  }}
+                                  onEdit={() => {
+                                    setOpenEditDialog(true)
+                                    setSelectedEntry(entry)
+                                  }}
+                                  currentTheme={currentTheme}
+                                />
+                              </Box>
+                            </Collapse>
+                          )
+                        })}
+                      </TransitionGroup>
+                    </Stack>
+                  )
+                })}
+
+              <Stack spacing={1.5}>
+                <hr style={{ border: `1px solid ${accentColorPrimary}` }} />
+
+                <BudgetProgressBar
+                  label={"Week Total"}
+                  actual={actualTotal}
+                  budget={budgetTotal}
+                />
+
+                {budgetTransactions.length !== 0 && (
+                  <Typography variant={"h6"} textAlign={"left"}>
+                    {`${netTotal < 0 ? "Overspending" : "Saving"}
+                    $${formattedStringNumber(Math.abs(netTotal))} for the week`}
+                  </Typography>
+                )}
+              </Stack>
+            </Stack>
           )}
         </Stack>
       )}

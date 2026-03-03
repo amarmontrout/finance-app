@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import EditTransactionDetailDialog from "@/app/(app)/transactions/EditTransactionDetailDialog"
+import EditTransactionDetailDialog from "./EditTransactionDetailDialog"
 import {
   AlertToastType,
   SelectedDateType,

@@ -1,5 +1,3 @@
-"use client"
-
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"

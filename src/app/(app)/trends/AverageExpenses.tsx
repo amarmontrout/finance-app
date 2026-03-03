@@ -1,5 +1,3 @@
-"use client"
-
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexChildWrapper, FlexColWrapper } from "@/components/Wrappers"
 import { darkMode, lightMode } from "@/globals/colors"

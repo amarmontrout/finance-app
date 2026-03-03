@@ -1,5 +1,3 @@
-"use client"
-
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LineChart from "@/components/LineChart"
 import ShowCaseCard from "@/components/ShowCaseCard"

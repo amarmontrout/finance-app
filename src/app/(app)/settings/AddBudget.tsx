@@ -1,5 +1,3 @@
-"use client"
-
 import ShowCaseCard from "@/components/ShowCaseCard"
 import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"

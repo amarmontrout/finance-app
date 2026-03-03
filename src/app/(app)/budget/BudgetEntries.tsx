@@ -1,5 +1,3 @@
-"use client"
-
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { Box, Collapse, Stack, Typography } from "@mui/material"
 import {

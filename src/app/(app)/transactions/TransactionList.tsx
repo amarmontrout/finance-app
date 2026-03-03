@@ -48,20 +48,14 @@ const TransactionList = ({
     type: "income" | "expense",
   ) => {
     if (!user) return
+    const deleteFn = type === "income" ? deleteIncome : deleteExpense
+    const refreshFn =
+      type === "income"
+        ? refreshIncomeTransactionsV2
+        : refreshExpenseTransactionsV2
+
     try {
-      if (type === "income") {
-        await deleteIncome({
-          userId: user.id,
-          rowId: id,
-        })
-        refreshIncomeTransactionsV2()
-      } else {
-        await deleteExpense({
-          userId: user.id,
-          rowId: id,
-        })
-        refreshExpenseTransactionsV2()
-      }
+      await deleteFn({ userId: user.id, rowId: id })
       setAlertToast({
         open: true,
         onClose: () => {
@@ -81,12 +75,19 @@ const TransactionList = ({
         message: "Transaction could not be deleted.",
       })
     } finally {
+      refreshFn()
       setSelectedTransaction(null)
     }
   }
 
   const total = useMemo(() => {
     return transactions.reduce((sum, t) => sum + t.amount, 0)
+  }, [transactions])
+
+  const sortedTransactions = useMemo(() => {
+    return [...transactions].sort((a, b) =>
+      a.category.localeCompare(b.category, undefined, { sensitivity: "base" }),
+    )
   }, [transactions])
 
   if (isLoading) {
@@ -111,15 +112,15 @@ const TransactionList = ({
         }}
       />
 
-      {transactions.length === 0 ? (
+      {sortedTransactions.length === 0 ? (
         <Typography
           width={"100%"}
           textAlign={"center"}
-        >{`There are no ${type} transactions yet`}</Typography>
+        >{`There are no ${type} transactions`}</Typography>
       ) : (
         <TransitionGroup>
-          {transactions.map((transaction, index) => {
-            const isLast = index === transactions.length - 1
+          {sortedTransactions.map((transaction, index) => {
+            const isLast = index === sortedTransactions.length - 1
             return (
               <Collapse key={transaction.id}>
                 <Box mb={isLast ? 0 : 1}>

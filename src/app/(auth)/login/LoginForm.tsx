@@ -46,66 +46,63 @@ const LoginForm = () => {
   }
 
   return (
-    <Card
+    <Box
       style={{
-        borderRadius: "15px",
         margin: "0 auto",
         padding: "20px",
       }}
     >
-      <CardContent>
-        <FlexColWrapper gap={5}>
-          <Typography textAlign={"center"} variant="h5">
-            Please Sign In
-          </Typography>
+      <FlexColWrapper gap={5}>
+        <Typography textAlign={"center"} variant="h5">
+          Please Sign In
+        </Typography>
 
-          {error && <Alert severity={"error"}>{error}</Alert>}
+        {error && <Alert severity={"error"}>{error}</Alert>}
 
-          <Box className="flex flex-col gap-3 m-auto">
-            <FormControl>
-              <InputLabel>Username</InputLabel>
-              <OutlinedInput
-                label={"Username"}
-                value={credentials.username}
-                name={"username"}
-                onChange={(e) => {
-                  setCredentials((prev) => ({
-                    ...prev,
-                    username: e.target.value,
-                  }))
-                }}
-              />
-            </FormControl>
+        <Box className="flex flex-col gap-3 m-auto">
+          <FormControl>
+            <InputLabel>Username</InputLabel>
+            <OutlinedInput
+              label={"Username"}
+              value={credentials.username}
+              name={"username"}
+              onChange={(e) => {
+                setCredentials((prev) => ({
+                  ...prev,
+                  username: e.target.value,
+                }))
+              }}
+            />
+          </FormControl>
 
-            <FormControl>
-              <InputLabel>Password</InputLabel>
-              <OutlinedInput
-                label={"Password"}
-                type={"password"}
-                value={credentials.password}
-                name={"password"}
-                onChange={(e) => {
-                  setCredentials((prev) => ({
-                    ...prev,
-                    password: e.target.value,
-                  }))
-                }}
-              />
-            </FormControl>
+          <FormControl>
+            <InputLabel>Password</InputLabel>
+            <OutlinedInput
+              label={"Password"}
+              type={"password"}
+              value={credentials.password}
+              name={"password"}
+              onChange={(e) => {
+                setCredentials((prev) => ({
+                  ...prev,
+                  password: e.target.value,
+                }))
+              }}
+            />
+          </FormControl>
 
-            <Button
-              variant={"contained"}
-              onClick={handleLogin}
-              disabled={!credentials.username || !credentials.password}
-              sx={{ backgroundColor: accentColorSecondary }}
-              loading={isLoading}
-            >
-              {"Sign In"}
-            </Button>
-          </Box>
-        </FlexColWrapper>
-      </CardContent>
-    </Card>
+          <Button
+            variant={"contained"}
+            onClick={handleLogin}
+            disabled={!credentials.username || !credentials.password}
+            sx={{ backgroundColor: accentColorSecondary }}
+            loading={isLoading}
+          >
+            {"Sign In"}
+          </Button>
+        </Box>
+      </FlexColWrapper>
+    </Box>
   )
 }
 

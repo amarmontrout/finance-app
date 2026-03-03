@@ -1,7 +1,7 @@
 "use client"
 
 import { useTransactionContext } from "@/contexts/transactions-context"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
@@ -44,7 +44,12 @@ const Insights = () => {
       method: "compare",
       excludedSet: excludedSet,
     })
-  }, [incomeTransactionsV2, expenseTransactionsV2, selectedDate])
+  }, [
+    incomeTransactionsV2,
+    expenseTransactionsV2,
+    excludedSet,
+    selectedDate.year,
+  ])
 
   const eachMonthNetIncome: [string, number][] = useMemo(() => {
     return MONTHS.map((month) => {
@@ -63,16 +68,19 @@ const Insights = () => {
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, net]
     })
-  }, [selectedDate.year, incomeTransactionsV2, expenseTransactionsV2])
+  }, [
+    selectedDate.year,
+    incomeTransactionsV2,
+    expenseTransactionsV2,
+    excludedSet,
+  ])
 
   const NetChartData: TwoColumnDataType = useMemo(() => {
-    return (
-      buildTwoColumnData({
-        data: eachMonthNetIncome,
-        firstColumnTitle: "Month",
-        secondColumnTitle: "Net Cash Flow",
-      }) || []
-    )
+    return buildTwoColumnData({
+      data: eachMonthNetIncome,
+      firstColumnTitle: "Month",
+      secondColumnTitle: "Net Cash Flow",
+    })
   }, [eachMonthNetIncome])
 
   const resetSelectedDate = () => {
@@ -87,10 +95,6 @@ const Insights = () => {
       setType(newType)
     }
   }
-
-  useEffect(() => {
-    resetSelectedDate()
-  }, [])
 
   return (
     <Stack gap={1.5}>

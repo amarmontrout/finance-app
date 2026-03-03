@@ -67,7 +67,7 @@ export type NewTransactionType = {
   amount: number, 
   category: string, 
   note?: string, 
-  payment_method: string, 
+  payment_method?: string, 
   type: string, 
   is_paid?: boolean, 
   is_recurring?: boolean, 

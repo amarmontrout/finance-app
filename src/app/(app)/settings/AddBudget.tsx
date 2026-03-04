@@ -29,7 +29,7 @@ import {
 import { useUser } from "@/hooks/useUser"
 
 const BUDGET_INIT: BudgetTypeV2 = {
-  id: Number(makeId(8)),
+  id: makeId(),
   category: "",
   amount: 0,
 }

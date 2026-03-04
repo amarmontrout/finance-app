@@ -22,7 +22,7 @@ const AddIncomeCategory = () => {
     await saveIncomeCategory({
       userId: user.id,
       body: {
-        id: Number(makeId(8)),
+        id: makeId(),
         name: incomeCategoriesInput,
       },
     })

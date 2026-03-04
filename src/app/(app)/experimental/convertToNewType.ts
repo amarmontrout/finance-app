@@ -10,7 +10,7 @@ export const migrateIncomeTransaction = (
   type: "income",
 ): NewTransactionType => {
   return {
-    id: makeId(10),
+    id: makeId(),
     date: {
       month: old.month,
       day: 0,
@@ -31,7 +31,7 @@ export const migrateExpenseTransaction = (
   type: "expense",
 ): NewTransactionType => {
   return {
-    id: makeId(10),
+    id: makeId(),
     date: {
       month: old.month,
       day: 0,
@@ -51,7 +51,7 @@ export const migrateBudgetTransaction = (
   old: BudgetTransactionTypeV2, 
 ): NewTransactionType => { 
   return { 
-    id: makeId(10),
+    id: makeId(),
     date: old.date, 
     amount: old.amount, 
     category: old.category, 

@@ -43,7 +43,7 @@ const AddBudgetEntryDialog = ({
   inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const BUDGET_ENTRY_INIT: BudgetTransactionTypeV2 = {
-    id: Number(makeId(8)),
+    id: makeId(),
     category: "",
     note: "",
     amount: 0,

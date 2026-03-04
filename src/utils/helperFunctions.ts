@@ -77,26 +77,28 @@ export const formattedStringNumber = (
   num: number
 ): string => {
   return num.toLocaleString(undefined, {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   })
 }
 
 /**
  * This helper function creates a random string id.
  * 
- * @param length
  * @returns A randomized string of given length.
  */
-export const makeId = (
-  length: number
-): number => {
-    let result = ""
-    const characters = "0123456789"
-    const charLength = characters.length
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() * charLength))
-    }
+export const makeId = (): number => {
+  let result = ""
+  const characters = "123456789"
+  const charLength = characters.length
+
+  const array = new Uint8Array(16)
+  crypto.getRandomValues(array)
+
+  for (let i = 0; i < 16; i++) {
+    result += characters[array[i] % charLength]
+  }
+
     return Number(result)
 }
 

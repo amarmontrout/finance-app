@@ -37,7 +37,7 @@ const TransactionForm = ({
     if (!categories.length) return
 
     setTransaction({
-      id: Number(makeId(8)),
+      id: makeId(),
       month: currentMonth,
       year: currentYear,
       category: categories[0].name,

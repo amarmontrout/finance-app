@@ -30,7 +30,7 @@ const AddExpenseCategory = ({
     await saveExpenseCategory({
       userId: user.id,
       body: {
-        id: Number(makeId(8)),
+        id: makeId(),
         name: expenseCategoriesInput,
       },
     })

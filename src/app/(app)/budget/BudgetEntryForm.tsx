@@ -46,7 +46,7 @@ const BudgetEntryForm = ({
     if (!budgetCategories.length) return
 
     setBudgetEntry({
-      id: Number(makeId(8)),
+      id: makeId(),
       category: budgetCategories[0].category,
       note: "",
       amount: 0,

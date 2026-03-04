@@ -52,7 +52,7 @@ const AddDialog = ({
   }
 
   const createInitialTransaction = (): NewTransactionType => ({
-    id: Number(makeId(8)),
+    id: makeId(),
     date: TODAY,
     amount: 0,
     category: "",

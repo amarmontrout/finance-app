@@ -47,7 +47,7 @@ const AddTransactionDialog = ({
   const user = useUser()
 
   const TRANSACTION_INIT: TransactionTypeV2 = {
-    id: Number(makeId(8)),
+    id: makeId(),
     month: currentMonth,
     year: currentYear,
     category: "",

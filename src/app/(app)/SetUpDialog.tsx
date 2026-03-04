@@ -228,7 +228,7 @@ const SetUpDialog = ({
         saveYearChoice({
           userId: user.id,
           body: {
-            id: Number(makeId(8)),
+            id: makeId(),
             name: String(choice),
           },
         }),
@@ -240,7 +240,7 @@ const SetUpDialog = ({
         saveExpenseCategory({
           userId: user.id,
           body: {
-            id: Number(makeId(8)),
+            id: makeId(),
             name: choice,
           },
         }),
@@ -252,7 +252,7 @@ const SetUpDialog = ({
         saveIncomeCategory({
           userId: user.id,
           body: {
-            id: Number(makeId(8)),
+            id: makeId(),
             name: choice,
           },
         }),

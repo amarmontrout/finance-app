@@ -230,7 +230,7 @@ const Experimental = () => {
                             setSelectedTransaction(null)
                           }}
                           onEdit={() => {
-                            setOpenEditDialog(true)
+                            setOpenDialog(true)
                             setSelectedTransaction(transaction)
                           }}
                           currentTheme={currentTheme}
@@ -254,6 +254,8 @@ const Experimental = () => {
         inputRef={inputRef}
         allNotes={allNotes}
         refreshTransactions={refreshTransactions}
+        selectedTransaction={selectedTransaction}
+        setSelectedTransaction={setSelectedTransaction}
       />
 
       <AlertToast alertToast={alertToast} />

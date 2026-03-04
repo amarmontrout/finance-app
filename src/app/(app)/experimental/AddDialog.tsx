@@ -19,7 +19,10 @@ import {
   NewTransactionType,
 } from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
-import { saveTransaction } from "@/app/api/Transactions/requests"
+import {
+  saveTransaction,
+  updateTransaction,
+} from "@/app/api/Transactions/requests"
 import NewTransactionForm from "./NewTransactionForm"
 import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
 
@@ -32,6 +35,8 @@ const AddDialog = ({
   inputRef,
   allNotes,
   refreshTransactions,
+  selectedTransaction,
+  setSelectedTransaction,
 }: {
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
@@ -41,6 +46,8 @@ const AddDialog = ({
   inputRef: RefObject<HTMLInputElement | null>
   allNotes: string[]
   refreshTransactions: () => Promise<void>
+  selectedTransaction?: NewTransactionType | null
+  setSelectedTransaction?: HookSetter<NewTransactionType | null>
 }) => {
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
@@ -63,9 +70,13 @@ const AddDialog = ({
     is_return: false,
   })
 
-  const [type, setType] = useState<"income" | "expense">("income")
+  const isEdit = Boolean(selectedTransaction)
+
+  const [type, setType] = useState<"income" | "expense">(
+    selectedTransaction?.type ?? "income",
+  )
   const [transaction, setTransaction] = useState<NewTransactionType>(
-    createInitialTransaction(),
+    selectedTransaction ?? createInitialTransaction(),
   )
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -77,6 +88,17 @@ const AddDialog = ({
       setType(newType)
     }
   }
+
+  useEffect(() => {
+    if (openDialog) {
+      if (selectedTransaction) {
+        setTransaction(selectedTransaction)
+        setType(selectedTransaction.type)
+      } else {
+        resetFormData()
+      }
+    }
+  }, [openDialog, selectedTransaction])
 
   useEffect(() => {
     setTransaction((prev) => ({
@@ -99,19 +121,35 @@ const AddDialog = ({
     if (!user || !transaction) return
     setIsLoading(true)
     try {
-      await saveTransaction({
-        userId: user.id,
-        body: transaction,
-      })
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "success",
-        message: "Transaction saved successfully!",
-      })
-      await refreshTransactions()
+      if (isEdit && setSelectedTransaction) {
+        await updateTransaction({
+          userId: user.id,
+          rowId: transaction.id,
+          body: transaction,
+        })
+        setAlertToast({
+          open: true,
+          onClose: () => {
+            setAlertToast(undefined)
+          },
+          severity: "success",
+          message: "Transaction updated successfully!",
+        })
+        setSelectedTransaction(null)
+      } else {
+        await saveTransaction({
+          userId: user.id,
+          body: transaction,
+        })
+        setAlertToast({
+          open: true,
+          onClose: () => {
+            setAlertToast(undefined)
+          },
+          severity: "success",
+          message: "Transaction saved successfully!",
+        })
+      }
     } catch (error) {
       console.error(error)
       setAlertToast({
@@ -123,6 +161,7 @@ const AddDialog = ({
         message: "Transaction could not be saved.",
       })
     } finally {
+      refreshTransactions()
       resetFormData()
       setOpenDialog(false)
       setIsLoading(false)
@@ -147,7 +186,9 @@ const AddDialog = ({
           >
             <CloseIcon />
           </IconButton>
-          <Typography>{"New Transaction"}</Typography>
+          <Typography>
+            {isEdit ? "Edit Transaction" : "New Transaction"}
+          </Typography>
           <IconButton
             loading={isLoading}
             disabled={transaction?.amount === 0}
@@ -165,6 +206,7 @@ const AddDialog = ({
             exclusive
             size={"small"}
             onChange={handleSelectType}
+            disabled={isEdit}
             sx={{
               width: "100%",
               justifyContent: "center",

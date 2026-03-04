@@ -1,16 +1,21 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { useTransactionContext } from "@/contexts/transactions-context"
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { useUser } from "@/hooks/useUser"
 import {
   AlertToastType,
   HookSetter,
   SelectedTransactionType,
+  TransactionTypeV2,
 } from "@/utils/type"
 import { useMemo, useState } from "react"
 import TransactionList from "./TransactionList"
 
 const TransactionFeed = ({
+  incomeTransactionsV2,
+  refreshIncomeTransactionsV2,
+  expenseTransactionsV2,
+  refreshExpenseTransactionsV2,
+  isLoading,
   selectedMonth,
   selectedYear,
   currentTheme,
@@ -20,6 +25,11 @@ const TransactionFeed = ({
   setOpenEditDialog,
   setAlertToast,
 }: {
+  incomeTransactionsV2: TransactionTypeV2[]
+  refreshIncomeTransactionsV2: () => void
+  expenseTransactionsV2: TransactionTypeV2[]
+  refreshExpenseTransactionsV2: () => void
+  isLoading: boolean
   selectedMonth: string
   selectedYear: number
   currentTheme: string | undefined
@@ -29,13 +39,6 @@ const TransactionFeed = ({
   setOpenEditDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
-  const {
-    incomeTransactionsV2,
-    expenseTransactionsV2,
-    refreshIncomeTransactionsV2,
-    refreshExpenseTransactionsV2,
-    isLoading,
-  } = useTransactionContext()
   const user = useUser()
 
   const [type, setType] = useState<"income" | "expense">("income")

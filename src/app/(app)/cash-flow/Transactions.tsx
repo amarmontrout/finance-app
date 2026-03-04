@@ -42,6 +42,7 @@ const Transactions = () => {
     refreshIncomeTransactionsV2,
     expenseTransactionsV2,
     refreshExpenseTransactionsV2,
+    isLoading,
   } = useTransactionContext()
   const { yearsV2, incomeCategoriesV2, expenseCategoriesV2, excludedSet } =
     useCategoryContext()
@@ -95,6 +96,11 @@ const Transactions = () => {
 
       <TabPanel value={tab} index={0}>
         <TransactionFeed
+          incomeTransactionsV2={incomeTransactionsV2}
+          refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
+          expenseTransactionsV2={expenseTransactionsV2}
+          refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
+          isLoading={isLoading}
           selectedMonth={selectedDate.month}
           selectedYear={selectedDate.year}
           currentTheme={currentTheme}

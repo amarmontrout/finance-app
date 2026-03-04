@@ -76,16 +76,13 @@ const Experimental = () => {
     )
   }, [filteredTransactions])
 
-  const handleDeleteTransaction = async (
-    id: number,
-    type: "income" | "expense",
-  ) => {
-    if (!user || !selectedTransaction) return
+  const handleDeleteTransaction = async (rowId: number) => {
+    if (!user || !rowId) return
 
     try {
       await deleteTransaction({
         userId: user.id,
-        rowId: selectedTransaction.id,
+        rowId: rowId,
       })
       setAlertToast({
         open: true,
@@ -196,6 +193,7 @@ const Experimental = () => {
                   return (
                     <Collapse key={transaction.id}>
                       <Box mb={isLast ? 0 : 1}>
+                        {/* Revisit the onDelete, onSetDelete, onCancelDelete, and onEdit functions for new transaction type */}
                         <ListItemSwipe
                           mainTitle={transaction.category}
                           secondaryTitle={transaction.is_paid ? "Paid" : ""}
@@ -210,7 +208,7 @@ const Experimental = () => {
                             !openEditDialog
                           }
                           onDelete={async () => {
-                            handleDeleteTransaction(transaction.id, type)
+                            handleDeleteTransaction(transaction.id)
                           }}
                           onSetDelete={() => {
                             setSelectedTransaction({

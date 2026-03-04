@@ -90,14 +90,14 @@ export const formattedStringNumber = (
  */
 export const makeId = (
   length: number
-): string => {
+): number => {
     let result = ""
     const characters = "0123456789"
     const charLength = characters.length
     for (var i = 0; i < length; i++) {
         result += characters.charAt(Math.floor(Math.random() * charLength))
     }
-    return result
+    return Number(result)
 }
 
 /**

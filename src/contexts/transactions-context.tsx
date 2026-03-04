@@ -2,9 +2,14 @@ import {
   getBudget,
   getExpenses,
   getIncome,
+  getTransactions,
 } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTransactionTypeV2, TransactionTypeV2 } from "@/utils/type"
+import {
+  BudgetTransactionTypeV2,
+  NewTransactionType,
+  TransactionTypeV2,
+} from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
@@ -15,6 +20,8 @@ type TransactionsContextType = {
   budgetTransactionsV2: BudgetTransactionTypeV2[]
   refreshBudgetTransactionsV2: () => void
   isLoading: boolean
+  transactions: NewTransactionType[]
+  refreshTransactions: () => void
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -34,6 +41,7 @@ export const useTransactionContext = () => {
 export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
 
+  const [transactions, setTransactions] = useState<NewTransactionType[]>([])
   const [incomeTransactionsV2, setIncomeTransactionsV2] = useState<
     TransactionTypeV2[]
   >([])
@@ -44,6 +52,17 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     BudgetTransactionTypeV2[]
   >([])
   const [isLoading, setIsLoading] = useState(true)
+
+  const refreshTransactions = async () => {
+    if (!user) {
+      return
+    }
+    console.log("Pulling Transactions...")
+    const result = await getTransactions({
+      userId: user.id,
+    })
+    setTransactions(result ?? [])
+  }
 
   const refreshIncomeTransactionsV2 = async () => {
     if (!user) {
@@ -87,6 +106,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
       setIsLoading(true)
 
       await Promise.all([
+        refreshTransactions(),
         refreshIncomeTransactionsV2(),
         refreshExpenseTransactionsV2(),
         refreshBudgetTransactionsV2(),
@@ -108,6 +128,8 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
         budgetTransactionsV2,
         refreshBudgetTransactionsV2,
         isLoading,
+        transactions,
+        refreshTransactions,
       }}
     >
       {props.children}

@@ -24,7 +24,7 @@ import { ChangeEvent, RefObject, useEffect, useMemo, useState } from "react"
 const NewTransactionForm = ({
   transaction,
   setTransaction,
-  // allTransactions,
+  allTransactions,
   categories,
   today,
   openDialog,
@@ -32,7 +32,7 @@ const NewTransactionForm = ({
 }: {
   transaction: NewTransactionType
   setTransaction: HookSetter<NewTransactionType>
-  // allTransactions: NewTransactionType[]
+  allTransactions: NewTransactionType[]
   categories: ChoiceTypeV2[]
   today: DateType
   openDialog: boolean
@@ -44,20 +44,20 @@ const NewTransactionForm = ({
     null,
   )
 
-  // const allNotes = useMemo(() => {
-  //   return [...new Set(allTransactions.map((e) => e.note))]
-  // }, [allTransactions])
+  const allNotes = useMemo(() => {
+    return [...new Set(allTransactions.map((e) => e.note))]
+  }, [allTransactions])
 
-  // const paymentMethods = useMemo(() => {
-  //   return [...new Set(allTransactions.map((e) => e.payment_method))]
-  // }, [allTransactions])
+  const paymentMethods = useMemo(() => {
+    return [...new Set(allTransactions.map((e) => e.payment_method))]
+  }, [allTransactions])
 
   useEffect(() => {
     setTransaction((prev) => ({
       ...prev,
       date: date,
     }))
-  }, [date])
+  }, [date, setTransaction])
 
   const handleMonth = (e: SelectChangeEvent) => {
     const { value } = e.target
@@ -101,6 +101,7 @@ const NewTransactionForm = ({
 
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={2} margin={"0 auto"}>
+      {/* Money input */}
       {openDialog && (
         <MoneyInputV2
           value={transaction.amount}
@@ -110,6 +111,7 @@ const NewTransactionForm = ({
         />
       )}
 
+      {/* Full date */}
       <Stack direction={"row"} spacing={1}>
         <FormControl
           sx={{
@@ -124,7 +126,11 @@ const NewTransactionForm = ({
             onChange={(e) => handleMonth(e)}
           >
             {MONTHS.map((month) => {
-              return <MenuItem value={month}>{month}</MenuItem>
+              return (
+                <MenuItem key={month} value={month}>
+                  {month}
+                </MenuItem>
+              )
             })}
           </Select>
         </FormControl>
@@ -158,6 +164,7 @@ const NewTransactionForm = ({
         </FormControl>
       </Stack>
 
+      {/* Category and notes */}
       <Stack direction={"row"} spacing={1}>
         <FormControl fullWidth>
           <InputLabel>Category</InputLabel>
@@ -178,8 +185,7 @@ const NewTransactionForm = ({
           <Autocomplete
             className="w-full"
             freeSolo
-            options={[]}
-            // options={allNotes.map((option) => option)}
+            options={allNotes.map((option) => option)}
             value={noteValue}
             onChange={(_: any, newValue: string | null) => {
               setNoteValue(newValue)
@@ -196,18 +202,18 @@ const NewTransactionForm = ({
         </FormControl>
       </Stack>
 
+      {/* Expense payment method */}
       {transaction.type === "expense" && (
         <FormControl fullWidth>
           <Autocomplete
             className="w-full"
             freeSolo
-            options={[]}
-            // options={paymentMethods.map((option) => option)}
-            value={noteValue}
+            options={paymentMethods.map((option) => option)}
+            value={paymentMethodValue}
             onChange={(_: any, newValue: string | null) => {
               setPaymentMethodValue(newValue)
             }}
-            inputValue={transaction.note}
+            inputValue={transaction.payment_method}
             onInputChange={(_, newInputValue) => {
               setTransaction((prev) => ({
                 ...prev,
@@ -221,58 +227,40 @@ const NewTransactionForm = ({
         </FormControl>
       )}
 
-      <Stack direction={"row"} spacing={4}>
-        {transaction.type === "income" ? (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={transaction.is_return}
-                sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setTransaction((prev) => ({
-                    ...prev,
-                    is_return: e.target.checked,
-                  }))
-                }}
-              />
-            }
-            label="Is a return?"
-          />
-        ) : (
-          <>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={transaction.is_recurring}
-                  sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setTransaction((prev) => ({
-                      ...prev,
-                      is_recurring: e.target.checked,
-                    }))
-                  }}
-                />
-              }
-              label="Is recurring?"
+      {/* Is return or is paid */}
+      {transaction.type === "income" ? (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={transaction.is_return}
+              sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setTransaction((prev) => ({
+                  ...prev,
+                  is_return: e.target.checked,
+                }))
+              }}
             />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={transaction.is_paid}
-                  sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setTransaction((prev) => ({
-                      ...prev,
-                      is_paid: e.target.checked,
-                    }))
-                  }}
-                />
-              }
-              label="Is paid?"
+          }
+          label="Is a return?"
+        />
+      ) : (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={transaction.is_paid}
+              sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
+              onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                setTransaction((prev) => ({
+                  ...prev,
+                  is_paid: e.target.checked,
+                }))
+              }}
             />
-          </>
-        )}
-      </Stack>
+          }
+          label="Is paid?"
+        />
+      )}
     </Stack>
   )
 }

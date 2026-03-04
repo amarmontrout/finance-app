@@ -30,6 +30,8 @@ const AddDialog = ({
   incomeCategoriesV2,
   expenseCategoriesV2,
   inputRef,
+  transactions,
+  refreshTransactions,
 }: {
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
@@ -37,6 +39,8 @@ const AddDialog = ({
   incomeCategoriesV2: ChoiceTypeV2[]
   expenseCategoriesV2: ChoiceTypeV2[]
   inputRef: RefObject<HTMLInputElement | null>
+  transactions: NewTransactionType[]
+  refreshTransactions: () => void
 }) => {
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
@@ -52,7 +56,11 @@ const AddDialog = ({
     date: TODAY,
     amount: 0,
     category: "",
-    type: "",
+    note: "",
+    payment_method: "",
+    type: "income",
+    is_paid: false,
+    is_return: false,
   }
 
   const [type, setType] = useState<"income" | "expense">("expense")
@@ -97,6 +105,7 @@ const AddDialog = ({
         severity: "success",
         message: "Transaction saved successfully!",
       })
+      refreshTransactions()
     } catch (error) {
       console.error(error)
       setAlertToast({
@@ -179,8 +188,10 @@ const AddDialog = ({
           </ToggleButtonGroup>
 
           <NewTransactionForm
+            key={type}
             transaction={transaction}
             setTransaction={setTransaction}
+            allTransactions={transactions}
             categories={
               type === "expense" ? expenseCategoriesV2 : incomeCategoriesV2
             }

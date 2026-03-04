@@ -19,12 +19,12 @@ import {
   FormControlLabel,
   Checkbox,
 } from "@mui/material"
-import { ChangeEvent, RefObject, useEffect, useMemo, useState } from "react"
+import { ChangeEvent, RefObject, useEffect, useState } from "react"
 
 const NewTransactionForm = ({
   transaction,
   setTransaction,
-  allTransactions,
+  allNotes,
   categories,
   today,
   openDialog,
@@ -32,7 +32,7 @@ const NewTransactionForm = ({
 }: {
   transaction: NewTransactionType
   setTransaction: HookSetter<NewTransactionType>
-  allTransactions: NewTransactionType[]
+  allNotes: string[]
   categories: ChoiceTypeV2[]
   today: DateType
   openDialog: boolean
@@ -40,17 +40,6 @@ const NewTransactionForm = ({
 }) => {
   const [date, setDate] = useState<DateType>(today)
   const [noteValue, setNoteValue] = useState<string | null>(null)
-
-  const allNotes = useMemo(() => {
-    return [
-      ...new Set(
-        allTransactions
-          .filter((e) => e.type === transaction.type)
-          .filter((e) => e.note !== "")
-          .map((e) => e.note),
-      ),
-    ]
-  }, [allTransactions, transaction])
 
   useEffect(() => {
     setTransaction((prev) => ({

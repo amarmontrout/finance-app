@@ -13,6 +13,7 @@ import { useMemo, useRef, useState } from "react"
 import AddDialog from "./AddDialog"
 import {
   AlertToastType,
+  NewTransactionType,
   SelectedDateType,
   SelectedTransactionType,
 } from "@/utils/type"
@@ -51,7 +52,7 @@ const Experimental = () => {
   const [selectedDate, setSelectedDate] =
     useState<SelectedDateType>(CURRENT_DATE)
   const [selectedTransaction, setSelectedTransaction] =
-    useState<SelectedTransactionType | null>(null)
+    useState<NewTransactionType | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [type, setType] = useState<"income" | "expense">("income")
 
@@ -75,6 +76,17 @@ const Experimental = () => {
       }),
     )
   }, [filteredTransactions])
+
+  const allNotes = useMemo(() => {
+    return [
+      ...new Set(
+        transactions
+          .filter((e) => e.type === type)
+          .filter((e) => e.note !== "")
+          .map((e) => e.note),
+      ),
+    ]
+  }, [transactions])
 
   const handleDeleteTransaction = async (rowId: number) => {
     if (!user || !rowId) return
@@ -165,6 +177,7 @@ const Experimental = () => {
               Expense
             </ToggleButton>
           </ToggleButtonGroup>
+
           <Stack spacing={1.5}>
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="h5" fontWeight={700}>
@@ -211,20 +224,14 @@ const Experimental = () => {
                             handleDeleteTransaction(transaction.id)
                           }}
                           onSetDelete={() => {
-                            setSelectedTransaction({
-                              id: transaction.id,
-                              type: type,
-                            })
+                            setSelectedTransaction(transaction)
                           }}
                           onCancelDelete={() => {
                             setSelectedTransaction(null)
                           }}
                           onEdit={() => {
                             setOpenEditDialog(true)
-                            setSelectedTransaction({
-                              id: transaction.id,
-                              type: type,
-                            })
+                            setSelectedTransaction(transaction)
                           }}
                           currentTheme={currentTheme}
                         />
@@ -245,7 +252,7 @@ const Experimental = () => {
         incomeCategoriesV2={incomeCategoriesV2}
         expenseCategoriesV2={expenseCategoriesV2}
         inputRef={inputRef}
-        transactions={transactions}
+        allNotes={allNotes}
         refreshTransactions={refreshTransactions}
       />
 

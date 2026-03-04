@@ -30,7 +30,7 @@ const AddDialog = ({
   incomeCategoriesV2,
   expenseCategoriesV2,
   inputRef,
-  transactions,
+  allNotes,
   refreshTransactions,
 }: {
   openDialog: boolean
@@ -39,7 +39,7 @@ const AddDialog = ({
   incomeCategoriesV2: ChoiceTypeV2[]
   expenseCategoriesV2: ChoiceTypeV2[]
   inputRef: RefObject<HTMLInputElement | null>
-  transactions: NewTransactionType[]
+  allNotes: string[]
   refreshTransactions: () => Promise<void>
 }) => {
   const user = useUser()
@@ -197,7 +197,7 @@ const AddDialog = ({
             key={type}
             transaction={transaction}
             setTransaction={setTransaction}
-            allTransactions={transactions}
+            allNotes={allNotes}
             categories={
               type === "expense" ? expenseCategoriesV2 : incomeCategoriesV2
             }

@@ -21,7 +21,7 @@ type TransactionsContextType = {
   refreshBudgetTransactionsV2: () => void
   isLoading: boolean
   transactions: NewTransactionType[]
-  refreshTransactions: () => void
+  refreshTransactions: () => Promise<void>
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)

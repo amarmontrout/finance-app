@@ -40,7 +40,7 @@ const AddDialog = ({
   expenseCategoriesV2: ChoiceTypeV2[]
   inputRef: RefObject<HTMLInputElement | null>
   transactions: NewTransactionType[]
-  refreshTransactions: () => void
+  refreshTransactions: () => Promise<void>
 }) => {
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
@@ -51,7 +51,7 @@ const AddDialog = ({
     year: currentYear,
   }
 
-  const TRANSACTION_INIT: NewTransactionType = {
+  const createInitialTransaction = (): NewTransactionType => ({
     id: Number(makeId(8)),
     date: TODAY,
     amount: 0,
@@ -61,11 +61,12 @@ const AddDialog = ({
     type: "income",
     is_paid: false,
     is_return: false,
-  }
+  })
 
-  const [type, setType] = useState<"income" | "expense">("expense")
-  const [transaction, setTransaction] =
-    useState<NewTransactionType>(TRANSACTION_INIT)
+  const [type, setType] = useState<"income" | "expense">("income")
+  const [transaction, setTransaction] = useState<NewTransactionType>(
+    createInitialTransaction(),
+  )
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleSelectType = (
@@ -80,20 +81,25 @@ const AddDialog = ({
   useEffect(() => {
     setTransaction((prev) => ({
       ...prev,
+      category: "",
+      note: "",
+      payment_method: type === "income" ? "" : "Debit",
       type: type,
+      is_paid: false,
+      is_return: false,
     }))
   }, [type])
 
   const resetFormData = () => {
-    setType("expense")
-    setTransaction(TRANSACTION_INIT)
+    setType("income")
+    setTransaction(createInitialTransaction())
   }
 
   const save = async () => {
     if (!user || !transaction) return
     setIsLoading(true)
     try {
-      saveTransaction({
+      await saveTransaction({
         userId: user.id,
         body: transaction,
       })
@@ -105,7 +111,7 @@ const AddDialog = ({
         severity: "success",
         message: "Transaction saved successfully!",
       })
-      refreshTransactions()
+      await refreshTransactions()
     } catch (error) {
       console.error(error)
       setAlertToast({

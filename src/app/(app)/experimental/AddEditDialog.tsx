@@ -26,7 +26,7 @@ import {
 import NewTransactionForm from "./NewTransactionForm"
 import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
 
-const AddDialog = ({
+const AddEditDialog = ({
   openDialog,
   setOpenDialog,
   setAlertToast,
@@ -253,4 +253,4 @@ const AddDialog = ({
   )
 }
 
-export default AddDialog
+export default AddEditDialog

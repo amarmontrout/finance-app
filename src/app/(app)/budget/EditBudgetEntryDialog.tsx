@@ -146,48 +146,6 @@ const EditBudgetEntryDialog = ({
 
       <DialogContent>
         <Box className="flex flex-col gap-5" padding={"10px"}>
-          <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select
-              className="w-full"
-              label="Category"
-              value={updatedBudgetEntry.category}
-              name={"category"}
-              onChange={(e) =>
-                setUpdatedBudgetEntry((prev) => ({
-                  ...prev,
-                  category: e.target.value,
-                }))
-              }
-            >
-              {budgetCategories.map((budget) => {
-                return (
-                  <MenuItem value={budget.category}>{budget.category}</MenuItem>
-                )
-              })}
-            </Select>
-          </FormControl>
-
-          <FormControl>
-            <Autocomplete
-              className="w-full"
-              freeSolo
-              options={notes.map((option) => option)}
-              value={noteValue}
-              onChange={(event: any, newValue: string | null) => {
-                setNoteValue(newValue)
-              }}
-              inputValue={updatedBudgetEntry.note}
-              onInputChange={(event, newInputValue) => {
-                setUpdatedBudgetEntry((prev) => ({
-                  ...prev,
-                  note: newInputValue,
-                }))
-              }}
-              renderInput={(params) => <TextField {...params} label="Note" />}
-            />
-          </FormControl>
-
           {openEditDialog && (
             <MoneyInputV2
               value={updatedBudgetEntry.amount}
@@ -196,6 +154,52 @@ const EditBudgetEntryDialog = ({
               autoFocus={openEditDialog}
             />
           )}
+
+          <Stack direction={"row"} spacing={1}>
+            <FormControl fullWidth>
+              <InputLabel>Category</InputLabel>
+              <Select
+                className="w-full"
+                label="Category"
+                value={updatedBudgetEntry.category}
+                name={"category"}
+                onChange={(e) =>
+                  setUpdatedBudgetEntry((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
+              >
+                {budgetCategories.map((budget) => {
+                  return (
+                    <MenuItem value={budget.category}>
+                      {budget.category}
+                    </MenuItem>
+                  )
+                })}
+              </Select>
+            </FormControl>
+
+            <FormControl fullWidth>
+              <Autocomplete
+                className="w-full"
+                freeSolo
+                options={notes.map((option) => option)}
+                value={noteValue}
+                onChange={(event: any, newValue: string | null) => {
+                  setNoteValue(newValue)
+                }}
+                inputValue={updatedBudgetEntry.note}
+                onInputChange={(event, newInputValue) => {
+                  setUpdatedBudgetEntry((prev) => ({
+                    ...prev,
+                    note: newInputValue,
+                  }))
+                }}
+                renderInput={(params) => <TextField {...params} label="Note" />}
+              />
+            </FormControl>
+          </Stack>
 
           <FormControlLabel
             control={

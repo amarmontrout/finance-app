@@ -11,26 +11,23 @@ import { NewTransactionType } from "@/utils/type"
 export const getTotalsForYearNetCash = (
   year: number,
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
-): {incomeTotalYear: number, expenseTotalYear: number} => {
-  let incomeTotalYear = 0
-  let expenseTotalYear = 0
+): {incomeTotalYearNet: number, expenseTotalYearNet: number} => {
+  let incomeTotalYearNet = 0
+  let expenseTotalYearNet = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalYear += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalYearNet += entry.amount
+      } 
         
-        if (entry.type == "expense" && entry.payment_method === "Debit") {
-          expenseTotalYear += entry.amount
-        }
+      if (entry.type == "expense" && entry.payment_method === "Debit") {
+        expenseTotalYearNet += entry.amount
       }
     }
   })
 
-  return {incomeTotalYear, expenseTotalYear}
+  return {incomeTotalYearNet, expenseTotalYearNet}
 }
 
 /**
@@ -40,21 +37,18 @@ export const getTotalsForYearNetCash = (
 export const getTotalsForYear = (
   year: number,
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
 ): {incomeTotalYear: number, expenseTotalYear: number} => {
   let incomeTotalYear = 0
   let expenseTotalYear = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalYear += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalYear += entry.amount
+      } 
         
-        if (entry.type == "expense") {
-          expenseTotalYear += entry.amount
-        }
+      if (entry.type == "expense") {
+        expenseTotalYear += entry.amount
       }
     }
   })
@@ -73,26 +67,23 @@ export const getTotalsForMonthNetCash = (
   year: number, 
   month: string, 
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
-): {incomeTotalMonth: number, expenseTotalMonth: number} => {
-  let incomeTotalMonth = 0
-  let expenseTotalMonth = 0
+): {incomeTotalMonthNet: number, expenseTotalMonthNet: number} => {
+  let incomeTotalMonthNet = 0
+  let expenseTotalMonthNet = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year && entry.date.month == month) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalMonth += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalMonthNet += entry.amount
+      } 
         
-        if (entry.type == "expense" && entry.payment_method === "Debit") {
-          expenseTotalMonth += entry.amount
-        }
+      if (entry.type == "expense" && entry.payment_method === "Debit") {
+        expenseTotalMonthNet += entry.amount
       }
     }
   })
 
-  return {incomeTotalMonth, expenseTotalMonth}
+  return {incomeTotalMonthNet, expenseTotalMonthNet}
 }
 
 /**
@@ -103,21 +94,18 @@ export const getTotalsForMonth = (
   year: number, 
   month: string, 
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
 ): {incomeTotalMonth: number, expenseTotalMonth: number} => {
   let incomeTotalMonth = 0
   let expenseTotalMonth = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year && entry.date.month == month) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalMonth += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalMonth += entry.amount
+      } 
         
-        if (entry.type == "expense") {
-          expenseTotalMonth += entry.amount
-        }
+      if (entry.type == "expense") {
+        expenseTotalMonth += entry.amount
       }
     }
   })
@@ -136,26 +124,24 @@ export const getTotalsYTDNetCash = (
   year: number, 
   passedMonths: string[],
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
-): {incomeTotalYTD: number, expenseTotalYTD: number} => {
-  let incomeTotalYTD = 0
-  let expenseTotalYTD = 0
+
+): {incomeTotalYTDNet: number, expenseTotalYTDNet: number} => {
+  let incomeTotalYTDNet = 0
+  let expenseTotalYTDNet = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year && passedMonths.includes(entry.date.month)) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalYTD += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalYTDNet += entry.amount
+      } 
         
-        if (entry.type == "expense" && entry.payment_method === "Debit") {
-          expenseTotalYTD += entry.amount
-        }
+      if (entry.type == "expense" && entry.payment_method === "Debit") {
+        expenseTotalYTDNet += entry.amount
       }
     }
   })
 
-  return {incomeTotalYTD, expenseTotalYTD}
+  return {incomeTotalYTDNet, expenseTotalYTDNet}
 }
 
 /**
@@ -165,21 +151,19 @@ export const getTotalsYTD = (
   year: number, 
   passedMonths: string[],
   transactions: NewTransactionType[],
-  excludedCategories: Set<string>
+
 ): {incomeTotalYTD: number, expenseTotalYTD: number} => {
   let incomeTotalYTD = 0
   let expenseTotalYTD = 0
 
   transactions.forEach((entry) => {
     if (entry.date.year === year && passedMonths.includes(entry.date.month)) {
-      if (!excludedCategories.has(entry.category)) {
-        if (entry.type == "income") {
-          incomeTotalYTD += entry.amount
-        } 
+      if (entry.type == "income") {
+        incomeTotalYTD += entry.amount
+      } 
         
-        if (entry.type == "expense") {
-          expenseTotalYTD += entry.amount
-        }
+      if (entry.type == "expense") {
+        expenseTotalYTD += entry.amount
       }
     }
   })

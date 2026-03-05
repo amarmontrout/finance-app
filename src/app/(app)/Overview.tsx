@@ -10,10 +10,17 @@ import RemainingBudget from "./RemainingBudget"
 import TopThreeExpenses from "./TopThreeCategories"
 import SetUpDialog from "./SetUpDialog"
 import { Stack } from "@mui/material"
+import MonthlySummary from "./experimental/MonthlySummary"
+import WeeklyBudget from "./experimental/WeeklyBudget"
+import TopMonthlyExpenses from "./experimental/TopMonthlyExpenses"
 
 const Overview = () => {
-  const { incomeTransactionsV2, expenseTransactionsV2, budgetTransactionsV2 } =
-    useTransactionContext()
+  const {
+    incomeTransactionsV2,
+    expenseTransactionsV2,
+    budgetTransactionsV2,
+    transactions,
+  } = useTransactionContext()
   const {
     excludedSet,
     budgetCategoriesV2,
@@ -42,7 +49,14 @@ const Overview = () => {
 
   return (
     <Stack spacing={1}>
-      <YearTotals
+      <MonthlySummary
+        transactions={transactions}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
+      />
+      {/* <YearTotals
         currentYear={currentYear}
         currentMonth={currentMonth}
         currentTheme={currentTheme}
@@ -50,9 +64,18 @@ const Overview = () => {
         incomeTransactionsV2={incomeTransactionsV2}
         expenseTransactionsV2={expenseTransactionsV2}
         isLoading={isLoading}
-      />
+      /> */}
 
-      <RemainingBudget
+      <WeeklyBudget
+        transactions={transactions}
+        budgetCategoriesV2={budgetCategoriesV2}
+        currentMonth={currentMonth}
+        currentDay={currentDay}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
+      />
+      {/* <RemainingBudget
         budgetCategoriesV2={budgetCategoriesV2}
         budgetTransactionsV2={budgetTransactionsV2}
         currentTheme={currentTheme}
@@ -60,13 +83,20 @@ const Overview = () => {
         currentDay={currentDay}
         currentYear={currentYear}
         isLoading={isLoading}
-      />
+      /> */}
 
-      <TopThreeExpenses
+      <TopMonthlyExpenses
+        transactions={transactions}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
+      />
+      {/* <TopThreeExpenses
         expenseTransactionsV2={expenseTransactionsV2}
         excludedSet={excludedSet}
         isLoading={isLoading}
-      />
+      /> */}
 
       <SetUpDialog
         setUpDialogOpen={setUpDialogOpen}

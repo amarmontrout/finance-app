@@ -8,26 +8,39 @@ import { useTheme } from "next-themes"
 import { Stack } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { AlertToastType, BudgetTransactionTypeV2, DateType } from "@/utils/type"
+import {
+  AlertToastType,
+  BudgetTransactionTypeV2,
+  DateType,
+  NewTransactionType,
+} from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
 import AddBudgetEntryDialog from "./AddBudgetEntryDialog"
 import AddDataButton from "@/components/AddDataButton"
 import WeekSelector from "@/components/WeekSelector"
 import AlertToast from "@/components/AlertToast"
+import BudgetTransactions from "../experimental/BudgetTransactions"
+import AddEditDialog from "../experimental/AddEditDialog"
 
 const Budget = () => {
-  const { budgetTransactionsV2, refreshBudgetTransactionsV2, isLoading } =
-    useTransactionContext()
-  const { budgetCategoriesV2 } = useCategoryContext()
+  const {
+    budgetTransactionsV2,
+    refreshBudgetTransactionsV2,
+    isLoading,
+    transactions,
+    refreshTransactions,
+  } = useTransactionContext()
+  const { budgetCategoriesV2, incomeCategoriesV2, expenseCategoriesV2 } =
+    useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const [weekOffset, setWeekOffset] = useState<number>(0)
-  const [selectedEntry, setSelectedEntry] =
-    useState<BudgetTransactionTypeV2 | null>(null)
-  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [selectedTransaction, setSelectedTransaction] =
+    useState<NewTransactionType | null>(null)
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [openAddBudgetEntryDialog, setOpenAddBudgetEntryDialog] =
     useState<boolean>(false)
   const [noteId, setNoteId] = useState<number | null>(null)
@@ -70,7 +83,30 @@ const Budget = () => {
         setWeekOffset={setWeekOffset}
       />
 
-      <BudgetEntries
+      <BudgetTransactions
+        transactions={transactions}
+        refreshTransactions={refreshTransactions}
+        setSelectedTransaction={setSelectedTransaction}
+        setAlertToast={setAlertToast}
+        setOpenDialog={setOpenDialog}
+        isLoading={isLoading}
+        week={week}
+      />
+
+      <AddEditDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        setAlertToast={setAlertToast}
+        incomeCategoriesV2={incomeCategoriesV2}
+        expenseCategoriesV2={expenseCategoriesV2}
+        inputRef={inputRef}
+        refreshTransactions={refreshTransactions}
+        selectedTransaction={selectedTransaction}
+        setSelectedTransaction={setSelectedTransaction}
+        transactions={transactions}
+      />
+
+      {/* <BudgetEntries
         budgetTransactions={weeklyTransactions}
         budgetCategories={budgetCategoriesV2}
         refreshBudgetTransactions={refreshBudgetTransactionsV2}
@@ -105,7 +141,7 @@ const Budget = () => {
         today={TODAY}
         setAlertToast={setAlertToast}
         inputRef={inputRef}
-      />
+      /> */}
 
       <AlertToast alertToast={alertToast} />
 

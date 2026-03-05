@@ -10,6 +10,7 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import EditTransactionDetailDialog from "./EditTransactionDetailDialog"
 import {
   AlertToastType,
+  NewTransactionType,
   SelectedDateType,
   SelectedTransactionType,
 } from "@/utils/type"
@@ -18,6 +19,8 @@ import AddTransactionDialog from "./AddTransactionDialog"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import AddDataButton from "@/components/AddDataButton"
 import AlertToast from "@/components/AlertToast"
+import TransactionsDisplay from "../experimental/TransactionsDisplay"
+import AddEditDialog from "../experimental/AddEditDialog"
 
 const TabPanel = ({
   children,
@@ -43,6 +46,8 @@ const Transactions = () => {
     expenseTransactionsV2,
     refreshExpenseTransactionsV2,
     isLoading,
+    transactions,
+    refreshTransactions,
   } = useTransactionContext()
   const { yearsV2, incomeCategoriesV2, expenseCategoriesV2, excludedSet } =
     useCategoryContext()
@@ -59,11 +64,11 @@ const Transactions = () => {
     useState<SelectedDateType>(CURRENT_DATE)
   const [openAddTransactionDialog, setOpenAddTransactionDialog] =
     useState<boolean>(false)
-  const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [tab, setTab] = useState(0)
   const [selectedTransaction, setSelectedTransaction] =
-    useState<SelectedTransactionType | null>(null)
+    useState<NewTransactionType | null>(null)
 
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)
@@ -75,7 +80,7 @@ const Transactions = () => {
 
   return (
     <Stack spacing={1.5}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={tab}
           onChange={(_event: React.SyntheticEvent, newValue: number) => {
@@ -85,7 +90,7 @@ const Transactions = () => {
           <Tab label="Transactions" />
           <Tab label="Totals" />
         </Tabs>
-      </Box>
+      </Box> */}
 
       <MonthYearSelector
         selectedDate={selectedDate}
@@ -94,7 +99,32 @@ const Transactions = () => {
         showMonth={tab === 0}
       />
 
-      <TabPanel value={tab} index={0}>
+      <TransactionsDisplay
+        transactions={transactions}
+        refreshTransactions={refreshTransactions}
+        selectedDate={selectedDate}
+        setAlertToast={setAlertToast}
+        selectedTransaction={selectedTransaction}
+        setSelectedTransaction={setSelectedTransaction}
+        isLoading={isLoading}
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        currentTheme={currentTheme}
+      />
+
+      <AddEditDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        setAlertToast={setAlertToast}
+        incomeCategoriesV2={incomeCategoriesV2}
+        expenseCategoriesV2={expenseCategoriesV2}
+        inputRef={inputRef}
+        refreshTransactions={refreshTransactions}
+        selectedTransaction={selectedTransaction}
+        setSelectedTransaction={setSelectedTransaction}
+        transactions={transactions}
+      />
+      {/* <TabPanel value={tab} index={0}>
         <TransactionFeed
           incomeTransactionsV2={incomeTransactionsV2}
           refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
@@ -110,9 +140,9 @@ const Transactions = () => {
           setOpenEditDialog={setOpenEditDialog}
           setAlertToast={setAlertToast}
         />
-      </TabPanel>
+      </TabPanel> */}
 
-      <TabPanel value={tab} index={1}>
+      {/* <TabPanel value={tab} index={1}>
         <TransactionTotals
           selectedYear={selectedDate.year}
           currentYear={currentYear}
@@ -121,9 +151,9 @@ const Transactions = () => {
           expenseTransactionsV2={expenseTransactionsV2}
           excludedSet={excludedSet}
         />
-      </TabPanel>
+      </TabPanel> */}
 
-      <AddTransactionDialog
+      {/* <AddTransactionDialog
         openAddTransactionDialog={openAddTransactionDialog}
         setOpenAddTransactionDialog={setOpenAddTransactionDialog}
         incomeCategoriesV2={incomeCategoriesV2}
@@ -133,9 +163,9 @@ const Transactions = () => {
         yearsV2={yearsV2}
         setAlertToast={setAlertToast}
         inputRef={inputRef}
-      />
+      /> */}
 
-      <EditTransactionDetailDialog
+      {/* <EditTransactionDetailDialog
         openEditDialog={openEditDialog}
         setOpenEditDialog={setOpenEditDialog}
         selectedTransaction={selectedTransaction}
@@ -156,13 +186,13 @@ const Transactions = () => {
         refreshExpenseTransactions={refreshExpenseTransactionsV2}
         setAlertToast={setAlertToast}
         inputRef={inputRef}
-      />
+      /> */}
 
       <AlertToast alertToast={alertToast} />
 
       <AddDataButton
         action={() => {
-          setOpenAddTransactionDialog(true)
+          setOpenDialog(true)
           setTimeout(() => {
             inputRef.current?.focus()
           }, 50)

@@ -131,6 +131,7 @@ const NewTransactionForm = ({
             label="Day"
             value={transaction.date.day ?? 1}
             onChange={(e) => updateDate("day")(Number(e.target.value))}
+            MenuProps={MENU_PROPS}
           >
             {days.map((day) => (
               <MenuItem key={day} value={day}>

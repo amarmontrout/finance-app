@@ -45,7 +45,7 @@ const TopMonthlyExpenses = ({
       topThree,
       topThreeSum,
     }
-  }, [currentYear, currentMonth])
+  }, [currentYear, currentMonth, transactions])
 
   const { topThree, topThreeSum } = topThreeData
 

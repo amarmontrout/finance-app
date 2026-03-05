@@ -41,7 +41,7 @@ export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
 export const EXPERIMENTAL: PageLinkType[] = [
-  {"name": "Experimental", "link": "/experimental", icon: ScienceIcon},
+  // {"name": "Experimental", "link": "/experimental", icon: ScienceIcon},
 ]
 export const INITIAL_INCOME_CATEGORIES = [
   "Paycheck",

@@ -222,3 +222,33 @@ export const getAverageNumber = (
 
   return average
 }
+
+/**
+ * Returns category totals in the format compatible with react google pie charts.
+ */
+export const getMonthCategoryTotals = (
+  year: number, 
+  month: string, 
+  transactions: NewTransactionType[]
+): [string, string | number][] => {
+  const categoryTotals: Record<string, number> = {}
+  if (!transactions) return [["Category", "Total"]]
+
+  transactions.map((entry) => {
+    if (
+      entry.date.year === year && 
+      entry.date.month === month && 
+      entry.type === "expense"
+    ) {
+      categoryTotals[entry.category] = 
+      (categoryTotals[entry.category] ?? 0) + entry.amount
+    }
+  })
+
+  const pieChartData: [string, string | number][] = [["Category", "Total"]]
+
+  Object.entries(categoryTotals).forEach(([category, total]) => {
+    pieChartData.push([category, Number(total.toFixed(2))])
+  })
+  return pieChartData
+}

@@ -90,7 +90,6 @@ const RemainingBudget = ({
     (sum, t) => sum + (t.isReturn ? -t.amount : t.amount),
     0,
   )
-  const netTotal = budgetTotal - actualTotal
 
   return (
     <ShowCaseCard title={""}>

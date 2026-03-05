@@ -147,7 +147,7 @@ const Budget = () => {
 
       <AddDataButton
         action={() => {
-          setOpenAddBudgetEntryDialog(true)
+          setOpenDialog(true)
           setTimeout(() => {
             inputRef.current?.focus()
           }, 50)

@@ -2,15 +2,19 @@ import { saveIncomeCategory } from "@/app/api/Choices/requests"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
-import { useCategoryContext } from "@/contexts/categories-context"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
+import { ChoiceTypeV2 } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
-const AddIncomeCategory = () => {
-  const { incomeCategoriesV2, refreshIncomeCategoryChoicesV2 } =
-    useCategoryContext()
+const AddIncomeCategory = ({
+  incomeCategoriesV2,
+  loadCategories,
+}: {
+  incomeCategoriesV2: ChoiceTypeV2[]
+  loadCategories: () => Promise<void>
+}) => {
   const user = useUser()
 
   const [incomeCategoriesInput, setIncomeCategoriesInput] = useState<string>("")
@@ -27,7 +31,7 @@ const AddIncomeCategory = () => {
       },
     })
     setIsLoading(false)
-    refreshIncomeCategoryChoicesV2()
+    loadCategories()
     setIncomeCategoriesInput("")
   }
 
@@ -56,7 +60,7 @@ const AddIncomeCategory = () => {
           <EditDeleteListItem
             type={"income"}
             items={incomeCategoriesV2}
-            refresh={refreshIncomeCategoryChoicesV2}
+            refresh={loadCategories}
           />
         </Box>
       </Box>

@@ -2,14 +2,19 @@ import { saveYearChoice } from "@/app/api/Choices/requests"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
-import { useCategoryContext } from "@/contexts/categories-context"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
+import { ChoiceTypeV2 } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
-const AddYear = () => {
-  const { refreshYearChoicesV2, yearsV2 } = useCategoryContext()
+const AddYear = ({
+  yearsV2,
+  loadCategories,
+}: {
+  yearsV2: ChoiceTypeV2[]
+  loadCategories: () => Promise<void>
+}) => {
   const user = useUser()
 
   const [yearsInput, setYearsInput] = useState<string>("")
@@ -26,7 +31,7 @@ const AddYear = () => {
       },
     })
     setIsLoading(false)
-    refreshYearChoicesV2()
+    loadCategories()
     setYearsInput("")
   }
 
@@ -55,7 +60,7 @@ const AddYear = () => {
           <EditDeleteListItem
             type={"year"}
             items={yearsV2}
-            refresh={refreshYearChoicesV2}
+            refresh={loadCategories}
           />
         </Box>
       </Box>

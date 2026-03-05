@@ -25,7 +25,7 @@ const EditDeleteListItem = ({
 }: {
   type: "year" | "income" | "expense" | "budget"
   items: ChoiceTypeV2[]
-  refresh: () => void
+  refresh: () => Promise<void>
   setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
   setChoice?: React.Dispatch<React.SetStateAction<ChoiceTypeV2 | null>>
 }) => {

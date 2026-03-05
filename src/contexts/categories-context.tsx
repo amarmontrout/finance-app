@@ -3,23 +3,21 @@ import {
   getExpenseCategories,
   getIncomeCategories,
   getYearChoices,
+  saveBudgetCategory,
+  saveExpenseCategory,
 } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
-import { getExcludedCategorySet } from "@/utils/helperFunctions"
+import { getExcludedCategorySet, makeId } from "@/utils/helperFunctions"
 import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 type CategoryContextType = {
   excludedSet: Set<string>
   yearsV2: ChoiceTypeV2[]
-  refreshYearChoicesV2: () => void
   incomeCategoriesV2: ChoiceTypeV2[]
-  refreshIncomeCategoryChoicesV2: () => void
   expenseCategoriesV2: ChoiceTypeV2[]
-  refreshExpenseCategoryChoicesV2: () => void
   budgetCategoriesV2: BudgetTypeV2[]
-  refreshBudgetCategoryChoicesV2: () => void
-  loadCategories: () => void
+  loadCategories: () => Promise<void>
   isLoading: boolean
 }
 
@@ -27,11 +25,9 @@ const CategoryContext = createContext<CategoryContextType | null>(null)
 
 export const useCategoryContext = () => {
   const context = useContext(CategoryContext)
-
   if (!context) {
     throw new Error("useCategoryContext must be used within a CategoryProvider")
   }
-
   return context
 }
 
@@ -50,99 +46,50 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
   )
   const [isLoading, setIsLoading] = useState(true)
 
-  const excludedSet = getExcludedCategorySet(expenseCategoriesV2)
+  const excludedSet = useMemo(
+    () => getExcludedCategorySet(expenseCategoriesV2),
+    [expenseCategoriesV2],
+  )
 
-  const refreshYearChoicesV2 = async () => {
-    if (!user) {
-      return
-    }
-    console.log("Pulling Year Choices...")
-    const yearsResult = await getYearChoices({
-      userId: user.id,
-    })
-    if (yearsResult === null) {
-      setYearsV2([])
-      return
-    }
-    const sortedYears = [...yearsResult].sort(
-      (a, b) => Number(b.name) - Number(a.name),
-    )
-    setYearsV2(sortedYears)
-  }
-
-  const refreshIncomeCategoryChoicesV2 = async () => {
-    if (!user) {
-      return
-    }
-    console.log("Pulling Income Category Choices...")
-    const incomeCategoryResult = await getIncomeCategories({
-      userId: user.id,
-    })
-    if (incomeCategoryResult == null) {
-      setIncomeCategoriesV2([])
-      return
-    }
-    const sortedIncomeCategories = [...incomeCategoryResult].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )
-    setIncomeCategoriesV2(sortedIncomeCategories)
-  }
-
-  const refreshExpenseCategoryChoicesV2 = async () => {
-    if (!user) {
-      return
-    }
-    console.log("Pulling Expense Category Choices...")
-    const expenseCategoryResult = await getExpenseCategories({
-      userId: user.id,
-    })
-    if (expenseCategoryResult == null) {
-      setExpenseCategoriesV2([])
-      return
-    }
-    const sortedExpenseCategories = [...expenseCategoryResult].sort((a, b) =>
-      a.name.localeCompare(b.name),
-    )
-    setExpenseCategoriesV2(sortedExpenseCategories)
-  }
-
-  const refreshBudgetCategoryChoicesV2 = async () => {
-    if (!user) {
-      return
-    }
-    console.log("Pulling Budget Category Choices...")
-    const budgetCategoryResult = await getBudgetCategories({
-      userId: user.id,
-    })
-    if (budgetCategoryResult == null) {
-      setBudgetCategoriesV2([])
-      return
-    }
-    const sortedBudgetCategories = [...budgetCategoryResult].sort((a, b) =>
-      a.category.localeCompare(b.category),
-    )
-    setBudgetCategoriesV2(sortedBudgetCategories)
+  const setSortedState = <T,>(
+    result: T[] | null,
+    setter: (value: T[]) => void,
+    sortFn: (a: T, b: T) => number,
+  ) => {
+    setter(result ? [...result].sort(sortFn) : [])
   }
 
   const loadCategories = async () => {
+    if (!user) return
     setIsLoading(true)
-
-    await Promise.all([
-      refreshYearChoicesV2(),
-      refreshIncomeCategoryChoicesV2(),
-      refreshExpenseCategoryChoicesV2(),
-      refreshBudgetCategoryChoicesV2(),
-    ])
-
+    const [yearsResult, incomeResult, expenseResult, budgetResult] =
+      await Promise.all([
+        getYearChoices({ userId: user.id }),
+        getIncomeCategories({ userId: user.id }),
+        getExpenseCategories({ userId: user.id }),
+        getBudgetCategories({ userId: user.id }),
+      ])
+    setSortedState(
+      yearsResult,
+      setYearsV2,
+      (a, b) => Number(b.name) - Number(a.name),
+    )
+    setSortedState(incomeResult, setIncomeCategoriesV2, (a, b) =>
+      a.name.localeCompare(b.name),
+    )
+    setSortedState(expenseResult, setExpenseCategoriesV2, (a, b) =>
+      a.name.localeCompare(b.name),
+    )
+    setSortedState(budgetResult, setBudgetCategoriesV2, (a, b) =>
+      a.category.localeCompare(b.category),
+    )
     setIsLoading(false)
   }
 
   useEffect(() => {
-    if (!user) {
-      return
+    if (user) {
+      loadCategories()
     }
-
-    loadCategories()
   }, [user])
 
   return (
@@ -150,13 +97,9 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       value={{
         excludedSet,
         yearsV2,
-        refreshYearChoicesV2,
         incomeCategoriesV2,
-        refreshIncomeCategoryChoicesV2,
         expenseCategoriesV2,
-        refreshExpenseCategoryChoicesV2,
         budgetCategoriesV2,
-        refreshBudgetCategoryChoicesV2,
         loadCategories,
         isLoading,
       }}

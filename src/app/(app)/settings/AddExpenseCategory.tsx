@@ -2,7 +2,6 @@ import { saveExpenseCategory } from "@/app/api/Choices/requests"
 import EditDeleteListItem from "@/components/EditDeleteListItem"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
-import { useCategoryContext } from "@/contexts/categories-context"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
 import { ChoiceTypeV2, HookSetter } from "@/utils/type"
@@ -12,12 +11,16 @@ import { ChangeEvent, useState } from "react"
 const AddExpenseCategory = ({
   setCategoryDialogOpen,
   setChoice,
+  expenseCategoriesV2,
+  loadCategories,
+  syncExpenseToBudget,
 }: {
   setCategoryDialogOpen: HookSetter<boolean>
   setChoice: HookSetter<ChoiceTypeV2 | null>
+  expenseCategoriesV2: ChoiceTypeV2[]
+  loadCategories: () => Promise<void>
+  syncExpenseToBudget: (expense: string, userId: string) => Promise<void>
 }) => {
-  const { expenseCategoriesV2, refreshExpenseCategoryChoicesV2 } =
-    useCategoryContext()
   const user = useUser()
 
   const [expenseCategoriesInput, setExpenseCategoriesInput] =
@@ -34,8 +37,9 @@ const AddExpenseCategory = ({
         name: expenseCategoriesInput,
       },
     })
+    await syncExpenseToBudget(expenseCategoriesInput, user.id)
     setIsLoading(false)
-    refreshExpenseCategoryChoicesV2()
+    loadCategories()
     setExpenseCategoriesInput("")
   }
 
@@ -64,7 +68,7 @@ const AddExpenseCategory = ({
           <EditDeleteListItem
             type={"expense"}
             items={expenseCategoriesV2}
-            refresh={refreshExpenseCategoryChoicesV2}
+            refresh={loadCategories}
             setCategoryDialogOpen={setCategoryDialogOpen}
             setChoice={setChoice}
           />

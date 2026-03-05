@@ -26,7 +26,7 @@ const EditCategorySettingsDialog = ({
   categoryDialogOpen: boolean
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
   choice: ChoiceTypeV2 | null
-  refresh: () => void
+  refresh: () => Promise<void>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()

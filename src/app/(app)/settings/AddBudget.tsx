@@ -21,7 +21,6 @@ import { ChangeEvent, useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetTypeV2, HookSetter } from "@/utils/type"
 import { makeId } from "@/utils/helperFunctions"
-import { useCategoryContext } from "@/contexts/categories-context"
 import {
   deleteBudgetCategory,
   saveBudgetCategory,
@@ -39,14 +38,21 @@ const AddBudget = ({
   setConfirmSelection,
   setBudgetEditDialogOpen,
   setConfirmEdit,
+  budgetCategoriesV2,
+  loadCategories,
+  syncBudgetToExpense,
 }: {
   confirmSelection: BudgetTypeV2 | null
   setConfirmSelection: HookSetter<BudgetTypeV2 | null>
   setBudgetEditDialogOpen: HookSetter<boolean>
   setConfirmEdit: HookSetter<BudgetTypeV2 | null>
+  budgetCategoriesV2: BudgetTypeV2[]
+  loadCategories: () => Promise<void>
+  syncBudgetToExpense: (
+    budgetCategory: BudgetTypeV2,
+    userId: string,
+  ) => Promise<void>
 }) => {
-  const { budgetCategoriesV2, refreshBudgetCategoryChoicesV2 } =
-    useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
@@ -77,8 +83,9 @@ const AddBudget = ({
       userId: user.id,
       body: budgetCategory,
     })
+    await syncBudgetToExpense(budgetCategory, user.id)
     setIsLoading(false)
-    refreshBudgetCategoryChoicesV2()
+    loadCategories()
     resetFormData()
   }
 
@@ -88,7 +95,7 @@ const AddBudget = ({
       userId: user.id,
       rowId: confirmSelection.id,
     })
-    refreshBudgetCategoryChoicesV2()
+    loadCategories()
   }
 
   const EditDeleteButton = ({ selection }: { selection: BudgetTypeV2 }) => {

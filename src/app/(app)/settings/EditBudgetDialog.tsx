@@ -31,7 +31,7 @@ const EditBudgetDialog = ({
   confirmEdit: BudgetTypeV2 | null
   currentTheme: string | undefined
 }) => {
-  const { refreshBudgetCategoryChoicesV2 } = useCategoryContext()
+  const { loadCategories } = useCategoryContext()
   const user = useUser()
 
   const [updateBudget, setUpdateBudget] =
@@ -51,7 +51,7 @@ const EditBudgetDialog = ({
       body: updateBudget,
     })
     setBudgetEditDialogOpen(false)
-    refreshBudgetCategoryChoicesV2()
+    loadCategories()
   }
   if (!updateBudget) return null
   return (

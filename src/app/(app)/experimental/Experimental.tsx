@@ -1,8 +1,8 @@
 "use client"
 
 import AddDataButton from "@/components/AddDataButton"
-import { Box, Collapse, Stack, Typography } from "@mui/material"
-import { useMemo, useRef, useState } from "react"
+import { Stack } from "@mui/material"
+import { useRef, useState } from "react"
 import {
   AlertToastType,
   DateType,
@@ -13,32 +13,24 @@ import AlertToast from "@/components/AlertToast"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import MonthYearSelector from "@/components/MonthYearSelector"
-import {
-  formattedStringNumber,
-  getCurrentDateInfo,
-  getWeekBounds,
-} from "@/utils/helperFunctions"
+import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import ShowCaseCard from "@/components/ShowCaseCard"
-import { TransitionGroup } from "react-transition-group"
-import ListItemSwipe from "@/components/ListItemSwipe"
-import { accentColorPrimarySelected } from "@/globals/colors"
-import { deleteTransaction } from "@/app/api/Transactions/requests"
-import { useUser } from "@/hooks/useUser"
 import AddEditDialog from "./AddEditDialog"
-import TransactionTypeToggle from "./TransactionTypeToggle"
-import LoadingCircle from "@/components/LoadingCircle"
 import BudgetTransactions from "./BudgetTransactions"
 import WeekSelector from "@/components/WeekSelector"
+import MonthlySummary from "./MonthlySummary"
+import WeeklyBudget from "./WeeklyBudget"
+import TopMonthlyExpenses from "./TopMonthlyExpenses"
+import TransactionsDisplay from "./TransactionsDisplay"
 
 const Experimental = () => {
   const { transactions, refreshTransactions, isLoading } =
     useTransactionContext()
-  const { incomeCategoriesV2, expenseCategoriesV2 } = useCategoryContext()
+  const { incomeCategoriesV2, expenseCategoriesV2, budgetCategoriesV2 } =
+    useCategoryContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth, currentDay } = getCurrentDateInfo()
-  const user = useUser()
 
   const CURRENT_DATE = { month: currentMonth, year: currentYear }
   const TODAY: DateType = {
@@ -49,67 +41,13 @@ const Experimental = () => {
 
   const [weekOffset, setWeekOffset] = useState<number>(0)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [alertToast, setAlertToast] = useState<AlertToastType>()
+  const [alertToast, setAlertToast] = useState<AlertToastType | undefined>()
   const [selectedDate, setSelectedDate] =
     useState<SelectedDateType>(CURRENT_DATE)
   const [selectedTransaction, setSelectedTransaction] =
     useState<NewTransactionType | null>(null)
-  const [type, setType] = useState<"income" | "expense">("income")
 
   const week = getWeekBounds(TODAY, weekOffset)
-
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter(
-      (t) =>
-        t.type === type &&
-        t.date.month === selectedDate.month &&
-        t.date.year === selectedDate.year,
-    )
-  }, [transactions, type, selectedDate])
-
-  const total = useMemo(() => {
-    return filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
-  }, [filteredTransactions])
-
-  const visibleTransactions = useMemo(() => {
-    return [...filteredTransactions].sort((a, b) =>
-      a.category.localeCompare(b.category, undefined, {
-        sensitivity: "base",
-      }),
-    )
-  }, [filteredTransactions])
-
-  const handleDeleteTransaction = async (rowId: number) => {
-    if (!user || !rowId) return
-
-    try {
-      await deleteTransaction({
-        userId: user.id,
-        rowId: rowId,
-      })
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "success",
-        message: "Transaction deleted successfully!",
-      })
-    } catch (error) {
-      console.error(error)
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "error",
-        message: "Transaction could not be deleted.",
-      })
-    } finally {
-      refreshTransactions()
-      setSelectedTransaction(null)
-    }
-  }
 
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)
@@ -123,83 +61,25 @@ const Experimental = () => {
         resetSelectedDate={resetSelectedDate}
         showMonth={true}
       />
+
       <WeekSelector
         week={week}
         weekOffset={weekOffset}
         setWeekOffset={setWeekOffset}
       />
 
-      <ShowCaseCard title={""}>
-        <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"}>
-          <TransactionTypeToggle type={type} setType={setType} />
-
-          {isLoading ? (
-            <LoadingCircle />
-          ) : (
-            <Stack spacing={1.5}>
-              <Stack direction="row" justifyContent="space-between">
-                <Typography variant="h5" fontWeight={700}>
-                  {type === "income" ? "Income" : "Expense"}
-                </Typography>
-
-                <Typography variant="h5" fontWeight={700}>
-                  {`$${formattedStringNumber(total)}`}
-                </Typography>
-              </Stack>
-              <hr
-                style={{
-                  border: `1px solid ${accentColorPrimarySelected}`,
-                }}
-              />
-              {visibleTransactions.length === 0 ? (
-                <Typography width="100%" textAlign="center">
-                  {`There are no ${type} transactions`}
-                </Typography>
-              ) : (
-                <TransitionGroup>
-                  {visibleTransactions.map((transaction, index) => {
-                    const isLast = index === visibleTransactions.length - 1
-                    return (
-                      <Collapse key={transaction.id}>
-                        <Box mb={isLast ? 0 : 1}>
-                          <ListItemSwipe
-                            mainTitle={transaction.category}
-                            secondaryTitle={transaction.note}
-                            amount={`$${formattedStringNumber(transaction.amount)}`}
-                            amountColor={
-                              transaction.type === "income"
-                                ? "success.main"
-                                : "error.main"
-                            }
-                            buttonCondition={
-                              selectedTransaction?.id === transaction.id &&
-                              !openDialog
-                            }
-                            onDelete={async () => {
-                              handleDeleteTransaction(transaction.id)
-                            }}
-                            onSetDelete={() => {
-                              setSelectedTransaction(transaction)
-                            }}
-                            onCancelDelete={() => {
-                              setSelectedTransaction(null)
-                            }}
-                            onEdit={() => {
-                              setOpenDialog(true)
-                              setSelectedTransaction(transaction)
-                            }}
-                            currentTheme={currentTheme}
-                          />
-                        </Box>
-                      </Collapse>
-                    )
-                  })}
-                </TransitionGroup>
-              )}
-            </Stack>
-          )}
-        </Stack>
-      </ShowCaseCard>
+      <TransactionsDisplay
+        transactions={transactions}
+        refreshTransactions={refreshTransactions}
+        selectedDate={selectedDate}
+        setAlertToast={setAlertToast}
+        selectedTransaction={selectedTransaction}
+        setSelectedTransaction={setSelectedTransaction}
+        isLoading={isLoading}
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        currentTheme={currentTheme}
+      />
 
       <BudgetTransactions
         transactions={transactions}
@@ -209,6 +89,32 @@ const Experimental = () => {
         setOpenDialog={setOpenDialog}
         isLoading={isLoading}
         week={week}
+      />
+
+      <MonthlySummary
+        transactions={transactions}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
+      />
+
+      <WeeklyBudget
+        transactions={transactions}
+        budgetCategoriesV2={budgetCategoriesV2}
+        currentMonth={currentMonth}
+        currentDay={currentDay}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
+      />
+
+      <TopMonthlyExpenses
+        transactions={transactions}
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        currentTheme={currentTheme}
+        isLoading={isLoading}
       />
 
       <AddEditDialog

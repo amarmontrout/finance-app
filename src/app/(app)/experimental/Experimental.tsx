@@ -25,7 +25,6 @@ import { deleteTransaction } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import AddEditDialog from "./AddEditDialog"
 import TransactionTypeToggle from "./TransactionTypeToggle"
-import { getTotalsForMonth, getTotalsForMonthNetCash } from "./functions"
 import LoadingCircle from "@/components/LoadingCircle"
 
 const Experimental = () => {
@@ -63,19 +62,6 @@ const Experimental = () => {
     return filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
   }, [filteredTransactions])
 
-  const { incomeTotalMonthNet, expenseTotalMonthNet } =
-    getTotalsForMonthNetCash(
-      selectedDate.year,
-      selectedDate.month,
-      transactions,
-    )
-
-  const { incomeTotalMonth, expenseTotalMonth } = getTotalsForMonth(
-    selectedDate.year,
-    selectedDate.month,
-    transactions,
-  )
-
   const visibleTransactions = useMemo(() => {
     return [...filteredTransactions].sort((a, b) =>
       a.category.localeCompare(b.category, undefined, {
@@ -83,17 +69,6 @@ const Experimental = () => {
       }),
     )
   }, [filteredTransactions])
-
-  const allNotes = useMemo(() => {
-    return [
-      ...new Set(
-        transactions
-          .filter((e) => e.type === type)
-          .filter((e) => e.note !== "")
-          .map((e) => e.note),
-      ),
-    ]
-  }, [transactions])
 
   const handleDeleteTransaction = async (rowId: number) => {
     if (!user || !rowId) return
@@ -174,10 +149,9 @@ const Experimental = () => {
                     return (
                       <Collapse key={transaction.id}>
                         <Box mb={isLast ? 0 : 1}>
-                          {/* Revisit the onDelete, onSetDelete, onCancelDelete, and onEdit functions for new transaction type */}
                           <ListItemSwipe
                             mainTitle={transaction.category}
-                            secondaryTitle={transaction.is_paid ? "Paid" : ""}
+                            secondaryTitle={transaction.note}
                             amount={`$${formattedStringNumber(transaction.amount)}`}
                             amountColor={
                               transaction.type === "income"
@@ -221,10 +195,10 @@ const Experimental = () => {
         incomeCategoriesV2={incomeCategoriesV2}
         expenseCategoriesV2={expenseCategoriesV2}
         inputRef={inputRef}
-        allNotes={allNotes}
         refreshTransactions={refreshTransactions}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
+        transactions={transactions}
       />
 
       <AlertToast alertToast={alertToast} />

@@ -8,7 +8,7 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material"
-import { RefObject, useEffect, useState } from "react"
+import { RefObject, useEffect, useMemo, useState } from "react"
 import CloseIcon from "@mui/icons-material/Close"
 import SaveIcon from "@mui/icons-material/Save"
 import {
@@ -33,10 +33,10 @@ const AddEditDialog = ({
   incomeCategoriesV2,
   expenseCategoriesV2,
   inputRef,
-  allNotes,
   refreshTransactions,
   selectedTransaction,
   setSelectedTransaction,
+  transactions,
 }: {
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
@@ -44,10 +44,10 @@ const AddEditDialog = ({
   incomeCategoriesV2: ChoiceTypeV2[]
   expenseCategoriesV2: ChoiceTypeV2[]
   inputRef: RefObject<HTMLInputElement | null>
-  allNotes: string[]
   refreshTransactions: () => Promise<void>
   selectedTransaction?: NewTransactionType | null
   setSelectedTransaction?: HookSetter<NewTransactionType | null>
+  transactions: NewTransactionType[]
 }) => {
   const user = useUser()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
@@ -70,103 +70,115 @@ const AddEditDialog = ({
     is_return: false,
   })
 
-  const isEdit = Boolean(selectedTransaction)
-
-  const [type, setType] = useState<"income" | "expense">(
-    selectedTransaction?.type ?? "income",
-  )
-  const [transaction, setTransaction] = useState<NewTransactionType>(
-    selectedTransaction ?? createInitialTransaction(),
-  )
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [dialogType, setDialogType] = useState<"income" | "expense">("income")
+  const [transaction, setTransaction] = useState<NewTransactionType>(
+    createInitialTransaction(),
+  )
+
+  const allNotes = useMemo(() => {
+    return [
+      ...new Set(
+        transactions
+          .filter((e) => e.type === dialogType && e.note)
+          .map((e) => e.note),
+      ),
+    ]
+  }, [transactions, dialogType])
 
   const handleSelectType = (
     event: React.MouseEvent<HTMLElement>,
     newType: "income" | "expense" | null,
   ) => {
     if (newType !== null) {
-      setType(newType)
+      setDialogType(newType)
     }
   }
 
-  useEffect(() => {
-    if (openDialog) {
-      if (selectedTransaction) {
-        setTransaction(selectedTransaction)
-        setType(selectedTransaction.type)
-      } else {
-        resetFormData()
-      }
-    }
-  }, [openDialog, selectedTransaction])
-
-  useEffect(() => {
-    setTransaction((prev) => ({
-      ...prev,
-      category: "",
-      note: "",
-      payment_method: type === "income" ? "" : "Debit",
-      type: type,
-      is_paid: false,
-      is_return: false,
-    }))
-  }, [type])
-
   const resetFormData = () => {
-    setType("income")
+    setDialogType("income")
     setTransaction(createInitialTransaction())
   }
 
   const save = async () => {
     if (!user || !transaction) return
+
+    const isEditing = !!selectedTransaction
+
     setIsLoading(true)
+
     try {
-      if (isEdit && setSelectedTransaction) {
+      if (isEditing) {
         await updateTransaction({
           userId: user.id,
-          rowId: transaction.id,
+          rowId: selectedTransaction.id,
           body: transaction,
         })
-        setAlertToast({
-          open: true,
-          onClose: () => {
-            setAlertToast(undefined)
-          },
-          severity: "success",
-          message: "Transaction updated successfully!",
-        })
-        setSelectedTransaction(null)
       } else {
         await saveTransaction({
           userId: user.id,
           body: transaction,
         })
-        setAlertToast({
-          open: true,
-          onClose: () => {
-            setAlertToast(undefined)
-          },
-          severity: "success",
-          message: "Transaction saved successfully!",
-        })
       }
+
+      setAlertToast({
+        open: true,
+        onClose: () => setAlertToast(undefined),
+        severity: "success",
+        message: isEditing
+          ? "Transaction updated successfully!"
+          : "Transaction saved successfully!",
+      })
     } catch (error) {
       console.error(error)
       setAlertToast({
         open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
+        onClose: () => setAlertToast(undefined),
         severity: "error",
-        message: "Transaction could not be saved.",
+        message: isEditing
+          ? "Transaction could not be updated."
+          : "Transaction could not be saved.",
       })
     } finally {
-      refreshTransactions()
+      await refreshTransactions()
       resetFormData()
+      setSelectedTransaction?.(null)
       setOpenDialog(false)
       setIsLoading(false)
     }
   }
+
+  const handleClose = () => {
+    setOpenDialog(false)
+    resetFormData()
+    setSelectedTransaction?.(null)
+  }
+
+  useEffect(() => {
+    if (!openDialog) return
+
+    if (selectedTransaction) {
+      setDialogType(selectedTransaction.type)
+      setTransaction(selectedTransaction)
+    } else {
+      resetFormData()
+    }
+  }, [openDialog, selectedTransaction])
+
+  useEffect(() => {
+    if (!openDialog) return
+    if (selectedTransaction) return
+
+    setTransaction((prev) => ({
+      ...prev,
+      category: "",
+      note: "",
+      payment_method: dialogType === "income" ? "" : "Debit",
+      type: dialogType,
+      is_paid: false,
+      is_return: false,
+    }))
+  }, [dialogType, openDialog, selectedTransaction])
 
   return (
     <Dialog open={openDialog} fullScreen>
@@ -178,17 +190,10 @@ const AddEditDialog = ({
           justifyContent={"space-between"}
           alignItems={"center"}
         >
-          <IconButton
-            onClick={() => {
-              setOpenDialog(false)
-              resetFormData()
-            }}
-          >
+          <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
-          <Typography>
-            {isEdit ? "Edit Transaction" : "New Transaction"}
-          </Typography>
+          <Typography>{"New Transaction"}</Typography>
           <IconButton
             loading={isLoading}
             disabled={transaction?.amount === 0}
@@ -202,11 +207,11 @@ const AddEditDialog = ({
       <DialogContent>
         <Stack gap={2}>
           <ToggleButtonGroup
-            value={type}
+            value={dialogType}
             exclusive
             size={"small"}
             onChange={handleSelectType}
-            disabled={isEdit}
+            disabled={selectedTransaction !== null}
             sx={{
               width: "100%",
               justifyContent: "center",
@@ -236,12 +241,14 @@ const AddEditDialog = ({
           </ToggleButtonGroup>
 
           <NewTransactionForm
-            key={type}
+            key={dialogType}
             transaction={transaction}
             setTransaction={setTransaction}
             allNotes={allNotes}
             categories={
-              type === "expense" ? expenseCategoriesV2 : incomeCategoriesV2
+              dialogType === "expense"
+                ? expenseCategoriesV2
+                : incomeCategoriesV2
             }
             today={TODAY}
             openDialog={openDialog}

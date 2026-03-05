@@ -1,3 +1,4 @@
+import { MONTHS } from "@/globals/globals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { NewTransactionType } from "@/utils/type"
 
@@ -251,4 +252,10 @@ export const getMonthCategoryTotals = (
     pieChartData.push([category, Number(total.toFixed(2))])
   })
   return pieChartData
+}
+
+export const getDaysInMonth = (month: string, year: number) => {
+  const monthIndex = MONTHS.indexOf(month) // 0-based
+  // JS Date: monthIndex + 1, day 0 gives last day of previous month
+  return new Date(year, monthIndex + 1, 0).getDate()
 }

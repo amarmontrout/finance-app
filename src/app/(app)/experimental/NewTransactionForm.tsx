@@ -20,6 +20,7 @@ import {
   Checkbox,
 } from "@mui/material"
 import { ChangeEvent, RefObject, useEffect, useState } from "react"
+import { getDaysInMonth } from "./functions"
 
 const NewTransactionForm = ({
   transaction,
@@ -65,28 +66,13 @@ const NewTransactionForm = ({
     }))
   }
 
-  const handleDay = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "")
-    if (digits.length <= 2) {
-      setDate((prev) => ({
-        ...prev,
-        day: Number(digits),
-      }))
-    }
+  const handleDay = (e: SelectChangeEvent<string>) => {
+    const value = e.target.value
+    setDate((prev) => ({ ...prev, day: Number(value) }))
   }
 
-  const handleYear = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    let digits = e.target.value.replace(/\D/g, "")
-    if (digits.length <= 4) {
-      setDate((prev) => ({
-        ...prev,
-        year: Number(digits),
-      }))
-    }
+  const handleYear = (e: SelectChangeEvent<string>) => {
+    setDate((prev) => ({ ...prev, year: Number(e.target.value) }))
   }
 
   const handleCategory = (e: SelectChangeEvent) => {
@@ -130,6 +116,13 @@ const NewTransactionForm = ({
             value={date.month}
             name={"month"}
             onChange={(e) => handleMonth(e)}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 5 * 39,
+                },
+              },
+            }}
           >
             {MONTHS.map((month) => {
               return (
@@ -141,32 +134,53 @@ const NewTransactionForm = ({
           </Select>
         </FormControl>
 
-        <FormControl
-          sx={{
-            width: "25%",
-          }}
-        >
+        <FormControl sx={{ width: "25%" }}>
           <InputLabel>Day</InputLabel>
-          <OutlinedInput
-            label={"Day"}
-            value={date.day}
-            name={"day"}
-            onChange={(e) => handleDay(e)}
-          />
+          <Select
+            label="Day"
+            value={(date.day ?? 1).toString()}
+            onChange={handleDay}
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 5 * 39,
+                },
+              },
+            }}
+          >
+            {Array.from(
+              { length: getDaysInMonth(date.month, date.year) },
+              (_, i) => i + 1,
+            ).map((day) => (
+              <MenuItem key={day} value={day.toString()}>
+                {day}
+              </MenuItem>
+            ))}
+          </Select>
         </FormControl>
 
-        <FormControl
-          sx={{
-            width: "30%",
-          }}
-        >
+        <FormControl sx={{ width: "30%" }}>
           <InputLabel>Year</InputLabel>
-          <OutlinedInput
-            label={"Year"}
-            value={date.year}
-            name={"year"}
+          <Select
+            label="Year"
+            value={date.year.toString()}
             onChange={(e) => handleYear(e)}
-          />
+            MenuProps={{
+              PaperProps: {
+                style: {
+                  maxHeight: 5 * 39,
+                },
+              },
+            }}
+          >
+            {Array.from({ length: 21 }, (_, i) => date.year - 10 + i).map(
+              (year) => (
+                <MenuItem key={year} value={year.toString()}>
+                  {year}
+                </MenuItem>
+              ),
+            )}
+          </Select>
         </FormControl>
       </Stack>
 

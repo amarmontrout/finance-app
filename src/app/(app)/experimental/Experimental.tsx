@@ -5,6 +5,7 @@ import { Box, Collapse, Stack, Typography } from "@mui/material"
 import { useMemo, useRef, useState } from "react"
 import {
   AlertToastType,
+  DateType,
   NewTransactionType,
   SelectedDateType,
 } from "@/utils/type"
@@ -15,6 +16,7 @@ import MonthYearSelector from "@/components/MonthYearSelector"
 import {
   formattedStringNumber,
   getCurrentDateInfo,
+  getWeekBounds,
 } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import ShowCaseCard from "@/components/ShowCaseCard"
@@ -26,28 +28,35 @@ import { useUser } from "@/hooks/useUser"
 import AddEditDialog from "./AddEditDialog"
 import TransactionTypeToggle from "./TransactionTypeToggle"
 import LoadingCircle from "@/components/LoadingCircle"
+import BudgetTransactions from "./BudgetTransactions"
+import WeekSelector from "@/components/WeekSelector"
 
 const Experimental = () => {
   const { transactions, refreshTransactions, isLoading } =
     useTransactionContext()
   const { incomeCategoriesV2, expenseCategoriesV2 } = useCategoryContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
-
-  const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [alertToast, setAlertToast] = useState<AlertToastType>()
-  //////////////////////////////////////////////////////////////////////////////
   const { theme: currentTheme } = useTheme()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
+  const { currentYear, currentMonth, currentDay } = getCurrentDateInfo()
   const user = useUser()
-  const CURRENT_DATE = {
+
+  const CURRENT_DATE = { month: currentMonth, year: currentYear }
+  const TODAY: DateType = {
     month: currentMonth,
+    day: currentDay,
     year: currentYear,
   }
+
+  const [weekOffset, setWeekOffset] = useState<number>(0)
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [selectedDate, setSelectedDate] =
     useState<SelectedDateType>(CURRENT_DATE)
   const [selectedTransaction, setSelectedTransaction] =
     useState<NewTransactionType | null>(null)
   const [type, setType] = useState<"income" | "expense">("income")
+
+  const week = getWeekBounds(TODAY, weekOffset)
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter(
@@ -105,7 +114,6 @@ const Experimental = () => {
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)
   }
-  //////////////////////////////////////////////////////////////////////////////
 
   return (
     <Stack spacing={1.5}>
@@ -114,6 +122,11 @@ const Experimental = () => {
         setSelectedDate={setSelectedDate}
         resetSelectedDate={resetSelectedDate}
         showMonth={true}
+      />
+      <WeekSelector
+        week={week}
+        weekOffset={weekOffset}
+        setWeekOffset={setWeekOffset}
       />
 
       <ShowCaseCard title={""}>
@@ -187,6 +200,16 @@ const Experimental = () => {
           )}
         </Stack>
       </ShowCaseCard>
+
+      <BudgetTransactions
+        transactions={transactions}
+        refreshTransactions={refreshTransactions}
+        setSelectedTransaction={setSelectedTransaction}
+        setAlertToast={setAlertToast}
+        setOpenDialog={setOpenDialog}
+        isLoading={isLoading}
+        week={week}
+      />
 
       <AddEditDialog
         openDialog={openDialog}

@@ -250,9 +250,9 @@ const AddEditDialog = ({
                 ? expenseCategoriesV2
                 : incomeCategoriesV2
             }
-            today={TODAY}
             openDialog={openDialog}
             inputRef={inputRef}
+            currentYear={currentYear}
           />
         </Stack>
       </DialogContent>

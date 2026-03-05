@@ -12,42 +12,50 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  SelectChangeEvent,
-  OutlinedInput,
   Autocomplete,
   TextField,
   FormControlLabel,
   Checkbox,
 } from "@mui/material"
-import { ChangeEvent, RefObject, useEffect, useState } from "react"
+import { RefObject, useEffect, useMemo } from "react"
 import { getDaysInMonth } from "./functions"
+
+const MENU_PROPS = {
+  PaperProps: {
+    style: {
+      maxHeight: 5 * 39,
+    },
+  },
+}
 
 const NewTransactionForm = ({
   transaction,
   setTransaction,
   allNotes,
   categories,
-  today,
   openDialog,
   inputRef,
+  currentYear,
 }: {
   transaction: NewTransactionType
   setTransaction: HookSetter<NewTransactionType>
   allNotes: string[]
   categories: ChoiceTypeV2[]
-  today: DateType
   openDialog: boolean
   inputRef: RefObject<HTMLInputElement | null>
+  currentYear: number
 }) => {
-  const [date, setDate] = useState<DateType>(today)
-  const [noteValue, setNoteValue] = useState<string | null>(null)
+  const { month, year } = transaction.date
 
-  useEffect(() => {
-    setTransaction((prev) => ({
-      ...prev,
-      date: date,
-    }))
-  }, [date, setTransaction])
+  const days = useMemo(
+    () => Array.from({ length: getDaysInMonth(month, year) }, (_, i) => i + 1),
+    [month, year],
+  )
+
+  const years = useMemo(
+    () => Array.from({ length: 21 }, (_, i) => currentYear - 10 + i),
+    [currentYear],
+  )
 
   useEffect(() => {
     if (transaction.is_return) {
@@ -56,40 +64,30 @@ const NewTransactionForm = ({
         is_paid: false,
       }))
     }
-  }, [transaction.is_return])
+  }, [transaction.is_return, setTransaction])
 
-  const handleMonth = (e: SelectChangeEvent) => {
-    const { value } = e.target
-    setDate((prev) => ({
-      ...prev,
-      month: value,
-    }))
-  }
+  useEffect(() => {
+    const maxDay = getDaysInMonth(month, year)
+    if ((transaction.date.day ?? 1) > maxDay) {
+      updateDate("day")(maxDay)
+    }
+  }, [month, year, setTransaction])
 
-  const handleDay = (e: SelectChangeEvent<string>) => {
-    const value = e.target.value
-    setDate((prev) => ({ ...prev, day: Number(value) }))
-  }
+  const updateTransaction =
+    (field: keyof NewTransactionType) => (value: string | number | boolean) =>
+      setTransaction((prev) => ({
+        ...prev,
+        [field]: value,
+      }))
 
-  const handleYear = (e: SelectChangeEvent<string>) => {
-    setDate((prev) => ({ ...prev, year: Number(e.target.value) }))
-  }
-
-  const handleCategory = (e: SelectChangeEvent) => {
-    const { value } = e.target
+  const updateDate = (field: keyof DateType) => (value: string | number) =>
     setTransaction((prev) => ({
       ...prev,
-      category: value,
+      date: {
+        ...prev.date,
+        [field]: value,
+      },
     }))
-  }
-
-  const handlePaymentMethod = (e: SelectChangeEvent) => {
-    const { value } = e.target
-    setTransaction((prev) => ({
-      ...prev,
-      payment_method: value,
-    }))
-  }
 
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={2} margin={"0 auto"}>
@@ -113,16 +111,9 @@ const NewTransactionForm = ({
           <InputLabel>Month</InputLabel>
           <Select
             label="Month"
-            value={date.month}
-            name={"month"}
-            onChange={(e) => handleMonth(e)}
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 5 * 39,
-                },
-              },
-            }}
+            value={transaction.date.month}
+            onChange={(e) => updateDate("month")(e.target.value)}
+            MenuProps={MENU_PROPS}
           >
             {MONTHS.map((month) => {
               return (
@@ -138,21 +129,11 @@ const NewTransactionForm = ({
           <InputLabel>Day</InputLabel>
           <Select
             label="Day"
-            value={(date.day ?? 1).toString()}
-            onChange={handleDay}
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 5 * 39,
-                },
-              },
-            }}
+            value={transaction.date.day ?? 1}
+            onChange={(e) => updateDate("day")(Number(e.target.value))}
           >
-            {Array.from(
-              { length: getDaysInMonth(date.month, date.year) },
-              (_, i) => i + 1,
-            ).map((day) => (
-              <MenuItem key={day} value={day.toString()}>
+            {days.map((day) => (
+              <MenuItem key={day} value={day}>
                 {day}
               </MenuItem>
             ))}
@@ -163,23 +144,15 @@ const NewTransactionForm = ({
           <InputLabel>Year</InputLabel>
           <Select
             label="Year"
-            value={date.year.toString()}
-            onChange={(e) => handleYear(e)}
-            MenuProps={{
-              PaperProps: {
-                style: {
-                  maxHeight: 5 * 39,
-                },
-              },
-            }}
+            value={transaction.date.year.toString()}
+            onChange={(e) => updateDate("year")(Number(e.target.value))}
+            MenuProps={MENU_PROPS}
           >
-            {Array.from({ length: 21 }, (_, i) => date.year - 10 + i).map(
-              (year) => (
-                <MenuItem key={year} value={year.toString()}>
-                  {year}
-                </MenuItem>
-              ),
-            )}
+            {years.map((year) => (
+              <MenuItem key={year} value={year}>
+                {year}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
       </Stack>
@@ -192,12 +165,14 @@ const NewTransactionForm = ({
             className="w-full"
             label="Category"
             value={transaction.category}
-            name={"category"}
-            onChange={(e) => handleCategory(e)}
+            onChange={(e) => updateTransaction("category")(e.target.value)}
+            MenuProps={MENU_PROPS}
           >
-            {categories.map((category) => {
-              return <MenuItem value={category.name}>{category.name}</MenuItem>
-            })}
+            {categories.map((category) => (
+              <MenuItem key={category.name} value={category.name}>
+                {category.name}
+              </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
@@ -205,17 +180,21 @@ const NewTransactionForm = ({
           <Autocomplete
             className="w-full"
             freeSolo
-            options={allNotes.map((option) => option)}
-            value={noteValue}
-            onChange={(_: any, newValue: string | null) => {
-              setNoteValue(newValue)
-            }}
+            options={allNotes}
             inputValue={transaction.note}
             onInputChange={(_, newInputValue) => {
               setTransaction((prev) => ({
                 ...prev,
                 note: newInputValue,
               }))
+            }}
+            slotProps={{
+              listbox: {
+                sx: {
+                  maxHeight: 5 * 39,
+                  overflow: "auto",
+                },
+              },
             }}
             renderInput={(params) => <TextField {...params} label="Note" />}
           />
@@ -230,8 +209,9 @@ const NewTransactionForm = ({
             className="w-full"
             label="Payment Method"
             value={transaction.payment_method}
-            name={"payment method"}
-            onChange={(e) => handlePaymentMethod(e)}
+            onChange={(e) =>
+              updateTransaction("payment_method")(e.target.value)
+            }
           >
             <MenuItem value={"Debit"}>{"Debit"}</MenuItem>
             <MenuItem value={"Credit"}>{"Credit"}</MenuItem>
@@ -247,12 +227,9 @@ const NewTransactionForm = ({
               <Checkbox
                 checked={transaction.is_return}
                 sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-                onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                  setTransaction((prev) => ({
-                    ...prev,
-                    is_return: e.target.checked,
-                  }))
-                }}
+                onChange={(e) =>
+                  updateTransaction("is_return")(e.target.checked)
+                }
               />
             }
             label="Is a return?"
@@ -263,12 +240,9 @@ const NewTransactionForm = ({
                 <Checkbox
                   checked={transaction.is_paid}
                   sx={{ "& .MuiSvgIcon-root": { fontSize: 28 } }}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                    setTransaction((prev) => ({
-                      ...prev,
-                      is_paid: e.target.checked,
-                    }))
-                  }}
+                  onChange={(e) =>
+                    updateTransaction("is_paid")(e.target.checked)
+                  }
                 />
               }
               label="Is paid?"

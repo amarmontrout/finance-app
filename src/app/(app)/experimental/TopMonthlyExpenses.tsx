@@ -50,7 +50,7 @@ const TopMonthlyExpenses = ({
   const { topThree, topThreeSum } = topThreeData
 
   return (
-    <ShowCaseCard title={`Top Monthly Expenses V2`}>
+    <ShowCaseCard title={`Top Monthly Expenses`}>
       {isLoading ? (
         <LoadingCircle />
       ) : (

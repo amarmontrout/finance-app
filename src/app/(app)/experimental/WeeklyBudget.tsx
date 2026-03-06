@@ -96,7 +96,7 @@ const WeeklyBudget = ({
       ) : (
         <Stack spacing={1.5}>
           <BudgetProgressBar
-            label={"Weekly Budget V2"}
+            label={"Weekly Budget"}
             actual={actualTotal}
             budget={budgetTotal}
           />

@@ -42,7 +42,7 @@ const MonthlySummary = ({
     hasNet ? ` (${savingsHealthState.toUpperCase()})` : ""
   }`
   return (
-    <ShowCaseCard title={"Monthly Summary V2"}>
+    <ShowCaseCard title={"Monthly Summary"}>
       {isLoading ? (
         <LoadingCircle />
       ) : (

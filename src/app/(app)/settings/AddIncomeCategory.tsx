@@ -132,6 +132,7 @@ const AddIncomeCategory = ({
                       }}
                       onEdit={() => {}}
                       currentTheme={currentTheme}
+                      noEdit={true}
                     />
                   </Box>
                 </Collapse>

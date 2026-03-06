@@ -92,7 +92,6 @@ const AddYear = ({
       await loadCategories()
       setYearsInput("")
       setIsLoading(false)
-      setIsLoading(false)
     }
   }
 
@@ -137,6 +136,7 @@ const AddYear = ({
                       }}
                       onEdit={() => {}}
                       currentTheme={currentTheme}
+                      noEdit={true}
                     />
                   </Box>
                 </Collapse>

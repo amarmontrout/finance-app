@@ -8,15 +8,19 @@ import { darkMode, lightMode } from "@/globals/colors"
 const EditDeleteButton = ({
   onEdit,
   onSetDelete,
+  noEdit,
 }: {
   onEdit: () => void
   onSetDelete: () => void
+  noEdit?: boolean
 }) => {
   return (
     <Stack direction={"row"} gap={2}>
-      <IconButton edge="end" onClick={onEdit}>
-        <EditIcon />
-      </IconButton>
+      {!noEdit && (
+        <IconButton edge="end" onClick={onEdit}>
+          <EditIcon />
+        </IconButton>
+      )}
 
       <IconButton edge="end" onClick={onSetDelete}>
         <DeleteIcon />
@@ -56,6 +60,7 @@ const ListItemSwipe = ({
   onCancelDelete,
   onEdit,
   currentTheme,
+  noEdit,
 }: {
   mainTitle: string
   secondaryTitle: string
@@ -67,6 +72,7 @@ const ListItemSwipe = ({
   onCancelDelete: () => void
   onEdit: () => void
   currentTheme: string | undefined
+  noEdit?: boolean
 }) => {
   const startEdgeRef = useRef<"left" | "right" | null>(null)
   const startXRef = useRef(0)
@@ -136,12 +142,15 @@ const ListItemSwipe = ({
     if (gestureLockRef.current === "horizontal") {
       e.preventDefault()
 
-      const newOffset =
-        startEdgeRef.current === "left"
-          ? Math.max(0, Math.min(deltaX, 110))
-          : Math.min(0, Math.max(deltaX, -110))
-
-      setOffset(newOffset)
+      if (startEdgeRef.current === "left") {
+        if (noEdit) {
+          setOffset(0)
+        } else {
+          setOffset(Math.max(0, Math.min(deltaX, 110)))
+        }
+      } else {
+        setOffset(Math.min(0, Math.max(deltaX, -110)))
+      }
     }
   }
 
@@ -151,7 +160,7 @@ const ListItemSwipe = ({
     if (offset <= -SWIPE_THRESHOLD) {
       setIsActioning(true)
       await onDelete()
-    } else if (offset >= SWIPE_THRESHOLD) {
+    } else if (!noEdit && offset >= SWIPE_THRESHOLD) {
       setIsActioning(true)
       onEdit()
     }
@@ -256,7 +265,11 @@ const ListItemSwipe = ({
                   onCancelDelete={onCancelDelete}
                 />
               ) : (
-                <EditDeleteButton onEdit={onEdit} onSetDelete={onSetDelete} />
+                <EditDeleteButton
+                  onEdit={onEdit}
+                  onSetDelete={onSetDelete}
+                  noEdit={noEdit}
+                />
               )}
             </Box>
           </Stack>

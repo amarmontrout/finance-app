@@ -1,37 +1,39 @@
 import { updateExpenseCategory } from "@/app/api/Choices/requests"
-import { darkMode, lightMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { ChoiceType } from "@/utils/type"
+import { AlertToastType, ChoiceType, HookSetter } from "@/utils/type"
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  IconButton,
   Stack,
   Switch,
   Typography,
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import React, { useEffect, useState } from "react"
+import CloseIcon from "@mui/icons-material/Close"
+import SaveIcon from "@mui/icons-material/Save"
 
 const EditCategorySettingsDialog = ({
   categoryDialogOpen,
   setCategoryDialogOpen,
   choice,
   refresh,
+  setAlertToast,
 }: {
   categoryDialogOpen: boolean
-  setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
+  setCategoryDialogOpen: HookSetter<boolean>
   choice: ChoiceType | null
   refresh: () => Promise<void>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
-  const { theme: currentTheme } = useTheme()
   const user = useUser()
 
   const [localChoice, setLocalChoice] = useState<ChoiceType | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (categoryDialogOpen && choice) {
@@ -51,35 +53,67 @@ const EditCategorySettingsDialog = ({
     })
   }
 
-  const handleChangeExclude = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalChoice((prev) => {
-      if (!prev) return prev
-      return {
-        ...prev,
-        isExcluded: event.target.checked,
-      }
-    })
-  }
-
-  const update = async () => {
+  const handleUpdateExpenseCategoryData = async () => {
     if (!user || !localChoice) return
-    await updateExpenseCategory({
-      userId: user.id,
-      rowId: localChoice.id,
-      body: localChoice,
-    })
-    refresh()
-    setCategoryDialogOpen(false)
+    setIsLoading(true)
+    try {
+      await updateExpenseCategory({
+        userId: user.id,
+        rowId: localChoice.id,
+        body: localChoice,
+      })
+      setAlertToast({
+        open: true,
+        onClose: () => setAlertToast(undefined),
+        severity: "success",
+        message: "Category updated successfully!",
+      })
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => setAlertToast(undefined),
+        severity: "error",
+        message: "Category could not be updated.",
+      })
+    } finally {
+      await refresh()
+      setIsLoading(false)
+      setCategoryDialogOpen(false)
+    }
   }
 
   if (!localChoice) return null
 
   return (
     <Dialog open={categoryDialogOpen}>
-      <DialogTitle>{`Category Settings`}</DialogTitle>
+      <DialogTitle>
+        <Stack
+          width={"100%"}
+          height={"100%"}
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+        >
+          <IconButton
+            onClick={() => {
+              setCategoryDialogOpen(false)
+              setLocalChoice(null)
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <Typography>{`Edit ${localChoice.name}`}</Typography>
+          <IconButton
+            // loading={isLoading}
+            onClick={handleUpdateExpenseCategoryData}
+          >
+            <SaveIcon />
+          </IconButton>
+        </Stack>
+      </DialogTitle>
 
       <DialogContent>
-        <Typography>{localChoice.name}</Typography>
         <FormGroup>
           <FormControlLabel
             control={
@@ -90,49 +124,8 @@ const EditCategorySettingsDialog = ({
             }
             label="Recurring"
           />
-
-          <FormControlLabel
-            control={
-              <Switch
-                checked={localChoice.isExcluded}
-                onChange={handleChangeExclude}
-              />
-            }
-            label="Exclude"
-          />
         </FormGroup>
       </DialogContent>
-
-      <DialogActions>
-        <Stack direction={"row"} gap={1} justifyContent={"right"}>
-          <Button
-            variant={"contained"}
-            onClick={update}
-            sx={{
-              backgroundColor:
-                currentTheme === "light"
-                  ? [lightMode.success]
-                  : [darkMode.success],
-            }}
-          >
-            {"Update"}
-          </Button>
-
-          <Button
-            variant={"contained"}
-            onClick={() => {
-              setCategoryDialogOpen(false)
-              setLocalChoice(null)
-            }}
-            sx={{
-              backgroundColor:
-                currentTheme === "light" ? [lightMode.error] : [darkMode.error],
-            }}
-          >
-            {"Cancel"}
-          </Button>
-        </Stack>
-      </DialogActions>
     </Dialog>
   )
 }

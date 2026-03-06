@@ -2,7 +2,6 @@
 
 import { Box, Typography } from "@mui/material"
 import { useState } from "react"
-import { useTheme } from "next-themes"
 import { useCategoryContext } from "@/contexts/categories-context"
 import EditCategorySettingsDialog from "@/app/(app)/settings/EditCategorySettingsDialog"
 import AddYear from "./AddYear"
@@ -27,7 +26,6 @@ const Settings = () => {
     years,
     loadCategories,
   } = useCategoryContext()
-  const { theme: currentTheme } = useTheme()
 
   const [choice, setChoice] = useState<ChoiceType | null>(null)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
@@ -106,6 +104,7 @@ const Settings = () => {
           expenseCategories={expenseCategories}
           loadCategories={loadCategories}
           syncExpenseToBudget={syncExpenseToBudget}
+          setAlertToast={setAlertToast}
         />
       </Box>
 
@@ -126,13 +125,14 @@ const Settings = () => {
         setCategoryDialogOpen={setCategoryDialogOpen}
         choice={choice}
         refresh={loadCategories}
+        setAlertToast={setAlertToast}
       />
 
       <EditBudgetDialog
         budgetEditDialogOpen={budgetEditDialogOpen}
         setBudgetEditDialogOpen={setBudgetEditDialogOpen}
         confirmEdit={confirmEdit}
-        currentTheme={currentTheme}
+        setAlertToast={setAlertToast}
       />
 
       <AlertToast alertToast={alertToast} />

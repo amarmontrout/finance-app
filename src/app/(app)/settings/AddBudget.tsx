@@ -1,17 +1,11 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
-import DeleteIcon from "@mui/icons-material/Delete"
-import CancelIcon from "@mui/icons-material/Cancel"
-import EditIcon from "@mui/icons-material/Edit"
 import { accentColorSecondary, darkMode, lightMode } from "@/globals/colors"
 import {
   Box,
   Button,
+  Collapse,
   FormControl,
-  IconButton,
   InputLabel,
-  List,
-  ListItem,
-  ListItemText,
   OutlinedInput,
   Stack,
   Typography,
@@ -26,75 +20,8 @@ import {
   saveBudgetCategory,
 } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
-
-const EditDeleteButton = ({
-  selection,
-  setConfirmSelection,
-  setBudgetEditDialogOpen,
-  setConfirmEdit,
-}: {
-  selection: BudgetType
-  setConfirmSelection: HookSetter<BudgetType | null>
-  setBudgetEditDialogOpen: HookSetter<boolean>
-  setConfirmEdit: HookSetter<BudgetType | null>
-}) => {
-  return (
-    <Stack direction={"row"} gap={2}>
-      {
-        <IconButton
-          edge="end"
-          onClick={() => {
-            if (setBudgetEditDialogOpen && setConfirmEdit) {
-              setBudgetEditDialogOpen(true)
-              setConfirmEdit(selection)
-            }
-          }}
-        >
-          <EditIcon />
-        </IconButton>
-      }
-
-      <IconButton
-        edge="end"
-        onClick={() => {
-          setConfirmSelection(selection)
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </Stack>
-  )
-}
-
-const ConfirmCancel = ({
-  handleDeleteItem,
-  setConfirmSelection,
-}: {
-  handleDeleteItem: () => Promise<void>
-  setConfirmSelection: HookSetter<BudgetType | null>
-}) => {
-  return (
-    <Stack direction={"row"} gap={2}>
-      <IconButton
-        edge="end"
-        onClick={() => {
-          handleDeleteItem()
-        }}
-      >
-        <DeleteIcon />
-      </IconButton>
-
-      <IconButton
-        edge="end"
-        onClick={() => {
-          setConfirmSelection(null)
-        }}
-      >
-        <CancelIcon />
-      </IconButton>
-    </Stack>
-  )
-}
+import { TransitionGroup } from "react-transition-group"
+import ListItemSwipe from "@/components/ListItemSwipe"
 
 const AddBudget = ({
   confirmSelection,
@@ -181,13 +108,7 @@ const AddBudget = ({
           <Typography>Weekly Budget</Typography>
           <Typography>{`$${formattedStringNumber(budgetTotal)} Total`}</Typography>
         </Stack>
-        <Box
-          display={"flex"}
-          flexDirection={"column"}
-          overflow={"hidden"}
-          paddingTop={"5px"}
-          height={"325px"}
-        >
+        <Stack height={"325px"} spacing={1}>
           <Stack direction={"column"} spacing={1}>
             <Stack direction={"row"} height={"100%"}>
               <FormControl fullWidth>
@@ -226,44 +147,46 @@ const AddBudget = ({
 
           <hr style={{ width: "100%", marginTop: "10px" }} />
 
-          <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
-            <List className="flex flex-col gap-2">
+          <Stack spacing={1.5} overflow={"auto"}>
+            <TransitionGroup>
               {budgetCategories
                 .slice()
                 .sort((a, b) => a.category.localeCompare(b.category))
-                .map((budget) => {
+                .map((entry, index) => {
+                  const isLast = index === budgetCategories.length - 1
                   return (
-                    <ListItem
-                      key={budget.id}
-                      secondaryAction={
-                        confirmSelection?.id === budget.id ? (
-                          <ConfirmCancel
-                            handleDeleteItem={handleDeleteItem}
-                            setConfirmSelection={setConfirmSelection}
-                          />
-                        ) : (
-                          <EditDeleteButton
-                            selection={budget}
-                            setConfirmSelection={setConfirmSelection}
-                            setBudgetEditDialogOpen={setBudgetEditDialogOpen}
-                            setConfirmEdit={setConfirmEdit}
-                          />
-                        )
-                      }
-                      sx={{
-                        backgroundColor: listItemColor,
-                        borderRadius: "15px",
-                      }}
-                    >
-                      <ListItemText
-                        primary={`${budget.category} - $${formattedStringNumber(budget.amount)}/week`}
-                      />
-                    </ListItem>
+                    <Collapse key={entry.id}>
+                      <Box mb={isLast ? 0 : 1}>
+                        <ListItemSwipe
+                          mainTitle={entry.category}
+                          secondaryTitle={""}
+                          amount={`$${formattedStringNumber(entry.amount)}`}
+                          amountColor={"inherit"}
+                          buttonCondition={confirmSelection?.id === entry.id}
+                          onDelete={async () => {
+                            handleDeleteItem()
+                          }}
+                          onSetDelete={() => {
+                            setConfirmSelection(entry)
+                          }}
+                          onCancelDelete={() => {
+                            setConfirmSelection(null)
+                          }}
+                          onEdit={() => {
+                            if (setBudgetEditDialogOpen && setConfirmEdit) {
+                              setBudgetEditDialogOpen(true)
+                              setConfirmEdit(entry)
+                            }
+                          }}
+                          currentTheme={currentTheme}
+                        />
+                      </Box>
+                    </Collapse>
                   )
                 })}
-            </List>
-          </Box>
-        </Box>
+            </TransitionGroup>
+          </Stack>
+        </Stack>
       </Stack>
     </ShowCaseCard>
   )

@@ -37,7 +37,7 @@ export const NAV_QUICK_INFO: PageLinkType[] = [
   // {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
 ]
 export const NAV_TRANSACTIONS: PageLinkType[] = [
-  {"name": "Cash Flow", "link": "/cash-flow", icon: AccountBalanceIcon},
+  {"name": "Transaction", "link": "/transaction", icon: AccountBalanceIcon},
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
 ]
 export const EXPERIMENTAL: PageLinkType[] = [

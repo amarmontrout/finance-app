@@ -4,7 +4,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { accentColorPrimarySelected } from "@/globals/colors"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
 import TransactionTypeToggle from "./TransactionTypeToggle"
 import { deleteTransaction } from "@/app/api/Transactions/requests"
@@ -15,6 +15,7 @@ import {
   NewTransactionType,
   SelectedDateType,
 } from "@/utils/type"
+import ExpenseViewToggle from "./ExpenseViewToggle"
 
 const TransactionsDisplay = ({
   transactions,
@@ -42,15 +43,24 @@ const TransactionsDisplay = ({
   const user = useUser()
 
   const [type, setType] = useState<"income" | "expense">("income")
+  const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
 
   const filteredTransactions = useMemo(() => {
-    return transactions.filter(
-      (t) =>
-        t.type === type &&
-        t.date.month === selectedDate.month &&
-        t.date.year === selectedDate.year,
-    )
-  }, [transactions, type, selectedDate])
+    return transactions.filter((t) => {
+      const matchesType = t.type === type
+      const matchesMonth = t.date.month === selectedDate.month
+      const matchesYear = t.date.year === selectedDate.year
+
+      const matchesView =
+        type === "expense"
+          ? view === "Both" ||
+            (view === "Debit" && t.payment_method === "Debit") ||
+            (view === "Credit" && t.payment_method === "Credit")
+          : true
+
+      return matchesType && matchesMonth && matchesYear && matchesView
+    })
+  }, [transactions, type, selectedDate, view])
 
   const total = useMemo(() => {
     return filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
@@ -96,15 +106,24 @@ const TransactionsDisplay = ({
     }
   }
 
+  useEffect(() => {
+    setView("Debit")
+  }, [type])
+
   return (
     <ShowCaseCard title={""}>
       <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"}>
-        <TransactionTypeToggle type={type} setType={setType} />
+        <Stack spacing={1}>
+          <TransactionTypeToggle type={type} setType={setType} />
+        </Stack>
 
         {isLoading ? (
           <LoadingCircle />
         ) : (
           <Stack spacing={1.5}>
+            {type === "expense" && (
+              <ExpenseViewToggle view={view} setView={setView} />
+            )}
             <Stack direction="row" justifyContent="space-between">
               <Typography variant="h5" fontWeight={700}>
                 {type === "income" ? "Income" : "Expense"}

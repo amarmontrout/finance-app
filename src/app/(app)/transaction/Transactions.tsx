@@ -67,6 +67,7 @@ const Transactions = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [tab, setTab] = useState(0)
+
   const [selectedTransaction, setSelectedTransaction] =
     useState<NewTransactionType | null>(null)
 

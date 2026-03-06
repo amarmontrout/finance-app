@@ -46,7 +46,6 @@ const TransactionsDisplay = ({
 }) => {
   const user = useUser()
 
-  // const [type, setType] = useState<"income" | "expense">("income")
   const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
 
   const { filteredTransactions, total } = useMemo(() => {

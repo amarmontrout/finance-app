@@ -59,6 +59,7 @@ const Transactions = () => {
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [tab, setTab] = useState(0)
+  const [type, setType] = useState<"income" | "expense">("income")
 
   const [selectedTransaction, setSelectedTransaction] =
     useState<NewTransactionType | null>(null)
@@ -73,7 +74,7 @@ const Transactions = () => {
 
   return (
     <Stack spacing={1.5}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={tab}
           onChange={(_event: React.SyntheticEvent, newValue: number) => {
@@ -81,9 +82,9 @@ const Transactions = () => {
           }}
         >
           <Tab label="Transactions" />
-          {/* <Tab label="Totals" /> */}
+          <Tab label="Totals" />
         </Tabs>
-      </Box>
+      </Box> */}
 
       <MonthYearSelector
         selectedDate={selectedDate}
@@ -96,6 +97,8 @@ const Transactions = () => {
         <TransactionsDisplay
           transactions={transactions}
           refreshTransactions={refreshTransactions}
+          type={type}
+          setType={setType}
           selectedDate={selectedDate}
           setAlertToast={setAlertToast}
           selectedTransaction={selectedTransaction}
@@ -129,6 +132,8 @@ const Transactions = () => {
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
         transactions={transactions}
+        type={type}
+        setType={setType}
       />
 
       <AlertToast alertToast={alertToast} />

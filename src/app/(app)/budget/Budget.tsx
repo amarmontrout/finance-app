@@ -24,6 +24,7 @@ const Budget = () => {
     useState<NewTransactionType | null>(null)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
+  const [type, setType] = useState<"income" | "expense">("expense")
 
   const TODAY: DateType = {
     month: currentMonth,
@@ -63,6 +64,8 @@ const Budget = () => {
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
         transactions={transactions}
+        type={type}
+        setType={setType}
       />
 
       <AlertToast alertToast={alertToast} />

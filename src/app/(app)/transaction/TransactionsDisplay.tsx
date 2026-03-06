@@ -20,6 +20,8 @@ import ExpenseViewToggle from "./ExpenseViewToggle"
 const TransactionsDisplay = ({
   transactions,
   refreshTransactions,
+  type,
+  setType,
   selectedDate,
   setAlertToast,
   selectedTransaction,
@@ -31,6 +33,8 @@ const TransactionsDisplay = ({
 }: {
   transactions: NewTransactionType[]
   refreshTransactions: () => Promise<void>
+  type: "income" | "expense"
+  setType: HookSetter<"income" | "expense">
   selectedDate: SelectedDateType
   setAlertToast: HookSetter<AlertToastType | undefined>
   selectedTransaction: NewTransactionType | null
@@ -42,7 +46,7 @@ const TransactionsDisplay = ({
 }) => {
   const user = useUser()
 
-  const [type, setType] = useState<"income" | "expense">("income")
+  // const [type, setType] = useState<"income" | "expense">("income")
   const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
 
   const { filteredTransactions, total } = useMemo(() => {

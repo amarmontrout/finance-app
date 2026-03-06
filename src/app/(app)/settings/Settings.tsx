@@ -10,7 +10,7 @@ import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
 import EditBudgetDialog from "./EditBudgetDialog"
-import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
+import { BudgetType, ChoiceType } from "@/utils/type"
 import { accentColorPrimarySelected } from "@/globals/colors"
 import {
   saveBudgetCategory,
@@ -20,25 +20,25 @@ import { makeId } from "@/utils/helperFunctions"
 
 const Settings = () => {
   const {
-    incomeCategoriesV2,
-    expenseCategoriesV2,
-    budgetCategoriesV2,
-    yearsV2,
+    incomeCategories,
+    expenseCategories,
+    budgetCategories,
+    years,
     loadCategories,
   } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
 
-  const [choice, setChoice] = useState<ChoiceTypeV2 | null>(null)
+  const [choice, setChoice] = useState<ChoiceType | null>(null)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
   const [budgetEditDialogOpen, setBudgetEditDialogOpen] =
     useState<boolean>(false)
-  const [confirmSelection, setConfirmSelection] = useState<BudgetTypeV2 | null>(
+  const [confirmSelection, setConfirmSelection] = useState<BudgetType | null>(
     null,
   )
-  const [confirmEdit, setConfirmEdit] = useState<BudgetTypeV2 | null>(null)
+  const [confirmEdit, setConfirmEdit] = useState<BudgetType | null>(null)
 
   const syncExpenseToBudget = async (expenseName: string, userId: string) => {
-    const exists = budgetCategoriesV2.some((b) => b.category === expenseName)
+    const exists = budgetCategories.some((b) => b.category === expenseName)
 
     if (!exists) {
       await saveBudgetCategory({
@@ -54,10 +54,10 @@ const Settings = () => {
   }
 
   const syncBudgetToExpense = async (
-    budgetCategory: BudgetTypeV2,
+    budgetCategory: BudgetType,
     userId: string,
   ) => {
-    const exists = expenseCategoriesV2.some(
+    const exists = expenseCategories.some(
       (c) => c.name === budgetCategory.category,
     )
 
@@ -86,17 +86,17 @@ const Settings = () => {
       />
 
       <Box className="flex flex-col xl:flex-row gap-5 h-full">
-        <AddYear yearsV2={yearsV2} loadCategories={loadCategories} />
+        <AddYear years={years} loadCategories={loadCategories} />
 
         <AddIncomeCategory
-          incomeCategoriesV2={incomeCategoriesV2}
+          incomeCategories={incomeCategories}
           loadCategories={loadCategories}
         />
 
         <AddExpenseCategory
           setCategoryDialogOpen={setCategoryDialogOpen}
           setChoice={setChoice}
-          expenseCategoriesV2={expenseCategoriesV2}
+          expenseCategories={expenseCategories}
           loadCategories={loadCategories}
           syncExpenseToBudget={syncExpenseToBudget}
         />
@@ -108,7 +108,7 @@ const Settings = () => {
           setConfirmSelection={setConfirmSelection}
           setBudgetEditDialogOpen={setBudgetEditDialogOpen}
           setConfirmEdit={setConfirmEdit}
-          budgetCategoriesV2={budgetCategoriesV2}
+          budgetCategories={budgetCategories}
           loadCategories={loadCategories}
           syncBudgetToExpense={syncBudgetToExpense}
         />

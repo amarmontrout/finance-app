@@ -1,26 +1,22 @@
 "use client"
 
-import TransactionFeed from "./TransactionFeed"
 import { Box, Tabs, Tab, Stack } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useEffect, useRef, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import EditTransactionDetailDialog from "./EditTransactionDetailDialog"
 import {
   AlertToastType,
   NewTransactionType,
   SelectedDateType,
-  SelectedTransactionType,
 } from "@/utils/type"
 import TransactionTotals from "./TransactionTotals"
-import AddTransactionDialog from "./AddTransactionDialog"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import AddDataButton from "@/components/AddDataButton"
 import AlertToast from "@/components/AlertToast"
-import TransactionsDisplay from "../experimental/TransactionsDisplay"
-import AddEditDialog from "../experimental/AddEditDialog"
+import TransactionsDisplay from "./TransactionsDisplay"
+import AddEditDialog from "../../../components/AddEditDialog"
 
 const TabPanel = ({
   children,
@@ -41,15 +37,13 @@ const TabPanel = ({
 
 const Transactions = () => {
   const {
-    incomeTransactionsV2,
-    refreshIncomeTransactionsV2,
-    expenseTransactionsV2,
-    refreshExpenseTransactionsV2,
+    incomeTransactions,
+    expenseTransactions,
     isLoading,
     transactions,
     refreshTransactions,
   } = useTransactionContext()
-  const { yearsV2, incomeCategoriesV2, expenseCategoriesV2, excludedSet } =
+  const { incomeCategories, expenseCategories, excludedSet } =
     useCategoryContext()
   const { currentYear, currentMonth, passedMonths } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
@@ -62,8 +56,6 @@ const Transactions = () => {
 
   const [selectedDate, setSelectedDate] =
     useState<SelectedDateType>(CURRENT_DATE)
-  const [openAddTransactionDialog, setOpenAddTransactionDialog] =
-    useState<boolean>(false)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
   const [tab, setTab] = useState(0)
@@ -81,7 +73,7 @@ const Transactions = () => {
 
   return (
     <Stack spacing={1.5}>
-      {/* <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
         <Tabs
           value={tab}
           onChange={(_event: React.SyntheticEvent, newValue: number) => {
@@ -89,9 +81,9 @@ const Transactions = () => {
           }}
         >
           <Tab label="Transactions" />
-          <Tab label="Totals" />
+          {/* <Tab label="Totals" /> */}
         </Tabs>
-      </Box> */}
+      </Box>
 
       <MonthYearSelector
         selectedDate={selectedDate}
@@ -100,94 +92,44 @@ const Transactions = () => {
         showMonth={tab === 0}
       />
 
-      <TransactionsDisplay
-        transactions={transactions}
-        refreshTransactions={refreshTransactions}
-        selectedDate={selectedDate}
-        setAlertToast={setAlertToast}
-        selectedTransaction={selectedTransaction}
-        setSelectedTransaction={setSelectedTransaction}
-        isLoading={isLoading}
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
-        currentTheme={currentTheme}
-      />
-
-      <AddEditDialog
-        openDialog={openDialog}
-        setOpenDialog={setOpenDialog}
-        setAlertToast={setAlertToast}
-        incomeCategoriesV2={incomeCategoriesV2}
-        expenseCategoriesV2={expenseCategoriesV2}
-        inputRef={inputRef}
-        refreshTransactions={refreshTransactions}
-        selectedTransaction={selectedTransaction}
-        setSelectedTransaction={setSelectedTransaction}
-        transactions={transactions}
-      />
-      {/* <TabPanel value={tab} index={0}>
-        <TransactionFeed
-          incomeTransactionsV2={incomeTransactionsV2}
-          refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
-          expenseTransactionsV2={expenseTransactionsV2}
-          refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-          isLoading={isLoading}
-          selectedMonth={selectedDate.month}
-          selectedYear={selectedDate.year}
-          currentTheme={currentTheme}
+      <TabPanel value={tab} index={0}>
+        <TransactionsDisplay
+          transactions={transactions}
+          refreshTransactions={refreshTransactions}
+          selectedDate={selectedDate}
+          setAlertToast={setAlertToast}
           selectedTransaction={selectedTransaction}
           setSelectedTransaction={setSelectedTransaction}
-          openEditDialog={openEditDialog}
-          setOpenEditDialog={setOpenEditDialog}
-          setAlertToast={setAlertToast}
+          isLoading={isLoading}
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          currentTheme={currentTheme}
         />
-      </TabPanel> */}
+      </TabPanel>
 
       {/* <TabPanel value={tab} index={1}>
         <TransactionTotals
           selectedYear={selectedDate.year}
           currentYear={currentYear}
           passedMonths={passedMonths}
-          incomeTransactionsV2={incomeTransactionsV2}
-          expenseTransactionsV2={expenseTransactionsV2}
+          incomeTransactions={incomeTransactions}
+          expenseTransactions={expenseTransactions}
           excludedSet={excludedSet}
         />
       </TabPanel> */}
 
-      {/* <AddTransactionDialog
-        openAddTransactionDialog={openAddTransactionDialog}
-        setOpenAddTransactionDialog={setOpenAddTransactionDialog}
-        incomeCategoriesV2={incomeCategoriesV2}
-        refreshIncomeTransactionsV2={refreshIncomeTransactionsV2}
-        expenseCategoriesV2={expenseCategoriesV2}
-        refreshExpenseTransactionsV2={refreshExpenseTransactionsV2}
-        yearsV2={yearsV2}
+      <AddEditDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
         setAlertToast={setAlertToast}
+        incomeCategories={incomeCategories}
+        expenseCategories={expenseCategories}
         inputRef={inputRef}
-      /> */}
-
-      {/* <EditTransactionDetailDialog
-        openEditDialog={openEditDialog}
-        setOpenEditDialog={setOpenEditDialog}
+        refreshTransactions={refreshTransactions}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
-        transactions={
-          selectedTransaction?.type === "income"
-            ? incomeTransactionsV2
-            : expenseTransactionsV2
-        }
-        categories={
-          selectedTransaction?.type === "income"
-            ? incomeCategoriesV2
-            : expenseCategoriesV2
-        }
-        selectedYear={selectedDate.year}
-        selectedMonth={selectedDate.month}
-        refreshIncomeTransactions={refreshIncomeTransactionsV2}
-        refreshExpenseTransactions={refreshExpenseTransactionsV2}
-        setAlertToast={setAlertToast}
-        inputRef={inputRef}
-      /> */}
+        transactions={transactions}
+      />
 
       <AlertToast alertToast={alertToast} />
 

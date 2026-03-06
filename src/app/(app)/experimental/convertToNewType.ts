@@ -1,14 +1,14 @@
 import { saveTransaction } from "@/app/api/Transactions/requests"
 import { makeId } from "@/utils/helperFunctions"
 import { 
-  BudgetTransactionTypeV2, 
+  BudgetTransactionType, 
   NewTransactionType, 
-  TransactionTypeV2 
+  TransactionType 
 } from "@/utils/type"
 import { User } from "@supabase/supabase-js"
 
 const migrateIncomeTransaction = (
-  old: TransactionTypeV2,
+  old: TransactionType,
   type: "income",
 ): NewTransactionType => {
   return {
@@ -29,7 +29,7 @@ const migrateIncomeTransaction = (
 }
 
 const migrateExpenseTransaction = (
-  old: TransactionTypeV2,
+  old: TransactionType,
   type: "expense",
 ): NewTransactionType => {
   return {
@@ -50,7 +50,7 @@ const migrateExpenseTransaction = (
 }
 
 const migrateBudgetTransaction = ( 
-  old: BudgetTransactionTypeV2, 
+  old: BudgetTransactionType, 
 ): NewTransactionType => { 
   return { 
     id: makeId(),
@@ -67,17 +67,17 @@ const migrateBudgetTransaction = (
 
 export const migrateAllIncome = async (
   user: User, 
-  incomeTransactionsV2: TransactionTypeV2[]
+  incomeTransactions: TransactionType[]
 ) => {
   if (!user) return
-  for (const [i, oldTx] of incomeTransactionsV2.entries()) {
+  for (const [i, oldTx] of incomeTransactions.entries()) {
     const t = migrateIncomeTransaction(oldTx, "income")
     try {
       await saveTransaction({
         userId: user.id,
         body: t,
       })
-      console.log(`Migrated ${i + 1}/${incomeTransactionsV2.length}`)
+      console.log(`Migrated ${i + 1}/${incomeTransactions.length}`)
     } catch (err) {
       console.error("Migration failed:", t, err)
     }
@@ -87,17 +87,17 @@ export const migrateAllIncome = async (
 
 export const migrateAllExpenses = async (
   user: User, 
-  expenseTransactionsV2: TransactionTypeV2[]
+  expenseTransactions: TransactionType[]
 ) => {
   if (!user) return
-  for (const [i, oldTx] of expenseTransactionsV2.entries()) {
+  for (const [i, oldTx] of expenseTransactions.entries()) {
     const t = migrateExpenseTransaction(oldTx, "expense")
     try {
       await saveTransaction({
         userId: user.id,
         body: t,
       })
-      console.log(`Migrated ${i + 1}/${expenseTransactionsV2.length}`)
+      console.log(`Migrated ${i + 1}/${expenseTransactions.length}`)
     } catch (err) {
       console.error("Migration failed:", t, err)
     }
@@ -107,17 +107,17 @@ export const migrateAllExpenses = async (
 
 export const migrateAllBudget = async (
   user: User, 
-  budgetTransactionsV2: BudgetTransactionTypeV2[]
+  budgetTransactions: BudgetTransactionType[]
 ) => {
   if (!user) return
-  for (const [i, oldTx] of budgetTransactionsV2.entries()) {
+  for (const [i, oldTx] of budgetTransactions.entries()) {
     const t = migrateBudgetTransaction(oldTx)
     try {
       await saveTransaction({
         userId: user.id,
         body: t,
       })
-      console.log(`Migrated ${i + 1}/${budgetTransactionsV2.length}`)
+      console.log(`Migrated ${i + 1}/${budgetTransactions.length}`)
     } catch (err) {
       console.error("Migration failed:", t, err)
     }

@@ -4,29 +4,20 @@ import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useEffect, useMemo, useState } from "react"
-import YearTotals from "./YearTotals"
-import RemainingBudget from "./RemainingBudget"
-import TopThreeExpenses from "./TopThreeCategories"
+import { useEffect, useState } from "react"
 import SetUpDialog from "./SetUpDialog"
 import { Stack } from "@mui/material"
-import MonthlySummary from "./experimental/MonthlySummary"
-import WeeklyBudget from "./experimental/WeeklyBudget"
-import TopMonthlyExpenses from "./experimental/TopMonthlyExpenses"
+import MonthlySummary from "./MonthlySummary"
+import WeeklyBudget from "./WeeklyBudget"
+import TopMonthlyExpenses from "./TopMonthlyExpenses"
 
 const Overview = () => {
+  const { transactions } = useTransactionContext()
   const {
-    incomeTransactionsV2,
-    expenseTransactionsV2,
-    budgetTransactionsV2,
-    transactions,
-  } = useTransactionContext()
-  const {
-    excludedSet,
-    budgetCategoriesV2,
-    incomeCategoriesV2,
-    expenseCategoriesV2,
-    yearsV2,
+    budgetCategories,
+    incomeCategories,
+    expenseCategories,
+    years,
     loadCategories,
     isLoading,
   } = useCategoryContext()
@@ -39,13 +30,13 @@ const Overview = () => {
     if (isLoading) return
 
     if (
-      yearsV2.length === 0 &&
-      incomeCategoriesV2.length === 0 &&
-      expenseCategoriesV2.length === 0
+      years.length === 0 &&
+      incomeCategories.length === 0 &&
+      expenseCategories.length === 0
     ) {
       setSetUpDialogOpen(true)
     }
-  }, [isLoading, yearsV2, incomeCategoriesV2, expenseCategoriesV2])
+  }, [isLoading, years, incomeCategories, expenseCategories])
 
   return (
     <Stack spacing={1}>
@@ -56,34 +47,16 @@ const Overview = () => {
         currentTheme={currentTheme}
         isLoading={isLoading}
       />
-      {/* <YearTotals
-        currentYear={currentYear}
-        currentMonth={currentMonth}
-        currentTheme={currentTheme}
-        excludedSet={excludedSet}
-        incomeTransactionsV2={incomeTransactionsV2}
-        expenseTransactionsV2={expenseTransactionsV2}
-        isLoading={isLoading}
-      /> */}
 
       <WeeklyBudget
         transactions={transactions}
-        budgetCategoriesV2={budgetCategoriesV2}
+        budgetCategories={budgetCategories}
         currentMonth={currentMonth}
         currentDay={currentDay}
         currentYear={currentYear}
         currentTheme={currentTheme}
         isLoading={isLoading}
       />
-      {/* <RemainingBudget
-        budgetCategoriesV2={budgetCategoriesV2}
-        budgetTransactionsV2={budgetTransactionsV2}
-        currentTheme={currentTheme}
-        currentMonth={currentMonth}
-        currentDay={currentDay}
-        currentYear={currentYear}
-        isLoading={isLoading}
-      /> */}
 
       <TopMonthlyExpenses
         transactions={transactions}
@@ -92,11 +65,6 @@ const Overview = () => {
         currentTheme={currentTheme}
         isLoading={isLoading}
       />
-      {/* <TopThreeExpenses
-        expenseTransactionsV2={expenseTransactionsV2}
-        excludedSet={excludedSet}
-        isLoading={isLoading}
-      /> */}
 
       <SetUpDialog
         setUpDialogOpen={setUpDialogOpen}

@@ -7,7 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import CancelIcon from "@mui/icons-material/Cancel"
 import SettingsIcon from "@mui/icons-material/Settings"
 import { useState } from "react"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceType } from "@/utils/type"
 import {
   deleteBudgetCategory,
   deleteExpenseCategory,
@@ -24,10 +24,10 @@ const EditDeleteListItem = ({
   setChoice,
 }: {
   type: "year" | "income" | "expense" | "budget"
-  items: ChoiceTypeV2[]
+  items: ChoiceType[]
   refresh: () => Promise<void>
   setCategoryDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
-  setChoice?: React.Dispatch<React.SetStateAction<ChoiceTypeV2 | null>>
+  setChoice?: React.Dispatch<React.SetStateAction<ChoiceType | null>>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
@@ -65,7 +65,7 @@ const EditDeleteListItem = ({
     setConfirmSelection(null)
   }
 
-  const EditDeleteButton = ({ selection }: { selection: ChoiceTypeV2 }) => {
+  const EditDeleteButton = ({ selection }: { selection: ChoiceType }) => {
     return (
       <Stack direction={"row"} gap={2}>
         {type === "expense" && (

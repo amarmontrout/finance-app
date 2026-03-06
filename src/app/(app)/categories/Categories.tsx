@@ -3,8 +3,8 @@
 import DateSelector from "@/components/DateSelector"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import {
-  getAnnualCategoryTotalsV2,
-  getMonthCategoryTotalsV2,
+  getAnnualCategoryTotals,
+  getMonthCategoryTotals,
 } from "@/utils/getTotals"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useEffect, useMemo, useState } from "react"
@@ -15,12 +15,12 @@ import { useCategoryContext } from "@/contexts/categories-context"
 
 const Categories = () => {
   const {
-    incomeTransactionsV2,
-    refreshIncomeTransactionsV2,
-    expenseTransactionsV2,
-    refreshExpenseTransactionsV2,
+    incomeTransactions,
+    refreshIncomeTransactions,
+    expenseTransactions,
+    refreshExpenseTransactions,
   } = useTransactionContext()
-  const { yearsV2 } = useCategoryContext()
+  const { years } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const [selectedYear, setSelectedYear] = useState<number>(currentYear)
@@ -28,36 +28,28 @@ const Categories = () => {
   const [view, setView] = useState<"annual" | "month">("month")
 
   useEffect(() => {
-    refreshIncomeTransactionsV2()
-    refreshExpenseTransactionsV2()
+    refreshIncomeTransactions()
+    refreshExpenseTransactions()
   }, [selectedYear])
 
   const annualIncomeCategoryTotals = useMemo(
-    () => getAnnualCategoryTotalsV2(selectedYear, incomeTransactionsV2),
-    [incomeTransactionsV2, selectedYear],
+    () => getAnnualCategoryTotals(selectedYear, incomeTransactions),
+    [incomeTransactions, selectedYear],
   )
   const annualExpenseCategoryTotals = useMemo(
-    () => getAnnualCategoryTotalsV2(selectedYear, expenseTransactionsV2),
-    [expenseTransactionsV2, selectedYear],
+    () => getAnnualCategoryTotals(selectedYear, expenseTransactions),
+    [expenseTransactions, selectedYear],
   )
 
   const monthIncomeCategoryTotals = useMemo(
     () =>
-      getMonthCategoryTotalsV2(
-        selectedYear,
-        selectedMonth,
-        incomeTransactionsV2,
-      ),
-    [selectedYear, selectedMonth, incomeTransactionsV2],
+      getMonthCategoryTotals(selectedYear, selectedMonth, incomeTransactions),
+    [selectedYear, selectedMonth, incomeTransactions],
   )
   const monthExpenseCategoryTotals = useMemo(
     () =>
-      getMonthCategoryTotalsV2(
-        selectedYear,
-        selectedMonth,
-        expenseTransactionsV2,
-      ),
-    [selectedYear, selectedMonth, expenseTransactionsV2],
+      getMonthCategoryTotals(selectedYear, selectedMonth, expenseTransactions),
+    [selectedYear, selectedMonth, expenseTransactions],
   )
 
   return (
@@ -69,7 +61,7 @@ const Categories = () => {
         setSelectedYear={setSelectedYear}
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
-        years={yearsV2}
+        years={years}
       />
 
       <hr style={{ width: "100%" }} />

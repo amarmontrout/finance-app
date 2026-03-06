@@ -13,7 +13,7 @@ import CloseIcon from "@mui/icons-material/Close"
 import SaveIcon from "@mui/icons-material/Save"
 import {
   AlertToastType,
-  ChoiceTypeV2,
+  ChoiceType,
   DateType,
   HookSetter,
   NewTransactionType,
@@ -30,8 +30,8 @@ const AddEditDialog = ({
   openDialog,
   setOpenDialog,
   setAlertToast,
-  incomeCategoriesV2,
-  expenseCategoriesV2,
+  incomeCategories,
+  expenseCategories,
   inputRef,
   refreshTransactions,
   selectedTransaction,
@@ -41,8 +41,8 @@ const AddEditDialog = ({
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
-  incomeCategoriesV2: ChoiceTypeV2[]
-  expenseCategoriesV2: ChoiceTypeV2[]
+  incomeCategories: ChoiceType[]
+  expenseCategories: ChoiceType[]
   inputRef: RefObject<HTMLInputElement | null>
   refreshTransactions: () => Promise<void>
   selectedTransaction?: NewTransactionType | null
@@ -246,9 +246,7 @@ const AddEditDialog = ({
             setTransaction={setTransaction}
             allNotes={allNotes}
             categories={
-              dialogType === "expense"
-                ? expenseCategoriesV2
-                : incomeCategoriesV2
+              dialogType === "expense" ? expenseCategories : incomeCategories
             }
             openDialog={openDialog}
             inputRef={inputRef}

@@ -1,37 +1,36 @@
-import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
+import { Stack, Typography } from "@mui/material"
+import { useMemo } from "react"
+import BudgetProgressBar from "./budget/BudgetProgressBar"
+import ColoredInfoCard from "@/components/ColoredInfoCard"
 import {
   formattedStringNumber,
   getCardColor,
   getWeekBounds,
 } from "@/utils/helperFunctions"
-import { BudgetTransactionTypeV2, BudgetTypeV2, DateType } from "@/utils/type"
-import { Stack, Typography } from "@mui/material"
-import { useMemo } from "react"
-import BudgetProgressBar from "./budget/BudgetProgressBar"
+import { BudgetType, DateType, NewTransactionType } from "@/utils/type"
 
-const RemainingBudget = ({
-  budgetCategoriesV2,
-  budgetTransactionsV2,
-  currentTheme,
+const WeeklyBudget = ({
+  transactions,
+  budgetCategories,
   currentMonth,
   currentDay,
   currentYear,
+  currentTheme,
   isLoading,
 }: {
-  budgetCategoriesV2: BudgetTypeV2[]
-  budgetTransactionsV2: BudgetTransactionTypeV2[]
-  currentTheme: string | undefined
+  transactions: NewTransactionType[]
+  budgetCategories: BudgetType[]
   currentMonth: string
   currentDay: number
   currentYear: number
+  currentTheme: string | undefined
   isLoading: boolean
 }) => {
   const positiveCardColor = getCardColor(currentTheme, "great")
   const negativeCardColor = getCardColor(currentTheme, "concerning")
-
   const { start, end } = useMemo(() => {
     return getWeekBounds({
       month: currentMonth,
@@ -49,48 +48,47 @@ const RemainingBudget = ({
     const weekStart = toDate(start)
     const weekEnd = toDate(end)
 
-    return budgetTransactionsV2.filter((entry) => {
-      if (!entry.date?.day) return false
+    const budgetCategorySet = new Set(budgetCategories.map((b) => b.category))
 
-      const entryDate = toDate(entry.date)
+    return transactions
+      .filter((entry) => entry.type === "expense")
+      .filter((entry) => budgetCategorySet.has(entry.category ?? ""))
+      .filter((entry) => {
+        if (!entry.date?.day) return false
+        const entryDate = toDate(entry.date)
+        return entryDate >= weekStart && entryDate <= weekEnd
+      })
+  }, [transactions, start, end, budgetCategories])
 
-      return entryDate >= weekStart && entryDate <= weekEnd
+  const categoryTotals = useMemo(() => {
+    const totals = new Map<string, number>()
+
+    weeklyTransactions.forEach((entry) => {
+      const current = totals.get(entry.category ?? "") ?? 0
+      const value = entry.is_return ? -entry.amount : entry.amount
+      totals.set(entry.category ?? "", current + value)
     })
-  }, [budgetTransactionsV2, start, end])
+
+    return totals
+  }, [weeklyTransactions])
 
   const remainingBudgetCategories = useMemo(() => {
-    let remaining: BudgetTypeV2[] = []
+    return budgetCategories.map((category) => {
+      const spent = categoryTotals.get(category.category) ?? 0
 
-    budgetCategoriesV2.map((category) => {
-      let budget = category.amount
-      let total = 0
-
-      weeklyTransactions.map((entry) => {
-        if (entry.category === category.category) {
-          if (entry.isReturn) {
-            total -= entry.amount
-          } else {
-            total += entry.amount
-          }
-        }
-      })
-
-      remaining.push({
+      return {
         id: category.id,
         category: category.category,
-        amount: budget - total,
-      })
+        amount: category.amount - spent,
+      }
     })
+  }, [budgetCategories, categoryTotals])
 
-    return remaining
-  }, [budgetCategoriesV2, weeklyTransactions])
-
-  const budgetTotal = budgetCategoriesV2.reduce((sum, c) => sum + c.amount, 0)
+  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
   const actualTotal = weeklyTransactions.reduce(
-    (sum, t) => sum + (t.isReturn ? -t.amount : t.amount),
+    (sum, t) => sum + (t.is_return ? -t.amount : t.amount),
     0,
   )
-
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
@@ -131,4 +129,4 @@ const RemainingBudget = ({
   )
 }
 
-export default RemainingBudget
+export default WeeklyBudget

@@ -4,15 +4,15 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceType } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
 const AddIncomeCategory = ({
-  incomeCategoriesV2,
+  incomeCategories,
   loadCategories,
 }: {
-  incomeCategoriesV2: ChoiceTypeV2[]
+  incomeCategories: ChoiceType[]
   loadCategories: () => Promise<void>
 }) => {
   const user = useUser()
@@ -59,7 +59,7 @@ const AddIncomeCategory = ({
         <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"income"}
-            items={incomeCategoriesV2}
+            items={incomeCategories}
             refresh={loadCategories}
           />
         </Box>

@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionTypeV2 } from "./type"
+import { TransactionType } from "./type"
 
 export type TwoColumnDataType = [string, string | number][]
 export type MultiColumnDataType = (string | number)[][]
@@ -42,7 +42,7 @@ export const buildTwoColumnData = (props: {
  * 
  * @returns Google chart data
  */
-export const buildMultiColumnDataV2 = ({
+export const buildMultiColumnData = ({
   firstData,
   secondData,
   selectedYear,
@@ -50,8 +50,8 @@ export const buildMultiColumnDataV2 = ({
   method,
   excludedSet
 }: {
-  firstData: TransactionTypeV2[]
-  secondData?: TransactionTypeV2[]
+  firstData: TransactionType[]
+  secondData?: TransactionType[]
   selectedYear?: number
   firstColumnTitle: string
   method: "self" | "compare"

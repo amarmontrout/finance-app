@@ -28,8 +28,8 @@ const TabPanel = ({
 }
 
 const Trends = () => {
-  const { expenseTransactionsV2 } = useTransactionContext()
-  const { excludedSet, expenseCategoriesV2 } = useCategoryContext()
+  const { expenseTransactions } = useTransactionContext()
+  const { excludedSet, expenseCategories } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
@@ -51,8 +51,8 @@ const Trends = () => {
 
       <TabPanel value={value} index={0}>
         <AverageExpenses
-          expenseTransactions={expenseTransactionsV2}
-          expenseCategories={expenseCategoriesV2}
+          expenseTransactions={expenseTransactions}
+          expenseCategories={expenseCategories}
           currentTheme={currentTheme}
           currentYear={currentYear}
           currentMonth={currentMonth}
@@ -61,9 +61,9 @@ const Trends = () => {
 
       <TabPanel value={value} index={1}>
         <Projections
-          expenseTransactions={expenseTransactionsV2}
+          expenseTransactions={expenseTransactions}
           currentTheme={currentTheme}
-          expenseCategories={expenseCategoriesV2}
+          expenseCategories={expenseCategories}
           excludedSet={excludedSet}
           currentYear={currentYear}
           currentMonth={currentMonth}

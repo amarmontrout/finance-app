@@ -5,7 +5,7 @@ import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAnnualProjection } from "@/utils/financialFunctions"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
-import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { ChoiceType, TransactionType } from "@/utils/type"
 import {
   Box,
   Divider,
@@ -24,9 +24,9 @@ const Projections = ({
   currentYear,
   currentMonth,
 }: {
-  expenseTransactions: TransactionTypeV2[]
+  expenseTransactions: TransactionType[]
   currentTheme: string | undefined
-  expenseCategories: ChoiceTypeV2[]
+  expenseCategories: ChoiceType[]
   excludedSet: Set<string>
   currentYear: number
   currentMonth: string

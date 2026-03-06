@@ -1,14 +1,14 @@
 import { dbRequestBrowser } from "../dbRequest"
-import { BudgetTransactionTypeV2, NewTransactionType, TransactionTypeV2 } from "@/utils/type"
+import { BudgetTransactionType, NewTransactionType, TransactionType } from "@/utils/type"
 
 export const saveIncome = async ({
   userId,
   body
 }: {
   userId: string
-  body: TransactionTypeV2
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "income",
     method: "POST",
@@ -26,7 +26,7 @@ export const getIncome = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "income",
     method: "GET",
@@ -45,9 +45,9 @@ export const updateIncome = async ({
 }: {
   userId: string
   rowId: number
-  body: TransactionTypeV2
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "income",
     method: "PATCH",
@@ -68,7 +68,7 @@ export const deleteIncome = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "income",
     method: "DELETE",
@@ -87,9 +87,9 @@ export const saveExpense = async ({
   body
 }: {
   userId: string
-  body: TransactionTypeV2
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "expenses",
     method: "POST",
@@ -107,7 +107,7 @@ export const getExpenses = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "expenses",
     method: "GET",
@@ -126,9 +126,9 @@ export const updateExpense = async ({
 }: {
   userId: string
   rowId: number
-  body: TransactionTypeV2
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "expenses",
     method: "PATCH",
@@ -149,7 +149,7 @@ export const deleteExpense = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<TransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "expenses",
     method: "DELETE",
@@ -168,9 +168,9 @@ export const saveBudget = async ({
   body
 }: {
   userId: string
-  body: BudgetTransactionTypeV2
+  body: BudgetTransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionType>({
     schema: "Transactions",
     table: "budget",
     method: "POST",
@@ -188,7 +188,7 @@ export const getBudget = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionType>({
     schema: "Transactions",
     table: "budget",
     method: "GET",
@@ -207,9 +207,9 @@ export const updateBudget = async ({
 }: {
   userId: string
   rowId: number
-  body: BudgetTransactionTypeV2
+  body: BudgetTransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionType>({
     schema: "Transactions",
     table: "budget",
     method: "PATCH",
@@ -230,7 +230,7 @@ export const deleteBudget = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetTransactionTypeV2>({
+  const {data, error} = await dbRequestBrowser<BudgetTransactionType>({
     schema: "Transactions",
     table: "budget",
     method: "DELETE",

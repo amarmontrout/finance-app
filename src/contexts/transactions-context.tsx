@@ -6,19 +6,19 @@ import {
 } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import {
-  BudgetTransactionTypeV2,
+  BudgetTransactionType,
   NewTransactionType,
-  TransactionTypeV2,
+  TransactionType,
 } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
-  incomeTransactionsV2: TransactionTypeV2[]
-  refreshIncomeTransactionsV2: () => void
-  expenseTransactionsV2: TransactionTypeV2[]
-  refreshExpenseTransactionsV2: () => void
-  budgetTransactionsV2: BudgetTransactionTypeV2[]
-  refreshBudgetTransactionsV2: () => void
+  incomeTransactions: TransactionType[]
+  refreshIncomeTransactions: () => void
+  expenseTransactions: TransactionType[]
+  refreshExpenseTransactions: () => void
+  budgetTransactions: BudgetTransactionType[]
+  refreshBudgetTransactions: () => void
   isLoading: boolean
   transactions: NewTransactionType[]
   refreshTransactions: () => Promise<void>
@@ -53,16 +53,16 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     setTransactions(result ?? [])
   }
   //////////////////////////////////////////////////////////////////////////////
-  const [incomeTransactionsV2, setIncomeTransactionsV2] = useState<
-    TransactionTypeV2[]
+  const [incomeTransactions, setIncomeTransactions] = useState<
+    TransactionType[]
   >([])
-  const [expenseTransactionsV2, setExpenseTransactionsV2] = useState<
-    TransactionTypeV2[]
+  const [expenseTransactions, setExpenseTransactions] = useState<
+    TransactionType[]
   >([])
-  const [budgetTransactionsV2, setBudgetTransactionsV2] = useState<
-    BudgetTransactionTypeV2[]
+  const [budgetTransactions, setBudgetTransactions] = useState<
+    BudgetTransactionType[]
   >([])
-  const refreshIncomeTransactionsV2 = async () => {
+  const refreshIncomeTransactions = async () => {
     if (!user) {
       return
     }
@@ -70,9 +70,9 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     const incomeResult = await getIncome({
       userId: user.id,
     })
-    setIncomeTransactionsV2(incomeResult ?? [])
+    setIncomeTransactions(incomeResult ?? [])
   }
-  const refreshExpenseTransactionsV2 = async () => {
+  const refreshExpenseTransactions = async () => {
     if (!user) {
       return
     }
@@ -80,9 +80,9 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     const expenseResult = await getExpenses({
       userId: user.id,
     })
-    setExpenseTransactionsV2(expenseResult ?? [])
+    setExpenseTransactions(expenseResult ?? [])
   }
-  const refreshBudgetTransactionsV2 = async () => {
+  const refreshBudgetTransactions = async () => {
     if (!user) {
       return
     }
@@ -90,16 +90,16 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     const budgetResult = await getBudget({
       userId: user.id,
     })
-    setBudgetTransactionsV2(budgetResult ?? [])
+    setBudgetTransactions(budgetResult ?? [])
   }
   const loadTransactions = async () => {
     if (!user) return
     setIsLoading(true)
     await Promise.all([
       refreshTransactions(),
-      refreshIncomeTransactionsV2(),
-      refreshExpenseTransactionsV2(),
-      refreshBudgetTransactionsV2(),
+      refreshIncomeTransactions(),
+      refreshExpenseTransactions(),
+      refreshBudgetTransactions(),
     ])
     setIsLoading(false)
   }
@@ -113,12 +113,12 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   return (
     <TransactionContext.Provider
       value={{
-        incomeTransactionsV2,
-        refreshIncomeTransactionsV2,
-        expenseTransactionsV2,
-        refreshExpenseTransactionsV2,
-        budgetTransactionsV2,
-        refreshBudgetTransactionsV2,
+        incomeTransactions,
+        refreshIncomeTransactions,
+        expenseTransactions,
+        refreshExpenseTransactions,
+        budgetTransactions,
+        refreshBudgetTransactions,
         isLoading,
         transactions,
         refreshTransactions,

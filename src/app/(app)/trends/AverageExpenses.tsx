@@ -4,7 +4,7 @@ import { darkMode, lightMode } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getAverage } from "@/utils/financialFunctions"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { ChoiceTypeV2, TransactionTypeV2 } from "@/utils/type"
+import { ChoiceType, TransactionType } from "@/utils/type"
 import { Typography } from "@mui/material"
 import { useMemo } from "react"
 
@@ -15,8 +15,8 @@ const AverageExpenses = ({
   currentYear,
   currentMonth,
 }: {
-  expenseTransactions: TransactionTypeV2[]
-  expenseCategories: ChoiceTypeV2[]
+  expenseTransactions: TransactionType[]
+  expenseCategories: ChoiceType[]
   currentTheme: string | undefined
   currentYear: number
   currentMonth: string

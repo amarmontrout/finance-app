@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { ChoiceTypeV2, HookSetter } from "@/utils/type"
+import { ChoiceType, HookSetter } from "@/utils/type"
 import {
   Box,
   FormControl,
@@ -24,7 +24,7 @@ const DateSelector = ({
   setSelectedYear: HookSetter<number>
   selectedMonth: string
   setSelectedMonth: HookSetter<string>
-  years: ChoiceTypeV2[]
+  years: ChoiceType[]
 }) => {
   return (
     <Box className="flex flex-col sm:flex-row gap-3 h-full" paddingTop={"10px"}>

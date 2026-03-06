@@ -6,13 +6,13 @@ import { accentColorSecondary } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { buildTwoColumnData, TwoColumnDataType } from "@/utils/buildChartData"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getMonthTotalV2, getYearTotalV2 } from "@/utils/getTotals"
+import { getMonthTotal, getYearTotal } from "@/utils/getTotals"
 import {
   formattedStringNumber,
   getCardColor,
   getSavingsHealthState,
 } from "@/utils/helperFunctions"
-import { TransactionTypeV2 } from "@/utils/type"
+import { TransactionType } from "@/utils/type"
 import { useMemo } from "react"
 
 // Annual logic accounts for all transactions. Need to limit to past and current months only.
@@ -26,41 +26,41 @@ const NetCashFlow = ({
   currentTheme,
   excludedSet,
 }: {
-  incomeTransactions: TransactionTypeV2[]
-  expenseTransactions: TransactionTypeV2[]
+  incomeTransactions: TransactionType[]
+  expenseTransactions: TransactionType[]
   selectedYear: number
   selectedMonth: string
   view: "annual" | "month"
   currentTheme: string | undefined
   excludedSet: Set<string>
 }) => {
-  const monthIncome = getMonthTotalV2(
+  const monthIncome = getMonthTotal(
     selectedYear,
     selectedMonth,
     incomeTransactions,
     excludedSet,
   )
-  const monthExpense = getMonthTotalV2(
+  const monthExpense = getMonthTotal(
     selectedYear,
     selectedMonth,
     expenseTransactions,
     excludedSet,
   )
   const monthNetIncome = getNetCashFlow(monthIncome, monthExpense)
-  const annualIncome = getYearTotalV2(
+  const annualIncome = getYearTotal(
     selectedYear,
     incomeTransactions,
     excludedSet,
   )
   const eachMonthNetIncome: [string, number][] = useMemo(() => {
     return MONTHS.map((month) => {
-      const incomeTotal = getMonthTotalV2(
+      const incomeTotal = getMonthTotal(
         selectedYear,
         month,
         incomeTransactions,
         excludedSet,
       )
-      const expenseTotal = getMonthTotalV2(
+      const expenseTotal = getMonthTotal(
         selectedYear,
         month,
         expenseTransactions,

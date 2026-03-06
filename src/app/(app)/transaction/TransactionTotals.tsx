@@ -1,8 +1,8 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { MONTHS } from "@/globals/globals"
-import { getYearUpToMonthTotalV2 } from "@/utils/getTotals"
+import { getYearUpToMonthTotal } from "@/utils/getTotals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { TransactionTypeV2 } from "@/utils/type"
+import { TransactionType } from "@/utils/type"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 
@@ -10,37 +10,37 @@ const TransactionTotals = ({
   selectedYear,
   currentYear,
   passedMonths,
-  incomeTransactionsV2,
-  expenseTransactionsV2,
+  incomeTransactions,
+  expenseTransactions,
   excludedSet,
 }: {
   selectedYear: number
   currentYear: number
   passedMonths: string[]
-  incomeTransactionsV2: TransactionTypeV2[]
-  expenseTransactionsV2: TransactionTypeV2[]
+  incomeTransactions: TransactionType[]
+  expenseTransactions: TransactionType[]
   excludedSet: Set<string>
 }) => {
   const yearIncomeTotal = useMemo(() => {
     const elapsedMonths = selectedYear === currentYear ? passedMonths : MONTHS
-    return getYearUpToMonthTotalV2(
+    return getYearUpToMonthTotal(
       selectedYear,
       elapsedMonths,
-      incomeTransactionsV2,
+      incomeTransactions,
       excludedSet,
     )
-  }, [selectedYear, incomeTransactionsV2, excludedSet])
+  }, [selectedYear, incomeTransactions, excludedSet])
 
   const yearExpenseTotal = useMemo(() => {
     const elapsedMonths = selectedYear === currentYear ? passedMonths : MONTHS
 
-    return getYearUpToMonthTotalV2(
+    return getYearUpToMonthTotal(
       selectedYear,
       elapsedMonths,
-      expenseTransactionsV2,
+      expenseTransactions,
       excludedSet,
     )
-  }, [selectedYear, expenseTransactionsV2, excludedSet])
+  }, [selectedYear, expenseTransactions, excludedSet])
 
   const incomeByMonth = useMemo(() => {
     const map: Record<string, number> = {}
@@ -49,14 +49,14 @@ const TransactionTotals = ({
       map[month] = 0
     }
 
-    for (const income of incomeTransactionsV2) {
+    for (const income of incomeTransactions) {
       if (income.year === selectedYear && !excludedSet.has(income.category)) {
         map[income.month] += income.amount
       }
     }
 
     return map
-  }, [incomeTransactionsV2, selectedYear, excludedSet])
+  }, [incomeTransactions, selectedYear, excludedSet])
 
   const ExpenseByMonth = useMemo(() => {
     const map: Record<string, number> = {}
@@ -65,14 +65,14 @@ const TransactionTotals = ({
       map[month] = 0
     }
 
-    for (const expense of expenseTransactionsV2) {
+    for (const expense of expenseTransactions) {
       if (expense.year === selectedYear && !excludedSet.has(expense.category)) {
         map[expense.month] += expense.amount
       }
     }
 
     return map
-  }, [expenseTransactionsV2, selectedYear, excludedSet])
+  }, [expenseTransactions, selectedYear, excludedSet])
 
   return (
     <ShowCaseCard title="">

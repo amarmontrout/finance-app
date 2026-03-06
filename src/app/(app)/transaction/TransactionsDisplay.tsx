@@ -6,7 +6,7 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
-import TransactionTypeToggle from "./TransactionTypeToggle"
+import TransactionTypeToggle from "../../../components/TransactionTypeToggle"
 import { deleteTransaction } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import {

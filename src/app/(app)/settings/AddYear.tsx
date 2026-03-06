@@ -4,15 +4,15 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceType } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
 const AddYear = ({
-  yearsV2,
+  years,
   loadCategories,
 }: {
-  yearsV2: ChoiceTypeV2[]
+  years: ChoiceType[]
   loadCategories: () => Promise<void>
 }) => {
   const user = useUser()
@@ -31,7 +31,7 @@ const AddYear = ({
   const save = async () => {
     if (!user) return
 
-    const yearExists = yearsV2.some((y) => y.name === yearsInput)
+    const yearExists = years.some((y) => y.name === yearsInput)
     if (!/^\d{4}$/.test(yearsInput) || yearExists) return
 
     setIsLoading(true)
@@ -61,14 +61,14 @@ const AddYear = ({
           isLoading={isLoading}
           isDisabled={
             !/^\d{4}$/.test(yearsInput) ||
-            yearsV2.some((y) => y.name === yearsInput)
+            years.some((y) => y.name === yearsInput)
           }
         />
         <hr style={{ width: "100%" }} />
         <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"year"}
-            items={yearsV2}
+            items={years}
             refresh={loadCategories}
           />
         </Box>

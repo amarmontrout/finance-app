@@ -1,9 +1,9 @@
 import { updateBudgetCategory } from "@/app/api/Choices/requests"
-import { MoneyInputV2 } from "@/components/MoneyInput"
+import MoneyInput from "@/components/MoneyInput"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { lightMode, darkMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { BudgetTypeV2, HookSetter } from "@/utils/type"
+import { BudgetType, HookSetter } from "@/utils/type"
 import {
   Dialog,
   DialogTitle,
@@ -14,7 +14,7 @@ import {
 } from "@mui/material"
 import { useEffect, useState } from "react"
 
-const UPDATE_BUDGET_INIT: BudgetTypeV2 = {
+const UPDATE_BUDGET_INIT: BudgetType = {
   id: 0,
   category: "",
   amount: 0,
@@ -28,14 +28,14 @@ const EditBudgetDialog = ({
 }: {
   budgetEditDialogOpen: boolean
   setBudgetEditDialogOpen: HookSetter<boolean>
-  confirmEdit: BudgetTypeV2 | null
+  confirmEdit: BudgetType | null
   currentTheme: string | undefined
 }) => {
   const { loadCategories } = useCategoryContext()
   const user = useUser()
 
   const [updateBudget, setUpdateBudget] =
-    useState<BudgetTypeV2>(UPDATE_BUDGET_INIT)
+    useState<BudgetType>(UPDATE_BUDGET_INIT)
 
   useEffect(() => {
     if (!confirmEdit) return
@@ -60,10 +60,7 @@ const EditBudgetDialog = ({
 
       <DialogContent>
         <Box padding={"10px"}>
-          <MoneyInputV2
-            value={updateBudget.amount}
-            setValue={setUpdateBudget}
-          />
+          <MoneyInput value={updateBudget.amount} setValue={setUpdateBudget} />
         </Box>
       </DialogContent>
       <DialogActions>

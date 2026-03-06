@@ -1,7 +1,7 @@
 import { updateExpenseCategory } from "@/app/api/Choices/requests"
 import { darkMode, lightMode } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
-import { ChoiceTypeV2 } from "@/utils/type"
+import { ChoiceType } from "@/utils/type"
 import {
   Button,
   Dialog,
@@ -25,13 +25,13 @@ const EditCategorySettingsDialog = ({
 }: {
   categoryDialogOpen: boolean
   setCategoryDialogOpen: React.Dispatch<React.SetStateAction<boolean>>
-  choice: ChoiceTypeV2 | null
+  choice: ChoiceType | null
   refresh: () => Promise<void>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
-  const [localChoice, setLocalChoice] = useState<ChoiceTypeV2 | null>(null)
+  const [localChoice, setLocalChoice] = useState<ChoiceType | null>(null)
 
   useEffect(() => {
     if (categoryDialogOpen && choice) {

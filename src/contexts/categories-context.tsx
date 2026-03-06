@@ -3,20 +3,18 @@ import {
   getExpenseCategories,
   getIncomeCategories,
   getYearChoices,
-  saveBudgetCategory,
-  saveExpenseCategory,
 } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
-import { getExcludedCategorySet, makeId } from "@/utils/helperFunctions"
-import { BudgetTypeV2, ChoiceTypeV2 } from "@/utils/type"
+import { getExcludedCategorySet } from "@/utils/helperFunctions"
+import { BudgetType, ChoiceType } from "@/utils/type"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 type CategoryContextType = {
   excludedSet: Set<string>
-  yearsV2: ChoiceTypeV2[]
-  incomeCategoriesV2: ChoiceTypeV2[]
-  expenseCategoriesV2: ChoiceTypeV2[]
-  budgetCategoriesV2: BudgetTypeV2[]
+  years: ChoiceType[]
+  incomeCategories: ChoiceType[]
+  expenseCategories: ChoiceType[]
+  budgetCategories: BudgetType[]
   loadCategories: () => Promise<void>
   isLoading: boolean
 }
@@ -34,21 +32,15 @@ export const useCategoryContext = () => {
 export const CategoryProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
 
-  const [yearsV2, setYearsV2] = useState<ChoiceTypeV2[]>([])
-  const [incomeCategoriesV2, setIncomeCategoriesV2] = useState<ChoiceTypeV2[]>(
-    [],
-  )
-  const [expenseCategoriesV2, setExpenseCategoriesV2] = useState<
-    ChoiceTypeV2[]
-  >([])
-  const [budgetCategoriesV2, setBudgetCategoriesV2] = useState<BudgetTypeV2[]>(
-    [],
-  )
+  const [years, setYears] = useState<ChoiceType[]>([])
+  const [incomeCategories, setIncomeCategories] = useState<ChoiceType[]>([])
+  const [expenseCategories, setExpenseCategories] = useState<ChoiceType[]>([])
+  const [budgetCategories, setBudgetCategories] = useState<BudgetType[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   const excludedSet = useMemo(
-    () => getExcludedCategorySet(expenseCategoriesV2),
-    [expenseCategoriesV2],
+    () => getExcludedCategorySet(expenseCategories),
+    [expenseCategories],
   )
 
   const setSortedState = <T,>(
@@ -71,16 +63,16 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
       ])
     setSortedState(
       yearsResult,
-      setYearsV2,
+      setYears,
       (a, b) => Number(b.name) - Number(a.name),
     )
-    setSortedState(incomeResult, setIncomeCategoriesV2, (a, b) =>
+    setSortedState(incomeResult, setIncomeCategories, (a, b) =>
       a.name.localeCompare(b.name),
     )
-    setSortedState(expenseResult, setExpenseCategoriesV2, (a, b) =>
+    setSortedState(expenseResult, setExpenseCategories, (a, b) =>
       a.name.localeCompare(b.name),
     )
-    setSortedState(budgetResult, setBudgetCategoriesV2, (a, b) =>
+    setSortedState(budgetResult, setBudgetCategories, (a, b) =>
       a.category.localeCompare(b.category),
     )
     setIsLoading(false)
@@ -96,10 +88,10 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
     <CategoryContext.Provider
       value={{
         excludedSet,
-        yearsV2,
-        incomeCategoriesV2,
-        expenseCategoriesV2,
-        budgetCategoriesV2,
+        years,
+        incomeCategories,
+        expenseCategories,
+        budgetCategories,
         loadCategories,
         isLoading,
       }}

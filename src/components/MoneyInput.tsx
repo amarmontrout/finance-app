@@ -1,7 +1,7 @@
 import { FormControl, OutlinedInput } from "@mui/material"
 import { ChangeEvent, RefObject } from "react"
 
-export const MoneyInputV2 = <T extends { amount: number }>({
+const MoneyInput = <T extends { amount: number }>({
   value,
   setValue,
   inputRef,
@@ -62,3 +62,4 @@ export const MoneyInputV2 = <T extends { amount: number }>({
     </FormControl>
   )
 }
+export default MoneyInput

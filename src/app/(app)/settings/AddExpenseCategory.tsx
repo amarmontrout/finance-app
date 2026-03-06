@@ -4,20 +4,20 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
-import { ChoiceTypeV2, HookSetter } from "@/utils/type"
+import { ChoiceType, HookSetter } from "@/utils/type"
 import { Box } from "@mui/material"
 import { ChangeEvent, useState } from "react"
 
 const AddExpenseCategory = ({
   setCategoryDialogOpen,
   setChoice,
-  expenseCategoriesV2,
+  expenseCategories,
   loadCategories,
   syncExpenseToBudget,
 }: {
   setCategoryDialogOpen: HookSetter<boolean>
-  setChoice: HookSetter<ChoiceTypeV2 | null>
-  expenseCategoriesV2: ChoiceTypeV2[]
+  setChoice: HookSetter<ChoiceType | null>
+  expenseCategories: ChoiceType[]
   loadCategories: () => Promise<void>
   syncExpenseToBudget: (expense: string, userId: string) => Promise<void>
 }) => {
@@ -67,7 +67,7 @@ const AddExpenseCategory = ({
         <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
           <EditDeleteListItem
             type={"expense"}
-            items={expenseCategoriesV2}
+            items={expenseCategories}
             refresh={loadCategories}
             setCategoryDialogOpen={setCategoryDialogOpen}
             setChoice={setChoice}

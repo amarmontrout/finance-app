@@ -18,8 +18,8 @@ import {
 } from "@mui/material"
 import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
-import { MoneyInputV2 } from "@/components/MoneyInput"
-import { BudgetTypeV2, HookSetter } from "@/utils/type"
+import MoneyInput from "@/components/MoneyInput"
+import { BudgetType, HookSetter } from "@/utils/type"
 import { formattedStringNumber, makeId } from "@/utils/helperFunctions"
 import {
   deleteBudgetCategory,
@@ -33,10 +33,10 @@ const EditDeleteButton = ({
   setBudgetEditDialogOpen,
   setConfirmEdit,
 }: {
-  selection: BudgetTypeV2
-  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+  selection: BudgetType
+  setConfirmSelection: HookSetter<BudgetType | null>
   setBudgetEditDialogOpen: HookSetter<boolean>
-  setConfirmEdit: HookSetter<BudgetTypeV2 | null>
+  setConfirmEdit: HookSetter<BudgetType | null>
 }) => {
   return (
     <Stack direction={"row"} gap={2}>
@@ -71,7 +71,7 @@ const ConfirmCancel = ({
   setConfirmSelection,
 }: {
   handleDeleteItem: () => Promise<void>
-  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+  setConfirmSelection: HookSetter<BudgetType | null>
 }) => {
   return (
     <Stack direction={"row"} gap={2}>
@@ -101,38 +101,38 @@ const AddBudget = ({
   setConfirmSelection,
   setBudgetEditDialogOpen,
   setConfirmEdit,
-  budgetCategoriesV2,
+  budgetCategories,
   loadCategories,
   syncBudgetToExpense,
 }: {
-  confirmSelection: BudgetTypeV2 | null
-  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+  confirmSelection: BudgetType | null
+  setConfirmSelection: HookSetter<BudgetType | null>
   setBudgetEditDialogOpen: HookSetter<boolean>
-  setConfirmEdit: HookSetter<BudgetTypeV2 | null>
-  budgetCategoriesV2: BudgetTypeV2[]
+  setConfirmEdit: HookSetter<BudgetType | null>
+  budgetCategories: BudgetType[]
   loadCategories: () => Promise<void>
   syncBudgetToExpense: (
-    budgetCategory: BudgetTypeV2,
+    budgetCategory: BudgetType,
     userId: string,
   ) => Promise<void>
 }) => {
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
-  const createBudgetInit = (): BudgetTypeV2 => ({
+  const createBudgetInit = (): BudgetType => ({
     id: makeId(),
     category: "",
     amount: 0,
   })
 
   const [budgetCategory, setBudgetCategory] =
-    useState<BudgetTypeV2>(createBudgetInit())
+    useState<BudgetType>(createBudgetInit())
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const listItemColor =
     currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
-  const budgetTotal = budgetCategoriesV2.reduce((sum, c) => sum + c.amount, 0)
-  const categoryExists = budgetCategoriesV2.some(
+  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
+  const categoryExists = budgetCategories.some(
     (c) => c.category.toLowerCase() === budgetCategory.category.toLowerCase(),
   )
 
@@ -201,7 +201,7 @@ const AddBudget = ({
                 />
               </FormControl>
 
-              <MoneyInputV2
+              <MoneyInput
                 value={budgetCategory.amount}
                 setValue={setBudgetCategory}
               />
@@ -228,7 +228,7 @@ const AddBudget = ({
 
           <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
             <List className="flex flex-col gap-2">
-              {budgetCategoriesV2
+              {budgetCategories
                 .slice()
                 .sort((a, b) => a.category.localeCompare(b.category))
                 .map((budget) => {

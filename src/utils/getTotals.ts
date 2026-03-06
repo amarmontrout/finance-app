@@ -1,8 +1,8 @@
-import { TransactionTypeV2 } from "./type"
+import { TransactionType } from "./type"
 
-export const getYearTotalV2 = (
+export const getYearTotal = (
   year: number,
-  transactions: TransactionTypeV2[],
+  transactions: TransactionType[],
   excludedCategories: Set<string>
 ): number => {
   let total = 0
@@ -16,10 +16,10 @@ export const getYearTotalV2 = (
   return total
 }
 
-export const getYearUpToMonthTotalV2 = (
+export const getYearUpToMonthTotal = (
   year: number, 
   passedMonths: string[],
-  transactions: TransactionTypeV2[],
+  transactions: TransactionType[],
   excludedCategories: Set<string>
 ): number => {
   let total = 0
@@ -33,10 +33,10 @@ export const getYearUpToMonthTotalV2 = (
   return total
 }
 
-export const getMonthTotalV2 = (
+export const getMonthTotal = (
   year: number, 
   month: string, 
-  transactions: TransactionTypeV2[],
+  transactions: TransactionType[],
   excludedCategories: Set<string>
 ): number => {
   let total = 0
@@ -50,9 +50,9 @@ export const getMonthTotalV2 = (
   return total
 }
 
-export const getAnnualCategoryTotalsV2 = (
+export const getAnnualCategoryTotals = (
   year: number,
-  transactions: TransactionTypeV2[]
+  transactions: TransactionType[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
   if (!transactions) {
@@ -71,10 +71,10 @@ export const getAnnualCategoryTotalsV2 = (
   return pieChartData
 }
 
-export const getMonthCategoryTotalsV2 = (
+export const getMonthCategoryTotals = (
   year: number, 
   month: string, 
-  transactions: TransactionTypeV2[]
+  transactions: TransactionType[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
   if (!transactions) return [["Category", "Total"]]

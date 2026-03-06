@@ -1,8 +1,8 @@
-import { MoneyInputV2 } from "@/components/MoneyInput"
+import MoneyInput from "@/components/MoneyInput"
 import { MONTHS } from "@/globals/globals"
 import {
   HookSetter,
-  ChoiceTypeV2,
+  ChoiceType,
   NewTransactionType,
   DateType,
 } from "@/utils/type"
@@ -18,7 +18,7 @@ import {
   Checkbox,
 } from "@mui/material"
 import { RefObject, useEffect, useMemo } from "react"
-import { getDaysInMonth } from "./functions"
+import { getDaysInMonth } from "../app/(app)/experimental/functions"
 
 const MENU_PROPS = {
   PaperProps: {
@@ -40,7 +40,7 @@ const NewTransactionForm = ({
   transaction: NewTransactionType
   setTransaction: HookSetter<NewTransactionType>
   allNotes: string[]
-  categories: ChoiceTypeV2[]
+  categories: ChoiceType[]
   openDialog: boolean
   inputRef: RefObject<HTMLInputElement | null>
   currentYear: number
@@ -93,7 +93,7 @@ const NewTransactionForm = ({
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={2} margin={"0 auto"}>
       {/* Money input */}
       {openDialog && (
-        <MoneyInputV2
+        <MoneyInput
           value={transaction.amount}
           setValue={setTransaction}
           inputRef={inputRef}

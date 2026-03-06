@@ -2,7 +2,7 @@ import { AlertColor } from "@mui/material"
 
 export type HookSetter<T> = React.Dispatch<React.SetStateAction<T>>
 
-export type TransactionTypeV2 = {
+export type TransactionType = {
   id: number,
   month: string,
   year: number,
@@ -11,7 +11,7 @@ export type TransactionTypeV2 = {
   isPaid?: boolean
 }
 
-export type BudgetTransactionTypeV2 = {
+export type BudgetTransactionType = {
   id: number,
   category: string,
   note: string,
@@ -20,13 +20,13 @@ export type BudgetTransactionTypeV2 = {
   date: DateType
 }
 
-export type BudgetTypeV2 = {
+export type BudgetType = {
   id: number,
   category: string,
   amount: number
 }
 
-export type ChoiceTypeV2 = {
+export type ChoiceType = {
   id: number,
   name: string
   isExcluded?: boolean

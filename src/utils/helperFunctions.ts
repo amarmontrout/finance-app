@@ -1,6 +1,6 @@
 import { MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { ChoiceTypeV2, DateType, WeekType } from "./type"
+import { ChoiceType, DateType, WeekType } from "./type"
 
 /**
  * This helper function gets the current year and month.
@@ -153,7 +153,7 @@ export const getPreviousMonthInfo = (year: number, month: string) => {
 }
 
 export const getExcludedCategorySet = (
-  categories: ChoiceTypeV2[]
+  categories: ChoiceType[]
 ): Set<string> =>
   new Set(
     categories

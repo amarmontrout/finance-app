@@ -6,7 +6,7 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
-import BudgetProgressBar from "../budget/BudgetProgressBar"
+import BudgetProgressBar from "./BudgetProgressBar"
 import {
   NewTransactionType,
   DateType,
@@ -36,7 +36,7 @@ const BudgetTransactions = ({
   isLoading: boolean
   week: WeekType
 }) => {
-  const { budgetCategoriesV2 } = useCategoryContext()
+  const { budgetCategories } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
@@ -61,7 +61,7 @@ const BudgetTransactions = ({
   }, [transactions, week.start, week.end])
 
   const groupedTransactions = useMemo(() => {
-    const allowedCategories = new Set(budgetCategoriesV2.map((c) => c.category))
+    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
 
     return expenseTransactions.reduce<Record<string, NewTransactionType[]>>(
       (acc, transaction) => {
@@ -79,26 +79,26 @@ const BudgetTransactions = ({
       },
       {},
     )
-  }, [expenseTransactions, budgetCategoriesV2])
+  }, [expenseTransactions, budgetCategories])
 
   const budgetLookup = useMemo(() => {
-    return budgetCategoriesV2.reduce(
+    return budgetCategories.reduce(
       (acc, budget) => {
         acc[budget.category] = budget.amount
         return acc
       },
       {} as Record<string, number>,
     )
-  }, [budgetCategoriesV2])
+  }, [budgetCategories])
 
-  const budgetTotal = budgetCategoriesV2.reduce((sum, c) => sum + c.amount, 0)
+  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
   const actualTotal = useMemo(() => {
-    const allowedCategories = new Set(budgetCategoriesV2.map((c) => c.category))
+    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
 
     return expenseTransactions
       .filter((entry) => allowedCategories.has(entry.category))
       .reduce((sum, t) => sum + (t.is_return ? -t.amount : t.amount), 0)
-  }, [expenseTransactions, budgetCategoriesV2])
+  }, [expenseTransactions, budgetCategories])
   const netTotal = budgetTotal - actualTotal
 
   const handleDeleteEntry = async (id: number) => {

@@ -8,20 +8,20 @@ import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { accentColorPrimary, lightMode } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
 import {
-  buildMultiColumnDataV2,
+  buildMultiColumnData,
   buildTwoColumnData,
   TwoColumnDataType,
 } from "@/utils/buildChartData"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import { SelectedDateType } from "@/utils/type"
 import { MONTHS } from "@/globals/globals"
-import { getMonthTotalV2 } from "@/utils/getTotals"
+import { getMonthTotal } from "@/utils/getTotals"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import LoadingCircle from "@/components/LoadingCircle"
 
 const Insights = () => {
-  const { incomeTransactionsV2, expenseTransactionsV2, isLoading } =
+  const { incomeTransactions, expenseTransactions, isLoading } =
     useTransactionContext()
   const { excludedSet } = useCategoryContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
@@ -36,44 +36,34 @@ const Insights = () => {
   const [type, setType] = useState<"incomeExpense" | "net">("incomeExpense")
 
   const IncomeExpenseData = useMemo(() => {
-    return buildMultiColumnDataV2({
-      firstData: incomeTransactionsV2,
-      secondData: expenseTransactionsV2,
+    return buildMultiColumnData({
+      firstData: incomeTransactions,
+      secondData: expenseTransactions,
       selectedYear: selectedDate.year,
       firstColumnTitle: "Month",
       method: "compare",
       excludedSet: excludedSet,
     })
-  }, [
-    incomeTransactionsV2,
-    expenseTransactionsV2,
-    excludedSet,
-    selectedDate.year,
-  ])
+  }, [incomeTransactions, expenseTransactions, excludedSet, selectedDate.year])
 
   const eachMonthNetIncome: [string, number][] = useMemo(() => {
     return MONTHS.map((month) => {
-      const incomeTotal = getMonthTotalV2(
+      const incomeTotal = getMonthTotal(
         selectedDate.year,
         month,
-        incomeTransactionsV2,
+        incomeTransactions,
         excludedSet,
       )
-      const expenseTotal = getMonthTotalV2(
+      const expenseTotal = getMonthTotal(
         selectedDate.year,
         month,
-        expenseTransactionsV2,
+        expenseTransactions,
         excludedSet,
       )
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, net]
     })
-  }, [
-    selectedDate.year,
-    incomeTransactionsV2,
-    expenseTransactionsV2,
-    excludedSet,
-  ])
+  }, [selectedDate.year, incomeTransactions, expenseTransactions, excludedSet])
 
   const NetChartData: TwoColumnDataType = useMemo(() => {
     return buildTwoColumnData({
@@ -155,8 +145,8 @@ const Insights = () => {
       </ShowCaseCard>
 
       {/* <NetCashFlow
-        incomeTransactions={incomeTransactionsV2}
-        expenseTransactions={expenseTransactionsV2}
+        incomeTransactions={incomeTransactions}
+        expenseTransactions={expenseTransactions}
         selectedYear={selectedDate.year}
         selectedMonth={selectedDate.month}
         view={view}
@@ -164,8 +154,8 @@ const Insights = () => {
         excludedSet={excludedSet}
       />
       <SavingsRate
-        incomeTransactions={incomeTransactionsV2}
-        expenseTransactions={expenseTransactionsV2}
+        incomeTransactions={incomeTransactions}
+        expenseTransactions={expenseTransactions}
         selectedYear={selectedDate.year}
         selectedMonth={selectedDate.month}
         view={view}

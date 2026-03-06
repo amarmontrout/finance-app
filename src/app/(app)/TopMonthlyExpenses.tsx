@@ -2,38 +2,32 @@ import ColoredInfoCard from "@/components/ColoredInfoCard"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { getMonthCategoryTotalsV2 } from "@/utils/getTotals"
-import {
-  formattedStringNumber,
-  getCardColor,
-  getCurrentDateInfo,
-} from "@/utils/helperFunctions"
-import { TransactionTypeV2 } from "@/utils/type"
+import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
 import { Stack, Typography } from "@mui/material"
-import { useTheme } from "next-themes"
 import { useMemo } from "react"
+import { getMonthCategoryTotals } from "./experimental/functions"
+import { NewTransactionType } from "@/utils/type"
 
-const TopThreeExpenses = ({
-  expenseTransactionsV2,
-  excludedSet,
+const TopMonthlyExpenses = ({
+  transactions,
+  currentMonth,
+  currentYear,
+  currentTheme,
   isLoading,
 }: {
-  expenseTransactionsV2: TransactionTypeV2[]
-  excludedSet: Set<string>
+  transactions: NewTransactionType[]
+  currentMonth: string
+  currentYear: number
+  currentTheme: string | undefined
   isLoading: boolean
 }) => {
-  const { theme: currentTheme } = useTheme()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
-
   const defaultCardColor = getCardColor(currentTheme, "default")
-
   const topThreeData = useMemo(() => {
-    const monthExpenseCategoryTotals = getMonthCategoryTotalsV2(
+    const monthExpenseCategoryTotals = getMonthCategoryTotals(
       currentYear,
       currentMonth,
-      expenseTransactionsV2,
+      transactions,
     )
-
     if (!monthExpenseCategoryTotals || monthExpenseCategoryTotals.length <= 1) {
       return {
         topThree: [] as [string, number][],
@@ -42,19 +36,16 @@ const TopThreeExpenses = ({
         topThreeTotalPercent: 0,
       }
     }
-
     const topThree = monthExpenseCategoryTotals
       .slice(1)
       .sort((a, b) => Number(b[1]) - Number(a[1]))
       .slice(0, 3) as [string, number][]
-
     const topThreeSum = topThree.reduce((sum, [, amount]) => sum + amount, 0)
-
     return {
       topThree,
       topThreeSum,
     }
-  }, [currentYear, currentMonth, expenseTransactionsV2, excludedSet])
+  }, [currentYear, currentMonth, transactions])
 
   const { topThree, topThreeSum } = topThreeData
 
@@ -89,4 +80,4 @@ const TopThreeExpenses = ({
   )
 }
 
-export default TopThreeExpenses
+export default TopMonthlyExpenses

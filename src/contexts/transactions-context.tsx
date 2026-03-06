@@ -40,19 +40,8 @@ export const useTransactionContext = () => {
 
 export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
-
   const [transactions, setTransactions] = useState<NewTransactionType[]>([])
-  const [incomeTransactionsV2, setIncomeTransactionsV2] = useState<
-    TransactionTypeV2[]
-  >([])
-  const [expenseTransactionsV2, setExpenseTransactionsV2] = useState<
-    TransactionTypeV2[]
-  >([])
-  const [budgetTransactionsV2, setBudgetTransactionsV2] = useState<
-    BudgetTransactionTypeV2[]
-  >([])
   const [isLoading, setIsLoading] = useState(true)
-
   const refreshTransactions = async () => {
     if (!user) {
       return
@@ -63,7 +52,16 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     })
     setTransactions(result ?? [])
   }
-
+  //////////////////////////////////////////////////////////////////////////////
+  const [incomeTransactionsV2, setIncomeTransactionsV2] = useState<
+    TransactionTypeV2[]
+  >([])
+  const [expenseTransactionsV2, setExpenseTransactionsV2] = useState<
+    TransactionTypeV2[]
+  >([])
+  const [budgetTransactionsV2, setBudgetTransactionsV2] = useState<
+    BudgetTransactionTypeV2[]
+  >([])
   const refreshIncomeTransactionsV2 = async () => {
     if (!user) {
       return
@@ -74,7 +72,6 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     })
     setIncomeTransactionsV2(incomeResult ?? [])
   }
-
   const refreshExpenseTransactionsV2 = async () => {
     if (!user) {
       return
@@ -85,7 +82,6 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     })
     setExpenseTransactionsV2(expenseResult ?? [])
   }
-
   const refreshBudgetTransactionsV2 = async () => {
     if (!user) {
       return
@@ -96,26 +92,22 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     })
     setBudgetTransactionsV2(budgetResult ?? [])
   }
+  const loadTransactions = async () => {
+    if (!user) return
+    setIsLoading(true)
+    await Promise.all([
+      refreshTransactions(),
+      refreshIncomeTransactionsV2(),
+      refreshExpenseTransactionsV2(),
+      refreshBudgetTransactionsV2(),
+    ])
+    setIsLoading(false)
+  }
 
   useEffect(() => {
-    if (!user) {
-      return
+    if (user) {
+      loadTransactions()
     }
-
-    const load = async () => {
-      setIsLoading(true)
-
-      await Promise.all([
-        refreshTransactions(),
-        refreshIncomeTransactionsV2(),
-        refreshExpenseTransactionsV2(),
-        refreshBudgetTransactionsV2(),
-      ])
-
-      setIsLoading(false)
-    }
-
-    load()
   }, [user])
 
   return (

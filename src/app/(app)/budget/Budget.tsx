@@ -11,11 +11,13 @@ import WeekSelector from "@/components/WeekSelector"
 import AlertToast from "@/components/AlertToast"
 import BudgetTransactions from "./BudgetTransactions"
 import AddEditDialog from "../../../components/AddEditDialog"
+import WeekTotalBudget from "./WeekTotalBudget"
 
 const Budget = () => {
   const { isLoading, transactions, refreshTransactions } =
     useTransactionContext()
-  const { incomeCategories, expenseCategories } = useCategoryContext()
+  const { incomeCategories, expenseCategories, budgetCategories } =
+    useCategoryContext()
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
@@ -46,11 +48,18 @@ const Budget = () => {
       <BudgetTransactions
         transactions={transactions}
         refreshTransactions={refreshTransactions}
+        budgetCategories={budgetCategories}
         setSelectedTransaction={setSelectedTransaction}
         setAlertToast={setAlertToast}
         setOpenDialog={setOpenDialog}
         isLoading={isLoading}
         week={week}
+      />
+      <WeekTotalBudget
+        transactions={transactions}
+        week={week}
+        isLoading={isLoading}
+        budgetCategories={budgetCategories}
       />
 
       <AddEditDialog

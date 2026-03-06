@@ -1,7 +1,6 @@
 import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { accentColorPrimary } from "@/globals/colors"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useMemo, useState } from "react"
@@ -13,8 +12,8 @@ import {
   AlertToastType,
   HookSetter,
   WeekType,
+  BudgetType,
 } from "@/utils/type"
-import { useCategoryContext } from "@/contexts/categories-context"
 import { useTheme } from "next-themes"
 import { useUser } from "@/hooks/useUser"
 import { deleteTransaction } from "@/app/api/Transactions/requests"
@@ -22,6 +21,7 @@ import { deleteTransaction } from "@/app/api/Transactions/requests"
 const BudgetTransactions = ({
   transactions,
   refreshTransactions,
+  budgetCategories,
   setSelectedTransaction,
   setAlertToast,
   setOpenDialog,
@@ -30,13 +30,13 @@ const BudgetTransactions = ({
 }: {
   transactions: NewTransactionType[]
   refreshTransactions: () => Promise<void>
+  budgetCategories: BudgetType[]
   setSelectedTransaction: HookSetter<NewTransactionType | null>
   setAlertToast: HookSetter<AlertToastType | undefined>
   setOpenDialog: HookSetter<boolean>
   isLoading: boolean
   week: WeekType
 }) => {
-  const { budgetCategories } = useCategoryContext()
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
@@ -90,16 +90,6 @@ const BudgetTransactions = ({
       {} as Record<string, number>,
     )
   }, [budgetCategories])
-
-  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
-  const actualTotal = useMemo(() => {
-    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
-
-    return expenseTransactions
-      .filter((entry) => allowedCategories.has(entry.category))
-      .reduce((sum, t) => sum + (t.is_return ? -t.amount : t.amount), 0)
-  }, [expenseTransactions, budgetCategories])
-  const netTotal = budgetTotal - actualTotal
 
   const handleDeleteEntry = async (id: number) => {
     if (!user) return
@@ -199,23 +189,6 @@ const BudgetTransactions = ({
                     </Stack>
                   )
                 })}
-
-              <Stack spacing={1.5}>
-                <hr style={{ border: `1px solid ${accentColorPrimary}` }} />
-
-                <BudgetProgressBar
-                  label={"Week Total"}
-                  actual={actualTotal}
-                  budget={budgetTotal}
-                />
-
-                {expenseTransactions.length !== 0 && (
-                  <Typography variant={"h6"} textAlign={"left"}>
-                    {`${netTotal < 0 ? "Overspending" : "Saving"}
-                    $${formattedStringNumber(Math.abs(netTotal))} for the week`}
-                  </Typography>
-                )}
-              </Stack>
             </Stack>
           )}
         </Stack>

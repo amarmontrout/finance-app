@@ -1,58 +1,104 @@
-import { saveYearChoice } from "@/app/api/Choices/requests"
-import EditDeleteListItem from "@/components/EditDeleteListItem"
+import { deleteYearChoice, saveYearChoice } from "@/app/api/Choices/requests"
+import ListItemSwipe from "@/components/ListItemSwipe"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import SimpleForm from "@/components/SimpleForm"
 import { useUser } from "@/hooks/useUser"
 import { makeId } from "@/utils/helperFunctions"
-import { ChoiceType } from "@/utils/type"
-import { Box } from "@mui/material"
+import { AlertToastType, ChoiceType, HookSetter } from "@/utils/type"
+import { Box, Collapse, Stack } from "@mui/material"
+import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
+import { TransitionGroup } from "react-transition-group"
 
 const AddYear = ({
   years,
   loadCategories,
+  setAlertToast,
 }: {
   years: ChoiceType[]
   loadCategories: () => Promise<void>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const user = useUser()
+  const { theme: currentTheme } = useTheme()
 
   const [yearsInput, setYearsInput] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [confirmSelection, setConfirmSelection] = useState<number | null>(null)
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { value } = e.target
-
     setYearsInput(value)
+  }
+
+  const handleDeleteEntry = async (id: number) => {
+    if (!user || !id) return
+    try {
+      await deleteYearChoice({
+        userId: user.id,
+        rowId: id,
+      })
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Year deleted successfully!",
+      })
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Year could not be deleted.",
+      })
+    } finally {
+      await loadCategories()
+    }
   }
 
   const save = async () => {
     if (!user) return
-
     const yearExists = years.some((y) => y.name === yearsInput)
     if (!/^\d{4}$/.test(yearsInput) || yearExists) return
-
     setIsLoading(true)
-    await saveYearChoice({
-      userId: user.id,
-      body: { id: makeId(), name: yearsInput },
-    })
-    await loadCategories()
-    setYearsInput("")
-    setIsLoading(false)
+    try {
+      await saveYearChoice({
+        userId: user.id,
+        body: { id: makeId(), name: yearsInput },
+      })
+
+      setAlertToast({
+        open: true,
+        onClose: () => setAlertToast(undefined),
+        severity: "success",
+        message: "Year saved successfully!",
+      })
+    } catch (error) {
+      console.error(error)
+      setAlertToast({
+        open: true,
+        onClose: () => setAlertToast(undefined),
+        severity: "error",
+        message: "Year could not be saved.",
+      })
+    } finally {
+      await loadCategories()
+      setYearsInput("")
+      setIsLoading(false)
+      setIsLoading(false)
+    }
   }
 
   return (
     <ShowCaseCard title={""}>
-      <Box
-        display={"flex"}
-        flexDirection={"column"}
-        height={"325px"}
-        overflow={"hidden"}
-        paddingTop={"1px"}
-      >
+      <Stack height={"325px"} spacing={1}>
         <SimpleForm
           label={"Add A Year"}
           value={yearsInput}
@@ -64,15 +110,41 @@ const AddYear = ({
             years.some((y) => y.name === yearsInput)
           }
         />
+
         <hr style={{ width: "100%" }} />
-        <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
-          <EditDeleteListItem
-            type={"year"}
-            items={years}
-            refresh={loadCategories}
-          />
-        </Box>
-      </Box>
+
+        <Stack spacing={1.5} overflow={"auto"}>
+          <TransitionGroup>
+            {years.map((entry, index) => {
+              const isLast = index === years.length - 1
+              return (
+                <Collapse key={entry.id}>
+                  <Box mb={isLast ? 0 : 1}>
+                    <ListItemSwipe
+                      mainTitle={entry.name}
+                      secondaryTitle={""}
+                      amount={""}
+                      amountColor={"inherit"}
+                      buttonCondition={confirmSelection === entry.id}
+                      onDelete={async () => {
+                        handleDeleteEntry(entry.id)
+                      }}
+                      onSetDelete={() => {
+                        setConfirmSelection(entry.id)
+                      }}
+                      onCancelDelete={() => {
+                        setConfirmSelection(null)
+                      }}
+                      onEdit={() => {}}
+                      currentTheme={currentTheme}
+                    />
+                  </Box>
+                </Collapse>
+              )
+            })}
+          </TransitionGroup>
+        </Stack>
+      </Stack>
     </ShowCaseCard>
   )
 }

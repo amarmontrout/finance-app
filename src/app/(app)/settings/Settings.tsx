@@ -10,13 +10,14 @@ import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
 import AddBudget from "./AddBudget"
 import EditBudgetDialog from "./EditBudgetDialog"
-import { BudgetType, ChoiceType } from "@/utils/type"
+import { AlertToastType, BudgetType, ChoiceType } from "@/utils/type"
 import { accentColorPrimarySelected } from "@/globals/colors"
 import {
   saveBudgetCategory,
   saveExpenseCategory,
 } from "@/app/api/Choices/requests"
 import { makeId } from "@/utils/helperFunctions"
+import AlertToast from "@/components/AlertToast"
 
 const Settings = () => {
   const {
@@ -36,6 +37,7 @@ const Settings = () => {
     null,
   )
   const [confirmEdit, setConfirmEdit] = useState<BudgetType | null>(null)
+  const [alertToast, setAlertToast] = useState<AlertToastType>()
 
   const syncExpenseToBudget = async (expenseName: string, userId: string) => {
     const exists = budgetCategories.some((b) => b.category === expenseName)
@@ -86,11 +88,16 @@ const Settings = () => {
       />
 
       <Box className="flex flex-col xl:flex-row gap-5 h-full">
-        <AddYear years={years} loadCategories={loadCategories} />
+        <AddYear
+          years={years}
+          loadCategories={loadCategories}
+          setAlertToast={setAlertToast}
+        />
 
         <AddIncomeCategory
           incomeCategories={incomeCategories}
           loadCategories={loadCategories}
+          setAlertToast={setAlertToast}
         />
 
         <AddExpenseCategory
@@ -127,6 +134,8 @@ const Settings = () => {
         confirmEdit={confirmEdit}
         currentTheme={currentTheme}
       />
+
+      <AlertToast alertToast={alertToast} />
     </Box>
   )
 }

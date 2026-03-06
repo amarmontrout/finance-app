@@ -108,7 +108,7 @@ const AddBudget = ({
           <Typography>Weekly Budget</Typography>
           <Typography>{`$${formattedStringNumber(budgetTotal)} Total`}</Typography>
         </Stack>
-        <Stack height={"325px"} spacing={1}>
+        <Stack height={"409px"} spacing={1}>
           <Stack direction={"column"} spacing={1}>
             <Stack direction={"row"} height={"100%"}>
               <FormControl fullWidth>

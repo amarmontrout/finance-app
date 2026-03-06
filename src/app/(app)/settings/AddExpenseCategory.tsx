@@ -108,7 +108,7 @@ const AddExpenseCategory = ({
 
   return (
     <ShowCaseCard title={""}>
-      <Stack height={"325px"} spacing={1}>
+      <Stack height={"406px"} spacing={1}>
         <SimpleForm
           label={"Add An Expense Category"}
           value={expenseCategoriesInput}

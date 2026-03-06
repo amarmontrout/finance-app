@@ -93,7 +93,7 @@ const AddIncomeCategory = ({
 
   return (
     <ShowCaseCard title={""}>
-      <Stack height={"325px"} spacing={1}>
+      <Stack height={"406px"} spacing={1}>
         <SimpleForm
           label={"Add An Income Category"}
           value={incomeCategoriesInput}

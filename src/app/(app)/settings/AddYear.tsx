@@ -20,19 +20,28 @@ const AddYear = ({
   const [yearsInput, setYearsInput] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { value } = e.target
+
+    setYearsInput(value)
+  }
+
   const save = async () => {
     if (!user) return
+
+    const yearExists = yearsV2.some((y) => y.name === yearsInput)
+    if (!/^\d{4}$/.test(yearsInput) || yearExists) return
+
     setIsLoading(true)
     await saveYearChoice({
       userId: user.id,
-      body: {
-        id: makeId(),
-        name: yearsInput,
-      },
+      body: { id: makeId(), name: yearsInput },
     })
-    setIsLoading(false)
-    loadCategories()
+    await loadCategories()
     setYearsInput("")
+    setIsLoading(false)
   }
 
   return (
@@ -47,13 +56,13 @@ const AddYear = ({
         <SimpleForm
           label={"Add A Year"}
           value={yearsInput}
-          onChange={(
-            e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-          ) => {
-            setYearsInput(e.target.value)
-          }}
+          onChange={handleChange}
           onSubmit={save}
           isLoading={isLoading}
+          isDisabled={
+            !/^\d{4}$/.test(yearsInput) ||
+            yearsV2.some((y) => y.name === yearsInput)
+          }
         />
         <hr style={{ width: "100%" }} />
         <Box flex={1} overflow={"auto"} paddingRight={"10px"}>

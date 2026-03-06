@@ -66,9 +66,9 @@ export const Navbar = () => {
           }}
         />
 
-        <Typography className="hidden md:flex" variant={"h5"}>
+        {/* <Typography className="hidden md:flex" variant={"h5"}>
           Transactions
-        </Typography>
+        </Typography> */}
         {NAV_TRANSACTIONS.map((item) => {
           return (
             <PageLink
@@ -79,7 +79,7 @@ export const Navbar = () => {
           )
         })}
 
-        <Divider
+        {/* <Divider
           orientation="horizontal"
           sx={{
             borderColor:
@@ -98,7 +98,7 @@ export const Navbar = () => {
               key={item.name}
             />
           )
-        })}
+        })} */}
       </Stack>
     </Stack>
   )

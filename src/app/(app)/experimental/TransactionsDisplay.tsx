@@ -45,8 +45,8 @@ const TransactionsDisplay = ({
   const [type, setType] = useState<"income" | "expense">("income")
   const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
 
-  const filteredTransactions = useMemo(() => {
-    return transactions.filter((t) => {
+  const { filteredTransactions, total } = useMemo(() => {
+    const filtered = transactions.filter((t) => {
       const matchesType = t.type === type
       const matchesMonth = t.date.month === selectedDate.month
       const matchesYear = t.date.year === selectedDate.year
@@ -60,11 +60,9 @@ const TransactionsDisplay = ({
 
       return matchesType && matchesMonth && matchesYear && matchesView
     })
+    const totalAmount = filtered.reduce((sum, t) => sum + t.amount, 0)
+    return { filteredTransactions: filtered, total: totalAmount }
   }, [transactions, type, selectedDate, view])
-
-  const total = useMemo(() => {
-    return filteredTransactions.reduce((sum, t) => sum + t.amount, 0)
-  }, [filteredTransactions])
 
   const visibleTransactions = useMemo(() => {
     return [...filteredTransactions].sort((a, b) =>
@@ -74,32 +72,22 @@ const TransactionsDisplay = ({
     )
   }, [filteredTransactions])
 
+  const showToast = (severity: "success" | "error", message: string) =>
+    setAlertToast({
+      open: true,
+      severity,
+      message,
+      onClose: () => setAlertToast(undefined),
+    })
+
   const handleDeleteTransaction = async (rowId: number) => {
     if (!user || !rowId) return
 
     try {
-      await deleteTransaction({
-        userId: user.id,
-        rowId: rowId,
-      })
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "success",
-        message: "Transaction deleted successfully!",
-      })
-    } catch (error) {
-      console.error(error)
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "error",
-        message: "Transaction could not be deleted.",
-      })
+      await deleteTransaction({ userId: user.id, rowId })
+      showToast("success", "Transaction deleted successfully!")
+    } catch {
+      showToast("error", "Transaction could not be deleted.")
     } finally {
       refreshTransactions()
       setSelectedTransaction(null)

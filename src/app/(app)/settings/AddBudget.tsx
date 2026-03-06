@@ -20,17 +20,80 @@ import { useTheme } from "next-themes"
 import { ChangeEvent, useState } from "react"
 import { MoneyInputV2 } from "@/components/MoneyInput"
 import { BudgetTypeV2, HookSetter } from "@/utils/type"
-import { makeId } from "@/utils/helperFunctions"
+import { formattedStringNumber, makeId } from "@/utils/helperFunctions"
 import {
   deleteBudgetCategory,
   saveBudgetCategory,
 } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
 
-const BUDGET_INIT: BudgetTypeV2 = {
-  id: makeId(),
-  category: "",
-  amount: 0,
+const EditDeleteButton = ({
+  selection,
+  setConfirmSelection,
+  setBudgetEditDialogOpen,
+  setConfirmEdit,
+}: {
+  selection: BudgetTypeV2
+  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+  setBudgetEditDialogOpen: HookSetter<boolean>
+  setConfirmEdit: HookSetter<BudgetTypeV2 | null>
+}) => {
+  return (
+    <Stack direction={"row"} gap={2}>
+      {
+        <IconButton
+          edge="end"
+          onClick={() => {
+            if (setBudgetEditDialogOpen && setConfirmEdit) {
+              setBudgetEditDialogOpen(true)
+              setConfirmEdit(selection)
+            }
+          }}
+        >
+          <EditIcon />
+        </IconButton>
+      }
+
+      <IconButton
+        edge="end"
+        onClick={() => {
+          setConfirmSelection(selection)
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Stack>
+  )
+}
+
+const ConfirmCancel = ({
+  handleDeleteItem,
+  setConfirmSelection,
+}: {
+  handleDeleteItem: () => Promise<void>
+  setConfirmSelection: HookSetter<BudgetTypeV2 | null>
+}) => {
+  return (
+    <Stack direction={"row"} gap={2}>
+      <IconButton
+        edge="end"
+        onClick={() => {
+          handleDeleteItem()
+        }}
+      >
+        <DeleteIcon />
+      </IconButton>
+
+      <IconButton
+        edge="end"
+        onClick={() => {
+          setConfirmSelection(null)
+        }}
+      >
+        <CancelIcon />
+      </IconButton>
+    </Stack>
+  )
 }
 
 const AddBudget = ({
@@ -56,12 +119,22 @@ const AddBudget = ({
   const { theme: currentTheme } = useTheme()
   const user = useUser()
 
+  const createBudgetInit = (): BudgetTypeV2 => ({
+    id: makeId(),
+    category: "",
+    amount: 0,
+  })
+
   const [budgetCategory, setBudgetCategory] =
-    useState<BudgetTypeV2>(BUDGET_INIT)
+    useState<BudgetTypeV2>(createBudgetInit())
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const listItemColor =
     currentTheme === "light" ? lightMode.elevatedBg : darkMode.elevatedBg
+  const budgetTotal = budgetCategoriesV2.reduce((sum, c) => sum + c.amount, 0)
+  const categoryExists = budgetCategoriesV2.some(
+    (c) => c.category.toLowerCase() === budgetCategory.category.toLowerCase(),
+  )
 
   const handleCategory = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -73,7 +146,7 @@ const AddBudget = ({
   }
 
   const resetFormData = () => {
-    setBudgetCategory(BUDGET_INIT)
+    setBudgetCategory(createBudgetInit())
   }
 
   const save = async () => {
@@ -91,70 +164,23 @@ const AddBudget = ({
 
   const handleDeleteItem = async () => {
     if (!user || !confirmSelection) return
+
     await deleteBudgetCategory({
       userId: user.id,
       rowId: confirmSelection.id,
     })
+
+    setConfirmSelection(null)
     loadCategories()
-  }
-
-  const EditDeleteButton = ({ selection }: { selection: BudgetTypeV2 }) => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        {
-          <IconButton
-            edge="end"
-            onClick={() => {
-              if (setBudgetEditDialogOpen && setConfirmEdit) {
-                setBudgetEditDialogOpen(true)
-                setConfirmEdit(selection)
-              }
-            }}
-          >
-            <EditIcon />
-          </IconButton>
-        }
-
-        <IconButton
-          edge="end"
-          onClick={() => {
-            setConfirmSelection(selection)
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </Stack>
-    )
-  }
-
-  const ConfirmCancel = () => {
-    return (
-      <Stack direction={"row"} gap={2}>
-        <IconButton
-          edge="end"
-          onClick={() => {
-            handleDeleteItem()
-          }}
-        >
-          <DeleteIcon />
-        </IconButton>
-
-        <IconButton
-          edge="end"
-          onClick={() => {
-            setConfirmSelection(null)
-          }}
-        >
-          <CancelIcon />
-        </IconButton>
-      </Stack>
-    )
   }
 
   return (
     <ShowCaseCard title={""}>
       <Stack direction={"column"} spacing={1}>
-        <Typography>Weekly Budget Categories</Typography>
+        <Stack direction={"row"} justifyContent={"space-between"}>
+          <Typography>Weekly Budget</Typography>
+          <Typography>{`$${formattedStringNumber(budgetTotal)} Total`}</Typography>
+        </Stack>
         <Box
           display={"flex"}
           flexDirection={"column"}
@@ -171,7 +197,7 @@ const AddBudget = ({
                   label={"Category"}
                   value={budgetCategory.category}
                   name={"category"}
-                  onChange={(e) => handleCategory(e)}
+                  onChange={handleCategory}
                 />
               </FormControl>
 
@@ -184,7 +210,9 @@ const AddBudget = ({
             <Button
               variant={"contained"}
               disabled={
-                budgetCategory.category === "" || budgetCategory.amount === 0
+                budgetCategory.category === "" ||
+                budgetCategory.amount === 0 ||
+                categoryExists
               }
               onClick={save}
               sx={{
@@ -200,16 +228,26 @@ const AddBudget = ({
 
           <Box flex={1} overflow={"auto"} paddingRight={"10px"}>
             <List className="flex flex-col gap-2">
-              {budgetCategoriesV2 &&
-                budgetCategoriesV2.map((budget) => {
+              {budgetCategoriesV2
+                .slice()
+                .sort((a, b) => a.category.localeCompare(b.category))
+                .map((budget) => {
                   return (
                     <ListItem
-                      key={budget.category}
+                      key={budget.id}
                       secondaryAction={
-                        confirmSelection === budget ? (
-                          <ConfirmCancel />
+                        confirmSelection?.id === budget.id ? (
+                          <ConfirmCancel
+                            handleDeleteItem={handleDeleteItem}
+                            setConfirmSelection={setConfirmSelection}
+                          />
                         ) : (
-                          <EditDeleteButton selection={budget} />
+                          <EditDeleteButton
+                            selection={budget}
+                            setConfirmSelection={setConfirmSelection}
+                            setBudgetEditDialogOpen={setBudgetEditDialogOpen}
+                            setConfirmEdit={setConfirmEdit}
+                          />
                         )
                       }
                       sx={{
@@ -218,7 +256,7 @@ const AddBudget = ({
                       }}
                     >
                       <ListItemText
-                        primary={`${budget.category} - $${budget.amount} a week`}
+                        primary={`${budget.category} - $${formattedStringNumber(budget.amount)}/week`}
                       />
                     </ListItem>
                   )

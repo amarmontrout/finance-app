@@ -67,7 +67,7 @@ export type NewTransactionType = {
   amount: number, 
   category: string, 
   note: string, 
-  payment_method: string, 
+  payment_method: "Debit" | "Credit" | "", 
   type: "income" | "expense", 
   is_paid: boolean, 
   is_return: boolean

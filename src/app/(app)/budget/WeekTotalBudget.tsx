@@ -55,7 +55,7 @@ const WeekTotalBudget = ({
       {isLoading ? (
         <LoadingCircle />
       ) : (
-        <Stack spacing={1.5}>
+        <Stack className="xl:w-[50%]" spacing={1.5} margin={"0 auto"}>
           <BudgetProgressBar
             label={"Week Total"}
             actual={actualTotal}

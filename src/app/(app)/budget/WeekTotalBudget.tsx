@@ -3,13 +3,8 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
-import { formattedStringNumber } from "@/utils/helperFunctions"
-import {
-  BudgetType,
-  DateType,
-  NewTransactionType,
-  WeekType,
-} from "@/utils/type"
+import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
+import { BudgetType, NewTransactionType, WeekType } from "@/utils/type"
 
 const WeekTotalBudget = ({
   transactions,
@@ -23,20 +18,13 @@ const WeekTotalBudget = ({
   budgetCategories: BudgetType[]
 }) => {
   const expenseTransactions = useMemo(() => {
-    const toDate = (date: DateType) => {
-      const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
-      return new Date(date.year, monthIndex, date.day)
-    }
-
-    const weekStart = toDate(week.start)
-    const weekEnd = toDate(week.end)
+    const weekStart = toTimestamp(week.start)
+    const weekEnd = toTimestamp(week.end)
 
     return transactions.filter((entry) => {
       if (!entry.date?.day || entry.type !== "expense") return false
-
-      const entryDate = toDate(entry.date)
-
-      return entryDate >= weekStart && entryDate <= weekEnd
+      const entryTime = toTimestamp(entry.date)
+      return entryTime >= weekStart && entryTime <= weekEnd
     })
   }, [transactions, week.start, week.end])
 

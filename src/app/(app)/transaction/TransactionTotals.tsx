@@ -1,4 +1,5 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
+import { negative, positive } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getYearUpToMonthTotal } from "@/utils/getTotals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
@@ -87,10 +88,20 @@ const TransactionTotals = ({
         >
           <Typography fontWeight={700}>Month</Typography>
           <Stack direction="row" spacing={9}>
-            <Typography fontWeight={700} color="success.main">
+            <Typography
+              fontWeight={700}
+              sx={{
+                color: positive,
+              }}
+            >
               Income
             </Typography>
-            <Typography fontWeight={700} color="error.main">
+            <Typography
+              fontWeight={700}
+              sx={{
+                color: negative,
+              }}
+            >
               Expense
             </Typography>
           </Stack>
@@ -111,18 +122,22 @@ const TransactionTotals = ({
               <Stack direction="row" spacing={6}>
                 <Typography
                   fontWeight={500}
-                  color="success.main"
                   textAlign="right"
                   minWidth={90}
+                  sx={{
+                    color: positive,
+                  }}
                 >
                   ${formattedStringNumber(incomeByMonth[month] ?? 0)}
                 </Typography>
 
                 <Typography
                   fontWeight={500}
-                  color="error.main"
                   textAlign="right"
                   minWidth={90}
+                  sx={{
+                    color: negative,
+                  }}
                 >
                   ${formattedStringNumber(ExpenseByMonth[month] ?? 0)}
                 </Typography>
@@ -152,9 +167,11 @@ const TransactionTotals = ({
             <Typography
               fontWeight={700}
               fontSize="1.1rem"
-              color="success.main"
               minWidth={90}
               textAlign="right"
+              sx={{
+                color: positive,
+              }}
             >
               ${formattedStringNumber(yearIncomeTotal)}
             </Typography>
@@ -162,9 +179,11 @@ const TransactionTotals = ({
             <Typography
               fontWeight={700}
               fontSize="1.1rem"
-              color="error.main"
               minWidth={90}
               textAlign="right"
+              sx={{
+                color: negative,
+              }}
             >
               ${formattedStringNumber(yearExpenseTotal)}
             </Typography>

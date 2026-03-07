@@ -9,8 +9,10 @@ import {
   formattedStringNumber,
   getCardColor,
   getWeekBounds,
+  toTimestamp,
 } from "@/utils/helperFunctions"
 import { BudgetType, DateType, NewTransactionType } from "@/utils/type"
+import { MONTH_INDEX } from "@/globals/globals"
 
 const WeeklyBudget = ({
   transactions,
@@ -31,33 +33,27 @@ const WeeklyBudget = ({
 }) => {
   const positiveCardColor = getCardColor(currentTheme, "great")
   const negativeCardColor = getCardColor(currentTheme, "concerning")
+
   const { start, end } = useMemo(() => {
     return getWeekBounds({
       month: currentMonth,
       day: currentDay,
       year: currentYear,
     })
-  }, [])
+  }, [currentMonth, currentDay, currentYear])
 
   const weeklyTransactions = useMemo(() => {
-    const toDate = (date: DateType) => {
-      const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
-      return new Date(date.year, monthIndex, date.day)
-    }
-
-    const weekStart = toDate(start)
-    const weekEnd = toDate(end)
-
+    const weekStart = toTimestamp(start)
+    const weekEnd = toTimestamp(end)
     const budgetCategorySet = new Set(budgetCategories.map((b) => b.category))
 
-    return transactions
-      .filter((entry) => entry.type === "expense")
-      .filter((entry) => budgetCategorySet.has(entry.category ?? ""))
-      .filter((entry) => {
-        if (!entry.date?.day) return false
-        const entryDate = toDate(entry.date)
-        return entryDate >= weekStart && entryDate <= weekEnd
-      })
+    return transactions.filter((entry) => {
+      if (entry.type !== "expense") return false
+      if (!entry.date?.day) return false
+      if (!budgetCategorySet.has(entry.category ?? "")) return false
+      const entryTime = toTimestamp(entry.date)
+      return entryTime >= weekStart && entryTime <= weekEnd
+    })
   }, [transactions, start, end, budgetCategories])
 
   const categoryTotals = useMemo(() => {

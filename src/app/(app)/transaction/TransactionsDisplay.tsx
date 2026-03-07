@@ -1,7 +1,11 @@
 import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { accentColorPrimarySelected } from "@/globals/colors"
+import {
+  accentColorPrimarySelected,
+  negative,
+  positive,
+} from "@/globals/colors"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
@@ -136,18 +140,19 @@ const TransactionsDisplay = ({
             ) : (
               <TransitionGroup>
                 {visibleTransactions.map((transaction, index) => {
+                  const transactionDate = `${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`
                   const isLast = index === visibleTransactions.length - 1
                   return (
                     <Collapse key={transaction.id}>
                       <Box mb={isLast ? 0 : 1}>
                         <ListItemSwipe
                           mainTitle={transaction.category}
-                          secondaryTitle={transaction.note}
+                          secondaryTitle={
+                            transaction.is_paid ? transactionDate : ""
+                          }
                           amount={`$${formattedStringNumber(transaction.amount)}`}
                           amountColor={
-                            transaction.type === "income"
-                              ? "success.main"
-                              : "error.main"
+                            transaction.type === "income" ? positive : negative
                           }
                           buttonCondition={
                             selectedTransaction?.id === transaction.id &&

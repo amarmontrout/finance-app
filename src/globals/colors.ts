@@ -4,6 +4,8 @@ export const accentColorPrimarySelected = "#2563EBB3"
 export const accentColorPrimaryHover = "#2563EB40"
 // Savings goals, positive cash flow, secondary buttons (CTA), graph comparison lines
 export const accentColorSecondary = "#10B981"
+export const positive = "mediumseagreen"
+export const negative = "indianred"
 
 export const incomeLinesLight = [
   "#1E40AF",

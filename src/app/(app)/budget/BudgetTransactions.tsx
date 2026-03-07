@@ -1,7 +1,7 @@
 import ListItemSwipe from "@/components/ListItemSwipe"
 import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { formattedStringNumber } from "@/utils/helperFunctions"
+import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
@@ -43,20 +43,13 @@ const BudgetTransactions = ({
   const [noteId, setNoteId] = useState<number | null>(null)
 
   const expenseTransactions = useMemo(() => {
-    const toDate = (date: DateType) => {
-      const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
-      return new Date(date.year, monthIndex, date.day)
-    }
-
-    const weekStart = toDate(week.start)
-    const weekEnd = toDate(week.end)
+    const weekStart = toTimestamp(week.start)
+    const weekEnd = toTimestamp(week.end)
 
     return transactions.filter((entry) => {
       if (!entry.date?.day || entry.type !== "expense") return false
-
-      const entryDate = toDate(entry.date)
-
-      return entryDate >= weekStart && entryDate <= weekEnd
+      const entryTime = toTimestamp(entry.date)
+      return entryTime >= weekStart && entryTime <= weekEnd
     })
   }, [transactions, week.start, week.end])
 
@@ -66,15 +59,11 @@ const BudgetTransactions = ({
     return expenseTransactions.reduce<Record<string, NewTransactionType[]>>(
       (acc, transaction) => {
         if (!allowedCategories.has(transaction.category)) return acc
-
         const category = transaction.category
-
         if (!acc[category]) {
           acc[category] = []
         }
-
         acc[category].push(transaction)
-
         return acc
       },
       {},

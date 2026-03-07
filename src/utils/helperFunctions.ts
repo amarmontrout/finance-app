@@ -1,4 +1,4 @@
-import { MONTHS } from "@/globals/globals"
+import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
 import { ChoiceType, DateType, WeekType } from "./type"
 
@@ -27,30 +27,34 @@ export const getWeekBounds = (
   date: DateType,
   weekOffset: number = 0
 ): WeekType => {
-  const monthIndex = new Date(`${date.month} 1, ${date.year}`).getMonth()
-  const d = new Date(date.year, monthIndex, date.day)
+  const d = new Date(date.year, MONTH_INDEX[date.month], date.day)
   d.setHours(0, 0, 0, 0)
-
   d.setDate(d.getDate() + weekOffset * 7)
+  const day = d.getDay()
+
+  const startOfWeek = new Date(d)
+  startOfWeek.setDate(d.getDate() - day)
   
+  const endOfWeek = new Date(startOfWeek)
+  endOfWeek.setDate(startOfWeek.getDate() + 6)
+
   const toDateType = (d: Date): DateType => ({
-    month: d.toLocaleString("default", { month: "long" }),
+    month: MONTHS[d.getMonth()],
     day: d.getDate(),
     year: d.getFullYear(),
   })
-
-  const day = d.getDay()
-  const startOfWeek = new Date(d)
-  startOfWeek.setDate(d.getDate() - day)
-
-  const endOfWeek = new Date(startOfWeek)
-  endOfWeek.setDate(startOfWeek.getDate() + 6)
 
   return {
     start: toDateType(startOfWeek),
     end: toDateType(endOfWeek)
   }
 }
+
+/**
+ * Convert DateType to timestamp for simple comparisons
+ */
+export const toTimestamp = (date: DateType) =>
+  new Date(date.year, MONTH_INDEX[date.month], date.day).getTime()
 
 
 /**

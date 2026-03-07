@@ -1,5 +1,5 @@
 import { DAYS, MONTHS } from "@/globals/globals"
-import { Box, Card, Grid, Stack, Typography } from "@mui/material"
+import { Box, Card, Grid, IconButton, Stack, Typography } from "@mui/material"
 import { useMemo, useRef, useState } from "react"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
 
@@ -84,26 +84,33 @@ const Calendar = ({
         padding={"0.5rem 1rem"}
         alignItems={"center"}
       >
-        <Box style={{ cursor: "pointer" }} onClick={prevMonth}>
-          <NavigateBefore fontSize="large" />
-        </Box>
+        <IconButton onClick={prevMonth}>
+          <NavigateBefore />
+        </IconButton>
+
         <Typography variant={"h6"} onClick={resetDate} fontSize={"4vw"}>
           {MONTHS[monthIndex]} {year}
         </Typography>
-        <Box style={{ cursor: "pointer" }} onClick={nextMonth}>
-          <NavigateNext fontSize="large" />
-        </Box>
+
+        <IconButton onClick={nextMonth}>
+          <NavigateNext />
+        </IconButton>
       </Stack>
 
       {/* Days of the Week */}
-      <Grid container columns={7} borderBottom={"1px solid black"}>
+      <Grid
+        container
+        columns={7}
+        paddingBottom={"5px"}
+        borderBottom={"1px solid black"}
+      >
         {DAYS.map((day, index) => {
           return (
             <Grid key={index} size={1}>
               <Box
                 textAlign={"center"}
                 alignContent={"center"}
-                fontSize={"2.25vw"}
+                fontSize={"2vw"}
               >
                 {day}
               </Box>

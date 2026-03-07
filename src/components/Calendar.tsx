@@ -128,8 +128,8 @@ const Calendar = ({
             <Grid key={i} size={1}>
               <Box
                 height={"12vw"}
-                minHeight={"50px"}
-                padding={"5px"}
+                minHeight={"70px"}
+                padding={"1vw"}
                 bgcolor={
                   isToday
                     ? todayColor
@@ -141,7 +141,7 @@ const Calendar = ({
                 borderRight={isLastCol ? "none" : "1px solid black"}
                 borderBottom={isLastRow ? "none" : "1px solid black"}
               >
-                <Box textAlign={"right"} fontSize={"2vw"}>
+                <Box textAlign={"right"} lineHeight={"2vw"} fontSize={"2vw"}>
                   {d.day}
                 </Box>
               </Box>

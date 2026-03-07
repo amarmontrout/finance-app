@@ -50,7 +50,7 @@ const TopMonthlyExpenses = ({
   const { topThree, topThreeSum } = topThreeData
 
   return (
-    <ShowCaseCard title={`Top Monthly Expenses`}>
+    <ShowCaseCard title={`Top Expenses for ${currentMonth}`}>
       {isLoading ? (
         <LoadingCircle />
       ) : (
@@ -67,7 +67,7 @@ const TopMonthlyExpenses = ({
           </FlexColWrapper>
           {topThree.length !== 0 ? (
             <Typography variant={"h6"} width={"100%"} textAlign={"center"}>
-              {`A total of $${formattedStringNumber(topThreeSum)}`}
+              {`Total: $${formattedStringNumber(topThreeSum)}`}
             </Typography>
           ) : (
             <Typography width={"100%"} textAlign={"center"}>

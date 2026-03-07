@@ -38,11 +38,11 @@ const MonthlySummary = ({
   )
   const savingsColor = getCardColor(currentTheme, savingsHealthState)
   const hasNet = annualNetIncome !== 0
-  const netTitle = `${currentMonth} Net Cash${
+  const netTitle = `Net Cash${
     hasNet ? ` (${savingsHealthState.toUpperCase()})` : ""
   }`
   return (
-    <ShowCaseCard title={"Monthly Summary"}>
+    <ShowCaseCard title={`${currentMonth} Summary`}>
       {isLoading ? (
         <LoadingCircle />
       ) : (
@@ -50,12 +50,12 @@ const MonthlySummary = ({
           <ColoredInfoCard
             cardColors={defaultCardColor}
             info={`$${formattedStringNumber(incomeTotalMonthNet)}`}
-            title={`${currentMonth} Income`}
+            title={"Income"}
           />
           <ColoredInfoCard
             cardColors={defaultCardColor}
             info={`$${formattedStringNumber(expenseTotalMonthNet)}`}
-            title={`${currentMonth} Expenses`}
+            title={"Expenses"}
           />
           <ColoredInfoCard
             cardColors={savingsColor}

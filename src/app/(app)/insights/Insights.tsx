@@ -18,10 +18,11 @@ import { getNetCashFlow } from "@/utils/financialFunctions"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import LoadingCircle from "@/components/LoadingCircle"
 import { getTotalsForMonthNetCash } from "../experimental/functions"
+import Calendar from "@/components/Calendar"
 
 const Insights = () => {
   const { isLoading, transactions } = useTransactionContext()
-  const { currentYear, currentMonth } = getCurrentDateInfo()
+  const { currentYear, currentMonth, currentDay } = getCurrentDateInfo()
 
   const CURRENT_DATE = {
     month: currentMonth,
@@ -129,6 +130,12 @@ const Insights = () => {
           )}
         </Stack>
       </ShowCaseCard>
+
+      <Calendar
+        currentMonth={currentMonth}
+        currentYear={currentYear}
+        currentDay={currentDay}
+      />
 
       {/* <NetCashFlow
         incomeTransactions={incomeTransactions}

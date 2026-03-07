@@ -1,5 +1,5 @@
 import ShowCaseCard from "@/components/ShowCaseCard"
-import { negative, positive } from "@/globals/colors"
+import { negativeColor, positiveColor } from "@/globals/colors"
 import { MONTHS } from "@/globals/globals"
 import { getYearUpToMonthTotal } from "@/utils/getTotals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
@@ -91,7 +91,7 @@ const TransactionTotals = ({
             <Typography
               fontWeight={700}
               sx={{
-                color: positive,
+                color: positiveColor,
               }}
             >
               Income
@@ -99,7 +99,7 @@ const TransactionTotals = ({
             <Typography
               fontWeight={700}
               sx={{
-                color: negative,
+                color: negativeColor,
               }}
             >
               Expense
@@ -125,7 +125,7 @@ const TransactionTotals = ({
                   textAlign="right"
                   minWidth={90}
                   sx={{
-                    color: positive,
+                    color: positiveColor,
                   }}
                 >
                   ${formattedStringNumber(incomeByMonth[month] ?? 0)}
@@ -136,7 +136,7 @@ const TransactionTotals = ({
                   textAlign="right"
                   minWidth={90}
                   sx={{
-                    color: negative,
+                    color: negativeColor,
                   }}
                 >
                   ${formattedStringNumber(ExpenseByMonth[month] ?? 0)}
@@ -170,7 +170,7 @@ const TransactionTotals = ({
               minWidth={90}
               textAlign="right"
               sx={{
-                color: positive,
+                color: positiveColor,
               }}
             >
               ${formattedStringNumber(yearIncomeTotal)}
@@ -182,7 +182,7 @@ const TransactionTotals = ({
               minWidth={90}
               textAlign="right"
               sx={{
-                color: negative,
+                color: negativeColor,
               }}
             >
               ${formattedStringNumber(yearExpenseTotal)}

@@ -46,7 +46,7 @@ export const MONTH_INDEX: Record<string, number> = {
 }
 export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: HomeIcon},
-  // {"name": "Insights", "link": "/insights", icon: InsightsIcon},
+  {"name": "Insights", "link": "/insights", icon: InsightsIcon},
   // {"name": "Trends", "link": "/trends", icon: MultilineChartIcon},
   // {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
 ]

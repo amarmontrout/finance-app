@@ -3,8 +3,8 @@ import LoadingCircle from "@/components/LoadingCircle"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import {
   accentColorPrimarySelected,
-  negative,
-  positive,
+  negativeColor,
+  positiveColor,
 } from "@/globals/colors"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
@@ -152,7 +152,9 @@ const TransactionsDisplay = ({
                           }
                           amount={`$${formattedStringNumber(transaction.amount)}`}
                           amountColor={
-                            transaction.type === "income" ? positive : negative
+                            transaction.type === "income"
+                              ? positiveColor
+                              : negativeColor
                           }
                           buttonCondition={
                             selectedTransaction?.id === transaction.id &&

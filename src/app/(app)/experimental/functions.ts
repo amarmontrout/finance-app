@@ -254,8 +254,10 @@ export const getMonthCategoryTotals = (
   return pieChartData
 }
 
+/**
+ * Returns how many days in the provided month
+ */
 export const getDaysInMonth = (month: string, year: number) => {
-  const monthIndex = MONTHS.indexOf(month) // 0-based
-  // JS Date: monthIndex + 1, day 0 gives last day of previous month
+  const monthIndex = MONTHS.indexOf(month)
   return new Date(year, monthIndex + 1, 0).getDate()
 }

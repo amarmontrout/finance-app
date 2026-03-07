@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { TransactionType } from "./type"
+import { NewTransactionType } from "./type"
 
 export type TwoColumnDataType = [string, string | number][]
 export type MultiColumnDataType = (string | number)[][]
@@ -47,20 +47,18 @@ export const buildMultiColumnData = ({
   secondData,
   selectedYear,
   firstColumnTitle,
-  method,
-  excludedSet
+  method
 }: {
-  firstData: TransactionType[]
-  secondData?: TransactionType[]
+  firstData: NewTransactionType[]
+  secondData?: NewTransactionType[]
   selectedYear?: number
   firstColumnTitle: string
   method: "self" | "compare"
-  excludedSet: Set<string>
 }): MultiColumnDataType => {
   if (!firstData) return []
   if (method === "self") {
     const years = Array.from(
-      new Set(firstData.map(entry => entry.year))
+      new Set(firstData.map(entry => entry.date.year))
     ).sort((a, b) => a-b)
     const yearStrings = years.map(String)
     const selfColumnData: MultiColumnDataType = [[
@@ -71,9 +69,9 @@ export const buildMultiColumnData = ({
       for (const year of years) {
         let total: number = 0
         firstData.forEach((entry) => {
-          if (entry.month === month 
-            && entry.year === year
-            && !excludedSet.has(entry.category)
+          if (entry.date.month === month 
+            && entry.date.year === year
+            && entry.type === "income"
           ) {
             total += entry.amount
           }
@@ -97,13 +95,20 @@ export const buildMultiColumnData = ({
       expense[month] = 0
     })
     firstData.forEach((entry) => {
-      if (entry.year === selectedYear) {
-        income[entry.month] += entry.amount
+      if (
+        entry.date.year === selectedYear 
+        && entry.type === "income"
+      ) {
+        income[entry.date.month] += entry.amount
       }
     })
     secondData.forEach((entry) => {
-      if (entry.year === selectedYear && !excludedSet.has(entry.category)) {
-        expense[entry.month] += entry.amount
+      if (
+        entry.date.year === selectedYear 
+        && entry.payment_method === "Debit" 
+        && entry.type === "expense"
+      ) {
+        expense[entry.date.month] += entry.amount
       }
     })
     MONTHS.forEach((month) => {

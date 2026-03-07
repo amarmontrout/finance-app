@@ -3,9 +3,8 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useMemo, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { useCategoryContext } from "@/contexts/categories-context"
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
-import { accentColorPrimary, lightMode } from "@/globals/colors"
+import { negativeColor, neutralColor, positiveColor } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
 import {
   buildMultiColumnData,
@@ -15,15 +14,13 @@ import {
 import MonthYearSelector from "@/components/MonthYearSelector"
 import { SelectedDateType } from "@/utils/type"
 import { MONTHS } from "@/globals/globals"
-import { getMonthTotal } from "@/utils/getTotals"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import ShowCaseCard from "@/components/ShowCaseCard"
 import LoadingCircle from "@/components/LoadingCircle"
+import { getTotalsForMonthNetCash } from "../experimental/functions"
 
 const Insights = () => {
-  const { incomeTransactions, expenseTransactions, isLoading } =
-    useTransactionContext()
-  const { excludedSet } = useCategoryContext()
+  const { isLoading, transactions } = useTransactionContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const CURRENT_DATE = {
@@ -37,33 +34,22 @@ const Insights = () => {
 
   const IncomeExpenseData = useMemo(() => {
     return buildMultiColumnData({
-      firstData: incomeTransactions,
-      secondData: expenseTransactions,
+      firstData: transactions,
+      secondData: transactions,
       selectedYear: selectedDate.year,
       firstColumnTitle: "Month",
       method: "compare",
-      excludedSet: excludedSet,
     })
-  }, [incomeTransactions, expenseTransactions, excludedSet, selectedDate.year])
+  }, [transactions, selectedDate.year])
 
   const eachMonthNetIncome: [string, number][] = useMemo(() => {
     return MONTHS.map((month) => {
-      const incomeTotal = getMonthTotal(
-        selectedDate.year,
-        month,
-        incomeTransactions,
-        excludedSet,
-      )
-      const expenseTotal = getMonthTotal(
-        selectedDate.year,
-        month,
-        expenseTransactions,
-        excludedSet,
-      )
-      const net = getNetCashFlow(incomeTotal, expenseTotal)
+      const { incomeTotalMonthNet, expenseTotalMonthNet } =
+        getTotalsForMonthNetCash(selectedDate.year, month, transactions)
+      const net = getNetCashFlow(incomeTotalMonthNet, expenseTotalMonthNet)
       return [month, net]
     })
-  }, [selectedDate.year, incomeTransactions, expenseTransactions, excludedSet])
+  }, [selectedDate.year, transactions])
 
   const NetChartData: TwoColumnDataType = useMemo(() => {
     return buildTwoColumnData({
@@ -136,8 +122,8 @@ const Insights = () => {
               twoColumnData={type === "net" ? NetChartData : undefined}
               barColors={
                 type === "incomeExpense"
-                  ? [lightMode.success, lightMode.error]
-                  : [accentColorPrimary]
+                  ? [positiveColor, negativeColor]
+                  : [neutralColor]
               }
             />
           )}

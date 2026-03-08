@@ -4,6 +4,7 @@ import ShowCaseCard from "@/components/ShowCaseCard"
 import {
   accentColorPrimarySelected,
   negativeColor,
+  neutralColor,
   positiveColor,
 } from "@/globals/colors"
 import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
@@ -20,6 +21,8 @@ import {
   SelectedDateType,
 } from "@/utils/type"
 import ExpenseViewToggle from "./ExpenseViewToggle"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 
 const TransactionsDisplay = ({
   transactions,
@@ -51,6 +54,16 @@ const TransactionsDisplay = ({
   const user = useUser()
 
   const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
+  const [expandedCategories, setExpandedCategories] = useState<
+    Record<string, boolean>
+  >({})
+
+  const toggleCategory = (category: string) => {
+    setExpandedCategories((prev) => ({
+      ...prev,
+      [category]: !prev[category],
+    }))
+  }
 
   const { filteredTransactions, total } = useMemo(() => {
     const filtered = transactions.filter((t) => {
@@ -85,6 +98,12 @@ const TransactionsDisplay = ({
       {},
     )
   }, [filteredTransactions])
+
+  const sortedCategories = useMemo(() => {
+    return Object.entries(groupedTransactions).sort(([a], [b]) =>
+      a.localeCompare(b),
+    )
+  }, [groupedTransactions])
 
   const showToast = (severity: "success" | "error", message: string) =>
     setAlertToast({
@@ -147,40 +166,69 @@ const TransactionsDisplay = ({
                 {`There are no ${type} transactions`}
               </Typography>
             ) : (
-              <Stack spacing={1.5}>
-                {Object.entries(groupedTransactions)
-                  .sort(([a], [b]) => a.localeCompare(b))
-                  .map(([category, entries]) => {
-                    const categoryTotal = entries.reduce((sum, entry) => {
-                      return entry.is_return
-                        ? sum - entry.amount
-                        : sum + entry.amount
-                    }, 0)
+              <Stack spacing={3}>
+                {sortedCategories.map(([category, entries]) => {
+                  const categoryTotal = entries.reduce((sum, entry) => {
+                    return entry.is_return
+                      ? sum - entry.amount
+                      : sum + entry.amount
+                  }, 0)
+                  const sortedEntries = [...entries].sort(
+                    (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
+                  )
+                  const isExpanded = expandedCategories[category]
+                  const visibleEntries =
+                    sortedEntries.length > 2 && !isExpanded
+                      ? sortedEntries.slice(0, 2)
+                      : sortedEntries
+                  const totalCount = sortedEntries.length
+                  const visibleCount = visibleEntries.length
 
-                    const sortedEntries = [...entries].sort(
-                      (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
-                    )
-
-                    return (
-                      <Stack key={category} spacing={0.5}>
+                  return (
+                    <Stack key={category} spacing={0.5}>
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        justifyContent="space-between"
+                        color={"white"}
+                        sx={{
+                          mt: 1,
+                          px: 1,
+                          py: 0.5,
+                          borderRadius: 1,
+                          backgroundColor: neutralColor,
+                          cursor: "pointer",
+                        }}
+                      >
                         <Stack
                           direction={"row"}
+                          spacing={0.5}
                           alignItems={"center"}
-                          justifyContent={"space-between"}
+                          onClick={() => toggleCategory(category)}
                         >
-                          <Typography variant={"h6"} fontWeight={700}>
-                            {category}
+                          <Typography fontSize={17}>{category}</Typography>
+
+                          <Typography fontSize={12} sx={{ opacity: 0.8 }}>
+                            ({totalCount})
                           </Typography>
-                          <Typography>
-                            ${formattedStringNumber(categoryTotal)}
-                          </Typography>
+
+                          {sortedEntries.length > 2 &&
+                            (isExpanded ? (
+                              <KeyboardArrowUpIcon />
+                            ) : (
+                              <KeyboardArrowDownIcon />
+                            ))}
                         </Stack>
 
+                        <Typography>
+                          ${formattedStringNumber(categoryTotal)}
+                        </Typography>
+                      </Stack>
+                      <Stack pl={1}>
                         <TransitionGroup>
-                          {sortedEntries.map((transaction, index) => {
-                            const transactionDate = `${transaction.date.month} ${transaction.date.day}, 
-                              ${transaction.date.year}`
-                            const isLast = index === sortedEntries.length - 1
+                          {visibleEntries.map((transaction, index) => {
+                            const transactionDate = `${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`
+                            const isLast = index === visibleEntries.length - 1
 
                             return (
                               <Collapse key={transaction.id}>
@@ -192,9 +240,7 @@ const TransactionsDisplay = ({
                                         : transaction.note
                                     }
                                     secondaryTitle={transactionDate}
-                                    amount={`$${formattedStringNumber(
-                                      transaction.amount,
-                                    )}`}
+                                    amount={`$${formattedStringNumber(transaction.amount)}`}
                                     amountColor={
                                       transaction.type === "income"
                                         ? positiveColor
@@ -225,8 +271,9 @@ const TransactionsDisplay = ({
                           })}
                         </TransitionGroup>
                       </Stack>
-                    )
-                  })}
+                    </Stack>
+                  )
+                })}
               </Stack>
             )}
           </Stack>

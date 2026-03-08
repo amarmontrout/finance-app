@@ -6,7 +6,7 @@ import {
   negativeColor,
   positiveColor,
 } from "@/globals/colors"
-import { formattedStringNumber } from "@/utils/helperFunctions"
+import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
@@ -71,11 +71,18 @@ const TransactionsDisplay = ({
     return { filteredTransactions: filtered, total: totalAmount }
   }, [transactions, type, selectedDate, view])
 
-  const visibleTransactions = useMemo(() => {
-    return [...filteredTransactions].sort((a, b) =>
-      a.category.localeCompare(b.category, undefined, {
-        sensitivity: "base",
-      }),
+  const groupedTransactions = useMemo(() => {
+    return filteredTransactions.reduce<Record<string, NewTransactionType[]>>(
+      (acc, transaction) => {
+        const category = transaction.category
+
+        if (!acc[category]) acc[category] = []
+
+        acc[category].push(transaction)
+
+        return acc
+      },
+      {},
     )
   }, [filteredTransactions])
 
@@ -128,58 +135,99 @@ const TransactionsDisplay = ({
                 {`$${formattedStringNumber(total)}`}
               </Typography>
             </Stack>
+
             <hr
               style={{
                 border: `1px solid ${accentColorPrimarySelected}`,
               }}
             />
-            {visibleTransactions.length === 0 ? (
+
+            {filteredTransactions.length === 0 ? (
               <Typography width="100%" textAlign="center">
                 {`There are no ${type} transactions`}
               </Typography>
             ) : (
-              <TransitionGroup>
-                {visibleTransactions.map((transaction, index) => {
-                  const transactionDate = `${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`
-                  const isLast = index === visibleTransactions.length - 1
-                  return (
-                    <Collapse key={transaction.id}>
-                      <Box mb={isLast ? 0 : 1}>
-                        <ListItemSwipe
-                          mainTitle={transaction.category}
-                          secondaryTitle={
-                            transaction.is_paid ? transactionDate : ""
-                          }
-                          amount={`$${formattedStringNumber(transaction.amount)}`}
-                          amountColor={
-                            transaction.type === "income"
-                              ? positiveColor
-                              : negativeColor
-                          }
-                          buttonCondition={
-                            selectedTransaction?.id === transaction.id &&
-                            !openDialog
-                          }
-                          onDelete={async () => {
-                            handleDeleteTransaction(transaction.id)
-                          }}
-                          onSetDelete={() => {
-                            setSelectedTransaction(transaction)
-                          }}
-                          onCancelDelete={() => {
-                            setSelectedTransaction(null)
-                          }}
-                          onEdit={() => {
-                            setOpenDialog(true)
-                            setSelectedTransaction(transaction)
-                          }}
-                          currentTheme={currentTheme}
-                        />
-                      </Box>
-                    </Collapse>
-                  )
-                })}
-              </TransitionGroup>
+              <Stack spacing={1.5}>
+                {Object.entries(groupedTransactions)
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([category, entries]) => {
+                    const categoryTotal = entries.reduce((sum, entry) => {
+                      return entry.is_return
+                        ? sum - entry.amount
+                        : sum + entry.amount
+                    }, 0)
+
+                    const sortedEntries = [...entries].sort(
+                      (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
+                    )
+
+                    return (
+                      <Stack key={category} spacing={0.5}>
+                        <Stack
+                          direction={"row"}
+                          alignItems={"center"}
+                          justifyContent={"space-between"}
+                        >
+                          <Typography variant={"h6"} fontWeight={700}>
+                            {category}
+                          </Typography>
+                          <Typography>
+                            ${formattedStringNumber(categoryTotal)}
+                          </Typography>
+                        </Stack>
+
+                        <TransitionGroup>
+                          {sortedEntries.map((transaction, index) => {
+                            const transactionDate = `${transaction.date.month} ${transaction.date.day}, 
+                              ${transaction.date.year}`
+                            const isLast = index === sortedEntries.length - 1
+
+                            return (
+                              <Collapse key={transaction.id}>
+                                <Box mb={isLast ? 0 : 1}>
+                                  <ListItemSwipe
+                                    mainTitle={
+                                      transaction.note === ""
+                                        ? transaction.category
+                                        : transaction.note
+                                    }
+                                    secondaryTitle={transactionDate}
+                                    amount={`$${formattedStringNumber(
+                                      transaction.amount,
+                                    )}`}
+                                    amountColor={
+                                      transaction.type === "income"
+                                        ? positiveColor
+                                        : negativeColor
+                                    }
+                                    buttonCondition={
+                                      selectedTransaction?.id ===
+                                        transaction.id && !openDialog
+                                    }
+                                    onDelete={() =>
+                                      handleDeleteTransaction(transaction.id)
+                                    }
+                                    onSetDelete={() =>
+                                      setSelectedTransaction(transaction)
+                                    }
+                                    onCancelDelete={() =>
+                                      setSelectedTransaction(null)
+                                    }
+                                    onEdit={() => {
+                                      setOpenDialog(true)
+                                      setSelectedTransaction(transaction)
+                                    }}
+                                    currentTheme={currentTheme}
+                                  />
+                                </Box>
+                              </Collapse>
+                            )
+                          })}
+                        </TransitionGroup>
+                      </Stack>
+                    )
+                  })}
+              </Stack>
             )}
           </Stack>
         )}

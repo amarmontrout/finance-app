@@ -17,6 +17,7 @@ const ExpenseViewToggle = ({
       setView(newView)
     }
   }
+
   return (
     <ToggleButtonGroup
       value={view}
@@ -29,7 +30,7 @@ const ExpenseViewToggle = ({
         alignItems: "center",
         "& .MuiToggleButton-root": {
           border: "none",
-          px: 2.5,
+          px: 2,
           textTransform: "none",
           fontWeight: 400,
           color: "text.secondary",

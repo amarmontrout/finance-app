@@ -180,12 +180,10 @@ const SelectExpenseCategories = ({
 
 const SetUpDialog = ({
   setUpDialogOpen,
-  setSetUpDialogOpen,
   currentYear,
   loadCategories,
 }: {
   setUpDialogOpen: boolean
-  setSetUpDialogOpen: HookSetter<boolean>
   currentYear: number
   loadCategories: () => void
 }) => {
@@ -260,7 +258,6 @@ const SetUpDialog = ({
     await Promise.all([...yearSaves, ...expenseSaves, ...incomeSaves])
     loadCategories()
     setIsLoading(false)
-    setSetUpDialogOpen(false)
   }
 
   const initialYears = useMemo(() => {

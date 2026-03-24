@@ -10,8 +10,8 @@ const MonthlyCategoryBreakdown = ({
 }: {
   selectedMonth: string
   selectedYear: number
-  monthIncomeCategoryTotals: any[]
-  monthExpenseCategoryTotals: any[]
+  monthIncomeCategoryTotals: [string, string | number][]
+  monthExpenseCategoryTotals: [string, string | number][]
 }) => {
   return (
     <FlexColWrapper gap={2}>

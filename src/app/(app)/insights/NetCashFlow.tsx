@@ -69,7 +69,14 @@ const NetCashFlow = ({
       const net = getNetCashFlow(incomeTotal, expenseTotal)
       return [month, net]
     })
-  }, [selectedYear, incomeTransactions, expenseTransactions])
+  }, [
+    selectedYear,
+    incomeTransactions,
+    expenseTransactions,
+    excludedSet,
+    getMonthTotal,
+    getNetCashFlow,
+  ])
   const annualNetIncome = useMemo(() => {
     return eachMonthNetIncome.reduce(
       (acc, [, amount]) => acc + Number(amount),

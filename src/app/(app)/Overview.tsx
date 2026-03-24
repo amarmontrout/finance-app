@@ -4,7 +4,6 @@ import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
-import { useEffect, useState } from "react"
 import SetUpDialog from "./SetUpDialog"
 import { Stack } from "@mui/material"
 import MonthlySummary from "./MonthlySummary"
@@ -24,19 +23,11 @@ const Overview = () => {
   const { currentYear, currentDay, currentMonth } = getCurrentDateInfo()
   const { theme: currentTheme } = useTheme()
 
-  const [setUpDialogOpen, setSetUpDialogOpen] = useState<boolean>(false)
-
-  useEffect(() => {
-    if (isLoading) return
-
-    if (
-      years.length === 0 &&
-      incomeCategories.length === 0 &&
-      expenseCategories.length === 0
-    ) {
-      setSetUpDialogOpen(true)
-    }
-  }, [isLoading, years, incomeCategories, expenseCategories])
+  const isSetUpDialogOpen =
+    !isLoading &&
+    years.length === 0 &&
+    incomeCategories.length === 0 &&
+    expenseCategories.length === 0
 
   return (
     <Stack spacing={1}>
@@ -67,8 +58,7 @@ const Overview = () => {
       />
 
       <SetUpDialog
-        setUpDialogOpen={setUpDialogOpen}
-        setSetUpDialogOpen={setSetUpDialogOpen}
+        setUpDialogOpen={isSetUpDialogOpen}
         currentYear={currentYear}
         loadCategories={loadCategories}
       />

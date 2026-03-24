@@ -7,14 +7,9 @@ import EditCategorySettingsDialog from "@/app/(app)/settings/EditCategorySetting
 import AddYear from "./AddYear"
 import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
-import AddBudget from "./AddBudget"
-import EditBudgetDialog from "./EditBudgetDialog"
 import { AlertToastType, BudgetType, ChoiceType } from "@/utils/type"
 import { accentColorPrimarySelected } from "@/globals/colors"
-import {
-  saveBudgetCategory,
-  saveExpenseCategory,
-} from "@/app/api/Choices/requests"
+import { saveBudgetCategory } from "@/app/api/Choices/requests"
 import { makeId } from "@/utils/helperFunctions"
 import AlertToast from "@/components/AlertToast"
 
@@ -29,12 +24,6 @@ const Settings = () => {
 
   const [choice, setChoice] = useState<ChoiceType | null>(null)
   const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
-  const [budgetEditDialogOpen, setBudgetEditDialogOpen] =
-    useState<boolean>(false)
-  const [confirmSelection, setConfirmSelection] = useState<BudgetType | null>(
-    null,
-  )
-  const [confirmEdit, setConfirmEdit] = useState<BudgetType | null>(null)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
 
   const syncExpenseToBudget = async (expenseName: string, userId: string) => {
@@ -47,26 +36,6 @@ const Settings = () => {
           id: makeId(),
           category: expenseName,
           amount: 50,
-        },
-      })
-      await loadCategories()
-    }
-  }
-
-  const syncBudgetToExpense = async (
-    budgetCategory: BudgetType,
-    userId: string,
-  ) => {
-    const exists = expenseCategories.some(
-      (c) => c.name === budgetCategory.category,
-    )
-
-    if (!exists) {
-      await saveExpenseCategory({
-        userId: userId,
-        body: {
-          id: makeId(),
-          name: budgetCategory.category,
         },
       })
       await loadCategories()
@@ -108,30 +77,11 @@ const Settings = () => {
         />
       </Box>
 
-      <Box className="flex flex-col xl:flex-row xl:w-[33%] gap-2 h-full">
-        <AddBudget
-          confirmSelection={confirmSelection}
-          setConfirmSelection={setConfirmSelection}
-          setBudgetEditDialogOpen={setBudgetEditDialogOpen}
-          setConfirmEdit={setConfirmEdit}
-          budgetCategories={budgetCategories}
-          loadCategories={loadCategories}
-          syncBudgetToExpense={syncBudgetToExpense}
-        />
-      </Box>
-
       <EditCategorySettingsDialog
         categoryDialogOpen={categoryDialogOpen}
         setCategoryDialogOpen={setCategoryDialogOpen}
         choice={choice}
         refresh={loadCategories}
-        setAlertToast={setAlertToast}
-      />
-
-      <EditBudgetDialog
-        budgetEditDialogOpen={budgetEditDialogOpen}
-        setBudgetEditDialogOpen={setBudgetEditDialogOpen}
-        confirmEdit={confirmEdit}
         setAlertToast={setAlertToast}
       />
 

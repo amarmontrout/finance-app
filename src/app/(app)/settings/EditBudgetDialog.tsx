@@ -11,7 +11,7 @@ import {
   IconButton,
   Typography,
 } from "@mui/material"
-import { useEffect, useState } from "react"
+import { RefObject, useEffect, useState } from "react"
 import CloseIcon from "@mui/icons-material/Close"
 import SaveIcon from "@mui/icons-material/Save"
 
@@ -26,11 +26,13 @@ const EditBudgetDialog = ({
   setBudgetEditDialogOpen,
   confirmEdit,
   setAlertToast,
+  inputRef,
 }: {
   budgetEditDialogOpen: boolean
   setBudgetEditDialogOpen: HookSetter<boolean>
   confirmEdit: BudgetType | null
   setAlertToast: HookSetter<AlertToastType | undefined>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const { loadCategories } = useCategoryContext()
   const user = useUser()
@@ -105,7 +107,12 @@ const EditBudgetDialog = ({
       </DialogTitle>
 
       <DialogContent>
-        <MoneyInput value={updateBudget.amount} setValue={setUpdateBudget} />
+        <MoneyInput
+          value={updateBudget.amount}
+          setValue={setUpdateBudget}
+          inputRef={inputRef}
+          autoFocus={budgetEditDialogOpen}
+        />
       </DialogContent>
     </Dialog>
   )

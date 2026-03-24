@@ -113,21 +113,27 @@ const Insights = () => {
             <ToggleButton value="net">Net Cash Flow</ToggleButton>
           </ToggleButtonGroup>
 
-          {isLoading ? (
-            <LoadingCircle />
-          ) : (
-            <BarChart
-              multiColumnData={
-                type === "incomeExpense" ? IncomeExpenseData : undefined
-              }
-              twoColumnData={type === "net" ? NetChartData : undefined}
-              barColors={
-                type === "incomeExpense"
-                  ? [positiveColor, negativeColor]
-                  : [neutralColor]
-              }
-            />
-          )}
+          <Stack
+            alignItems="center"
+            justifyContent="center"
+            sx={{ minHeight: 400 }}
+          >
+            {isLoading ? (
+              <LoadingCircle />
+            ) : (
+              <BarChart
+                multiColumnData={
+                  type === "incomeExpense" ? IncomeExpenseData : undefined
+                }
+                twoColumnData={type === "net" ? NetChartData : undefined}
+                barColors={
+                  type === "incomeExpense"
+                    ? [positiveColor, negativeColor]
+                    : [neutralColor]
+                }
+              />
+            )}
+          </Stack>
         </Stack>
       </ShowCaseCard>
 

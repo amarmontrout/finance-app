@@ -125,6 +125,9 @@ const BudgetTransactions = ({
               {Object.entries(groupedTransactions)
                 .sort(([a], [b]) => a.localeCompare(b))
                 .map(([category, entries]) => {
+                  const sortedEntries = [...entries].sort(
+                    (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
+                  )
                   const total = entries.reduce((sum, entry) => {
                     return entry.is_return
                       ? sum - entry.amount
@@ -140,9 +143,9 @@ const BudgetTransactions = ({
                       />
 
                       <TransitionGroup>
-                        {entries.map((entry, index) => {
+                        {sortedEntries.map((entry, index) => {
                           const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
-                          const isLast = index === entries.length - 1
+                          const isLast = index === sortedEntries.length - 1
                           return (
                             <Collapse key={entry.id}>
                               <Box mb={isLast ? 0 : 1}>

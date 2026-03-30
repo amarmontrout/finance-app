@@ -1,4 +1,4 @@
-import { MONTHS } from "@/globals/globals"
+import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { NewTransactionType } from "@/utils/type"
 
@@ -68,23 +68,43 @@ export const getTotalsForMonthNetCash = (
   year: number, 
   month: string, 
   transactions: NewTransactionType[],
-): {incomeTotalMonthNet: number, expenseTotalMonthNet: number} => {
+): {
+  incomeTotalMonthNet: number, 
+  expenseTotalMonthNet: number,
+  incomeTotalMonthNetPrev: number, 
+  expenseTotalMonthNetPrev: number,
+} => {
   let incomeTotalMonthNet = 0
   let expenseTotalMonthNet = 0
+  let incomeTotalMonthNetPrev = 0
+  let expenseTotalMonthNetPrev = 0
+
+  const currentMonthIndex = MONTH_INDEX[month]
+  const prevMonthIndex = currentMonthIndex === 0 ? 11 : currentMonthIndex - 1
+  const prevYear = currentMonthIndex === 0 ? year - 1 : year
 
   transactions.forEach((entry) => {
-    if (entry.date.year === year && entry.date.month == month) {
-      if (entry.type == "income") {
-        incomeTotalMonthNet += entry.amount
-      } 
-        
-      if (entry.type == "expense" && entry.payment_method === "Debit") {
-        expenseTotalMonthNet += entry.amount
-      }
+    const entryMonthIndex = MONTH_INDEX[entry.date.month]
+    const entryYear = entry.date.year
+    const isCurrent =
+      entryYear === year && entryMonthIndex === currentMonthIndex
+    const isPrevious =
+      entryYear === prevYear && entryMonthIndex === prevMonthIndex
+    if (!isCurrent && !isPrevious) return
+    const isIncome = entry.type === "income"
+    const isExpense =
+      entry.type === "expense" && entry.payment_method === "Debit"
+    if (isCurrent) {
+      if (isIncome) incomeTotalMonthNet += entry.amount
+      if (isExpense) expenseTotalMonthNet += entry.amount
+    }
+    if (isPrevious) {
+      if (isIncome) incomeTotalMonthNetPrev += entry.amount
+      if (isExpense) expenseTotalMonthNetPrev += entry.amount
     }
   })
 
-  return {incomeTotalMonthNet, expenseTotalMonthNet}
+  return {incomeTotalMonthNet, expenseTotalMonthNet, incomeTotalMonthNetPrev, expenseTotalMonthNetPrev}
 }
 
 /**

@@ -5,7 +5,7 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import SetUpDialog from "./SetUpDialog"
-import { Stack } from "@mui/material"
+import { Divider, Stack } from "@mui/material"
 import MonthlySummary from "./MonthlySummary"
 import WeeklyBudget from "./WeeklyBudget"
 import TopMonthlyExpenses from "./TopMonthlyExpenses"
@@ -35,9 +35,10 @@ const Overview = () => {
         transactions={transactions}
         currentMonth={currentMonth}
         currentYear={currentYear}
-        currentTheme={currentTheme}
         isLoading={isLoading}
       />
+
+      <Divider />
 
       <WeeklyBudget
         transactions={transactions}

@@ -38,7 +38,6 @@ const SummaryCard = ({
   return (
     <Box
       width={"100%"}
-      height={"115px"}
       borderRadius={2}
       border={`1px solid rgba(0,0,0,0.2)`}
       bgcolor={style.bg}
@@ -118,21 +117,22 @@ const MonthlySummary = ({
   return isLoading ? (
     <LoadingCircle />
   ) : (
-    <Stack direction={"row"} spacing={1}>
-      <SummaryCard
-        title="Income"
-        amount={incomeTotalMonthNet}
-        comparison={incomeTotalMonthNetPrev}
-        type="income"
-      />
+    <Stack direction={"column"} spacing={1}>
+      <Stack direction={"row"} spacing={1}>
+        <SummaryCard
+          title="Income"
+          amount={incomeTotalMonthNet}
+          comparison={incomeTotalMonthNetPrev}
+          type="income"
+        />
 
-      <SummaryCard
-        title="Expenses"
-        amount={expenseTotalMonthNet}
-        comparison={expenseTotalMonthNetPrev}
-        type="expense"
-      />
-
+        <SummaryCard
+          title="Expenses"
+          amount={expenseTotalMonthNet}
+          comparison={expenseTotalMonthNetPrev}
+          type="expense"
+        />
+      </Stack>
       <SummaryCard
         title="Net Cash"
         amount={netMonthIncome}

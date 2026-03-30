@@ -23,6 +23,7 @@ import {
 } from "@/app/api/Transactions/requests"
 import NewTransactionForm from "./NewTransactionForm"
 import { getCurrentDateInfo, makeId } from "@/utils/helperFunctions"
+import TransactionTypeToggle from "./TransactionTypeToggle"
 
 const AddEditDialog = ({
   openDialog,
@@ -195,15 +196,21 @@ const AddEditDialog = ({
       </DialogTitle>
 
       <DialogContent>
-        <NewTransactionForm
-          transaction={transaction}
-          setTransaction={setTransaction}
-          allNotes={allNotes}
-          categories={type === "expense" ? expenseCategories : incomeCategories}
-          openDialog={openDialog}
-          inputRef={inputRef}
-          currentYear={currentYear}
-        />
+        <Stack direction={"column"} spacing={3}>
+          <TransactionTypeToggle type={type} setType={setType} />
+
+          <NewTransactionForm
+            transaction={transaction}
+            setTransaction={setTransaction}
+            allNotes={allNotes}
+            categories={
+              type === "expense" ? expenseCategories : incomeCategories
+            }
+            openDialog={openDialog}
+            inputRef={inputRef}
+            currentYear={currentYear}
+          />
+        </Stack>
       </DialogContent>
     </Dialog>
   )

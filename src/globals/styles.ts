@@ -1,5 +1,3 @@
-import { accentColorPrimaryHover } from "./colors";
-
 export const linkStyle = {
     textDecoration: "none",
     color: "inherit"

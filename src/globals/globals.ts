@@ -1,7 +1,5 @@
 import { PageLinkType } from "@/navigation/PageLink"
 import InsightsIcon from '@mui/icons-material/Insights'
-import MultilineChartIcon from '@mui/icons-material/MultilineChart'
-import WorkspacesIcon from '@mui/icons-material/Workspaces'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import HomeIcon from '@mui/icons-material/Home'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
@@ -46,9 +44,7 @@ export const MONTH_INDEX: Record<string, number> = {
 }
 export const NAV_QUICK_INFO: PageLinkType[] = [
   {"name": "Overview", "link": "/", icon: HomeIcon},
-  {"name": "Insights", "link": "/insights", icon: InsightsIcon},
-  // {"name": "Trends", "link": "/trends", icon: MultilineChartIcon},
-  // {"name": "Categories", "link": "/categories", icon: WorkspacesIcon}
+  {"name": "Insights", "link": "/insights", icon: InsightsIcon}
 ]
 export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Transaction", "link": "/transaction", icon: AccountBalanceIcon},

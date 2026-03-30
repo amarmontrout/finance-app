@@ -1,64 +1,11 @@
 // Buttons, active tab/selected nav item, important graph highlights
 export const accentColorPrimary = "#2563EB"
 export const accentColorPrimarySelected = "#2563EBB3"
-export const accentColorPrimaryHover = "#2563EB40"
 // Savings goals, positive cash flow, secondary buttons (CTA), graph comparison lines
 export const accentColorSecondary = "#10B981"
 export const positiveColor = "mediumseagreen"
 export const negativeColor = "indianred"
 export const neutralColor = "steelblue"
-
-export const incomeLinesLight = [
-  "#1E40AF",
-  "#0EA5E9",
-  "#14532D",
-  "#38BDF8",
-  "#0F766E",
-  "#22C55E",
-  "#0284C7",
-  "#14B8A6",
-  "#312E81",
-  "#10B981",
-]
-
-export const incomeLinesDark = [
-  "#1D4ED8",
-  "#0EA5E9",
-  "#14B8A6",
-  "#2563EB",
-  "#06B6D4",
-  "#4338CA",
-  "#10B981",
-  "#0284C7",
-  "#2DD4BF",
-  "#312E81",
-]
-
-export const expenseLinesLight = [
-  "#7C2D12",
-  "#F97316",
-  "#B91C1C",
-  "#FDBA74",
-  "#DC2626",
-  "#F59E0B",
-  "#C2410C",
-  "#FB7185",
-  "#EA580C",
-  "#FCA5A5",
-]
-
-export const expenseLinesDark = [
-  "#FDBA74",
-  "#FCA5A5",
-  "#FB923C",
-  "#F87171",
-  "#FCD34D",
-  "#FECDD3",
-  "#F97316",
-  "#FF6B6B",
-  "#FBBF24",
-  "#FF9F1C",
-]
 
 export enum lightMode {
     accentColorPrimary = "#2563EB",

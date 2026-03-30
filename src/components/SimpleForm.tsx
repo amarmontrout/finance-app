@@ -1,4 +1,4 @@
-import { accentColorSecondary } from "@/globals/colors"
+import { positiveColor } from "@/globals/colors"
 import {
   Box,
   FormControl,
@@ -27,19 +27,14 @@ const SimpleForm = ({
     <Box className="flex flex-col gap-2 mt-1 mb-3">
       <FormControl>
         <InputLabel>{label}</InputLabel>
-        <OutlinedInput
-          label={label}
-          value={value}
-          name={"year"}
-          onChange={onChange}
-        />
+        <OutlinedInput label={label} value={value} onChange={onChange} />
       </FormControl>
 
       <Button
         variant={"contained"}
         onClick={onSubmit}
         sx={{
-          backgroundColor: accentColorSecondary,
+          backgroundColor: positiveColor,
         }}
         disabled={isDisabled || value === ""}
         loading={isLoading}

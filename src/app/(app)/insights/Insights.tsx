@@ -3,7 +3,7 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useMemo, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { Box, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { negativeColor, neutralColor, positiveColor } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
 import {
@@ -16,13 +16,11 @@ import { SelectedDateType } from "@/utils/type"
 import { MONTHS } from "@/globals/globals"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import ShowCaseCard from "@/components/ShowCaseCard"
-import LoadingCircle from "@/components/LoadingCircle"
 import { getTotalsForMonthNetCash } from "../experimental/functions"
-import Calendar from "@/components/Calendar"
 
 const Insights = () => {
-  const { isLoading, transactions } = useTransactionContext()
-  const { currentYear, currentMonth, currentDay } = getCurrentDateInfo()
+  const { transactions } = useTransactionContext()
+  const { currentYear, currentMonth } = getCurrentDateInfo()
 
   const CURRENT_DATE = {
     month: currentMonth,
@@ -74,7 +72,7 @@ const Insights = () => {
   }
 
   return (
-    <Stack gap={1.5}>
+    <Stack gap={1}>
       <MonthYearSelector
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
@@ -113,53 +111,21 @@ const Insights = () => {
             <ToggleButton value="net">Net Cash Flow</ToggleButton>
           </ToggleButtonGroup>
 
-          <Stack
-            alignItems="center"
-            justifyContent="center"
-            sx={{ minHeight: 400 }}
-          >
-            {isLoading ? (
-              <LoadingCircle />
-            ) : (
-              <BarChart
-                multiColumnData={
-                  type === "incomeExpense" ? IncomeExpenseData : undefined
-                }
-                twoColumnData={type === "net" ? NetChartData : undefined}
-                barColors={
-                  type === "incomeExpense"
-                    ? [positiveColor, negativeColor]
-                    : [neutralColor]
-                }
-              />
-            )}
-          </Stack>
+          <Box sx={{ minHeight: 400 }}>
+            <BarChart
+              multiColumnData={
+                type === "incomeExpense" ? IncomeExpenseData : undefined
+              }
+              twoColumnData={type === "net" ? NetChartData : undefined}
+              barColors={
+                type === "incomeExpense"
+                  ? [positiveColor, negativeColor]
+                  : [neutralColor]
+              }
+            />
+          </Box>
         </Stack>
       </ShowCaseCard>
-
-      <Calendar
-        currentMonth={currentMonth}
-        currentYear={currentYear}
-        currentDay={currentDay}
-      />
-
-      {/* <NetCashFlow
-        incomeTransactions={incomeTransactions}
-        expenseTransactions={expenseTransactions}
-        selectedYear={selectedDate.year}
-        selectedMonth={selectedDate.month}
-        view={view}
-        currentTheme={currentTheme}
-        excludedSet={excludedSet}
-      />
-      <SavingsRate
-        incomeTransactions={incomeTransactions}
-        expenseTransactions={expenseTransactions}
-        selectedYear={selectedDate.year}
-        selectedMonth={selectedDate.month}
-        view={view}
-        currentTheme={currentTheme}
-      /> */}
     </Stack>
   )
 }

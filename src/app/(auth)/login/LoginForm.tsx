@@ -3,7 +3,7 @@
 import { CredType } from "@/app/api/Auth/models"
 import { doLogin } from "@/app/api/Auth/requests"
 import { FlexColWrapper } from "@/components/Wrappers"
-import { accentColorSecondary } from "@/globals/colors"
+import { positiveColor } from "@/globals/colors"
 import {
   Alert,
   Box,
@@ -93,7 +93,7 @@ const LoginForm = () => {
             variant={"contained"}
             onClick={handleLogin}
             disabled={!credentials.username || !credentials.password}
-            sx={{ backgroundColor: accentColorSecondary }}
+            sx={{ backgroundColor: positiveColor }}
             loading={isLoading}
           >
             {"Sign In"}

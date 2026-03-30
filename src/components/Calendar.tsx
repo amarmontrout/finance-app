@@ -2,17 +2,11 @@ import { DAYS, MONTHS } from "@/globals/globals"
 import { Box, Card, Grid, IconButton, Stack, Typography } from "@mui/material"
 import { useMemo, useRef, useState } from "react"
 import { NavigateBefore, NavigateNext } from "@mui/icons-material"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 
-const Calendar = ({
-  currentMonth,
-  currentDay,
-  currentYear,
-}: {
-  currentMonth: string
-  currentDay: number
-  currentYear: number
-}) => {
+const Calendar = () => {
   const clickLock = useRef(false)
+  const { currentYear, currentMonth, currentDay } = getCurrentDateInfo()
 
   const currentMonthIndex = MONTHS.indexOf(currentMonth)
   const [date, setDate] = useState(new Date(currentYear, currentMonthIndex, 1))

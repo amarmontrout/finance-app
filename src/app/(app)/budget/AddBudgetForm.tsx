@@ -1,4 +1,4 @@
-import { accentColorSecondary } from "@/globals/colors"
+import { accentColorSecondary, positiveColor } from "@/globals/colors"
 import {
   Box,
   Button,
@@ -142,23 +142,21 @@ const AddBudgetForm = ({
     <Stack direction={"column"} spacing={3} marginTop={1}>
       <Stack spacing={1}>
         <Stack direction={"column"} spacing={1}>
-          <Stack direction={"row"} height={"100%"}>
-            <FormControl fullWidth>
-              <InputLabel>Category</InputLabel>
-              <OutlinedInput
-                className="w-full h-full"
-                label={"Category"}
-                value={budgetCategory.category}
-                name={"category"}
-                onChange={handleCategory}
-              />
-            </FormControl>
+          <MoneyInput
+            value={budgetCategory.amount}
+            setValue={setBudgetCategory}
+          />
 
-            <MoneyInput
-              value={budgetCategory.amount}
-              setValue={setBudgetCategory}
+          <FormControl fullWidth>
+            <InputLabel>Category</InputLabel>
+            <OutlinedInput
+              className="w-full h-full"
+              label={"Category"}
+              value={budgetCategory.category}
+              name={"category"}
+              onChange={handleCategory}
             />
-          </Stack>
+          </FormControl>
 
           <Button
             variant={"contained"}
@@ -169,7 +167,7 @@ const AddBudgetForm = ({
             }
             onClick={save}
             sx={{
-              backgroundColor: accentColorSecondary,
+              backgroundColor: positiveColor,
             }}
             loading={isLoading}
           >

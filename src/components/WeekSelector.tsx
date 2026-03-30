@@ -49,6 +49,7 @@ const WeekSelector = ({
     start: `${week.start.month} ${week.start.day}, ${week.start.year}`,
     end: `${week.end.month} ${week.end.day}, ${week.end.year}`,
   }
+
   return (
     <Stack
       className="w-full md:w-[75%] xl:w-[50%] 2xl:w-[40%]"

@@ -188,13 +188,15 @@ const NewTransactionForm = ({
                         autoFocus
                         placeholder="Add Note"
                         sx={{
+                          fontSize: "16px",
                           maxHeight: 24,
                           "& .MuiInputBase-root": {
-                            fontSize: "inherit",
+                            fontSize: "16px",
                           },
                           "& input": {
                             padding: 0,
                             margin: 0,
+                            fontSize: "16px",
                           },
                         }}
                       />

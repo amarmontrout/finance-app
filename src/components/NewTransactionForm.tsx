@@ -23,9 +23,8 @@ import {
   TableCell,
   Popover,
   Paper,
-  Menu,
 } from "@mui/material"
-import { RefObject, useEffect, useMemo, useState } from "react"
+import { MouseEvent, RefObject, useEffect, useMemo, useState } from "react"
 import { getDaysInMonth } from "../app/(app)/experimental/functions"
 
 const MENU_PROPS = {
@@ -34,6 +33,119 @@ const MENU_PROPS = {
       maxHeight: 5 * 39,
     },
   },
+}
+
+const Row = ({
+  label,
+  value,
+  onClick,
+}: {
+  label: string
+  value: React.ReactNode
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+}) => {
+  return (
+    <TableRow>
+      <TableCell>
+        <Typography>{label}</Typography>
+      </TableCell>
+      <TableCell
+        align="right"
+        onClick={onClick}
+        sx={{
+          textDecorationLine: onClick ? "underline" : "none",
+          cursor: onClick ? "pointer" : "default",
+        }}
+      >
+        {value}
+      </TableCell>
+    </TableRow>
+  )
+}
+
+const CategoryAutocomplete = ({
+  transaction,
+  setTransaction,
+  categories,
+  handleClose,
+}: {
+  transaction: NewTransactionType
+  setTransaction: HookSetter<NewTransactionType>
+  categories: ChoiceType[]
+  handleClose?: () => void
+}) => {
+  return (
+    <Autocomplete
+      options={categories.map((c) => c.name)}
+      value={transaction.category || ""}
+      onChange={(_, newValue) => {
+        if (newValue !== null) {
+          setTransaction((prev) => ({ ...prev, category: newValue }))
+        }
+      }}
+      onClose={handleClose}
+      openOnFocus
+      popupIcon={null}
+      freeSolo={false}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          autoFocus
+          placeholder="Select Category"
+          sx={{
+            fontSize: "16px",
+            maxHeight: 24,
+            "& .MuiInputBase-root": { fontSize: "16px" },
+            "& input": { padding: 0, margin: 0, fontSize: "16px" },
+          }}
+        />
+      )}
+    />
+  )
+}
+
+const NoteAutocomplete = ({
+  transaction,
+  setTransaction,
+  sortedNotes,
+  handleClose,
+}: {
+  transaction: NewTransactionType
+  setTransaction: HookSetter<NewTransactionType>
+  sortedNotes: string[]
+  handleClose?: () => void
+}) => {
+  return (
+    <Autocomplete
+      freeSolo
+      options={sortedNotes}
+      inputValue={transaction.note}
+      onInputChange={(_, newValue) => {
+        setTransaction((prev) => ({ ...prev, note: newValue }))
+      }}
+      onClose={handleClose}
+      openOnFocus
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="standard"
+          autoFocus
+          placeholder="Add Note"
+          sx={{
+            fontSize: "16px",
+            maxHeight: 24,
+            "& .MuiInputBase-root": { fontSize: "16px" },
+            "& input": {
+              padding: 0,
+              margin: 0,
+              fontSize: "16px",
+            },
+          }}
+        />
+      )}
+    />
+  )
 }
 
 const NewTransactionForm = ({
@@ -73,15 +185,16 @@ const NewTransactionForm = ({
     setActiveField(null)
   }
 
-  const days = useMemo(
-    () => Array.from({ length: getDaysInMonth(month, year) }, (_, i) => i + 1),
-    [month, year],
-  )
+  const { days, years } = useMemo(() => {
+    const days = Array.from(
+      { length: getDaysInMonth(month, year) },
+      (_, i) => i + 1,
+    )
+    const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i)
+    return { days, years }
+  }, [month, year, currentYear])
 
-  const years = useMemo(
-    () => Array.from({ length: 21 }, (_, i) => currentYear - 10 + i),
-    [currentYear],
-  )
+  const sortedNotes = useMemo(() => [...allNotes].sort(), [allNotes])
 
   useEffect(() => {
     if (transaction.is_return) {
@@ -131,103 +244,79 @@ const NewTransactionForm = ({
         <Table>
           <TableBody>
             {/* Full date */}
-            <TableRow>
-              <TableCell align={"left"}>
-                <Typography>Date</Typography>
-              </TableCell>
-              <TableCell align={"right"}>
-                <Typography
-                  sx={{ textDecorationLine: "underline" }}
-                  onClick={(e) => handleOpen("date", e)}
-                >
+            <Row
+              label="Date"
+              value={
+                <Typography>
                   {`${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`}
                 </Typography>
-              </TableCell>
-            </TableRow>
+              }
+              onClick={(e: MouseEvent<HTMLElement>) => handleOpen("date", e)}
+            />
 
             {/* Category */}
-            <TableRow>
-              <TableCell align={"left"}>
-                <Typography>Category</Typography>
-              </TableCell>
-              <TableCell align={"right"}>
-                <Typography
-                  sx={{ textDecorationLine: "underline" }}
-                  onClick={(e) => handleOpen("category", e)}
-                >
-                  {transaction.category !== ""
-                    ? transaction.category
-                    : "Select Category"}
-                </Typography>
-              </TableCell>
-            </TableRow>
-
-            {/* Notes */}
-            <TableRow>
-              <TableCell align={"left"}>
-                <Typography>Note</Typography>
-              </TableCell>
-              <TableCell align="right">
-                {activeField === "note" ? (
-                  <Autocomplete
-                    freeSolo
-                    options={allNotes.sort()}
-                    inputValue={transaction.note}
-                    onInputChange={(_, newValue) => {
-                      setTransaction((prev) => ({
-                        ...prev,
-                        note: newValue,
-                      }))
-                    }}
-                    onClose={handleClose}
-                    openOnFocus
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="standard"
-                        autoFocus
-                        placeholder="Add Note"
-                        sx={{
-                          fontSize: "16px",
-                          maxHeight: 24,
-                          "& .MuiInputBase-root": {
-                            fontSize: "16px",
-                          },
-                          "& input": {
-                            padding: 0,
-                            margin: 0,
-                            fontSize: "16px",
-                          },
-                        }}
-                      />
-                    )}
+            <Row
+              label="Category"
+              value={
+                activeField === "category" ? (
+                  <CategoryAutocomplete
+                    transaction={transaction}
+                    setTransaction={setTransaction}
+                    categories={categories}
+                    handleClose={handleClose}
                   />
                 ) : (
-                  <Typography
-                    sx={{ textDecorationLine: "underline", cursor: "pointer" }}
-                    onClick={(e) => handleOpen("note", e)}
-                  >
-                    {transaction.note !== "" ? transaction.note : "Add Note"}
+                  <Typography>
+                    {transaction.category || "Select Category"}
                   </Typography>
-                )}
-              </TableCell>
-            </TableRow>
+                )
+              }
+              onClick={
+                activeField !== "category"
+                  ? (e) => handleOpen("category", e)
+                  : undefined
+              }
+            />
+
+            {/* Notes */}
+            <Row
+              label="Note"
+              value={
+                activeField === "note" ? (
+                  <NoteAutocomplete
+                    transaction={transaction}
+                    setTransaction={setTransaction}
+                    sortedNotes={sortedNotes}
+                    handleClose={handleClose}
+                  />
+                ) : transaction.note !== "" ? (
+                  <Typography>{transaction.note}</Typography>
+                ) : (
+                  <Typography>Add Note</Typography>
+                )
+              }
+              onClick={
+                activeField !== "note"
+                  ? (e) => handleOpen("note", e)
+                  : undefined
+              }
+            />
 
             {/* Expense payment method */}
             {transaction.type === "expense" && (
-              <TableRow>
-                <TableCell align={"left"}>
-                  <Typography>Payment Method</Typography>
-                </TableCell>
-                <TableCell align={"right"}>
-                  <Typography
-                    sx={{ textDecorationLine: "underline" }}
-                    onClick={(e) => handleOpen("payment_method", e)}
-                  >
-                    {transaction.payment_method}
+              <Row
+                label="Payment Method"
+                value={
+                  <Typography>
+                    {transaction.payment_method || "Debit"}
                   </Typography>
-                </TableCell>
-              </TableRow>
+                }
+                onClick={() =>
+                  updateTransaction("payment_method")(
+                    transaction.payment_method === "Debit" ? "Credit" : "Debit",
+                  )
+                }
+              />
             )}
 
             {/* Is return */}
@@ -277,68 +366,6 @@ const NewTransactionForm = ({
         </Table>
       </TableContainer>
 
-      <Menu
-        anchorEl={anchorEl}
-        open={activeField === "category"}
-        onClose={handleClose}
-        slotProps={{ list: { ...MENU_PROPS.PaperProps } }}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        {categories.map((category) => (
-          <MenuItem
-            key={category.name}
-            selected={transaction.category === category.name}
-            onClick={() => {
-              updateTransaction("category")(category.name)
-              handleClose()
-            }}
-          >
-            {category.name}
-          </MenuItem>
-        ))}
-      </Menu>
-
-      <Menu
-        anchorEl={anchorEl}
-        open={activeField === "payment_method"}
-        onClose={handleClose}
-        slotProps={{ list: { ...MENU_PROPS.PaperProps } }}
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
-        }}
-      >
-        <MenuItem
-          value={"Debit"}
-          onClick={() => {
-            updateTransaction("payment_method")("Debit")
-            handleClose()
-          }}
-        >
-          {"Debit"}
-        </MenuItem>
-        <MenuItem
-          value={"Credit"}
-          onClick={() => {
-            updateTransaction("payment_method")("Credit")
-            handleClose()
-          }}
-        >
-          {"Credit"}
-        </MenuItem>
-      </Menu>
-
       <Popover
         open={activeField === "date"}
         anchorEl={anchorEl}
@@ -352,15 +379,11 @@ const NewTransactionForm = ({
           horizontal: "right",
         }}
       >
-        <Paper sx={{ p: 2, width: 380 }}>
+        <Paper sx={{ p: 2 }}>
           {activeField === "date" && (
             <Stack direction="row" spacing={1}>
               {/* Full date */}
-              <FormControl
-                sx={{
-                  width: "45%",
-                }}
-              >
+              <FormControl>
                 <InputLabel>Month</InputLabel>
                 <Select
                   label="Month"
@@ -378,7 +401,7 @@ const NewTransactionForm = ({
                 </Select>
               </FormControl>
 
-              <FormControl sx={{ width: "25%" }}>
+              <FormControl>
                 <InputLabel>Day</InputLabel>
                 <Select
                   label="Day"
@@ -394,7 +417,7 @@ const NewTransactionForm = ({
                 </Select>
               </FormControl>
 
-              <FormControl sx={{ width: "30%" }}>
+              <FormControl>
                 <InputLabel>Year</InputLabel>
                 <Select
                   label="Year"

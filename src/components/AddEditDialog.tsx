@@ -197,7 +197,9 @@ const AddEditDialog = ({
 
       <DialogContent>
         <Stack direction={"column"} spacing={3}>
-          <TransactionTypeToggle type={type} setType={setType} />
+          {!isEditing && (
+            <TransactionTypeToggle type={type} setType={setType} />
+          )}
 
           <NewTransactionForm
             transaction={transaction}

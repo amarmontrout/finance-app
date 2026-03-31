@@ -11,11 +11,13 @@ const SummaryCard = ({
   amount,
   comparison,
   type = "net",
+  isLoading,
 }: {
   title: string
   amount: number
   comparison?: number
   type?: "income" | "expense" | "net"
+  isLoading: boolean
 }) => {
   const typeStyles = {
     income: {
@@ -50,44 +52,48 @@ const SummaryCard = ({
         `,
       }}
     >
-      <Stack height={"100%"} justifyContent={"space-between"}>
-        {/* Title */}
-        <Typography
-          fontSize={"0.75rem"}
-          fontWeight={600}
-          color={"text.secondary"}
-        >
-          {title}
-        </Typography>
-
-        {/* Amount */}
-        <Typography
-          fontSize={"1.5rem"}
-          fontWeight={600}
-          sx={{ color: style.main }}
-        >
-          ${formattedStringNumber(amount)}
-        </Typography>
-
-        {/* Comparison */}
-        {comparison !== undefined && (
+      {isLoading ? (
+        <LoadingCircle height={72} />
+      ) : (
+        <Stack height={"100%"} justifyContent={"space-between"}>
+          {/* Title */}
           <Typography
             fontSize={"0.75rem"}
+            fontWeight={600}
             color={"text.secondary"}
-            textAlign={"right"}
           >
-            <span
-              style={{
-                color: isPositive ? style.main : "#6b7280",
-                fontWeight: 500,
-              }}
-            >
-              {isPositive ? "+" : ""}${formattedStringNumber(diff!)}
-            </span>{" "}
-            last month
+            {title}
           </Typography>
-        )}
-      </Stack>
+
+          {/* Amount */}
+          <Typography
+            fontSize={"1.5rem"}
+            fontWeight={600}
+            sx={{ color: style.main }}
+          >
+            ${formattedStringNumber(amount)}
+          </Typography>
+
+          {/* Comparison */}
+          {comparison !== undefined && (
+            <Typography
+              fontSize={"0.75rem"}
+              color={"text.secondary"}
+              textAlign={"right"}
+            >
+              <span
+                style={{
+                  color: isPositive ? style.main : "#6b7280",
+                  fontWeight: 500,
+                }}
+              >
+                {isPositive ? "+" : ""}${formattedStringNumber(diff!)}
+              </span>{" "}
+              last month
+            </Typography>
+          )}
+        </Stack>
+      )}
     </Box>
   )
 }
@@ -118,15 +124,14 @@ const MonthlySummary = ({
     expenseTotalMonthNetPrev,
   )
 
-  return isLoading ? (
-    <LoadingCircle height={310} />
-  ) : (
+  return (
     <Stack direction={"column"} spacing={1}>
       <SummaryCard
         title="Income"
         amount={incomeTotalMonthNet}
         comparison={incomeTotalMonthNetPrev}
         type="income"
+        isLoading={isLoading}
       />
 
       <SummaryCard
@@ -134,12 +139,14 @@ const MonthlySummary = ({
         amount={expenseTotalMonthNet}
         comparison={expenseTotalMonthNetPrev}
         type="expense"
+        isLoading={isLoading}
       />
       <SummaryCard
         title="Net Cash"
         amount={netMonthIncome}
         comparison={netMonthIncomePrev}
         type="net"
+        isLoading={isLoading}
       />
     </Stack>
   )

@@ -30,7 +30,7 @@ const Overview = () => {
     expenseCategories.length === 0
 
   return (
-    <Stack spacing={1}>
+    <Stack spacing={1.5}>
       <MonthlySummary
         transactions={transactions}
         currentMonth={currentMonth}

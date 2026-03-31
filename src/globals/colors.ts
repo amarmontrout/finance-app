@@ -3,9 +3,22 @@ export const accentColorPrimary = "#2563EB"
 export const accentColorPrimarySelected = "#2563EBB3"
 // Savings goals, positive cash flow, secondary buttons (CTA), graph comparison lines
 export const accentColorSecondary = "#10B981"
-export const positiveColor = "mediumseagreen"
-export const negativeColor = "indianred"
-export const neutralColor = "steelblue"
+export const positiveColor = {
+  color: "mediumseagreen", 
+  bg: "rgba(22, 163, 74, 0.2)"
+}
+export const negativeColor = {
+  color: "indianred", 
+  bg: "rgba(220, 38, 38, 0.2)"
+}
+export const neutralColor = {
+  color: "steelblue", 
+  bg: "rgba(37, 99, 235, 0.2)"
+}
+export const infoColor = {
+  color: "chocolate", 
+  bg: "rgba(255, 69, 0, 0.2)"
+}
 
 export enum lightMode {
     accentColorPrimary = "#2563EB",

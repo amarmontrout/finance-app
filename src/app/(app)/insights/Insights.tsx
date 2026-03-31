@@ -119,8 +119,8 @@ const Insights = () => {
               twoColumnData={type === "net" ? NetChartData : undefined}
               barColors={
                 type === "incomeExpense"
-                  ? [positiveColor, negativeColor]
-                  : [neutralColor]
+                  ? [positiveColor.color, negativeColor.color]
+                  : [neutralColor.color]
               }
             />
           </Box>

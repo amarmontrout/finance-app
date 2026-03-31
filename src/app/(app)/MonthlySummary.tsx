@@ -3,8 +3,15 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import { getTotalsForMonthNetCash } from "./experimental/functions"
 import { getNetCashFlow } from "@/utils/financialFunctions"
 import { NewTransactionType } from "@/utils/type"
-import { positiveColor, negativeColor, neutralColor } from "@/globals/colors"
+import {
+  positiveColor,
+  negativeColor,
+  neutralColor,
+  infoColor,
+} from "@/globals/colors"
 import { Box, Stack, Typography } from "@mui/material"
+import { useMemo } from "react"
+import { MONTH_INDEX } from "@/globals/globals"
 
 const SummaryCard = ({
   title,
@@ -16,21 +23,25 @@ const SummaryCard = ({
   title: string
   amount: number
   comparison?: number
-  type?: "income" | "expense" | "net"
+  type?: "income" | "expense" | "net" | "total"
   isLoading: boolean
 }) => {
   const typeStyles = {
     income: {
-      main: positiveColor,
-      bg: "rgba(22, 163, 74, 0.2)",
+      main: positiveColor.color,
+      bg: positiveColor.bg,
     },
     expense: {
-      main: negativeColor,
-      bg: "rgba(220, 38, 38, 0.2)",
+      main: negativeColor.color,
+      bg: negativeColor.bg,
     },
     net: {
-      main: neutralColor,
-      bg: "rgba(37, 99, 235, 0.2)",
+      main: neutralColor.color,
+      bg: neutralColor.bg,
+    },
+    total: {
+      main: infoColor.color,
+      bg: infoColor.bg,
     },
   }
   const style = typeStyles[type]
@@ -124,30 +135,63 @@ const MonthlySummary = ({
     expenseTotalMonthNetPrev,
   )
 
+  const { currentTotal, previousTotal } = useMemo(() => {
+    const currentMonthIndex = MONTH_INDEX[currentMonth]
+    const prevMonthIndex = (currentMonthIndex + 11) % 12
+    const prevYear = currentMonthIndex === 0 ? currentYear - 1 : currentYear
+    let currentSum = 0
+    let previousSum = 0
+    transactions.forEach((t) => {
+      if (t.type !== "expense") return
+      const tMonthIndex = MONTH_INDEX[t.date.month]
+      const tYear = t.date.year
+      const amount = t.is_return ? -t.amount : t.amount
+
+      if (tMonthIndex === currentMonthIndex && tYear === currentYear) {
+        currentSum += amount
+      } else if (tMonthIndex === prevMonthIndex && tYear === prevYear) {
+        previousSum += amount
+      }
+    })
+    return { currentTotal: currentSum, previousTotal: previousSum }
+  }, [transactions, currentMonth, currentYear])
+
   return (
     <Stack direction={"column"} spacing={1}>
-      <SummaryCard
-        title="Income"
-        amount={incomeTotalMonthNet}
-        comparison={incomeTotalMonthNetPrev}
-        type="income"
-        isLoading={isLoading}
-      />
+      <Stack direction={"row"} spacing={1}>
+        <SummaryCard
+          title="Income"
+          amount={incomeTotalMonthNet}
+          comparison={incomeTotalMonthNetPrev}
+          type="income"
+          isLoading={isLoading}
+        />
 
-      <SummaryCard
-        title="Expenses"
-        amount={expenseTotalMonthNet}
-        comparison={expenseTotalMonthNetPrev}
-        type="expense"
-        isLoading={isLoading}
-      />
-      <SummaryCard
-        title="Net Cash"
-        amount={netMonthIncome}
-        comparison={netMonthIncomePrev}
-        type="net"
-        isLoading={isLoading}
-      />
+        <SummaryCard
+          title="Expenses"
+          amount={expenseTotalMonthNet}
+          comparison={expenseTotalMonthNetPrev}
+          type="expense"
+          isLoading={isLoading}
+        />
+      </Stack>
+      <Stack direction={"row"} spacing={1}>
+        <SummaryCard
+          title="Net Cash"
+          amount={netMonthIncome}
+          comparison={netMonthIncomePrev}
+          type="net"
+          isLoading={isLoading}
+        />
+
+        <SummaryCard
+          title="Total Spending"
+          amount={currentTotal}
+          comparison={previousTotal}
+          type="total"
+          isLoading={isLoading}
+        />
+      </Stack>
     </Stack>
   )
 }

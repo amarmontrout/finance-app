@@ -54,7 +54,7 @@ const SummaryCard = ({
         {/* Title */}
         <Typography
           fontSize={"0.75rem"}
-          fontWeight={500}
+          fontWeight={600}
           color={"text.secondary"}
         >
           {title}
@@ -62,7 +62,7 @@ const SummaryCard = ({
 
         {/* Amount */}
         <Typography
-          fontSize="1.15rem"
+          fontSize={"1.5rem"}
           fontWeight={600}
           sx={{ color: style.main }}
         >
@@ -71,7 +71,11 @@ const SummaryCard = ({
 
         {/* Comparison */}
         {comparison !== undefined && (
-          <Typography fontSize={"0.7rem"} color={"text.secondary"}>
+          <Typography
+            fontSize={"0.75rem"}
+            color={"text.secondary"}
+            textAlign={"right"}
+          >
             <span
               style={{
                 color: isPositive ? style.main : "#6b7280",
@@ -115,24 +119,22 @@ const MonthlySummary = ({
   )
 
   return isLoading ? (
-    <LoadingCircle />
+    <LoadingCircle height={310} />
   ) : (
     <Stack direction={"column"} spacing={1}>
-      <Stack direction={"row"} spacing={1}>
-        <SummaryCard
-          title="Income"
-          amount={incomeTotalMonthNet}
-          comparison={incomeTotalMonthNetPrev}
-          type="income"
-        />
+      <SummaryCard
+        title="Income"
+        amount={incomeTotalMonthNet}
+        comparison={incomeTotalMonthNetPrev}
+        type="income"
+      />
 
-        <SummaryCard
-          title="Expenses"
-          amount={expenseTotalMonthNet}
-          comparison={expenseTotalMonthNetPrev}
-          type="expense"
-        />
-      </Stack>
+      <SummaryCard
+        title="Expenses"
+        amount={expenseTotalMonthNet}
+        comparison={expenseTotalMonthNetPrev}
+        type="expense"
+      />
       <SummaryCard
         title="Net Cash"
         amount={netMonthIncome}

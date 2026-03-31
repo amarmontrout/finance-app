@@ -5,7 +5,7 @@ import { useTransactionContext } from "@/contexts/transactions-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import SetUpDialog from "./SetUpDialog"
-import { Divider, Stack } from "@mui/material"
+import { Divider, Stack, Typography } from "@mui/material"
 import MonthlySummary from "./MonthlySummary"
 import WeeklyBudget from "./WeeklyBudget"
 import TopMonthlyExpenses from "./TopMonthlyExpenses"
@@ -31,6 +31,12 @@ const Overview = () => {
 
   return (
     <Stack spacing={1.5}>
+      <Typography variant={"h6"} fontWeight={700} textAlign={"center"}>
+        {`${currentMonth} Overview`}
+      </Typography>
+
+      <Divider />
+
       <MonthlySummary
         transactions={transactions}
         currentMonth={currentMonth}
@@ -49,6 +55,8 @@ const Overview = () => {
         currentTheme={currentTheme}
         isLoading={isLoading}
       />
+
+      <Divider />
 
       <TopMonthlyExpenses
         transactions={transactions}

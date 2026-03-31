@@ -52,7 +52,7 @@ const TopMonthlyExpenses = ({
   return (
     <ShowCaseCard title={`Top Expenses for ${currentMonth}`}>
       {isLoading ? (
-        <LoadingCircle height={347} />
+        <LoadingCircle height={302} />
       ) : (
         <Stack spacing={2}>
           <FlexColWrapper gap={2} toRowBreak={"xl"}>

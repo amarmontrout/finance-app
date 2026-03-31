@@ -1,5 +1,4 @@
 import LoadingCircle from "@/components/LoadingCircle"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
@@ -11,8 +10,7 @@ import {
   getWeekBounds,
   toTimestamp,
 } from "@/utils/helperFunctions"
-import { BudgetType, DateType, NewTransactionType } from "@/utils/type"
-import { MONTH_INDEX } from "@/globals/globals"
+import { BudgetType, NewTransactionType } from "@/utils/type"
 
 const WeeklyBudget = ({
   transactions,
@@ -85,43 +83,37 @@ const WeeklyBudget = ({
     (sum, t) => sum + (t.is_return ? -t.amount : t.amount),
     0,
   )
-  return (
-    <ShowCaseCard title={""}>
-      {isLoading ? (
-        <LoadingCircle height={470} />
-      ) : (
-        <Stack spacing={1.5}>
-          <BudgetProgressBar
-            label={"Weekly Budget"}
-            actual={actualTotal}
-            budget={budgetTotal}
-          />
-          <FlexColWrapper gap={2} toRowBreak={"xl"}>
-            {remainingBudgetCategories.length === 0 ? (
-              <Typography width={"100%"} textAlign={"center"}>
-                Set up your budget in settings
-              </Typography>
-            ) : (
-              remainingBudgetCategories.map((entry) => {
-                const category = entry.category
-                const remaining = entry.amount
-                const cardColor =
-                  remaining < 0 ? negativeCardColor : positiveCardColor
+  return isLoading ? (
+    <LoadingCircle height={410} />
+  ) : (
+    <Stack spacing={1.5}>
+      <BudgetProgressBar
+        label={"Weekly Budget"}
+        actual={actualTotal}
+        budget={budgetTotal}
+      />
+      <FlexColWrapper gap={2} toRowBreak={"xl"}>
+        {remainingBudgetCategories.length === 0 ? (
+          <Typography width={"100%"} textAlign={"center"}>
+            Set up your budget in settings
+          </Typography>
+        ) : (
+          remainingBudgetCategories.map((entry) => {
+            const cardColor =
+              entry.amount < 0 ? negativeCardColor : positiveCardColor
 
-                return (
-                  <ColoredInfoCard
-                    key={category}
-                    cardColors={cardColor}
-                    title={category}
-                    info={`$${formattedStringNumber(remaining)}`}
-                  />
-                )
-              })
-            )}
-          </FlexColWrapper>
-        </Stack>
-      )}
-    </ShowCaseCard>
+            return (
+              <ColoredInfoCard
+                key={entry.category}
+                cardColors={cardColor}
+                title={entry.category}
+                info={`$${formattedStringNumber(entry.amount)}`}
+              />
+            )
+          })
+        )}
+      </FlexColWrapper>
+    </Stack>
   )
 }
 

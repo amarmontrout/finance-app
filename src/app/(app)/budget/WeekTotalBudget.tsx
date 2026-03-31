@@ -41,7 +41,7 @@ const WeekTotalBudget = ({
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
-        <LoadingCircle />
+        <LoadingCircle height={250} />
       ) : (
         <Stack className="xl:w-[50%]" spacing={1.5} margin={"0 auto"}>
           <BudgetProgressBar

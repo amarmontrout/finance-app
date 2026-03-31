@@ -113,7 +113,7 @@ const BudgetTransactions = ({
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
-        <LoadingCircle />
+        <LoadingCircle height={250} />
       ) : (
         <Stack className="xl:w-[50%]" spacing={3} margin={"0 auto"}>
           {expenseTransactions.length === 0 ? (

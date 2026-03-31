@@ -88,7 +88,7 @@ const WeeklyBudget = ({
   return (
     <ShowCaseCard title={""}>
       {isLoading ? (
-        <LoadingCircle />
+        <LoadingCircle height={470} />
       ) : (
         <Stack spacing={1.5}>
           <BudgetProgressBar

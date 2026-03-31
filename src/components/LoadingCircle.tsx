@@ -1,8 +1,8 @@
 import { Box, CircularProgress, Typography } from "@mui/material"
 
-const LoadingCircle = () => {
+const LoadingCircle = ({ height }: { height: number }) => {
   return (
-    <Box height={"250px"} textAlign={"center"} alignContent={"center"}>
+    <Box height={height} textAlign={"center"} alignContent={"center"}>
       <CircularProgress size={"4rem"} />
       <Typography>Loading</Typography>
     </Box>

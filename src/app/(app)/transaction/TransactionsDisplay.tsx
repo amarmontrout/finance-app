@@ -74,7 +74,7 @@ const TransactionsDisplay = ({
         <TransactionTypeToggle type={type} setType={setType} />
 
         {isLoading ? (
-          <LoadingCircle />
+          <LoadingCircle height={250} />
         ) : (
           <Stack spacing={1}>
             {type === "expense" && (

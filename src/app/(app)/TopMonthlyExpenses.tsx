@@ -1,6 +1,4 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
-import LoadingCircle from "@/components/LoadingCircle"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
 import { Stack, Typography } from "@mui/material"
@@ -50,33 +48,31 @@ const TopMonthlyExpenses = ({
   const { topThree, topThreeSum } = topThreeData
 
   return (
-    <ShowCaseCard title={`Top Expenses for ${currentMonth}`}>
-      {isLoading ? (
-        <LoadingCircle height={302} />
+    <Stack spacing={2}>
+      <Typography variant={"h6"} fontWeight={700}>
+        Top Expenses
+      </Typography>
+
+      <FlexColWrapper gap={2} toRowBreak={"xl"}>
+        {topThree.map(([category, amount], idx) => (
+          <ColoredInfoCard
+            key={category}
+            cardColors={defaultCardColor}
+            info={`$${formattedStringNumber(Number(amount))}`}
+            title={`${idx + 1}) ${category}`}
+          />
+        ))}
+      </FlexColWrapper>
+      {topThree.length !== 0 ? (
+        <Typography variant={"h6"} width={"100%"} textAlign={"center"}>
+          {`Total: $${formattedStringNumber(topThreeSum)}`}
+        </Typography>
       ) : (
-        <Stack spacing={2}>
-          <FlexColWrapper gap={2} toRowBreak={"xl"}>
-            {topThree.map(([category, amount], idx) => (
-              <ColoredInfoCard
-                key={category}
-                cardColors={defaultCardColor}
-                info={`$${formattedStringNumber(Number(amount))}`}
-                title={`${idx + 1}) ${category}`}
-              />
-            ))}
-          </FlexColWrapper>
-          {topThree.length !== 0 ? (
-            <Typography variant={"h6"} width={"100%"} textAlign={"center"}>
-              {`Total: $${formattedStringNumber(topThreeSum)}`}
-            </Typography>
-          ) : (
-            <Typography width={"100%"} textAlign={"center"}>
-              Enter your expenses in transactions
-            </Typography>
-          )}
-        </Stack>
+        <Typography width={"100%"} textAlign={"center"}>
+          Enter your expenses in transactions
+        </Typography>
       )}
-    </ShowCaseCard>
+    </Stack>
   )
 }
 

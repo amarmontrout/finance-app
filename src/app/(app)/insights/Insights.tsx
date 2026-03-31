@@ -15,7 +15,6 @@ import MonthYearSelector from "@/components/MonthYearSelector"
 import { SelectedDateType } from "@/utils/type"
 import { MONTHS } from "@/globals/globals"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { getTotalsForMonthNetCash } from "../experimental/functions"
 
 const Insights = () => {
@@ -72,7 +71,7 @@ const Insights = () => {
   }
 
   return (
-    <Stack gap={1}>
+    <Stack gap={2}>
       <MonthYearSelector
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
@@ -80,52 +79,50 @@ const Insights = () => {
         showMonth={false}
       />
 
-      <ShowCaseCard title="">
-        <Stack spacing={3}>
-          <ToggleButtonGroup
-            value={type}
-            exclusive
-            size={"small"}
-            onChange={handleSelectType}
-            sx={{
-              width: "100%",
-              justifyContent: "center",
-              gap: 3,
-              "& .MuiToggleButton-root": {
-                borderRadius: "15px",
-                border: "1px solid",
-                px: 3,
-                textTransform: "none",
+      <Stack spacing={3}>
+        <ToggleButtonGroup
+          value={type}
+          exclusive
+          size={"small"}
+          onChange={handleSelectType}
+          sx={{
+            width: "100%",
+            justifyContent: "center",
+            gap: 3,
+            "& .MuiToggleButton-root": {
+              borderRadius: "15px",
+              border: "1px solid",
+              px: 3,
+              textTransform: "none",
+            },
+            "& .MuiToggleButtonGroup-grouped": {
+              margin: 0,
+              border: "1px solid",
+              "&:not(:first-of-type)": {
+                borderLeft: "1px solid",
               },
-              "& .MuiToggleButtonGroup-grouped": {
-                margin: 0,
-                border: "1px solid",
-                "&:not(:first-of-type)": {
-                  borderLeft: "1px solid",
-                },
-              },
-            }}
-          >
-            <ToggleButton value="incomeExpense">Income / Expense</ToggleButton>
+            },
+          }}
+        >
+          <ToggleButton value="incomeExpense">Income / Expense</ToggleButton>
 
-            <ToggleButton value="net">Net Cash Flow</ToggleButton>
-          </ToggleButtonGroup>
+          <ToggleButton value="net">Net Cash Flow</ToggleButton>
+        </ToggleButtonGroup>
 
-          <Box sx={{ minHeight: 400 }}>
-            <BarChart
-              multiColumnData={
-                type === "incomeExpense" ? IncomeExpenseData : undefined
-              }
-              twoColumnData={type === "net" ? NetChartData : undefined}
-              barColors={
-                type === "incomeExpense"
-                  ? [positiveColor.color, negativeColor.color]
-                  : [neutralColor.color]
-              }
-            />
-          </Box>
-        </Stack>
-      </ShowCaseCard>
+        <Box sx={{ minHeight: 400 }}>
+          <BarChart
+            multiColumnData={
+              type === "incomeExpense" ? IncomeExpenseData : undefined
+            }
+            twoColumnData={type === "net" ? NetChartData : undefined}
+            barColors={
+              type === "incomeExpense"
+                ? [positiveColor.color, negativeColor.color]
+                : [neutralColor.color]
+            }
+          />
+        </Box>
+      </Stack>
     </Stack>
   )
 }

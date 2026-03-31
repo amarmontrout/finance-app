@@ -1,5 +1,3 @@
-import LoadingCircle from "@/components/LoadingCircle"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
@@ -39,26 +37,20 @@ const WeekTotalBudget = ({
   const netTotal = budgetTotal - actualTotal
 
   return (
-    <ShowCaseCard title={""}>
-      {isLoading ? (
-        <LoadingCircle height={250} />
-      ) : (
-        <Stack className="xl:w-[50%]" spacing={1.5} margin={"0 auto"}>
-          <BudgetProgressBar
-            label={"Week Total"}
-            actual={actualTotal}
-            budget={budgetTotal}
-          />
+    <Stack className="xl:w-[50%]" spacing={1.5} margin={"0 auto"}>
+      <BudgetProgressBar
+        label={"Week Total"}
+        actual={actualTotal}
+        budget={budgetTotal}
+      />
 
-          {expenseTransactions.length !== 0 && (
-            <Typography variant={"h6"} textAlign={"left"}>
-              {`${netTotal < 0 ? "Overspending" : "Saving"}
+      {expenseTransactions.length !== 0 && (
+        <Typography variant={"h6"} textAlign={"left"}>
+          {`${netTotal < 0 ? "Overspending" : "Saving"}
                     $${formattedStringNumber(Math.abs(netTotal))} for the week`}
-            </Typography>
-          )}
-        </Stack>
+        </Typography>
       )}
-    </ShowCaseCard>
+    </Stack>
   )
 }
 

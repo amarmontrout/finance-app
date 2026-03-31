@@ -2,7 +2,7 @@
 
 import { useMemo, useRef, useState } from "react"
 import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
-import { Stack } from "@mui/material"
+import { Divider, Stack } from "@mui/material"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useCategoryContext } from "@/contexts/categories-context"
 import {
@@ -56,7 +56,7 @@ const Budget = () => {
   }, [TODAY, weekOffset])
 
   return (
-    <Stack spacing={1.5}>
+    <Stack spacing={2} pb={"58px"}>
       <WeekSelector
         week={week}
         weekOffset={weekOffset}
@@ -73,7 +73,7 @@ const Budget = () => {
         isLoading={isLoading}
         week={week}
       />
-
+      <Divider />
       <WeekTotalBudget
         transactions={transactions}
         week={week}

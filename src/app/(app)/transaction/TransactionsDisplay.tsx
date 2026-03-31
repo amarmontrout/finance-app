@@ -1,5 +1,4 @@
 import LoadingCircle from "@/components/LoadingCircle"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
@@ -69,48 +68,40 @@ const TransactionsDisplay = ({
   }, [type])
 
   return (
-    <ShowCaseCard title={""}>
-      <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"}>
-        <TransactionTypeToggle type={type} setType={setType} />
+    <Stack className="xl:w-[50%]" spacing={2} margin={"0 auto"} pb={"58px"}>
+      <TransactionTypeToggle type={type} setType={setType} />
 
-        {isLoading ? (
-          <LoadingCircle height={250} />
-        ) : (
-          <Stack spacing={1}>
-            {type === "expense" && (
-              <ExpenseViewToggle view={view} setView={setView} />
-            )}
+      {isLoading ? (
+        <LoadingCircle height={250} />
+      ) : (
+        <Stack spacing={1}>
+          {type === "expense" && (
+            <ExpenseViewToggle view={view} setView={setView} />
+          )}
 
-            <hr
-              style={{
-                border: `1px solid ${accentColorPrimary}`,
-              }}
-            />
+          <Typography variant="h5" fontWeight={700} textAlign={"center"}>
+            {`$${formattedStringNumber(total)}`}
+          </Typography>
 
-            <Typography variant="h5" fontWeight={700} textAlign={"center"}>
-              {`$${formattedStringNumber(total)}`}
+          {filteredTransactions.length === 0 ? (
+            <Typography width="100%" textAlign="center">
+              {`There are no ${type} transactions`}
             </Typography>
-
-            {filteredTransactions.length === 0 ? (
-              <Typography width="100%" textAlign="center">
-                {`There are no ${type} transactions`}
-              </Typography>
-            ) : (
-              <CategoryStack
-                filteredTransactions={filteredTransactions}
-                selectedTransaction={selectedTransaction}
-                setSelectedTransaction={setSelectedTransaction}
-                refreshTransactions={refreshTransactions}
-                openDialog={openDialog}
-                setOpenDialog={setOpenDialog}
-                setAlertToast={setAlertToast}
-                currentTheme={currentTheme}
-              />
-            )}
-          </Stack>
-        )}
-      </Stack>
-    </ShowCaseCard>
+          ) : (
+            <CategoryStack
+              filteredTransactions={filteredTransactions}
+              selectedTransaction={selectedTransaction}
+              setSelectedTransaction={setSelectedTransaction}
+              refreshTransactions={refreshTransactions}
+              openDialog={openDialog}
+              setOpenDialog={setOpenDialog}
+              setAlertToast={setAlertToast}
+              currentTheme={currentTheme}
+            />
+          )}
+        </Stack>
+      )}
+    </Stack>
   )
 }
 

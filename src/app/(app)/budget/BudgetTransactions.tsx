@@ -1,6 +1,4 @@
 import ListItemSwipe from "@/components/ListItemSwipe"
-import LoadingCircle from "@/components/LoadingCircle"
-import ShowCaseCard from "@/components/ShowCaseCard"
 import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
 import { Stack, Typography, Collapse, Box } from "@mui/material"
 import { useMemo, useState } from "react"
@@ -8,7 +6,6 @@ import { TransitionGroup } from "react-transition-group"
 import BudgetProgressBar from "./BudgetProgressBar"
 import {
   NewTransactionType,
-  DateType,
   AlertToastType,
   HookSetter,
   WeekType,
@@ -111,81 +108,73 @@ const BudgetTransactions = ({
   }
 
   return (
-    <ShowCaseCard title={""}>
-      {isLoading ? (
-        <LoadingCircle height={250} />
+    <Stack className="xl:w-[50%]" spacing={3} margin={"0 auto"}>
+      {expenseTransactions.length === 0 ? (
+        <Typography width={"100%"} textAlign={"center"}>
+          The are no expense entries for this week
+        </Typography>
       ) : (
-        <Stack className="xl:w-[50%]" spacing={3} margin={"0 auto"}>
-          {expenseTransactions.length === 0 ? (
-            <Typography width={"100%"} textAlign={"center"}>
-              The are no expense entries for this week
-            </Typography>
-          ) : (
-            <Stack spacing={5}>
-              {Object.entries(groupedTransactions)
-                .sort(([a], [b]) => a.localeCompare(b))
-                .map(([category, entries]) => {
-                  const sortedEntries = [...entries].sort(
-                    (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
-                  )
-                  const total = entries.reduce((sum, entry) => {
-                    return entry.is_return
-                      ? sum - entry.amount
-                      : sum + entry.amount
-                  }, 0)
+        <Stack spacing={3}>
+          {Object.entries(groupedTransactions)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([category, entries]) => {
+              const sortedEntries = [...entries].sort(
+                (a, b) => toTimestamp(b.date) - toTimestamp(a.date),
+              )
+              const total = entries.reduce((sum, entry) => {
+                return entry.is_return ? sum - entry.amount : sum + entry.amount
+              }, 0)
 
-                  return (
-                    <Stack key={category} spacing={0.5}>
-                      <BudgetProgressBar
-                        label={category}
-                        actual={total}
-                        budget={budgetLookup[category] ?? 0}
-                      />
+              return (
+                <Stack key={category} spacing={0.5}>
+                  <BudgetProgressBar
+                    label={category}
+                    actual={total}
+                    budget={budgetLookup[category] ?? 0}
+                  />
 
-                      <TransitionGroup>
-                        {sortedEntries.map((entry, index) => {
-                          const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
-                          const isLast = index === sortedEntries.length - 1
-                          return (
-                            <Collapse key={entry.id}>
-                              <Box mb={isLast ? 0 : 1}>
-                                <ListItemSwipe
-                                  mainTitle={entry.note}
-                                  secondaryTitle={entryDate}
-                                  amount={`${entry.is_return ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
-                                  amountColor={
-                                    entry.is_return ? "error.main" : "inherit"
-                                  }
-                                  buttonCondition={noteId === entry.id}
-                                  onDelete={async () => {
-                                    handleDeleteEntry(entry.id)
-                                  }}
-                                  onSetDelete={() => {
-                                    setNoteId(entry.id)
-                                  }}
-                                  onCancelDelete={() => {
-                                    setSelectedTransaction(null)
-                                    setNoteId(null)
-                                  }}
-                                  onEdit={() => {
-                                    setOpenDialog(true)
-                                    setSelectedTransaction(entry)
-                                  }}
-                                  currentTheme={currentTheme}
-                                />
-                              </Box>
-                            </Collapse>
-                          )
-                        })}
-                      </TransitionGroup>
-                    </Stack>
-                  )
-                })}
-            </Stack>
-          )}
+                  <TransitionGroup>
+                    {sortedEntries.map((entry, index) => {
+                      const entryDate = `${entry.date.month} ${entry.date.day}, ${entry.date.year}`
+                      const isLast = index === sortedEntries.length - 1
+                      return (
+                        <Collapse key={entry.id}>
+                          <Box mb={isLast ? 0 : 1}>
+                            <ListItemSwipe
+                              mainTitle={entry.note}
+                              secondaryTitle={entryDate}
+                              amount={`${entry.is_return ? "-" : ""}$${formattedStringNumber(entry.amount)}`}
+                              amountColor={
+                                entry.is_return ? "error.main" : "inherit"
+                              }
+                              buttonCondition={noteId === entry.id}
+                              onDelete={async () => {
+                                handleDeleteEntry(entry.id)
+                              }}
+                              onSetDelete={() => {
+                                setNoteId(entry.id)
+                              }}
+                              onCancelDelete={() => {
+                                setSelectedTransaction(null)
+                                setNoteId(null)
+                              }}
+                              onEdit={() => {
+                                setOpenDialog(true)
+                                setSelectedTransaction(entry)
+                              }}
+                              currentTheme={currentTheme}
+                            />
+                          </Box>
+                        </Collapse>
+                      )
+                    })}
+                  </TransitionGroup>
+                </Stack>
+              )
+            })}
         </Stack>
       )}
-    </ShowCaseCard>
+    </Stack>
   )
 }
 

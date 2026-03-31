@@ -77,8 +77,8 @@ const CategoryList = ({
                   amount={`$${formattedStringNumber(transaction.amount)}`}
                   amountColor={
                     transaction.type === "income"
-                      ? positiveColor
-                      : negativeColor
+                      ? positiveColor.color
+                      : negativeColor.color
                   }
                   buttonCondition={
                     selectedTransaction?.id === transaction.id && !openDialog

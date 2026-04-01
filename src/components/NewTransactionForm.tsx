@@ -11,12 +11,9 @@ import {
   Select,
   MenuItem,
   Checkbox,
-  TableContainer,
-  Table,
-  TableBody,
-  TableRow,
   Typography,
-  TableCell,
+  Divider,
+  Box,
 } from "@mui/material"
 import { RefObject, useEffect, useMemo, useState } from "react"
 import { getDaysInMonth } from "../app/(app)/experimental/functions"
@@ -32,30 +29,29 @@ const MENU_PROPS = {
 }
 
 const Row = ({
+  active,
   label,
-  value,
+  display,
+  edit,
   onClick,
 }: {
+  active?: boolean
   label: string
-  value: React.ReactNode
+  display: React.ReactNode
+  edit?: React.ReactNode
   onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }) => {
   return (
-    <TableRow>
-      <TableCell>
-        <Typography>{label}</Typography>
-      </TableCell>
-      <TableCell
-        align="right"
-        onClick={onClick}
-        sx={{
-          textDecorationLine: onClick ? "underline" : "none",
-          cursor: onClick ? "pointer" : "default",
-        }}
-      >
-        {value}
-      </TableCell>
-    </TableRow>
+    <Stack
+      direction={"row"}
+      justifyContent={"space-between"}
+      alignItems={"flex-start"}
+    >
+      <Typography flex={1}>{label}</Typography>
+      <Box onClick={onClick} minWidth={0} flex={1} textAlign={"right"}>
+        {active ? edit : display}
+      </Box>
+    </Stack>
   )
 }
 
@@ -145,14 +141,6 @@ const NewTransactionForm = ({
     "date" | "category" | "note" | "payment_method" | null
   >(null)
 
-  const handleOpen = (field: typeof activeField) => {
-    setActiveField(field)
-  }
-
-  const handleClose = () => {
-    setActiveField(null)
-  }
-
   const { days, years } = useMemo(() => {
     const days = Array.from(
       { length: getDaysInMonth(month, year) },
@@ -165,7 +153,7 @@ const NewTransactionForm = ({
   const sortedNotes = useMemo(() => [...allNotes].sort(), [allNotes])
 
   useEffect(() => {
-    if (transaction.is_return) {
+    if (transaction.is_return && transaction.is_paid) {
       setTransaction((prev) => ({
         ...prev,
         is_paid: false,
@@ -196,9 +184,16 @@ const NewTransactionForm = ({
       },
     }))
 
+  const handleOpen = (field: typeof activeField) => {
+    setActiveField(field)
+  }
+
+  const handleClose = () => {
+    setActiveField(null)
+  }
+
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={2}>
-      {/* Money input */}
       {openDialog && (
         <MoneyInput
           value={transaction.amount}
@@ -208,140 +203,130 @@ const NewTransactionForm = ({
         />
       )}
 
-      <TableContainer>
-        <Table>
-          <TableBody>
-            {/* Full date */}
-            <Row
-              label="Date"
-              value={
-                activeField === "date" ? (
-                  <TransactionDatePicker
-                    date={transaction.date}
-                    days={days}
-                    years={years}
-                    onChange={(field, value) => updateDate(field)(value)}
-                  />
-                ) : (
-                  <Typography>
-                    {`${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`}
-                  </Typography>
-                )
-              }
-              onClick={
-                activeField !== "date" ? () => handleOpen("date") : undefined
-              }
+      <Stack direction={"column"} divider={<Divider />} spacing={1.5}>
+        <Row
+          active={activeField === "date"}
+          label={"Date"}
+          display={
+            <Typography>
+              {`${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`}
+            </Typography>
+          }
+          edit={
+            <TransactionDatePicker
+              date={transaction.date}
+              days={days}
+              years={years}
+              onChange={(field, value) => updateDate(field)(value)}
             />
+          }
+          onClick={
+            activeField !== "date" ? () => handleOpen("date") : undefined
+          }
+        />
 
-            {/* Category */}
-            <Row
-              label="Category"
-              value={
-                activeField === "category" ? (
-                  <CategoryAutocomplete
-                    transaction={transaction}
-                    setTransaction={setTransaction}
-                    categories={categories}
-                    handleClose={handleClose}
-                  />
-                ) : (
-                  <Typography>
-                    {transaction.category || "Select Category"}
-                  </Typography>
-                )
-              }
-              onClick={
-                activeField !== "category"
-                  ? () => handleOpen("category")
-                  : undefined
-              }
+        <Row
+          active={activeField === "category"}
+          label={"Category"}
+          display={
+            <Typography>{transaction.category || "Select Category"}</Typography>
+          }
+          edit={
+            <CategoryAutocomplete
+              transaction={transaction}
+              setTransaction={setTransaction}
+              categories={categories}
+              handleClose={handleClose}
             />
+          }
+          onClick={
+            activeField !== "category"
+              ? () => handleOpen("category")
+              : undefined
+          }
+        />
 
-            {/* Notes */}
-            <Row
-              label="Note"
-              value={
-                activeField === "note" ? (
-                  <NoteAutocomplete
-                    transaction={transaction}
-                    setTransaction={setTransaction}
-                    sortedNotes={sortedNotes}
-                    handleClose={handleClose}
-                  />
-                ) : transaction.note !== "" ? (
-                  <Typography>{transaction.note}</Typography>
-                ) : (
-                  <Typography>Add Note</Typography>
-                )
-              }
-              onClick={
-                activeField !== "note" ? () => handleOpen("note") : undefined
-              }
+        <Row
+          active={activeField === "note"}
+          label={"Note"}
+          display={
+            transaction.note !== "" ? (
+              <Typography
+                sx={{
+                  whiteSpace: "normal",
+                  wordBreak: "break-word",
+                }}
+              >
+                {transaction.note}
+              </Typography>
+            ) : (
+              <Typography>Add Note</Typography>
+            )
+          }
+          edit={
+            <NoteAutocomplete
+              transaction={transaction}
+              setTransaction={setTransaction}
+              sortedNotes={sortedNotes}
+              handleClose={handleClose}
             />
+          }
+          onClick={
+            activeField !== "note" ? () => handleOpen("note") : undefined
+          }
+        />
 
-            {/* Expense payment method */}
-            {transaction.type === "expense" && (
-              <Row
-                label="Payment Method"
-                value={
-                  <Typography>
-                    {transaction.payment_method || "Debit"}
-                  </Typography>
-                }
-                onClick={() =>
-                  updateTransaction("payment_method")(
-                    transaction.payment_method === "Debit" ? "Credit" : "Debit",
-                  )
+        {transaction.type === "expense" && (
+          <Row
+            active={activeField === "payment_method"}
+            label={"Payment Method"}
+            display={
+              <Typography>{transaction.payment_method || "Debit"}</Typography>
+            }
+            onClick={() =>
+              updateTransaction("payment_method")(
+                transaction.payment_method === "Debit" ? "Credit" : "Debit",
+              )
+            }
+          />
+        )}
+
+        {transaction.type === "expense" && (
+          <Row
+            label={"Return"}
+            display={
+              <Checkbox
+                sx={{
+                  width: 16,
+                  height: 16,
+                }}
+                disableRipple
+                checked={transaction.is_return}
+                onChange={(e) =>
+                  updateTransaction("is_return")(e.target.checked)
                 }
               />
-            )}
+            }
+          />
+        )}
 
-            {/* Is return */}
-            {transaction.type === "expense" && (
-              <TableRow>
-                <TableCell align={"left"}>
-                  <Typography>Return</Typography>
-                </TableCell>
-                <TableCell align={"right"}>
-                  <Checkbox
-                    sx={{
-                      width: 16,
-                      height: 16,
-                    }}
-                    disableRipple
-                    checked={transaction.is_return}
-                    onChange={(e) =>
-                      updateTransaction("is_return")(e.target.checked)
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            )}
-
-            {/* Is paid */}
-            {transaction.type === "expense" && !transaction.is_return && (
-              <TableRow>
-                <TableCell align={"left"}>
-                  <Typography>Paid</Typography>
-                </TableCell>
-                <TableCell align={"right"}>
-                  <Checkbox
-                    sx={{
-                      width: 16,
-                      height: 16,
-                    }}
-                    disableRipple
-                    checked={transaction.is_paid}
-                    onChange={(e) =>
-                      updateTransaction("is_paid")(e.target.checked)
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+        {transaction.type === "expense" && !transaction.is_return && (
+          <Row
+            label={"Paid"}
+            display={
+              <Checkbox
+                sx={{
+                  width: 16,
+                  height: 16,
+                }}
+                disableRipple
+                checked={transaction.is_paid}
+                onChange={(e) => updateTransaction("is_paid")(e.target.checked)}
+              />
+            }
+          />
+        )}
+      </Stack>
     </Stack>
   )
 }

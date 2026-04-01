@@ -162,7 +162,7 @@ const AddEditDialog = ({
       ...prev,
       category: "",
       note: "",
-      payment_method: type === "income" ? "" : "Debit",
+      payment_method: type === "income" ? "" : "Credit",
       type: type,
       is_paid: false,
       is_return: false,

@@ -1,32 +1,17 @@
 import MoneyInput from "@/components/MoneyInput"
-import { MONTHS } from "@/globals/globals"
 import {
   HookSetter,
   ChoiceType,
   NewTransactionType,
   DateType,
 } from "@/utils/type"
-import {
-  Stack,
-  Select,
-  MenuItem,
-  Checkbox,
-  Typography,
-  Divider,
-  Box,
-} from "@mui/material"
+import { Stack, Checkbox, Typography, Divider, Box } from "@mui/material"
 import { RefObject, useEffect, useMemo, useState } from "react"
 import { getDaysInMonth } from "../app/(app)/experimental/functions"
 import NoteAutocomplete from "./NoteAutocomplete"
 import CategoryAutocomplete from "./CategoryAutocomplete"
-
-const MENU_PROPS = {
-  PaperProps: {
-    style: {
-      maxHeight: 7 * 39,
-    },
-  },
-}
+import TransactionDatePicker from "./TransactionDatePicker"
+import { neutralColor } from "@/globals/colors"
 
 const Row = ({
   active,
@@ -51,69 +36,6 @@ const Row = ({
       <Box onClick={onClick} minWidth={0} flex={1} textAlign={"right"}>
         {active ? edit : display}
       </Box>
-    </Stack>
-  )
-}
-
-const TransactionDatePicker = ({
-  date,
-  days,
-  years,
-  onChange,
-}: {
-  date: DateType
-  days: number[]
-  years: number[]
-  onChange: (field: keyof DateType, value: string | number) => void
-}) => {
-  return (
-    <Stack
-      direction={"row"}
-      spacing={1}
-      justifyContent={"flex-end"}
-      maxHeight={24}
-    >
-      <Select
-        size="small"
-        variant="standard"
-        value={date.month}
-        MenuProps={MENU_PROPS.PaperProps}
-        onChange={(e) => onChange("month", e.target.value)}
-      >
-        {MONTHS.map((m) => (
-          <MenuItem key={m} value={m}>
-            {m}
-          </MenuItem>
-        ))}
-      </Select>
-
-      <Select
-        size="small"
-        variant="standard"
-        value={date.day ?? 1}
-        MenuProps={MENU_PROPS.PaperProps}
-        onChange={(e) => onChange("day", Number(e.target.value))}
-      >
-        {days.map((d) => (
-          <MenuItem key={d} value={d}>
-            {d}
-          </MenuItem>
-        ))}
-      </Select>
-
-      <Select
-        size="small"
-        variant="standard"
-        value={date.year}
-        MenuProps={MENU_PROPS.PaperProps}
-        onChange={(e) => onChange("year", Number(e.target.value))}
-      >
-        {years.map((y) => (
-          <MenuItem key={y} value={y}>
-            {y}
-          </MenuItem>
-        ))}
-      </Select>
     </Stack>
   )
 }
@@ -208,7 +130,7 @@ const NewTransactionForm = ({
           active={activeField === "date"}
           label={"Date"}
           display={
-            <Typography>
+            <Typography borderBottom={`1px solid ${neutralColor.color}`}>
               {`${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`}
             </Typography>
           }
@@ -229,7 +151,9 @@ const NewTransactionForm = ({
           active={activeField === "category"}
           label={"Category"}
           display={
-            <Typography>{transaction.category || "Select Category"}</Typography>
+            <Typography borderBottom={`1px solid ${neutralColor.color}`}>
+              {transaction.category || "Select Category"}
+            </Typography>
           }
           edit={
             <CategoryAutocomplete
@@ -252,6 +176,7 @@ const NewTransactionForm = ({
           display={
             transaction.note !== "" ? (
               <Typography
+                borderBottom={`1px solid ${neutralColor.color}`}
                 sx={{
                   whiteSpace: "normal",
                   wordBreak: "break-word",
@@ -260,7 +185,9 @@ const NewTransactionForm = ({
                 {transaction.note}
               </Typography>
             ) : (
-              <Typography>Add Note</Typography>
+              <Typography borderBottom={`1px solid ${neutralColor.color}`}>
+                Add Note
+              </Typography>
             )
           }
           edit={
@@ -281,7 +208,9 @@ const NewTransactionForm = ({
             active={activeField === "payment_method"}
             label={"Payment Method"}
             display={
-              <Typography>{transaction.payment_method || "Debit"}</Typography>
+              <Typography borderBottom={`1px solid ${neutralColor.color}`}>
+                {transaction.payment_method || "Debit"}
+              </Typography>
             }
             onClick={() =>
               updateTransaction("payment_method")(

@@ -56,7 +56,7 @@ const Overview = () => {
         isLoading={isLoading}
       />
 
-      <Divider />
+      {/* <Divider />
 
       <TopMonthlyExpenses
         transactions={transactions}
@@ -64,7 +64,7 @@ const Overview = () => {
         currentYear={currentYear}
         currentTheme={currentTheme}
         isLoading={isLoading}
-      />
+      /> */}
 
       <SetUpDialog
         setUpDialogOpen={isSetUpDialogOpen}

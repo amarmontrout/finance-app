@@ -93,7 +93,8 @@ const SummaryCard = ({
                   fontWeight: 700,
                 }}
               >
-                {isPositive ? "+" : ""}${formattedStringNumber(diff!)}
+                {isPositive ? "+" : "-"}$
+                {formattedStringNumber(Math.abs(diff!))}
               </span>{" "}
               last month
             </Typography>

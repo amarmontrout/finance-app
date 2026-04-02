@@ -167,7 +167,7 @@ const AddBudgetForm = ({
             }
             onClick={save}
             sx={{
-              backgroundColor: positiveColor,
+              backgroundColor: positiveColor.color,
             }}
             loading={isLoading}
           >

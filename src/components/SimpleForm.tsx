@@ -34,7 +34,7 @@ const SimpleForm = ({
         variant={"contained"}
         onClick={onSubmit}
         sx={{
-          backgroundColor: positiveColor,
+          backgroundColor: positiveColor.color,
         }}
         disabled={isDisabled || value === ""}
         loading={isLoading}

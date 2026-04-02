@@ -93,7 +93,7 @@ const LoginForm = () => {
             variant={"contained"}
             onClick={handleLogin}
             disabled={!credentials.username || !credentials.password}
-            sx={{ backgroundColor: positiveColor }}
+            sx={{ backgroundColor: positiveColor.color }}
             loading={isLoading}
           >
             {"Sign In"}

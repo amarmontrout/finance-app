@@ -68,11 +68,7 @@ const SummaryCard = ({
       ) : (
         <Stack height={"100%"} justifyContent={"space-between"}>
           {/* Title */}
-          <Typography
-            fontSize={"0.75rem"}
-            fontWeight={600}
-            color={"text.secondary"}
-          >
+          <Typography fontSize={"0.75rem"} fontWeight={600} color={"text.main"}>
             {title}
           </Typography>
 
@@ -88,14 +84,13 @@ const SummaryCard = ({
           {/* Comparison */}
           {comparison !== undefined && (
             <Typography
-              fontSize={"0.75rem"}
+              fontSize={"0.73rem"}
               color={"text.secondary"}
               textAlign={"right"}
             >
               <span
                 style={{
-                  color: isPositive ? style.main : "#6b7280",
-                  fontWeight: 500,
+                  fontWeight: 700,
                 }}
               >
                 {isPositive ? "+" : ""}${formattedStringNumber(diff!)}

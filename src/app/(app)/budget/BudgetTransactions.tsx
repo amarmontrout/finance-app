@@ -5,7 +5,7 @@ import { useMemo, useState } from "react"
 import { TransitionGroup } from "react-transition-group"
 import BudgetProgressBar from "./BudgetProgressBar"
 import {
-  NewTransactionType,
+  TransactionType,
   AlertToastType,
   HookSetter,
   WeekType,
@@ -25,10 +25,10 @@ const BudgetTransactions = ({
   isLoading,
   week,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
   budgetCategories: BudgetType[]
-  setSelectedTransaction: HookSetter<NewTransactionType | null>
+  setSelectedTransaction: HookSetter<TransactionType | null>
   setAlertToast: HookSetter<AlertToastType | undefined>
   setOpenDialog: HookSetter<boolean>
   isLoading: boolean
@@ -53,7 +53,7 @@ const BudgetTransactions = ({
   const groupedTransactions = useMemo(() => {
     const allowedCategories = new Set(budgetCategories.map((c) => c.category))
 
-    return expenseTransactions.reduce<Record<string, NewTransactionType[]>>(
+    return expenseTransactions.reduce<Record<string, TransactionType[]>>(
       (acc, transaction) => {
         if (!allowedCategories.has(transaction.category)) return acc
         const category = transaction.category

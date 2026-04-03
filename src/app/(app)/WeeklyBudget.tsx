@@ -10,7 +10,7 @@ import {
   getWeekBounds,
   toTimestamp,
 } from "@/utils/helperFunctions"
-import { BudgetType, NewTransactionType } from "@/utils/type"
+import { BudgetType, TransactionType } from "@/utils/type"
 
 const WeeklyBudget = ({
   transactions,
@@ -21,7 +21,7 @@ const WeeklyBudget = ({
   currentTheme,
   isLoading,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   budgetCategories: BudgetType[]
   currentMonth: string
   currentDay: number

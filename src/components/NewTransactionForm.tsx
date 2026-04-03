@@ -1,13 +1,8 @@
 import MoneyInput from "@/components/MoneyInput"
-import {
-  HookSetter,
-  ChoiceType,
-  NewTransactionType,
-  DateType,
-} from "@/utils/type"
+import { HookSetter, ChoiceType, TransactionType, DateType } from "@/utils/type"
 import { Stack, Checkbox, Typography, Divider, Box } from "@mui/material"
 import { RefObject, useEffect, useMemo, useState } from "react"
-import { getDaysInMonth } from "../app/(app)/experimental/functions"
+import { getDaysInMonth } from "../utils/functions"
 import NoteAutocomplete from "./NoteAutocomplete"
 import CategoryAutocomplete from "./CategoryAutocomplete"
 import TransactionDatePicker from "./TransactionDatePicker"
@@ -49,8 +44,8 @@ const NewTransactionForm = ({
   inputRef,
   currentYear,
 }: {
-  transaction: NewTransactionType
-  setTransaction: HookSetter<NewTransactionType>
+  transaction: TransactionType
+  setTransaction: HookSetter<TransactionType>
   allNotes: string[]
   categories: ChoiceType[]
   openDialog: boolean
@@ -91,7 +86,7 @@ const NewTransactionForm = ({
   }, [month, year, setTransaction, transaction.date.day])
 
   const updateTransaction =
-    (field: keyof NewTransactionType) => (value: string | number | boolean) =>
+    (field: keyof TransactionType) => (value: string | number | boolean) =>
       setTransaction((prev) => ({
         ...prev,
         [field]: value,

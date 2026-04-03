@@ -1,6 +1,6 @@
 import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
-import { ChoiceType, DateType, WeekType } from "./type"
+import { DateType, WeekType } from "./type"
 
 /**
  * This helper function gets the current year and month.
@@ -56,20 +56,6 @@ export const getWeekBounds = (
 export const toTimestamp = (date: DateType) =>
   new Date(date.year, MONTH_INDEX[date.month], date.day).getTime()
 
-
-/**
- * This helper function converts a string number to a number.
- * It also removes any commas.
- * 
- * @param str 
- * @returns A number without the commas
- */
-export const cleanNumber = (
-  str: string
-): number => {
-  return Number(str.replace(/[^0-9.-]+/g,""))
-}
-
 /**
  * This helper function converts a number to a formatted string.
  * It adds commas.
@@ -106,24 +92,6 @@ export const makeId = (): number => {
     return Number(result)
 }
 
-/**
- * This helper function gets the state of the current savings rate.
- * 
- * @returns A string depicting the health state
- */
-export const getSavingsHealthState = (net: number, total: number) => {
-  if (total === 0) return "concerning"
-
-  const percent = net / total
-
-  // '<= 0' becaue total = 100 when calculated by the savings rate percent
-  if (percent <= 0) return "concerning"
-  if (percent <= 0.05) return "ok"
-  if (percent <= 0.1) return "average"
-  if (percent <= 0.15) return "great"
-  return "excellent"
-}
-
 export const getCardColor = (
   currentTheme: string | undefined, 
   state: keyof typeof healthStateLightMode
@@ -134,33 +102,3 @@ export const getCardColor = (
   
   return healthStateDarkMode[state]
 }
-
-/**
- * This helper function gets the previous month info for comparison
- * 
- * @returns An object with the previous month's year and month.
- */
-export const getPreviousMonthInfo = (year: number, month: string) => {
-  const monthIndex = MONTHS.indexOf(month)
-
-  if (monthIndex > 0) {
-    return {
-      year,
-      month: MONTHS[monthIndex - 1]
-    }
-  }
-
-  return {
-    year: year - 1,
-    month: MONTHS[11]
-  }
-}
-
-export const getExcludedCategorySet = (
-  categories: ChoiceType[]
-): Set<string> =>
-  new Set(
-    categories
-      .filter((c) => c.isExcluded)
-      .map((c) => c.name)
-  )

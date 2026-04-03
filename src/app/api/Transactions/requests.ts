@@ -1,5 +1,5 @@
 import { dbRequestBrowser, Filter } from "../dbRequest"
-import {  NewTransactionType } from "@/utils/type"
+import {  TransactionType } from "@/utils/type"
 
 
 export const saveTransaction = async ({
@@ -7,9 +7,9 @@ export const saveTransaction = async ({
   body
 }: {
   userId: string
-  body: NewTransactionType
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<NewTransactionType>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "POST",
@@ -27,9 +27,9 @@ export const getTransactions = async ({
   filters,
 }: {
   userId: string
-  filters?: Filter<NewTransactionType>[]
+  filters?: Filter<TransactionType>[]
 }) => {
-  const { data, error } = await dbRequestBrowser<NewTransactionType>({
+  const { data, error } = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "GET",
@@ -48,9 +48,9 @@ export const updateTransaction = async ({
 }: {
   userId: string
   rowId: number
-  body: NewTransactionType
+  body: TransactionType
 }) => {
-  const {data, error} = await dbRequestBrowser<NewTransactionType>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "PATCH",
@@ -71,7 +71,7 @@ export const deleteTransaction = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<NewTransactionType>({
+  const {data, error} = await dbRequestBrowser<TransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "DELETE",

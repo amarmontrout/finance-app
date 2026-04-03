@@ -6,11 +6,7 @@ import { useEffect, useRef, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
-import {
-  AlertToastType,
-  NewTransactionType,
-  SelectedDateType,
-} from "@/utils/type"
+import { AlertToastType, TransactionType, SelectedDateType } from "@/utils/type"
 import MonthYearSelector from "@/components/MonthYearSelector"
 import AddDataButton from "@/components/AddDataButton"
 import AlertToast from "@/components/AlertToast"
@@ -38,7 +34,7 @@ const Transactions = () => {
   const [type, setType] = useState<"income" | "expense">("income")
 
   const [selectedTransaction, setSelectedTransaction] =
-    useState<NewTransactionType | null>(null)
+    useState<TransactionType | null>(null)
 
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)

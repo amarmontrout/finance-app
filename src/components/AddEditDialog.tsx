@@ -14,7 +14,7 @@ import {
   ChoiceType,
   DateType,
   HookSetter,
-  NewTransactionType,
+  TransactionType,
 } from "@/utils/type"
 import { useUser } from "@/hooks/useUser"
 import {
@@ -46,9 +46,9 @@ const AddEditDialog = ({
   expenseCategories: ChoiceType[]
   inputRef: RefObject<HTMLInputElement | null>
   refreshTransactions: () => Promise<void>
-  selectedTransaction?: NewTransactionType | null
-  setSelectedTransaction?: HookSetter<NewTransactionType | null>
-  transactions: NewTransactionType[]
+  selectedTransaction?: TransactionType | null
+  setSelectedTransaction?: HookSetter<TransactionType | null>
+  transactions: TransactionType[]
   type: "income" | "expense"
   setType: HookSetter<"income" | "expense">
 }) => {
@@ -61,7 +61,7 @@ const AddEditDialog = ({
     year: currentYear,
   }
 
-  const createInitialTransaction = (): NewTransactionType => ({
+  const createInitialTransaction = (): TransactionType => ({
     id: makeId(),
     date: TODAY,
     amount: 0,
@@ -74,7 +74,7 @@ const AddEditDialog = ({
   })
 
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [transaction, setTransaction] = useState<NewTransactionType>(
+  const [transaction, setTransaction] = useState<TransactionType>(
     createInitialTransaction(),
   )
 

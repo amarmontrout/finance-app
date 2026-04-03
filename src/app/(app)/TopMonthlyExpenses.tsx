@@ -3,8 +3,8 @@ import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
-import { getMonthCategoryTotals } from "./experimental/functions"
-import { NewTransactionType } from "@/utils/type"
+import { getMonthCategoryTotals } from "../../utils/functions"
+import { TransactionType } from "@/utils/type"
 
 const TopMonthlyExpenses = ({
   transactions,
@@ -12,7 +12,7 @@ const TopMonthlyExpenses = ({
   currentYear,
   currentTheme,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   currentMonth: string
   currentYear: number
   currentTheme: string | undefined

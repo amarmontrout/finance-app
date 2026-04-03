@@ -2,7 +2,7 @@ import { AlertColor } from "@mui/material"
 
 export type HookSetter<T> = React.Dispatch<React.SetStateAction<T>>
 
-export type TransactionType = {
+export type OldTransactionType = {
   id: number,
   month: string,
   year: number,
@@ -61,7 +61,7 @@ export type AlertToastType = {
   message: string
 }
 
-export type NewTransactionType = {
+export type TransactionType = {
   id: number, 
   date: DateType,
   amount: number, 

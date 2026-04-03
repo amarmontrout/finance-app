@@ -9,7 +9,7 @@ import {
   AlertToastType,
   BudgetType,
   DateType,
-  NewTransactionType,
+  TransactionType,
 } from "@/utils/type"
 import AddDataButton from "@/components/AddDataButton"
 import WeekSelector from "@/components/WeekSelector"
@@ -35,7 +35,7 @@ const Budget = () => {
 
   const [weekOffset, setWeekOffset] = useState<number>(0)
   const [selectedTransaction, setSelectedTransaction] =
-    useState<NewTransactionType | null>(null)
+    useState<TransactionType | null>(null)
   const [openEditDialog, setOpenEditDialog] = useState<boolean>(false)
   const [openBudgetDialog, setOpenBudgetDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()

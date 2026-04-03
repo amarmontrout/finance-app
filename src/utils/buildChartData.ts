@@ -1,5 +1,5 @@
 import { MONTHS } from "@/globals/globals"
-import { NewTransactionType } from "./type"
+import { TransactionType } from "./type"
 
 export type TwoColumnDataType = [string, string | number][]
 export type MultiColumnDataType = (string | number)[][]
@@ -49,8 +49,8 @@ export const buildMultiColumnData = ({
   firstColumnTitle,
   method
 }: {
-  firstData: NewTransactionType[]
-  secondData?: NewTransactionType[]
+  firstData: TransactionType[]
+  secondData?: TransactionType[]
   selectedYear?: number
   firstColumnTitle: string
   method: "self" | "compare"

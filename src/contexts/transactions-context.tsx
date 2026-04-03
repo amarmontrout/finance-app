@@ -1,11 +1,11 @@
 import { getTransactions } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
-import { NewTransactionType } from "@/utils/type"
+import { TransactionType } from "@/utils/type"
 import { createContext, useContext, useEffect, useState } from "react"
 
 type TransactionsContextType = {
   isLoading: boolean
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
 }
 
@@ -25,7 +25,7 @@ export const useTransactionContext = () => {
 
 export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
-  const [transactions, setTransactions] = useState<NewTransactionType[]>([])
+  const [transactions, setTransactions] = useState<TransactionType[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const refreshTransactions = async () => {
     if (!user) {

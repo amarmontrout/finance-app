@@ -1,6 +1,6 @@
 import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { NewTransactionType } from "@/utils/type"
+import { TransactionType } from "@/utils/type"
 
 /**
  * Gets total income and total expenses for a provided year. Intended to be used
@@ -11,7 +11,7 @@ import { NewTransactionType } from "@/utils/type"
  */
 export const getTotalsForYearNetCash = (
   year: number,
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 ): {incomeTotalYearNet: number, expenseTotalYearNet: number} => {
   let incomeTotalYearNet = 0
   let expenseTotalYearNet = 0
@@ -37,7 +37,7 @@ export const getTotalsForYearNetCash = (
  */
 export const getTotalsForYear = (
   year: number,
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 ): {incomeTotalYear: number, expenseTotalYear: number} => {
   let incomeTotalYear = 0
   let expenseTotalYear = 0
@@ -67,7 +67,7 @@ export const getTotalsForYear = (
 export const getTotalsForMonthNetCash = (
   year: number, 
   month: string, 
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 ): {
   incomeTotalMonthNet: number, 
   expenseTotalMonthNet: number,
@@ -114,7 +114,7 @@ export const getTotalsForMonthNetCash = (
 export const getTotalsForMonth = (
   year: number, 
   month: string, 
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 ): {incomeTotalMonth: number, expenseTotalMonth: number} => {
   let incomeTotalMonth = 0
   let expenseTotalMonth = 0
@@ -144,7 +144,7 @@ export const getTotalsForMonth = (
 export const getTotalsYTDNetCash = (
   year: number, 
   passedMonths: string[],
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 
 ): {incomeTotalYTDNet: number, expenseTotalYTDNet: number} => {
   let incomeTotalYTDNet = 0
@@ -171,7 +171,7 @@ export const getTotalsYTDNetCash = (
 export const getTotalsYTD = (
   year: number, 
   passedMonths: string[],
-  transactions: NewTransactionType[],
+  transactions: TransactionType[],
 
 ): {incomeTotalYTD: number, expenseTotalYTD: number} => {
   let incomeTotalYTD = 0
@@ -250,7 +250,7 @@ export const getAverageNumber = (
 export const getMonthCategoryTotals = (
   year: number, 
   month: string, 
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
 ): [string, string | number][] => {
   const categoryTotals: Record<string, number> = {}
   if (!transactions) return [["Category", "Total"]]

@@ -5,12 +5,10 @@ import {
   getYearChoices,
 } from "@/app/api/Choices/requests"
 import { useUser } from "@/hooks/useUser"
-import { getExcludedCategorySet } from "@/utils/helperFunctions"
 import { BudgetType, ChoiceType } from "@/utils/type"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 
 type CategoryContextType = {
-  excludedSet: Set<string>
   years: ChoiceType[]
   incomeCategories: ChoiceType[]
   expenseCategories: ChoiceType[]
@@ -37,11 +35,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
   const [expenseCategories, setExpenseCategories] = useState<ChoiceType[]>([])
   const [budgetCategories, setBudgetCategories] = useState<BudgetType[]>([])
   const [isLoading, setIsLoading] = useState(true)
-
-  const excludedSet = useMemo(
-    () => getExcludedCategorySet(expenseCategories),
-    [expenseCategories],
-  )
 
   const setSortedState = <T,>(
     result: T[] | null,
@@ -87,7 +80,6 @@ export const CategoryProvider = (props: { children: React.ReactNode }) => {
   return (
     <CategoryContext.Provider
       value={{
-        excludedSet,
         years,
         incomeCategories,
         expenseCategories,

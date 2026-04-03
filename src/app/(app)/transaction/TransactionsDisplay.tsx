@@ -6,7 +6,7 @@ import TransactionTypeToggle from "../../../components/TransactionTypeToggle"
 import {
   AlertToastType,
   HookSetter,
-  NewTransactionType,
+  TransactionType,
   SelectedDateType,
 } from "@/utils/type"
 import ExpenseViewToggle from "./ExpenseViewToggle"
@@ -27,14 +27,14 @@ const TransactionsDisplay = ({
   setOpenDialog,
   currentTheme,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
   type: "income" | "expense"
   setType: HookSetter<"income" | "expense">
   selectedDate: SelectedDateType
   setAlertToast: HookSetter<AlertToastType | undefined>
-  selectedTransaction: NewTransactionType | null
-  setSelectedTransaction: HookSetter<NewTransactionType | null>
+  selectedTransaction: TransactionType | null
+  setSelectedTransaction: HookSetter<TransactionType | null>
   isLoading: boolean
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>

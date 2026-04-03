@@ -1,8 +1,8 @@
 import LoadingCircle from "@/components/LoadingCircle"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { getTotalsForMonthNetCash } from "./experimental/functions"
+import { getTotalsForMonthNetCash } from "../../utils/functions"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { NewTransactionType } from "@/utils/type"
+import { TransactionType } from "@/utils/type"
 import {
   positiveColor,
   negativeColor,
@@ -111,7 +111,7 @@ const MonthlySummary = ({
   currentYear,
   isLoading,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   currentMonth: string
   currentYear: number
   isLoading: boolean

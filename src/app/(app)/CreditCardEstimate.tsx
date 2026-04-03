@@ -1,7 +1,7 @@
 import { Stack, Typography, Divider, Button } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
-import { NewTransactionType } from "@/utils/type"
-import { formattedStringNumber } from "@/utils/helperFunctions"
+import { TransactionType } from "@/utils/type"
+import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
 import { MONTH_INDEX } from "@/globals/globals"
 import { neutralColor } from "@/globals/colors"
 
@@ -13,17 +13,17 @@ const CreditCardEstimate = ({
   currentDay,
   currentYear,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   currentMonth: string
   currentDay: number
   currentYear: number
 }) => {
   const [creditTransactions, setCreditTransactions] = useState<
-    NewTransactionType[]
+    TransactionType[]
   >([])
   const [showAll, setShowAll] = useState(false)
 
-  const getEstimatedCreditBill = (transactions: NewTransactionType[]) =>
+  const getEstimatedCreditBill = (transactions: TransactionType[]) =>
     transactions.reduce((total, tx) => total + (tx.amount ?? 0), 0)
 
   useEffect(() => {
@@ -39,37 +39,31 @@ const CreditCardEstimate = ({
       }
     }
 
-    const statementStart = new Date(startYear, startMonth, statementStartDay)
-    const statementEnd = new Date(
-      statementStart.getFullYear(),
-      statementStart.getMonth() + 1,
+    const statementStart = new Date(
+      startYear,
+      startMonth,
+      statementStartDay,
+    ).getTime()
+    const statementEndDate = new Date(
+      startYear,
+      startMonth + 1,
       statementStartDay - 1,
     )
-    if (statementEnd.getDate() <= 0)
-      statementEnd.setMonth(statementEnd.getMonth(), 0)
+    if (statementEndDate.getDate() <= 0)
+      statementEndDate.setMonth(statementEndDate.getMonth(), 0)
+    const statementEnd = statementEndDate.getTime()
 
     const filtered = transactions
-      .filter((tx) => {
-        if (!tx.date || tx.date.day == null) return false
-        if (tx.type !== "expense" || tx.payment_method !== "Credit")
-          return false
-        const monthIndex = MONTH_INDEX[tx.date.month]
-        const txDate = new Date(tx.date.year, monthIndex, tx.date.day)
-        return txDate >= statementStart && txDate <= statementEnd
-      })
-      .sort((a, b) => {
-        const aDate = new Date(
-          a.date!.year,
-          MONTH_INDEX[a.date!.month],
-          a.date!.day!,
-        )
-        const bDate = new Date(
-          b.date!.year,
-          MONTH_INDEX[b.date!.month],
-          b.date!.day!,
-        )
-        return bDate.getTime() - aDate.getTime()
-      })
+      .filter(
+        (tx) =>
+          tx.date &&
+          tx.date.day != null &&
+          tx.type === "expense" &&
+          tx.payment_method === "Credit" &&
+          toTimestamp(tx.date) >= statementStart &&
+          toTimestamp(tx.date) <= statementEnd,
+      )
+      .sort((a, b) => toTimestamp(b.date!) - toTimestamp(a.date!))
 
     setCreditTransactions(filtered)
   }, [transactions, currentDay, currentMonth, currentYear])

@@ -1,4 +1,4 @@
-import { NewTransactionType, HookSetter, ChoiceType } from "@/utils/type"
+import { TransactionType, HookSetter, ChoiceType } from "@/utils/type"
 import { Autocomplete, TextField } from "@mui/material"
 
 const CategoryAutocomplete = ({
@@ -7,8 +7,8 @@ const CategoryAutocomplete = ({
   categories,
   handleClose,
 }: {
-  transaction: NewTransactionType
-  setTransaction: HookSetter<NewTransactionType>
+  transaction: TransactionType
+  setTransaction: HookSetter<TransactionType>
   categories: ChoiceType[]
   handleClose?: () => void
 }) => {

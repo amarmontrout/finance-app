@@ -3,7 +3,7 @@ import { formattedStringNumber } from "@/utils/helperFunctions"
 import { Stack, Typography } from "@mui/material"
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
-import { HookSetter, NewTransactionType } from "@/utils/type"
+import { HookSetter, TransactionType } from "@/utils/type"
 
 const CategoryHeader = ({
   entries,
@@ -12,8 +12,8 @@ const CategoryHeader = ({
   category,
   isExpanded,
 }: {
-  entries: NewTransactionType[]
-  sortedEntries: NewTransactionType[]
+  entries: TransactionType[]
+  sortedEntries: TransactionType[]
   setExpandedCategories: HookSetter<Record<string, boolean>>
   category: string
   isExpanded: boolean

@@ -15,7 +15,7 @@ import MonthYearSelector from "@/components/MonthYearSelector"
 import { SelectedDateType } from "@/utils/type"
 import { MONTHS } from "@/globals/globals"
 import { getNetCashFlow } from "@/utils/financialFunctions"
-import { getTotalsForMonthNetCash } from "../experimental/functions"
+import { getTotalsForMonthNetCash } from "../../../utils/functions"
 
 const Insights = () => {
   const { transactions } = useTransactionContext()

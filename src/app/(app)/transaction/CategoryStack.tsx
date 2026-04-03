@@ -3,7 +3,7 @@ import { Stack } from "@mui/material"
 import CategoryHeader from "./CategoryHeader"
 import CategoryList from "./CategoryList"
 import { useMemo, useState } from "react"
-import { AlertToastType, HookSetter, NewTransactionType } from "@/utils/type"
+import { AlertToastType, HookSetter, TransactionType } from "@/utils/type"
 
 const CategoryStack = ({
   filteredTransactions,
@@ -15,9 +15,9 @@ const CategoryStack = ({
   setAlertToast,
   currentTheme,
 }: {
-  filteredTransactions: NewTransactionType[]
-  selectedTransaction: NewTransactionType | null
-  setSelectedTransaction: HookSetter<NewTransactionType | null>
+  filteredTransactions: TransactionType[]
+  selectedTransaction: TransactionType | null
+  setSelectedTransaction: HookSetter<TransactionType | null>
   refreshTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
@@ -29,7 +29,7 @@ const CategoryStack = ({
   >({})
 
   const groupedTransactions = useMemo(() => {
-    return filteredTransactions.reduce<Record<string, NewTransactionType[]>>(
+    return filteredTransactions.reduce<Record<string, TransactionType[]>>(
       (acc, transaction) => {
         const category = transaction.category
         if (!acc[category]) acc[category] = []

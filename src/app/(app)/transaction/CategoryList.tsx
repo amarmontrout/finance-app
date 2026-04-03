@@ -3,7 +3,7 @@ import ListItemSwipe from "@/components/ListItemSwipe"
 import { positiveColor, negativeColor } from "@/globals/colors"
 import { useUser } from "@/hooks/useUser"
 import { formattedStringNumber } from "@/utils/helperFunctions"
-import { AlertToastType, HookSetter, NewTransactionType } from "@/utils/type"
+import { AlertToastType, HookSetter, TransactionType } from "@/utils/type"
 import { Stack, Collapse, Box } from "@mui/material"
 import { TransitionGroup } from "react-transition-group"
 
@@ -18,9 +18,9 @@ const CategoryList = ({
   isExpanded,
   currentTheme,
 }: {
-  sortedEntries: NewTransactionType[]
-  selectedTransaction: NewTransactionType | null
-  setSelectedTransaction: HookSetter<NewTransactionType | null>
+  sortedEntries: TransactionType[]
+  selectedTransaction: TransactionType | null
+  setSelectedTransaction: HookSetter<TransactionType | null>
   refreshTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>

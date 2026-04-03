@@ -2,7 +2,7 @@ import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
 import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
-import { BudgetType, NewTransactionType, WeekType } from "@/utils/type"
+import { BudgetType, TransactionType, WeekType } from "@/utils/type"
 
 const WeekTotalBudget = ({
   transactions,
@@ -10,7 +10,7 @@ const WeekTotalBudget = ({
   isLoading,
   budgetCategories,
 }: {
-  transactions: NewTransactionType[]
+  transactions: TransactionType[]
   week: WeekType
   isLoading: boolean
   budgetCategories: BudgetType[]

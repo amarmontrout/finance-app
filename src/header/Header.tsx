@@ -2,6 +2,7 @@
 
 import { Box, Stack, Typography } from "@mui/material"
 import HeaderDropdown from "./HeaderDropdown"
+import { neutralColor } from "@/globals/colors"
 
 const Header = () => {
   return (
@@ -12,8 +13,8 @@ const Header = () => {
         marginLeft={"1rem"}
         marginRight={"5px"}
       >
-        <Typography variant="h5" color={"white"}>
-          Finance Tracker
+        <Typography variant="h5" color={neutralColor.color} fontWeight={600}>
+          My Finances
         </Typography>
       </Box>
 

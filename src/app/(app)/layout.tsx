@@ -5,6 +5,7 @@ import { Box } from "@mui/material"
 import Header from "@/header/Header"
 import "../../globals.css"
 import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
+import { neutralColor } from "@/globals/colors"
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -65,11 +66,11 @@ export default function RootLayout({
               {/* Header */}
               <Box
                 component="header"
+                className="h-[51px] md:h-[70px]"
                 sx={{
-                  height: "70px",
-                  bgcolor: "primary.main",
-                  borderBottomLeftRadius: "15px",
-                  borderBottomRightRadius: "15px",
+                  bgcolor: neutralColor.bg,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                  zIndex: 1000,
                 }}
               >
                 <Header />
@@ -106,10 +107,8 @@ export default function RootLayout({
                 height="85px"
                 alignItems={"center"}
                 sx={{
-                  bgcolor: "background.paper",
-                  borderTop: 1,
-                  borderColor: "divider",
-                  boxShadow: "0 -2px 8px rgba(0,0,0,0.1)",
+                  bgcolor: neutralColor.bg,
+                  boxShadow: "0 -2px 8px rgba(0,0,0,0.2)",
                   zIndex: 1000,
                 }}
               >

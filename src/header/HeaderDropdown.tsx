@@ -5,8 +5,10 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  MenuList,
 } from "@mui/material"
 import MenuIcon from "@mui/icons-material/Menu"
+import CloseIcon from "@mui/icons-material/Close"
 import LightModeIcon from "@mui/icons-material/LightMode"
 import DarkModeIcon from "@mui/icons-material/DarkMode"
 import LogoutIcon from "@mui/icons-material/Logout"
@@ -16,6 +18,7 @@ import { doLogout } from "@/app/api/Auth/requests"
 import { AuthError } from "@supabase/supabase-js"
 import { usePathname, useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
+import { neutralColor } from "@/globals/colors"
 
 const HeaderDropdown = () => {
   const router = useRouter()
@@ -62,40 +65,51 @@ const HeaderDropdown = () => {
       marginRight={"1rem"}
       height={"100%"}
     >
-      <IconButton onClick={handleOpenMenu}>
-        <MenuIcon fontSize={"large"} sx={{ color: "white" }} />
+      <IconButton onClick={handleOpenMenu} disableRipple>
+        {anchorEl === null ? (
+          <MenuIcon fontSize={"large"} sx={{ color: "text.secondary" }} />
+        ) : (
+          <CloseIcon
+            fontSize={"large"}
+            sx={{
+              color: "text.secondary",
+            }}
+          />
+        )}
       </IconButton>
 
       <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMenu}>
-        <MenuItem onClick={handleTheme}>
-          <ListItemIcon>
-            {current !== "dark" ? <DarkModeIcon /> : <LightModeIcon />}
-          </ListItemIcon>
-
-          <ListItemText>
-            {current !== "dark" ? "Dark Mode" : "Light Mode"}
-          </ListItemText>
-        </MenuItem>
-
-        {pathname !== "/login" && (
-          <MenuItem onClick={handleSettings}>
+        <MenuList>
+          <MenuItem onClick={handleTheme}>
             <ListItemIcon>
-              <SettingsIcon />
+              {current !== "dark" ? <DarkModeIcon /> : <LightModeIcon />}
             </ListItemIcon>
 
-            <ListItemText>Settings</ListItemText>
+            <ListItemText>
+              {current !== "dark" ? "Dark Mode" : "Light Mode"}
+            </ListItemText>
           </MenuItem>
-        )}
 
-        {pathname !== "/login" && (
-          <MenuItem onClick={handleLogOut}>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
+          {pathname !== "/login" && (
+            <MenuItem onClick={handleSettings}>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
 
-            <ListItemText>Logout</ListItemText>
-          </MenuItem>
-        )}
+              <ListItemText>Settings</ListItemText>
+            </MenuItem>
+          )}
+
+          {pathname !== "/login" && (
+            <MenuItem onClick={handleLogOut}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+
+              <ListItemText>Logout</ListItemText>
+            </MenuItem>
+          )}
+        </MenuList>
       </Menu>
     </Box>
   )

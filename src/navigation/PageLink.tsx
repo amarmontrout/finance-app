@@ -1,4 +1,4 @@
-import { accentColorPrimarySelected } from "@/globals/colors"
+import { accentColorPrimarySelected, neutralColor } from "@/globals/colors"
 import { linkStyle, navSelection } from "@/globals/styles"
 import { SvgIconComponent } from "@mui/icons-material"
 import { Box, Stack, Typography } from "@mui/material"
@@ -61,7 +61,7 @@ export const HorizontalPageLink = ({
           py: 1,
           px: 2,
           borderRadius: 2,
-          color: active ? "primary.main" : "text.secondary",
+          color: active ? neutralColor.color : "text.secondary",
         }}
       >
         <item.icon fontSize="medium" />

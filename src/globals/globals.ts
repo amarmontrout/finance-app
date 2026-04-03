@@ -3,7 +3,6 @@ import InsightsIcon from '@mui/icons-material/Insights'
 import PaymentsIcon from '@mui/icons-material/Payments'
 import HomeIcon from '@mui/icons-material/Home'
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
-import ScienceIcon from '@mui/icons-material/Science';
 
 export const DAYS = [
   "Sunday",
@@ -49,9 +48,6 @@ export const NAV_QUICK_INFO: PageLinkType[] = [
 export const NAV_TRANSACTIONS: PageLinkType[] = [
   {"name": "Transaction", "link": "/transaction", icon: AccountBalanceIcon},
   {"name": "Budget", "link": "/budget", icon: PaymentsIcon},
-]
-export const EXPERIMENTAL: PageLinkType[] = [
-  // {"name": "Experimental", "link": "/experimental", icon: ScienceIcon},
 ]
 export const INITIAL_INCOME_CATEGORIES = [
   "Paycheck",

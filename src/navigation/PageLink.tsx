@@ -62,10 +62,6 @@ export const HorizontalPageLink = ({
           px: 2,
           borderRadius: 2,
           color: active ? "primary.main" : "text.secondary",
-          transition: "all 0.2s ease-in-out",
-          "&:active": {
-            transform: "scale(0.95)",
-          },
         }}
       >
         <item.icon fontSize="medium" />

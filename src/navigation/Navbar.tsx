@@ -2,11 +2,7 @@
 
 import { Box, Divider, Stack, Typography } from "@mui/material"
 import Logo from "@/components/Logo"
-import {
-  EXPERIMENTAL,
-  NAV_QUICK_INFO,
-  NAV_TRANSACTIONS,
-} from "@/globals/globals"
+import { NAV_QUICK_INFO, NAV_TRANSACTIONS } from "@/globals/globals"
 import { usePathname } from "next/navigation"
 import { useTheme } from "next-themes"
 import { darkMode, lightMode } from "@/globals/colors"
@@ -78,27 +74,6 @@ export const Navbar = () => {
             />
           )
         })}
-
-        {/* <Divider
-          orientation="horizontal"
-          sx={{
-            borderColor:
-              currentTheme === "light"
-                ? lightMode.borderStrong
-                : darkMode.borderStrong,
-            borderRightWidth: 2,
-          }}
-        />
-
-        {EXPERIMENTAL.map((item) => {
-          return (
-            <PageLink
-              item={item}
-              active={pathname === item.link}
-              key={item.name}
-            />
-          )
-        })} */}
       </Stack>
     </Stack>
   )
@@ -116,15 +91,13 @@ export const HorizontalNavbar = () => {
       width={"fit-content"}
       px={1}
     >
-      {NAV_QUICK_INFO.concat(NAV_TRANSACTIONS)
-        .concat(EXPERIMENTAL)
-        .map((item) => (
-          <HorizontalPageLink
-            item={item}
-            active={pathname === item.link}
-            key={item.name}
-          />
-        ))}
+      {NAV_QUICK_INFO.concat(NAV_TRANSACTIONS).map((item) => (
+        <HorizontalPageLink
+          item={item}
+          active={pathname === item.link}
+          key={item.name}
+        />
+      ))}
     </Stack>
   )
 }

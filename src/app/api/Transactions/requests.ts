@@ -1,4 +1,4 @@
-import { dbRequestBrowser } from "../dbRequest"
+import { dbRequestBrowser, Filter } from "../dbRequest"
 import {  NewTransactionType } from "@/utils/type"
 
 
@@ -24,18 +24,20 @@ export const saveTransaction = async ({
 
 export const getTransactions = async ({
   userId,
+  filters,
 }: {
   userId: string
+  filters?: Filter<NewTransactionType>[]
 }) => {
-  const {data, error} = await dbRequestBrowser<NewTransactionType>({
+  const { data, error } = await dbRequestBrowser<NewTransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "GET",
-    userId: userId
+    userId,
+    filters: filters ?? []
   })
-    
-  if (error) throw error
 
+  if (error) throw error
   return data
 }
 

@@ -9,6 +9,8 @@ import { Divider, Stack, Typography } from "@mui/material"
 import MonthlySummary from "./MonthlySummary"
 import WeeklyBudget from "./WeeklyBudget"
 import TopMonthlyExpenses from "./TopMonthlyExpenses"
+import CreditCardEstimate from "./CreditCardEstimate"
+import { neutralColor } from "@/globals/colors"
 
 const Overview = () => {
   const { transactions } = useTransactionContext()
@@ -35,7 +37,7 @@ const Overview = () => {
         {`${currentMonth} Overview`}
       </Typography>
 
-      <Divider />
+      <Divider sx={{ borderColor: neutralColor.color }} />
 
       <MonthlySummary
         transactions={transactions}
@@ -44,7 +46,9 @@ const Overview = () => {
         isLoading={isLoading}
       />
 
-      <Divider />
+      {transactions.length !== 0 && (
+        <Divider sx={{ borderColor: neutralColor.color }} />
+      )}
 
       <WeeklyBudget
         transactions={transactions}
@@ -56,15 +60,27 @@ const Overview = () => {
         isLoading={isLoading}
       />
 
-      {/* <Divider />
+      {transactions.length !== 0 && (
+        <Divider sx={{ borderColor: neutralColor.color }} />
+      )}
+
+      <CreditCardEstimate
+        transactions={transactions}
+        currentMonth={currentMonth}
+        currentDay={currentDay}
+        currentYear={currentYear}
+      />
+
+      {transactions.length !== 0 && (
+        <Divider sx={{ borderColor: neutralColor.color }} />
+      )}
 
       <TopMonthlyExpenses
         transactions={transactions}
         currentMonth={currentMonth}
         currentYear={currentYear}
         currentTheme={currentTheme}
-        isLoading={isLoading}
-      /> */}
+      />
 
       <SetUpDialog
         setUpDialogOpen={isSetUpDialogOpen}

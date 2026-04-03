@@ -83,9 +83,12 @@ const WeeklyBudget = ({
     (sum, t) => sum + (t.is_return ? -t.amount : t.amount),
     0,
   )
-  return isLoading ? (
-    <LoadingCircle height={410} />
-  ) : (
+
+  if (transactions.length === 0) {
+    return
+  }
+
+  return (
     <Stack spacing={1.5}>
       <BudgetProgressBar
         label={"Weekly Budget"}

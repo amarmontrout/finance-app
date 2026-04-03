@@ -11,13 +11,11 @@ const TopMonthlyExpenses = ({
   currentMonth,
   currentYear,
   currentTheme,
-  isLoading,
 }: {
   transactions: NewTransactionType[]
   currentMonth: string
   currentYear: number
   currentTheme: string | undefined
-  isLoading: boolean
 }) => {
   const defaultCardColor = getCardColor(currentTheme, "default")
   const topThreeData = useMemo(() => {
@@ -47,11 +45,20 @@ const TopMonthlyExpenses = ({
 
   const { topThree, topThreeSum } = topThreeData
 
+  if (topThree.length === 0) {
+    return
+  }
+
   return (
     <Stack spacing={2}>
-      <Typography variant={"h6"} fontWeight={700}>
-        Top Expenses
-      </Typography>
+      <Stack direction={"row"} justifyContent={"space-between"}>
+        <Typography variant={"h6"} fontWeight={700}>
+          Top Expenses
+        </Typography>
+        <Typography variant="h6" textAlign={"right"}>
+          ${formattedStringNumber(topThreeSum)}
+        </Typography>
+      </Stack>
 
       <FlexColWrapper gap={2} toRowBreak={"xl"}>
         {topThree.map(([category, amount], idx) => (
@@ -63,11 +70,8 @@ const TopMonthlyExpenses = ({
           />
         ))}
       </FlexColWrapper>
-      {topThree.length !== 0 ? (
-        <Typography variant={"h6"} width={"100%"} textAlign={"center"}>
-          {`Total: $${formattedStringNumber(topThreeSum)}`}
-        </Typography>
-      ) : (
+
+      {topThree.length === 0 && (
         <Typography width={"100%"} textAlign={"center"}>
           Enter your expenses in transactions
         </Typography>

@@ -19,6 +19,7 @@ import AddEditDialog from "../../../components/AddEditDialog"
 import WeekTotalBudget from "./WeekTotalBudget"
 import AddBudgetDialog from "./AddBudgetDialog"
 import EditBudgetDialog from "../settings/EditBudgetDialog"
+import { neutralColor } from "@/globals/colors"
 
 const Budget = () => {
   const { isLoading, transactions, refreshTransactions } =
@@ -73,7 +74,9 @@ const Budget = () => {
         isLoading={isLoading}
         week={week}
       />
-      <Divider />
+
+      <Divider sx={{ borderColor: neutralColor.color }} />
+
       <WeekTotalBudget
         transactions={transactions}
         week={week}

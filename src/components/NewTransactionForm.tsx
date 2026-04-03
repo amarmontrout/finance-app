@@ -125,12 +125,16 @@ const NewTransactionForm = ({
         />
       )}
 
-      <Stack direction={"column"} divider={<Divider />} spacing={1.5}>
+      <Stack
+        direction={"column"}
+        divider={<Divider sx={{ borderColor: neutralColor.color }} />}
+        spacing={1.5}
+      >
         <Row
           active={activeField === "date"}
           label={"Date"}
           display={
-            <Typography borderBottom={`1px solid ${neutralColor.color}`}>
+            <Typography>
               {`${transaction.date.month} ${transaction.date.day}, ${transaction.date.year}`}
             </Typography>
           }
@@ -151,9 +155,7 @@ const NewTransactionForm = ({
           active={activeField === "category"}
           label={"Category"}
           display={
-            <Typography borderBottom={`1px solid ${neutralColor.color}`}>
-              {transaction.category || "Select Category"}
-            </Typography>
+            <Typography>{transaction.category || "Select Category"}</Typography>
           }
           edit={
             <CategoryAutocomplete
@@ -176,7 +178,6 @@ const NewTransactionForm = ({
           display={
             transaction.note !== "" ? (
               <Typography
-                borderBottom={`1px solid ${neutralColor.color}`}
                 sx={{
                   whiteSpace: "normal",
                   wordBreak: "break-word",
@@ -185,9 +186,7 @@ const NewTransactionForm = ({
                 {transaction.note}
               </Typography>
             ) : (
-              <Typography borderBottom={`1px solid ${neutralColor.color}`}>
-                Add Note
-              </Typography>
+              <Typography>Add Note</Typography>
             )
           }
           edit={
@@ -208,9 +207,7 @@ const NewTransactionForm = ({
             active={activeField === "payment_method"}
             label={"Payment Method"}
             display={
-              <Typography borderBottom={`1px solid ${neutralColor.color}`}>
-                {transaction.payment_method || "Debit"}
-              </Typography>
+              <Typography>{transaction.payment_method || "Debit"}</Typography>
             }
             onClick={() =>
               updateTransaction("payment_method")(

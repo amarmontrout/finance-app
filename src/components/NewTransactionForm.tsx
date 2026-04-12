@@ -85,6 +85,14 @@ const NewTransactionForm = ({
     }
   }, [month, year, setTransaction, transaction.date.day])
 
+  useEffect(() => {
+    if (!inputRef.current) return
+
+    if (transaction.amount === 0) {
+      inputRef.current.focus()
+    }
+  }, [transaction.type])
+
   const updateTransaction =
     (field: keyof TransactionType) => (value: string | number | boolean) =>
       setTransaction((prev) => ({

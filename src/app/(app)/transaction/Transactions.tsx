@@ -2,7 +2,7 @@
 
 import { Stack } from "@mui/material"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { useTheme } from "next-themes"
 import { useTransactionContext } from "@/contexts/transactions-context"
@@ -30,9 +30,7 @@ const Transactions = () => {
     useState<SelectedDateType>(CURRENT_DATE)
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
-  const [tab, setTab] = useState(0)
   const [type, setType] = useState<"income" | "expense">("income")
-
   const [selectedTransaction, setSelectedTransaction] =
     useState<TransactionType | null>(null)
 
@@ -40,17 +38,13 @@ const Transactions = () => {
     setSelectedDate(CURRENT_DATE)
   }
 
-  useEffect(() => {
-    resetSelectedDate()
-  }, [tab])
-
   return (
     <Stack spacing={1.5}>
       <MonthYearSelector
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
         resetSelectedDate={resetSelectedDate}
-        showMonth={tab === 0}
+        showMonth={true}
       />
 
       <TransactionsDisplay

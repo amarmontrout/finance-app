@@ -19,33 +19,22 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        suppressHydrationWarning
-        style={{
-          height: "100dvh",
-          width: "100dvw",
-          overflow: "hidden",
-          margin: 0,
-          padding: 0,
-        }}
-      >
+      <body suppressHydrationWarning>
         <Providers>
           <Box
             sx={{
               display: "flex",
-              flexDirection: "row",
-              minWidth: 0,
-              minHeight: 0,
-              height: "100%",
+              height: "100dvh",
+              overflow: "hidden",
             }}
           >
-            {/* Nav / Sidebar */}
+            {/* Sidebar */}
             <Box
-              className="hidden md:flex md:min-w-[205px]"
               component="nav"
+              className="hidden md:flex md:w-[220px] shrink-0"
               sx={{
                 bgcolor: "background.paper",
-                borderRight: 2,
+                borderRight: 1,
                 borderColor: "divider",
               }}
             >
@@ -57,59 +46,50 @@ export default function RootLayout({
               sx={{
                 display: "flex",
                 flex: 1,
-                minWidth: 0,
-                minHeight: 0,
                 flexDirection: "column",
+                minWidth: 0,
                 bgcolor: "background.default",
               }}
             >
-              {/* Header */}
+              {/* Header (sticky instead of fixed layout hacks) */}
               <Box
                 component="header"
-                className="h-[51px] md:h-[70px]"
                 sx={{
+                  position: "sticky",
+                  top: 0,
+                  height: { xs: 51, sm: 70 },
                   bgcolor: neutralColor.bg,
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                  zIndex: 1000,
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                  zIndex: 10,
                 }}
               >
                 <Header />
               </Box>
 
-              {/* Main content */}
+              {/* Scroll container */}
               <Box
                 component="main"
                 sx={{
-                  display: "flex",
                   flex: 1,
-                  color: "text.primary",
-                  overflow: "hidden",
+                  overflowY: "auto",
+                  px: { xs: 2, lg: 5 },
+                  py: { xs: 2, lg: 4 },
                 }}
               >
-                {/* Inner scroller */}
-                <Box
-                  className="p-[1rem] lg:p-[2.5rem]"
-                  sx={{
-                    flex: 1,
-                    minWidth: 0,
-                    overflowY: "auto",
-                  }}
-                >
-                  {children}
-                </Box>
+                {children}
               </Box>
 
-              {/* Mobile nav */}
+              {/* Mobile nav (sticky bottom instead of layout split) */}
               <Box
-                className="flex flex-col md:hidden"
                 component="nav"
-                width="100%"
-                height="85px"
-                alignItems={"center"}
+                className="md:hidden"
                 sx={{
+                  position: "sticky",
+                  bottom: 0,
+                  height: 80,
                   bgcolor: neutralColor.bg,
-                  boxShadow: "0 -2px 8px rgba(0,0,0,0.2)",
-                  zIndex: 1000,
+                  boxShadow: "0 -2px 8px rgba(0,0,0,0.15)",
+                  zIndex: 10,
                 }}
               >
                 <HorizontalNavbar />

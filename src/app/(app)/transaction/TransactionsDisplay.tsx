@@ -11,7 +11,6 @@ import {
 } from "@/utils/type"
 import ExpenseViewToggle from "./ExpenseViewToggle"
 import CategoryStack from "./CategoryStack"
-import { accentColorPrimary } from "@/globals/colors"
 
 const TransactionsDisplay = ({
   transactions,

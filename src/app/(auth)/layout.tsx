@@ -3,6 +3,7 @@ import { Box } from "@mui/material"
 import Header from "@/header/Header"
 import "../../globals.css"
 import Providers from "../providers"
+import { neutralColor } from "@/globals/colors"
 
 export const metadata: Metadata = {
   title: "Finance Tracker",
@@ -51,9 +52,7 @@ export default function AuthLayout({
                 component="header"
                 sx={{
                   height: "70px",
-                  bgcolor: "primary.main",
-                  borderBottom: 1,
-                  borderColor: "divider",
+                  bgcolor: neutralColor.bg,
                 }}
               >
                 <Header />

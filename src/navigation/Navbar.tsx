@@ -88,7 +88,7 @@ export const HorizontalNavbar = () => {
       justifyContent="space-around"
       alignItems="top"
       height="100%"
-      width={"fit-content"}
+      width={"100%"}
       px={1}
     >
       {NAV_QUICK_INFO.concat(NAV_TRANSACTIONS).map((item) => (

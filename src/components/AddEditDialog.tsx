@@ -164,7 +164,7 @@ const AddEditDialog = ({
       note: "",
       payment_method: type === "income" ? "" : "Credit",
       type: type,
-      is_paid: false,
+      is_paid: type === "expense" ? true : false,
       is_return: false,
     }))
   }, [type, openDialog, selectedTransaction])

@@ -33,11 +33,12 @@ const Overview = () => {
 
   return (
     <Stack spacing={1.5}>
-      <Typography variant={"h6"} fontWeight={700} textAlign={"center"}>
-        {`${currentMonth} Overview`}
-      </Typography>
-
-      <Divider sx={{ borderColor: neutralColor.color }} />
+      <>
+        <Typography variant={"h6"} fontWeight={700} textAlign={"center"}>
+          {`${currentMonth} Overview`}
+        </Typography>
+        <Divider sx={{ borderColor: neutralColor.color }} />
+      </>
 
       <MonthlySummary
         transactions={transactions}
@@ -47,40 +48,43 @@ const Overview = () => {
       />
 
       {transactions.length !== 0 && (
-        <Divider sx={{ borderColor: neutralColor.color }} />
+        <>
+          <Divider sx={{ borderColor: neutralColor.color }} />
+          <WeeklyBudget
+            transactions={transactions}
+            budgetCategories={budgetCategories}
+            currentMonth={currentMonth}
+            currentDay={currentDay}
+            currentYear={currentYear}
+            currentTheme={currentTheme}
+            isLoading={isLoading}
+          />
+        </>
       )}
-
-      <WeeklyBudget
-        transactions={transactions}
-        budgetCategories={budgetCategories}
-        currentMonth={currentMonth}
-        currentDay={currentDay}
-        currentYear={currentYear}
-        currentTheme={currentTheme}
-        isLoading={isLoading}
-      />
 
       {transactions.length !== 0 && (
-        <Divider sx={{ borderColor: neutralColor.color }} />
+        <>
+          <Divider sx={{ borderColor: neutralColor.color }} />
+          <CreditCardEstimate
+            transactions={transactions}
+            currentMonth={currentMonth}
+            currentDay={currentDay}
+            currentYear={currentYear}
+          />
+        </>
       )}
-
-      <CreditCardEstimate
-        transactions={transactions}
-        currentMonth={currentMonth}
-        currentDay={currentDay}
-        currentYear={currentYear}
-      />
 
       {transactions.length !== 0 && (
-        <Divider sx={{ borderColor: neutralColor.color }} />
+        <>
+          <Divider sx={{ borderColor: neutralColor.color }} />
+          <TopMonthlyExpenses
+            transactions={transactions}
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            currentTheme={currentTheme}
+          />
+        </>
       )}
-
-      <TopMonthlyExpenses
-        transactions={transactions}
-        currentMonth={currentMonth}
-        currentYear={currentYear}
-        currentTheme={currentTheme}
-      />
 
       <SetUpDialog
         setUpDialogOpen={isSetUpDialogOpen}

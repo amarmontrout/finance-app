@@ -1,4 +1,3 @@
-import LoadingCircle from "@/components/LoadingCircle"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { getTotalsForMonthNetCash } from "../../utils/functions"
 import { getNetCashFlow } from "@/utils/financialFunctions"
@@ -56,51 +55,40 @@ const SummaryCard = ({
       bgcolor={style.bg}
       py={1.5}
       px={2}
-      sx={{
-        boxShadow: `
-          0 1px 2px rgba(0,0,0,0.04),
-          0 4px 12px rgba(0,0,0,0.06)
-        `,
-      }}
     >
-      {isLoading ? (
-        <LoadingCircle height={72} />
-      ) : (
-        <Stack height={"100%"} justifyContent={"space-between"}>
-          {/* Title */}
-          <Typography fontSize={"0.75rem"} fontWeight={600} color={"text.main"}>
-            {title}
-          </Typography>
+      <Stack height={"100%"} justifyContent={"space-between"}>
+        {/* Title */}
+        <Typography fontSize={"0.75rem"} fontWeight={600} color={"text.main"}>
+          {title}
+        </Typography>
 
-          {/* Amount */}
+        {/* Amount */}
+        <Typography
+          fontSize={"1.5rem"}
+          fontWeight={600}
+          sx={{ color: style.main }}
+        >
+          ${formattedStringNumber(amount)}
+        </Typography>
+
+        {/* Comparison */}
+        {comparison !== undefined && (
           <Typography
-            fontSize={"1.5rem"}
-            fontWeight={600}
-            sx={{ color: style.main }}
+            fontSize={"0.73rem"}
+            color={"text.secondary"}
+            textAlign={"right"}
           >
-            ${formattedStringNumber(amount)}
-          </Typography>
-
-          {/* Comparison */}
-          {comparison !== undefined && (
-            <Typography
-              fontSize={"0.73rem"}
-              color={"text.secondary"}
-              textAlign={"right"}
+            <span
+              style={{
+                fontWeight: 700,
+              }}
             >
-              <span
-                style={{
-                  fontWeight: 700,
-                }}
-              >
-                {isPositive ? "+" : "-"}$
-                {formattedStringNumber(Math.abs(diff!))}
-              </span>{" "}
-              last month
-            </Typography>
-          )}
-        </Stack>
-      )}
+              {isPositive ? "+" : "-"}${formattedStringNumber(Math.abs(diff!))}
+            </span>{" "}
+            last month
+          </Typography>
+        )}
+      </Stack>
     </Box>
   )
 }
@@ -122,6 +110,7 @@ const MonthlySummary = ({
     incomeTotalMonthNetPrev,
     expenseTotalMonthNetPrev,
   } = getTotalsForMonthNetCash(currentYear, currentMonth, transactions)
+
   const netMonthIncome = getNetCashFlow(
     incomeTotalMonthNet,
     expenseTotalMonthNet,
@@ -171,6 +160,7 @@ const MonthlySummary = ({
           isLoading={isLoading}
         />
       </Stack>
+
       <Stack direction={"row"} spacing={1}>
         <SummaryCard
           title="Net Cash"

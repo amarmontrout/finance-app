@@ -1,7 +1,5 @@
 import { accentColorPrimary } from "@/globals/colors"
-import { HookSetter } from "@/utils/type"
 import {
-  Box,
   Button,
   Dialog,
   DialogContent,
@@ -48,32 +46,35 @@ const SelectYearChoices = ({
           onChange={handleSelectYearChoices}
           color="primary"
           fullWidth
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+            gap: 1,
+
+            // 🔥 break the "grouped" styling
+            "& .MuiToggleButtonGroup-grouped": {
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              margin: 0, // remove negative margin MUI applies
+            },
+          }}
         >
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(auto-fit, minmax(150px, 1fr))"
-            gap={1}
-            width={"100%"}
-            height={"325px"}
-          >
-            {initialYears.map((year) => (
-              <ToggleButton
-                key={year}
-                value={year}
-                fullWidth
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                <Typography variant="h6">{year}</Typography>
-              </ToggleButton>
-            ))}
-          </Box>
+          {initialYears.map((year) => (
+            <ToggleButton
+              key={year}
+              value={year}
+              sx={{
+                width: "100%",
+                textTransform: "none",
+              }}
+            >
+              <Typography variant="h6">{year}</Typography>
+            </ToggleButton>
+          ))}
         </ToggleButtonGroup>
-        <Typography textAlign={"center"}>
-          *Add more years in settings
-        </Typography>
+
+        <Typography textAlign="center">*Add more years in settings</Typography>
       </Stack>
     </ShowCaseCard>
   )
@@ -97,28 +98,33 @@ const SelectIncomeCategories = ({
           onChange={handleSelectIncomeChoices}
           color="secondary"
           fullWidth
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+            gap: 1,
+
+            // 🔥 break the "grouped" styling
+            "& .MuiToggleButtonGroup-grouped": {
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              margin: 0, // remove negative margin MUI applies
+            },
+          }}
         >
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(auto-fit, minmax(150px, 1fr))"
-            gap={1}
-            width={"100%"}
-            height={"325px"}
-          >
-            {INITIAL_INCOME_CATEGORIES.map((category) => (
-              <ToggleButton
-                key={category}
-                value={category}
-                fullWidth
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                <Typography variant="h6">{category}</Typography>
-              </ToggleButton>
-            ))}
-          </Box>
+          {INITIAL_INCOME_CATEGORIES.map((category) => (
+            <ToggleButton
+              key={category}
+              value={category}
+              fullWidth
+              sx={{
+                width: "100%",
+                textTransform: "none",
+              }}
+            >
+              <Typography variant="h6">{category}</Typography>
+            </ToggleButton>
+          ))}
         </ToggleButtonGroup>
 
         <Typography textAlign={"center"}>
@@ -147,28 +153,33 @@ const SelectExpenseCategories = ({
           onChange={handleSelectExpenseChoices}
           color="error"
           fullWidth
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+            gap: 1,
+
+            // 🔥 break the "grouped" styling
+            "& .MuiToggleButtonGroup-grouped": {
+              border: "1px solid",
+              borderColor: "divider",
+              borderRadius: 2,
+              margin: 0, // remove negative margin MUI applies
+            },
+          }}
         >
-          <Box
-            display="grid"
-            gridTemplateColumns="repeat(auto-fit, minmax(150px, 1fr))"
-            gap={1}
-            width={"100%"}
-            height={"325px"}
-          >
-            {INITIAL_EXPENSE_CATEGORIES.map((category) => (
-              <ToggleButton
-                key={category}
-                value={category}
-                fullWidth
-                sx={{
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                <Typography variant="h6">{category}</Typography>
-              </ToggleButton>
-            ))}
-          </Box>
+          {INITIAL_EXPENSE_CATEGORIES.map((category) => (
+            <ToggleButton
+              key={category}
+              value={category}
+              fullWidth
+              sx={{
+                width: "100%",
+                textTransform: "none",
+              }}
+            >
+              <Typography variant="h6">{category}</Typography>
+            </ToggleButton>
+          ))}
         </ToggleButtonGroup>
         <Typography textAlign={"center"}>
           *Add custom expense categories in settings
@@ -296,6 +307,7 @@ const SetUpDialog = ({
             expenseChoices={expenseChoices}
             handleSelectExpenseChoices={handleSelectExpenseChoices}
           />
+
           <Stack direction={"row"} spacing={1}>
             <Button
               variant={"outlined"}

@@ -1,5 +1,6 @@
-import { dbRequestBrowser } from "../dbRequest"
+
 import { BudgetType, ChoiceType } from "@/utils/type"
+import { performRequest } from "../performRequest"
 
 export const saveIncomeCategory = async ({
   userId,
@@ -8,7 +9,7 @@ export const saveIncomeCategory = async ({
   userId: string
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "incomeCategories",
     method: "POST",
@@ -29,7 +30,7 @@ export const getIncomeCategories = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "incomeCategories",
     method: "GET",
@@ -53,7 +54,7 @@ export const updateIncomeCategory = async ({
   rowId: number
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "incomeCategories",
     method: "PATCH",
@@ -77,7 +78,7 @@ export const deleteIncomeCategory = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "incomeCategories",
     method: "DELETE",
@@ -101,7 +102,7 @@ export const saveExpenseCategory = async ({
   userId: string
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "expenseCategories",
     method: "POST",
@@ -122,7 +123,7 @@ export const getExpenseCategories = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "expenseCategories",
     method: "GET",
@@ -146,7 +147,7 @@ export const updateExpenseCategory = async ({
   rowId: number
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "expenseCategories",
     method: "PATCH",
@@ -170,7 +171,7 @@ export const deleteExpenseCategory = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "expenseCategories",
     method: "DELETE",
@@ -194,7 +195,7 @@ export const saveYearChoice = async ({
   userId: string
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "years",
     method: "POST",
@@ -215,7 +216,7 @@ export const getYearChoices = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "years",
     method: "GET",
@@ -239,7 +240,7 @@ export const updateYearChoice = async ({
   rowId: number
   body: ChoiceType
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "years",
     method: "PATCH",
@@ -263,7 +264,7 @@ export const deleteYearChoice = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<ChoiceType>({
+  const {data, error} = await performRequest<ChoiceType>({
     schema: "Choices",
     table: "years",
     method: "DELETE",
@@ -287,7 +288,7 @@ export const saveBudgetCategory = async ({
   userId: string
   body: BudgetType
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetType>({
+  const {data, error} = await performRequest<BudgetType>({
     schema: "Choices",
     table: "budgetCategories",
     method: "POST",
@@ -308,7 +309,7 @@ export const getBudgetCategories = async ({
 }: {
   userId: string
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetType>({
+  const {data, error} = await performRequest<BudgetType>({
     schema: "Choices",
     table: "budgetCategories",
     method: "GET",
@@ -332,7 +333,7 @@ export const updateBudgetCategory = async ({
   rowId: number
   body: BudgetType
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetType>({
+  const {data, error} = await performRequest<BudgetType>({
     schema: "Choices",
     table: "budgetCategories",
     method: "PATCH",
@@ -356,7 +357,7 @@ export const deleteBudgetCategory = async ({
   userId: string
   rowId: number
 }) => {
-  const {data, error} = await dbRequestBrowser<BudgetType>({
+  const {data, error} = await performRequest<BudgetType>({
     schema: "Choices",
     table: "budgetCategories",
     method: "DELETE",

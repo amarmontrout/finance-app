@@ -205,6 +205,7 @@ const ListItemSwipe = ({
         <DeleteIcon />
       </Box>
 
+      {/* Blue edit background */}
       <Box
         sx={{
           position: "absolute",
@@ -239,22 +240,22 @@ const ListItemSwipe = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            px: 2,
-            py: 1.5,
+            px: 1.5,
+            py: 1,
             bgcolor: listItemColor,
             borderRadius: 2,
           }}
         >
           <Stack>
-            <Typography fontWeight={700}>{mainTitle}</Typography>
+            <Typography>{mainTitle}</Typography>
 
-            <Typography fontSize={12} color="text.secondary">
+            <Typography fontSize={12} color={"text.secondary"}>
               {secondaryTitle}
             </Typography>
           </Stack>
 
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <Typography fontSize="1.2rem" color={amountColor}>
+          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <Typography fontSize={"1.25rem"} color={amountColor}>
               {amount}
             </Typography>
 

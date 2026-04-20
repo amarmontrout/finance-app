@@ -3,7 +3,7 @@
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { useMemo, useState } from "react"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Box, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
 import { negativeColor, neutralColor, positiveColor } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
 import {
@@ -109,19 +109,17 @@ const Insights = () => {
           <ToggleButton value="net">Net Cash Flow</ToggleButton>
         </ToggleButtonGroup>
 
-        <Box sx={{ minHeight: 400 }}>
-          <BarChart
-            multiColumnData={
-              type === "incomeExpense" ? IncomeExpenseData : undefined
-            }
-            twoColumnData={type === "net" ? NetChartData : undefined}
-            barColors={
-              type === "incomeExpense"
-                ? [positiveColor.color, negativeColor.color]
-                : [neutralColor.color]
-            }
-          />
-        </Box>
+        <BarChart
+          multiColumnData={
+            type === "incomeExpense" ? IncomeExpenseData : undefined
+          }
+          twoColumnData={type === "net" ? NetChartData : undefined}
+          barColors={
+            type === "incomeExpense"
+              ? [positiveColor.color, negativeColor.color]
+              : [neutralColor.color]
+          }
+        />
       </Stack>
     </Stack>
   )

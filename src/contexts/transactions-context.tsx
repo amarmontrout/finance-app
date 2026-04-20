@@ -1,7 +1,13 @@
 import { getTransactions } from "@/app/api/Transactions/requests"
 import { useUser } from "@/hooks/useUser"
 import { TransactionType } from "@/utils/type"
-import { createContext, useContext, useEffect, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 
 type TransactionsContextType = {
   isLoading: boolean
@@ -27,28 +33,32 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
   const [transactions, setTransactions] = useState<TransactionType[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const refreshTransactions = async () => {
-    if (!user) {
-      return
-    }
-    console.log("Pulling Transactions...")
-    const result = await getTransactions({
-      userId: user.id,
-    })
-    setTransactions(result ?? [])
-  }
-  const loadTransactions = async () => {
-    if (!user) return
-    setIsLoading(true)
-    await Promise.all([refreshTransactions()])
-    setIsLoading(false)
-  }
 
-  useEffect(() => {
-    if (user) {
-      loadTransactions()
+  const refreshTransactions = useCallback(async () => {
+    if (!user) return
+
+    try {
+      setIsLoading(true)
+      console.log("Fetching Transactions...")
+      const result = await getTransactions({
+        userId: user.id,
+      })
+      setTransactions(result ?? [])
+    } catch (error) {
+      console.error("Failed to fetch transactions", error)
+      setTransactions([])
+    } finally {
+      setIsLoading(false)
     }
   }, [user])
+
+  useEffect(() => {
+    if (!user) {
+      setTransactions([])
+      return
+    }
+    refreshTransactions()
+  }, [user, refreshTransactions])
 
   return (
     <TransactionContext.Provider

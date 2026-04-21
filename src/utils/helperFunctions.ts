@@ -1,5 +1,5 @@
-import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { healthStateDarkMode, healthStateLightMode } from "@/globals/colors"
+import { MONTH_INDEX, MONTHS } from "@/globals/globals"
 import { DateType, WeekType } from "./type"
 
 /**
@@ -101,4 +101,40 @@ export const getCardColor = (
   }
   
   return healthStateDarkMode[state]
+}
+
+/**
+ * Returns how many days in the provided month
+ */
+export const getDaysInMonth = (month: string, year: number) => {
+  const monthIndex = MONTHS.indexOf(month)
+  return new Date(year, monthIndex + 1, 0).getDate()
+}
+
+
+/**
+ * Calculate remaining budget for the month and remaining daily allowance
+ */
+export function calculateDailyBudget({
+  monthlyBudget,
+  spentSoFar,
+  date
+}: {
+  monthlyBudget: number;
+  spentSoFar: number;
+  date: DateType;
+}) {
+  const daysInMonth = getDaysInMonth(date.month, date.year);
+
+  const remainingDays = daysInMonth - date.day + 1;
+  const remainingBudget = monthlyBudget - spentSoFar;
+
+  const dailyAllowance =
+    remainingDays > 0 ? remainingBudget / remainingDays : 0;
+
+  return {
+    remainingDays,
+    remainingBudget,
+    dailyAllowance,
+  };
 }

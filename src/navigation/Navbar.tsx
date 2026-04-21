@@ -16,7 +16,7 @@ export const Navbar = () => {
     <Stack height={"100%"} width={"100%"}>
       <Box>
         <Box
-          className="hidden md:flex"
+          className="hidden sm:flex"
           bgcolor={"background.default"}
           minHeight={"70px"}
           height={"100%"}

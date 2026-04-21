@@ -19,7 +19,6 @@ const WeeklyBudget = ({
   currentDay,
   currentYear,
   currentTheme,
-  isLoading,
 }: {
   transactions: TransactionType[]
   budgetCategories: BudgetType[]
@@ -27,7 +26,6 @@ const WeeklyBudget = ({
   currentDay: number
   currentYear: number
   currentTheme: string | undefined
-  isLoading: boolean
 }) => {
   const positiveCardColor = getCardColor(currentTheme, "great")
   const negativeCardColor = getCardColor(currentTheme, "concerning")

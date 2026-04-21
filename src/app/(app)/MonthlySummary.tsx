@@ -1,29 +1,26 @@
-import { formattedStringNumber } from "@/utils/helperFunctions"
-import { getTotalsForMonthNetCash } from "../../utils/functions"
-import { getNetCashFlow } from "@/utils/financialFunctions"
-import { TransactionType } from "@/utils/type"
 import {
-  positiveColor,
+  infoColor,
   negativeColor,
   neutralColor,
-  infoColor,
+  positiveColor,
 } from "@/globals/colors"
+import { MONTH_INDEX } from "@/globals/globals"
+import { formattedStringNumber } from "@/utils/helperFunctions"
+import { TransactionType } from "@/utils/type"
 import { Box, Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
-import { MONTH_INDEX } from "@/globals/globals"
+import { getTotalsForMonthNetCash } from "../../utils/functions"
 
 const SummaryCard = ({
   title,
   amount,
   comparison,
   type = "net",
-  isLoading,
 }: {
   title: string
   amount: number
   comparison?: number
   type?: "income" | "expense" | "net" | "total"
-  isLoading: boolean
 }) => {
   const typeStyles = {
     income: {
@@ -97,12 +94,10 @@ const MonthlySummary = ({
   transactions,
   currentMonth,
   currentYear,
-  isLoading,
 }: {
   transactions: TransactionType[]
   currentMonth: string
   currentYear: number
-  isLoading: boolean
 }) => {
   const {
     incomeTotalMonthNet,
@@ -111,14 +106,8 @@ const MonthlySummary = ({
     expenseTotalMonthNetPrev,
   } = getTotalsForMonthNetCash(currentYear, currentMonth, transactions)
 
-  const netMonthIncome = getNetCashFlow(
-    incomeTotalMonthNet,
-    expenseTotalMonthNet,
-  )
-  const netMonthIncomePrev = getNetCashFlow(
-    incomeTotalMonthNetPrev,
-    expenseTotalMonthNetPrev,
-  )
+  const netMonthIncome = incomeTotalMonthNet - expenseTotalMonthNet
+  const netMonthIncomePrev = incomeTotalMonthNetPrev - expenseTotalMonthNetPrev
 
   const { currentTotal, previousTotal } = useMemo(() => {
     const currentMonthIndex = MONTH_INDEX[currentMonth]
@@ -149,7 +138,6 @@ const MonthlySummary = ({
           amount={incomeTotalMonthNet}
           comparison={incomeTotalMonthNetPrev}
           type="income"
-          isLoading={isLoading}
         />
 
         <SummaryCard
@@ -157,7 +145,6 @@ const MonthlySummary = ({
           amount={expenseTotalMonthNet}
           comparison={expenseTotalMonthNetPrev}
           type="expense"
-          isLoading={isLoading}
         />
       </Stack>
 
@@ -167,7 +154,6 @@ const MonthlySummary = ({
           amount={netMonthIncome}
           comparison={netMonthIncomePrev}
           type="net"
-          isLoading={isLoading}
         />
 
         <SummaryCard
@@ -175,7 +161,6 @@ const MonthlySummary = ({
           amount={currentTotal}
           comparison={previousTotal}
           type="total"
-          isLoading={isLoading}
         />
       </Stack>
     </Stack>

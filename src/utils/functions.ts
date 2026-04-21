@@ -1,4 +1,4 @@
-import { MONTH_INDEX, MONTHS } from "@/globals/globals"
+import { MONTH_INDEX } from "@/globals/globals"
 import { formattedStringNumber } from "@/utils/helperFunctions"
 import { TransactionType } from "@/utils/type"
 
@@ -272,12 +272,4 @@ export const getMonthCategoryTotals = (
     pieChartData.push([category, Number(total.toFixed(2))])
   })
   return pieChartData
-}
-
-/**
- * Returns how many days in the provided month
- */
-export const getDaysInMonth = (month: string, year: number) => {
-  const monthIndex = MONTHS.indexOf(month)
-  return new Date(year, monthIndex + 1, 0).getDate()
 }

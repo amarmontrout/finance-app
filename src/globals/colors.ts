@@ -28,9 +28,6 @@ export enum lightMode {
     disabledText = "#9CA3AF", // Inactive UI
     borderMuted = "#E5E7EB", // Subtle divisions
     borderStrong = "#D1D5DB", // Focus outlines, important boundaries
-    success = "#16A34A", // Payment recieved, positive budget
-    warning = "#F59E0B", // Overspending approaching limit
-    error = "#DC2626", // Invalid inputs, failed sync, negative cash flow
     graph1 = "#6B7280", 
     graph2 = "#9CA3AF", 
     graph3 = "#D1D5DB", 
@@ -46,9 +43,6 @@ export enum darkMode {
     disabledText = "#64748B", // Inactive UI
     borderMuted = "#1E293B", // Subtle divisions
     borderStrong = "#475569", // Focus outlines, important boundaries
-    success = "#22C55E", // Payment recieved, positive budget
-    warning = "#FBBF24", // Overspending approaching limit
-    error = "#EF4444", // Invalid inputs, failed sync, negative cash flow
     graph1 = "#E2E8F0", 
     graph2 = "#94A3B8", 
     graph3 = "#475569", 

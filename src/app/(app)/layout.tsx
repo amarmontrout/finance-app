@@ -8,7 +8,7 @@ import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
 import { neutralColor } from "@/globals/colors"
 
 export const metadata: Metadata = {
-  title: "Finance Tracker",
+  title: "My Finances",
   description: "Personal project to track finances.",
 }
 
@@ -24,8 +24,10 @@ export default function RootLayout({
           <Box
             sx={{
               display: "flex",
+              flexDirection: "row",
               height: "100dvh",
               overflow: "hidden",
+              bgcolor: "background.default",
             }}
           >
             {/* Sidebar */}
@@ -35,7 +37,7 @@ export default function RootLayout({
               sx={{
                 bgcolor: "background.paper",
                 borderRight: 1,
-                borderColor: "divider",
+                borderColor: "background.paper",
               }}
             >
               <Navbar />
@@ -48,10 +50,9 @@ export default function RootLayout({
                 flex: 1,
                 flexDirection: "column",
                 minWidth: 0,
-                bgcolor: "background.default",
               }}
             >
-              {/* Header (sticky instead of fixed layout hacks) */}
+              {/* Header */}
               <Box
                 component="header"
                 sx={{
@@ -79,7 +80,7 @@ export default function RootLayout({
                 {children}
               </Box>
 
-              {/* Mobile nav (sticky bottom instead of layout split) */}
+              {/* Mobile nav */}
               <Box
                 component="nav"
                 className="md:hidden"

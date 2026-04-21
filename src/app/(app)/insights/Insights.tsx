@@ -1,20 +1,19 @@
 "use client"
 
-import { useTransactionContext } from "@/contexts/transactions-context"
-import { useMemo, useState } from "react"
-import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
-import { negativeColor, neutralColor, positiveColor } from "@/globals/colors"
 import BarChart from "@/components/BarChart"
+import MonthYearSelector from "@/components/MonthYearSelector"
+import { useTransactionContext } from "@/contexts/transactions-context"
+import { negativeColor, neutralColor, positiveColor } from "@/globals/colors"
+import { MONTHS } from "@/globals/globals"
 import {
   buildMultiColumnData,
   buildTwoColumnData,
   TwoColumnDataType,
 } from "@/utils/buildChartData"
-import MonthYearSelector from "@/components/MonthYearSelector"
+import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { SelectedDateType } from "@/utils/type"
-import { MONTHS } from "@/globals/globals"
-import { getNetCashFlow } from "@/utils/financialFunctions"
+import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { useMemo, useState } from "react"
 import { getTotalsForMonthNetCash } from "../../../utils/functions"
 
 const Insights = () => {
@@ -44,7 +43,7 @@ const Insights = () => {
     return MONTHS.map((month) => {
       const { incomeTotalMonthNet, expenseTotalMonthNet } =
         getTotalsForMonthNetCash(selectedDate.year, month, transactions)
-      const net = getNetCashFlow(incomeTotalMonthNet, expenseTotalMonthNet)
+      const net = incomeTotalMonthNet - expenseTotalMonthNet
       return [month, net]
     })
   }, [selectedDate.year, transactions])

@@ -2,8 +2,6 @@ import { createTheme } from "@mui/material";
 import { 
   lightMode, 
   darkMode, 
-  accentColorPrimary, 
-  accentColorSecondary 
 } from "@/globals/colors";
 
 export const lightTheme = createTheme({
@@ -25,27 +23,6 @@ export const lightTheme = createTheme({
 
     // Dividers & Borders
     divider: lightMode.borderMuted,
-
-    // Buttons, main UI color
-    primary: {
-      main: accentColorPrimary,
-    },
-
-    secondary: {
-      main: accentColorSecondary,
-    },
-
-    success: {
-      main: lightMode.success,
-    },
-
-    warning: {
-      main: lightMode.warning,
-    },
-
-    error: {
-      main: lightMode.error,
-    },
   },
 
   components: {
@@ -76,26 +53,6 @@ export const darkTheme = createTheme({
     },
 
     divider: darkMode.borderMuted,
-
-    primary: {
-      main: accentColorPrimary,
-    },
-
-    secondary: {
-      main: accentColorSecondary,
-    },
-
-    success: {
-      main: darkMode.success,
-    },
-
-    warning: {
-      main: darkMode.warning,
-    },
-
-    error: {
-      main: darkMode.error,
-    },
   },
 
   components: {

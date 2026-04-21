@@ -3,13 +3,13 @@
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transactions-context"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
-import { useTheme } from "next-themes"
-import SetUpDialog from "./SetUpDialog"
 import { Stack, Typography } from "@mui/material"
-import MonthlySummary from "./MonthlySummary"
-import WeeklyBudget from "./WeeklyBudget"
-import TopMonthlyExpenses from "./TopMonthlyExpenses"
+import { useTheme } from "next-themes"
 import CreditCardEstimate from "./CreditCardEstimate"
+import MonthlySummary from "./MonthlySummary"
+import SetUpDialog from "./SetUpDialog"
+import TopMonthlyExpenses from "./TopMonthlyExpenses"
+import WeeklyBudget from "./WeeklyBudget"
 
 const Overview = () => {
   const { transactions } = useTransactionContext()
@@ -40,7 +40,6 @@ const Overview = () => {
         transactions={transactions}
         currentMonth={currentMonth}
         currentYear={currentYear}
-        isLoading={isLoading}
       />
 
       {transactions.length !== 0 && (
@@ -51,7 +50,6 @@ const Overview = () => {
           currentDay={currentDay}
           currentYear={currentYear}
           currentTheme={currentTheme}
-          isLoading={isLoading}
         />
       )}
 

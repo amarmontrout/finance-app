@@ -7,8 +7,7 @@ import EditCategorySettingsDialog from "@/app/(app)/settings/EditCategorySetting
 import AddYear from "./AddYear"
 import AddIncomeCategory from "./AddIncomeCategory"
 import AddExpenseCategory from "./AddExpenseCategory"
-import { AlertToastType, BudgetType, ChoiceType } from "@/utils/type"
-import { accentColorPrimarySelected } from "@/globals/colors"
+import { AlertToastType, ChoiceType } from "@/utils/type"
 import { saveBudgetCategory } from "@/app/api/Choices/requests"
 import { makeId } from "@/utils/helperFunctions"
 import AlertToast from "@/components/AlertToast"
@@ -47,12 +46,6 @@ const Settings = () => {
       <Typography variant={"h5"} width={"100%"} textAlign={"center"}>
         Settings
       </Typography>
-
-      <hr
-        style={{
-          border: `1px solid ${accentColorPrimarySelected}`,
-        }}
-      />
 
       <Box className="flex flex-col xl:flex-row gap-5 h-full">
         <AddYear

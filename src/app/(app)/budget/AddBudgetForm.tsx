@@ -1,4 +1,4 @@
-import { accentColorSecondary, positiveColor } from "@/globals/colors"
+import { positiveColor } from "@/globals/colors"
 import {
   Box,
   Button,

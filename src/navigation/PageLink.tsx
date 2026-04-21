@@ -1,4 +1,4 @@
-import { accentColorPrimarySelected, neutralColor } from "@/globals/colors"
+import { neutralColor } from "@/globals/colors"
 import { linkStyle, navSelection } from "@/globals/styles"
 import { SvgIconComponent } from "@mui/icons-material"
 import { Box, Stack, Typography } from "@mui/material"
@@ -25,7 +25,7 @@ export const PageLink = ({
           "&::before": {
             ...navSelection["&::before"],
             width: active ? "100%" : 0,
-            backgroundColor: active ? accentColorPrimarySelected : "none",
+            backgroundColor: active ? neutralColor.color : "text.secondary",
           },
         }}
         display={"flex"}

@@ -1,8 +1,6 @@
-// Buttons, active tab/selected nav item, important graph highlights
 export const accentColorPrimary = "#2563EB"
-export const accentColorPrimarySelected = "#2563EBB3"
-// Savings goals, positive cash flow, secondary buttons (CTA), graph comparison lines
 export const accentColorSecondary = "#10B981"
+
 export const positiveColor = {
   color: "mediumseagreen", 
   bg: "rgba(22, 163, 74, 0.2)"

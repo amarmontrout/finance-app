@@ -1,11 +1,11 @@
 "use client"
 
-import { Box, Divider, Stack, Typography } from "@mui/material"
 import Logo from "@/components/Logo"
-import { NAV_QUICK_INFO, NAV_TRANSACTIONS } from "@/globals/globals"
-import { usePathname } from "next/navigation"
-import { useTheme } from "next-themes"
 import { darkMode, lightMode } from "@/globals/colors"
+import { NAV_MOBILE, NAV_QUICK_INFO, NAV_TRANSACTIONS } from "@/globals/globals"
+import { Box, Divider, Stack, Typography } from "@mui/material"
+import { useTheme } from "next-themes"
+import { usePathname } from "next/navigation"
 import { HorizontalPageLink, PageLink } from "./PageLink"
 
 export const Navbar = () => {
@@ -91,7 +91,7 @@ export const HorizontalNavbar = () => {
       width={"100%"}
       px={1}
     >
-      {NAV_QUICK_INFO.concat(NAV_TRANSACTIONS).map((item) => (
+      {NAV_MOBILE.map((item) => (
         <HorizontalPageLink
           item={item}
           active={pathname === item.link}

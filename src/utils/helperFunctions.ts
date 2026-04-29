@@ -111,7 +111,6 @@ export const getDaysInMonth = (month: string, year: number) => {
   return new Date(year, monthIndex + 1, 0).getDate()
 }
 
-
 /**
  * Calculate remaining budget for the month and remaining daily allowance
  */

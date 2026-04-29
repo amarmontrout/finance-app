@@ -1,18 +1,16 @@
+import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
+import { BudgetType, TransactionType, WeekType } from "@/utils/type"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
-import { formattedStringNumber, toTimestamp } from "@/utils/helperFunctions"
-import { BudgetType, TransactionType, WeekType } from "@/utils/type"
 
 const WeekTotalBudget = ({
   transactions,
   week,
-  isLoading,
   budgetCategories,
 }: {
   transactions: TransactionType[]
   week: WeekType
-  isLoading: boolean
   budgetCategories: BudgetType[]
 }) => {
   const expenseTransactions = useMemo(() => {
@@ -47,7 +45,7 @@ const WeekTotalBudget = ({
       {expenseTransactions.length !== 0 && (
         <Typography variant={"h6"} textAlign={"left"}>
           {`${netTotal < 0 ? "Overspending" : "Saving"}
-                    $${formattedStringNumber(Math.abs(netTotal))} for the week`}
+          $${formattedStringNumber(Math.abs(netTotal))} for the week`}
         </Typography>
       )}
     </Stack>

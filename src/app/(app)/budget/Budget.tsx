@@ -1,25 +1,25 @@
 "use client"
 
-import { useMemo, useRef, useState } from "react"
-import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
-import { Divider, Stack } from "@mui/material"
-import { useTransactionContext } from "@/contexts/transactions-context"
+import AddDataButton from "@/components/AddDataButton"
+import AlertToast from "@/components/AlertToast"
+import WeekSelector from "@/components/WeekSelector"
 import { useCategoryContext } from "@/contexts/categories-context"
+import { useTransactionContext } from "@/contexts/transactions-context"
+import { neutralColor } from "@/globals/colors"
+import { getCurrentDateInfo, getWeekBounds } from "@/utils/helperFunctions"
 import {
   AlertToastType,
   BudgetType,
   DateType,
   TransactionType,
 } from "@/utils/type"
-import AddDataButton from "@/components/AddDataButton"
-import WeekSelector from "@/components/WeekSelector"
-import AlertToast from "@/components/AlertToast"
-import BudgetTransactions from "./BudgetTransactions"
+import { Divider, Stack } from "@mui/material"
+import { useMemo, useRef, useState } from "react"
 import AddEditDialog from "../../../components/AddEditDialog"
-import WeekTotalBudget from "./WeekTotalBudget"
-import AddBudgetDialog from "./AddBudgetDialog"
 import EditBudgetDialog from "../settings/EditBudgetDialog"
-import { neutralColor } from "@/globals/colors"
+import AddBudgetDialog from "./AddBudgetDialog"
+import BudgetTransactions from "./BudgetTransactions"
+import WeekTotalBudget from "./WeekTotalBudget"
 
 const Budget = () => {
   const { isLoading, transactions, refreshTransactions } =
@@ -57,32 +57,42 @@ const Budget = () => {
   }, [TODAY, weekOffset])
 
   return (
-    <Stack spacing={2} pb={"58px"}>
-      <WeekSelector
-        week={week}
-        weekOffset={weekOffset}
-        setWeekOffset={setWeekOffset}
-      />
+    <>
+      <Stack
+        spacing={2}
+        pb={"58px"}
+        divider={<Divider sx={{ borderColor: neutralColor.color }} />}
+      >
+        <WeekSelector
+          week={week}
+          weekOffset={weekOffset}
+          setWeekOffset={setWeekOffset}
+        />
 
-      <BudgetTransactions
-        transactions={transactions}
-        refreshTransactions={refreshTransactions}
-        budgetCategories={budgetCategories}
-        setSelectedTransaction={setSelectedTransaction}
-        setAlertToast={setAlertToast}
-        setOpenDialog={setOpenEditDialog}
-        isLoading={isLoading}
-        week={week}
-      />
+        <BudgetTransactions
+          transactions={transactions}
+          refreshTransactions={refreshTransactions}
+          budgetCategories={budgetCategories}
+          setSelectedTransaction={setSelectedTransaction}
+          setAlertToast={setAlertToast}
+          setOpenDialog={setOpenEditDialog}
+          isLoading={isLoading}
+          week={week}
+        />
 
-      <Divider sx={{ borderColor: neutralColor.color }} />
+        <WeekTotalBudget
+          transactions={transactions}
+          week={week}
+          budgetCategories={budgetCategories}
+        />
 
-      <WeekTotalBudget
-        transactions={transactions}
-        week={week}
-        isLoading={isLoading}
-        budgetCategories={budgetCategories}
-      />
+        {/* <MonthlyBudget
+          transactions={transactions}
+          budgetCategories={budgetCategories}
+          currentMonth={currentMonth}
+          currentYear={currentYear}
+        /> */}
+      </Stack>
 
       <AddEditDialog
         openDialog={openEditDialog}
@@ -128,7 +138,7 @@ const Budget = () => {
           setOpenBudgetDialog(true)
         }}
       />
-    </Stack>
+    </>
   )
 }
 

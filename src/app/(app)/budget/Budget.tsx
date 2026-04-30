@@ -90,6 +90,7 @@ const Budget = () => {
           transactions={transactions}
           budgetCategories={budgetCategories}
           currentMonth={currentMonth}
+          currentDay={currentDay}
           currentYear={currentYear}
         /> */}
       </Stack>

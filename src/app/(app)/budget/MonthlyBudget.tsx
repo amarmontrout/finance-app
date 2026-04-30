@@ -1,6 +1,9 @@
-import { formattedStringNumber } from "@/utils/helperFunctions"
+import {
+  calculateDailyBudget,
+  formattedStringNumber,
+} from "@/utils/helperFunctions"
 import { BudgetType, TransactionType } from "@/utils/type"
-import { Typography } from "@mui/material"
+import { Divider, Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
 
@@ -8,11 +11,13 @@ const MonthlyBudget = ({
   transactions,
   budgetCategories,
   currentMonth,
+  currentDay,
   currentYear,
 }: {
   transactions: TransactionType[]
   budgetCategories: BudgetType[]
   currentMonth: string
+  currentDay: number
   currentYear: number
 }) => {
   const { actualTotal, budgetTotal } = useMemo(() => {
@@ -36,6 +41,13 @@ const MonthlyBudget = ({
 
   const netTotal = budgetTotal - actualTotal
 
+  const { remainingDays, remainingBudget, dailyAllowance } =
+    calculateDailyBudget({
+      monthlyBudget: budgetTotal,
+      spentSoFar: actualTotal,
+      date: { month: currentMonth, day: currentDay, year: currentYear },
+    })
+
   return (
     <div>
       <BudgetProgressBar
@@ -43,7 +55,19 @@ const MonthlyBudget = ({
         actual={actualTotal}
         budget={budgetTotal}
       />
-      <Typography>{`Net: $${formattedStringNumber(netTotal)}`}</Typography>
+      <Stack spacing={1} divider={<Divider />}>
+        <Typography>{`Net: $${formattedStringNumber(netTotal)}`}</Typography>
+        <Typography>
+          {`Today's Date: ${currentMonth} ${currentDay}, ${currentYear}`}
+        </Typography>
+        <Typography>{`Remaining Days: ${remainingDays}`}</Typography>
+        <Typography>
+          {`Remaining Budget: $${formattedStringNumber(remainingBudget)}`}
+        </Typography>
+        <Typography>
+          {`Daily Allowance: $${formattedStringNumber(dailyAllowance)}`}
+        </Typography>
+      </Stack>
     </div>
   )
 }

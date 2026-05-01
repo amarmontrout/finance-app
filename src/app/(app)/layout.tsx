@@ -1,11 +1,11 @@
-import type { Metadata } from "next"
-import { Analytics } from "@vercel/analytics/next"
-import Providers from "../providers"
-import { Box } from "@mui/material"
-import Header from "@/header/Header"
-import "../../globals.css"
-import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
 import { neutralColor } from "@/globals/colors"
+import Header from "@/header/Header"
+import { HorizontalNavbar, Navbar } from "@/navigation/Navbar"
+import { Box } from "@mui/material"
+import { Analytics } from "@vercel/analytics/next"
+import type { Metadata } from "next"
+import "../../globals.css"
+import Providers from "../providers"
 
 export const metadata: Metadata = {
   title: "My Finances",
@@ -25,7 +25,7 @@ export default function RootLayout({
             sx={{
               display: "flex",
               flexDirection: "row",
-              height: "100dvh",
+              height: "100svh",
               overflow: "hidden",
               bgcolor: "background.default",
             }}

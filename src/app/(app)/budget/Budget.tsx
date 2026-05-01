@@ -13,12 +13,13 @@ import {
   DateType,
   TransactionType,
 } from "@/utils/type"
-import { Divider, Stack } from "@mui/material"
+import { Button, Divider, Stack } from "@mui/material"
 import { useMemo, useRef, useState } from "react"
 import AddEditDialog from "../../../components/AddEditDialog"
 import EditBudgetDialog from "../settings/EditBudgetDialog"
 import AddBudgetDialog from "./AddBudgetDialog"
 import BudgetTransactions from "./BudgetTransactions"
+import MonthlyBudget from "./MonthlyBudget"
 import WeekTotalBudget from "./WeekTotalBudget"
 
 const Budget = () => {
@@ -56,6 +57,13 @@ const Budget = () => {
     return getWeekBounds(TODAY, weekOffset)
   }, [TODAY, weekOffset])
 
+  // Experimental ==============================================================
+  const [showExp, setShowExp] = useState<boolean>(false)
+  const handleExp = () => {
+    setShowExp(!showExp)
+  }
+  // ===========================================================================
+
   return (
     <>
       <Stack
@@ -63,36 +71,49 @@ const Budget = () => {
         pb={"58px"}
         divider={<Divider sx={{ borderColor: neutralColor.color }} />}
       >
-        <WeekSelector
-          week={week}
-          weekOffset={weekOffset}
-          setWeekOffset={setWeekOffset}
-        />
+        {!showExp && (
+          <>
+            <WeekSelector
+              week={week}
+              weekOffset={weekOffset}
+              setWeekOffset={setWeekOffset}
+            />
 
-        <BudgetTransactions
-          transactions={transactions}
-          refreshTransactions={refreshTransactions}
-          budgetCategories={budgetCategories}
-          setSelectedTransaction={setSelectedTransaction}
-          setAlertToast={setAlertToast}
-          setOpenDialog={setOpenEditDialog}
-          isLoading={isLoading}
-          week={week}
-        />
+            <BudgetTransactions
+              transactions={transactions}
+              refreshTransactions={refreshTransactions}
+              budgetCategories={budgetCategories}
+              setSelectedTransaction={setSelectedTransaction}
+              setAlertToast={setAlertToast}
+              setOpenDialog={setOpenEditDialog}
+              isLoading={isLoading}
+              week={week}
+            />
 
-        <WeekTotalBudget
-          transactions={transactions}
-          week={week}
-          budgetCategories={budgetCategories}
-        />
+            <WeekTotalBudget
+              transactions={transactions}
+              week={week}
+              budgetCategories={budgetCategories}
+            />
+          </>
+        )}
 
-        {/* <MonthlyBudget
-          transactions={transactions}
-          budgetCategories={budgetCategories}
-          currentMonth={currentMonth}
-          currentDay={currentDay}
-          currentYear={currentYear}
-        /> */}
+        {showExp && (
+          <>
+            <MonthlyBudget
+              transactions={transactions}
+              budgetCategories={budgetCategories}
+              currentMonth={currentMonth}
+              currentDay={currentDay}
+              currentYear={currentYear}
+            />
+          </>
+        )}
+
+        <Button
+          variant="contained"
+          onClick={handleExp}
+        >{`Show Exp: ${showExp}`}</Button>
       </Stack>
 
       <AddEditDialog

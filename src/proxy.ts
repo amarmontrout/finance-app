@@ -1,13 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest } from "next/server"
 import { updateSession } from "./utils/supabase/proxy"
 
 export async function proxy(request: NextRequest) {
-  // const isLoggedIn = true
-
-  // if (!isLoggedIn) {
-  //   return NextResponse.redirect(new URL('/login', request.url))
-  // }
-  // return NextResponse.next()
   return await updateSession(request)
 }
 

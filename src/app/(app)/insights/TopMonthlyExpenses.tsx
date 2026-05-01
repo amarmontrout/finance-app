@@ -1,10 +1,10 @@
 import ColoredInfoCard from "@/components/ColoredInfoCard"
 import { FlexColWrapper } from "@/components/Wrappers"
 import { formattedStringNumber, getCardColor } from "@/utils/helperFunctions"
+import { TransactionType } from "@/utils/type"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
-import { getMonthCategoryTotals } from "../../utils/functions"
-import { TransactionType } from "@/utils/type"
+import { getMonthCategoryTotals } from "../../../utils/functions"
 
 const TopMonthlyExpenses = ({
   transactions,

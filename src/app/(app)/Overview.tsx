@@ -8,7 +8,6 @@ import { useTheme } from "next-themes"
 import CreditCardEstimate from "./CreditCardEstimate"
 import MonthlySummary from "./MonthlySummary"
 import SetUpDialog from "./SetUpDialog"
-import TopMonthlyExpenses from "./TopMonthlyExpenses"
 import WeeklyBudget from "./WeeklyBudget"
 
 const Overview = () => {
@@ -59,15 +58,6 @@ const Overview = () => {
           currentMonth={currentMonth}
           currentDay={currentDay}
           currentYear={currentYear}
-        />
-      )}
-
-      {transactions.length !== 0 && (
-        <TopMonthlyExpenses
-          transactions={transactions}
-          currentMonth={currentMonth}
-          currentYear={currentYear}
-          currentTheme={currentTheme}
         />
       )}
 

@@ -12,13 +12,16 @@ import {
 } from "@/utils/buildChartData"
 import { getCurrentDateInfo } from "@/utils/helperFunctions"
 import { SelectedDateType } from "@/utils/type"
-import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { Box, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { useTheme } from "next-themes"
 import { useMemo, useState } from "react"
 import { getTotalsForMonthNetCash } from "../../../utils/functions"
+import TopMonthlyExpenses from "./TopMonthlyExpenses"
 
 const Insights = () => {
   const { transactions } = useTransactionContext()
   const { currentYear, currentMonth } = getCurrentDateInfo()
+  const { theme: currentTheme } = useTheme()
 
   const CURRENT_DATE = {
     month: currentMonth,
@@ -108,17 +111,28 @@ const Insights = () => {
           <ToggleButton value="net">Net Cash Flow</ToggleButton>
         </ToggleButtonGroup>
 
-        <BarChart
-          multiColumnData={
-            type === "incomeExpense" ? IncomeExpenseData : undefined
-          }
-          twoColumnData={type === "net" ? NetChartData : undefined}
-          barColors={
-            type === "incomeExpense"
-              ? [positiveColor.color, negativeColor.color]
-              : [neutralColor.color]
-          }
-        />
+        <Box height={"400px"}>
+          <BarChart
+            multiColumnData={
+              type === "incomeExpense" ? IncomeExpenseData : undefined
+            }
+            twoColumnData={type === "net" ? NetChartData : undefined}
+            barColors={
+              type === "incomeExpense"
+                ? [positiveColor.color, negativeColor.color]
+                : [neutralColor.color]
+            }
+          />
+        </Box>
+
+        {transactions.length !== 0 && (
+          <TopMonthlyExpenses
+            transactions={transactions}
+            currentMonth={currentMonth}
+            currentYear={currentYear}
+            currentTheme={currentTheme}
+          />
+        )}
       </Stack>
     </Stack>
   )

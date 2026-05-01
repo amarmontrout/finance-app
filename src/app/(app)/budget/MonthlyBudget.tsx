@@ -7,6 +7,29 @@ import { Divider, Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
 import BudgetProgressBar from "./BudgetProgressBar"
 
+const budgetExamplesForTesting = [
+  {
+    id: 1,
+    category: "Fast Food",
+    amount: 125,
+  },
+  {
+    id: 2,
+    category: "Groceries",
+    amount: 850,
+  },
+  {
+    id: 3,
+    category: "Restaurant",
+    amount: 375,
+  },
+  {
+    id: 4,
+    category: "Shopping",
+    amount: 350,
+  },
+]
+
 const MonthlyBudget = ({
   transactions,
   budgetCategories,
@@ -21,10 +44,12 @@ const MonthlyBudget = ({
   currentYear: number
 }) => {
   const { actualTotal, budgetTotal } = useMemo(() => {
-    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
+    const allowedCategories = new Set(
+      budgetExamplesForTesting.map((c) => c.category),
+    )
     let actual = 0
     let budget = 0
-    for (const c of budgetCategories) {
+    for (const c of budgetExamplesForTesting) {
       budget += c.amount
     }
     for (const t of transactions) {
@@ -37,7 +62,7 @@ const MonthlyBudget = ({
       }
     }
     return { actualTotal: actual, budgetTotal: budget }
-  }, [transactions, budgetCategories, currentMonth, currentYear])
+  }, [transactions, budgetExamplesForTesting, currentMonth, currentYear])
 
   const netTotal = budgetTotal - actualTotal
 

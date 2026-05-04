@@ -62,6 +62,26 @@ const Budget = () => {
   const handleExp = () => {
     setShowExp(!showExp)
   }
+
+  // const user = useUser()
+
+  // const testing = async () => {
+  //   if (!user) return
+
+  //   const result = await getTransactionsWithFilter({
+  //     userId: user.id,
+  //     year: currentYear,
+  //     type: "expense",
+  //     isPaid: true,
+  //     category: "Water",
+  //   })
+  //   console.log(result)
+  // }
+
+  // useEffect(() => {
+  //   testing()
+  // }, [user])
+
   // ===========================================================================
 
   return (

@@ -15,7 +15,7 @@ type FilterOperator =
   | "in"
 
 export type Filter<T> = {
-  column: keyof T
+  column: keyof T | string
   operator: FilterOperator
   value: T[keyof T] | T[keyof T][]
 }

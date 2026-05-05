@@ -64,8 +64,6 @@ const MonthlyBudget = ({
     return { actualTotal: actual, budgetTotal: budget }
   }, [transactions, budgetExamplesForTesting, currentMonth, currentYear])
 
-  const netTotal = budgetTotal - actualTotal
-
   const { remainingDays, remainingBudget, dailyAllowance } =
     calculateDailyBudget({
       monthlyBudget: budgetTotal,
@@ -81,7 +79,6 @@ const MonthlyBudget = ({
         budget={budgetTotal}
       />
       <Stack spacing={1} divider={<Divider />}>
-        <Typography>{`Net: $${formattedStringNumber(netTotal)}`}</Typography>
         <Typography>
           {`Today's Date: ${currentMonth} ${currentDay}, ${currentYear}`}
         </Typography>

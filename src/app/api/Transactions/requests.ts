@@ -173,3 +173,125 @@ export const getTransactionsWithFilter = async ({
   if (error) throw error
   return data
 }
+
+export const getUnpaidTransactions = async ({
+  userId,
+  month,
+  day,
+  year,
+}: {
+  userId: string
+  month?: string
+  day?: number
+  year?: number
+}) => {
+  const filters: Filter<TransactionType>[] = [
+    {
+      column: "type",
+      operator: "eq",
+      value: 'expense',
+    },
+    {
+      column: "is_return",
+      operator: "eq",
+      value: false,
+    },
+    {
+      column: "is_paid",
+      operator: "eq",
+      value: false,
+    }
+  ]
+
+  if (month) {
+    filters.push({
+      column: "date->>month",
+      operator: "eq",
+      value: month,
+    })
+  }
+
+  if (day) {
+    filters.push({
+      column: "date->>day",
+      operator: "eq",
+      value: day,
+    })
+  }
+
+  if (year) {
+    filters.push({
+      column: "date->>year",
+      operator: "eq",
+      value: year,
+    })
+  }
+
+  const { data, error } = await performRequest<TransactionType>({
+    schema: "Transactions",
+    table: "transactions",
+    method: "GET",
+    userId,
+    filters: filters.length ? filters : undefined,
+  })
+
+  if (error) throw error
+  return data
+}
+
+export const getTransactionsByCategory = async ({
+  userId,
+  month,
+  day,
+  year,
+  category
+}: {
+  userId: string
+  month?: string
+  day?: number
+  year?: number
+  category: string
+}) => {
+  const filters: Filter<TransactionType>[] = [
+    {
+      column: "category",
+      operator: "eq",
+      value: category,
+    }
+  ]
+
+  if (month) {
+    filters.push({
+      column: "date->>month",
+      operator: "eq",
+      value: month,
+    })
+  }
+
+  if (day) {
+    filters.push({
+      column: "date->>day",
+      operator: "eq",
+      value: day,
+    })
+  }
+
+  if (year) {
+    filters.push({
+      column: "date->>year",
+      operator: "eq",
+      value: year,
+    })
+  }
+
+  const { data, error } = await performRequest<TransactionType>({
+    schema: "Transactions",
+    table: "transactions",
+    method: "GET",
+    userId,
+    filters: filters.length ? filters : undefined,
+  })
+
+  if (error) throw error
+  return data
+}

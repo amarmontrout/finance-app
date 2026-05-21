@@ -1,0 +1,66 @@
+import { FormControl, OutlinedInput } from "@mui/material";
+import { ChangeEvent, RefObject } from "react";
+
+const MoneyInput = <T extends { amount: number }>({
+  value,
+  setValue,
+  inputRef,
+  autoFocus,
+}: {
+  value: number;
+  setValue: React.Dispatch<React.SetStateAction<T>>;
+  inputRef?: RefObject<HTMLInputElement | null>;
+  autoFocus?: boolean;
+}) => {
+  const handleAmount = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const MAX_AMOUNT = 9999.99;
+    const MAX_CENTS = MAX_AMOUNT * 100;
+    let digits = e.target.value.replace(/\D/g, "");
+    const cents = Number(digits || 0);
+    const decimal = cents / 100;
+    if (cents <= MAX_CENTS) {
+      setValue((prev) => ({
+        ...prev,
+        amount: decimal,
+      }));
+    }
+  };
+
+  return (
+    <FormControl fullWidth>
+      <OutlinedInput
+        className="text-dark-4 dark:text-dark-6"
+        inputRef={inputRef}
+        autoFocus={autoFocus}
+        type="text"
+        inputMode="decimal"
+        inputProps={{
+          inputMode: "decimal",
+          pattern: "[0-9]*[.]?[0-9]*",
+          style: {
+            textAlign: "center",
+            fontSize: "2.5rem",
+            padding: 0,
+          },
+        }}
+        value={`$${value.toFixed(2)}`}
+        onChange={handleAmount}
+        sx={{
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            border: "none",
+          },
+          backgroundColor: "transparent",
+        }}
+      />
+    </FormControl>
+  );
+};
+export default MoneyInput;

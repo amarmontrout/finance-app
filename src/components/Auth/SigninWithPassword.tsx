@@ -1,6 +1,6 @@
-"use client";
-import { CredType } from "@/api/auth/models";
-import { doLogin } from "@/api/auth/requests";
+"use client"
+import { CredType } from "@/api/auth/models"
+import { doLogin } from "@/api/auth/requests"
 import {
   Alert,
   Box,
@@ -9,36 +9,36 @@ import {
   InputLabel,
   OutlinedInput,
   Typography,
-} from "@mui/material";
-import { AuthError } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+} from "@mui/material"
+import { AuthError } from "@supabase/supabase-js"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 const CRED_INIT = {
   username: "",
   password: "",
-};
+}
 
 export default function SigninWithPassword() {
-  const router = useRouter();
-  const [credentials, setCredentials] = useState<CredType>(CRED_INIT);
-  const [error, setError] = useState<string | undefined>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const router = useRouter()
+  const [credentials, setCredentials] = useState<CredType>(CRED_INIT)
+  const [error, setError] = useState<string | undefined>()
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const handleLogin = () => {
-    setIsLoading(true);
+    setIsLoading(true)
     doLogin({
       credentials: credentials,
       callback: () => {
-        router.replace("/");
-        setIsLoading(false);
+        router.replace("/")
+        setIsLoading(false)
       },
       errorHandler: (error: AuthError) => {
-        setError(error.message);
-        setIsLoading(false);
+        setError(error.message)
+        setIsLoading(false)
       },
-    });
-  };
+    })
+  }
 
   return (
     <Box className="flex flex-col gap-4">
@@ -57,7 +57,7 @@ export default function SigninWithPassword() {
               setCredentials((prev) => ({
                 ...prev,
                 username: e.target.value,
-              }));
+              }))
             }}
           />
         </FormControl>
@@ -73,7 +73,7 @@ export default function SigninWithPassword() {
               setCredentials((prev) => ({
                 ...prev,
                 password: e.target.value,
-              }));
+              }))
             }}
           />
         </FormControl>
@@ -90,5 +90,5 @@ export default function SigninWithPassword() {
         {error && <Alert severity={"error"}>{error}</Alert>}
       </Box>
     </Box>
-  );
+  )
 }

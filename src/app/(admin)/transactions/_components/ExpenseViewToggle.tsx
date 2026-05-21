@@ -1,28 +1,28 @@
-import { neutralColor } from "@/global/colors";
-import { HookSetter } from "@/types/types";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { neutralColor } from "@/global/colors"
+import { HookSetter } from "@/types/types"
+import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
 const ExpenseViewToggle = ({
   view,
   setView,
 }: {
-  view: "Debit" | "Credit" | "Both";
-  setView: HookSetter<"Debit" | "Credit" | "Both">;
+  view: "Debit" | "Credit" | "Both"
+  setView: HookSetter<"Debit" | "Credit" | "Both">
 }) => {
   const handleToggle = (clicked: "Debit" | "Credit") => {
     if (view === "Debit") {
-      setView(clicked === "Debit" ? "Credit" : "Both");
-      return;
+      setView(clicked === "Debit" ? "Credit" : "Both")
+      return
     }
 
     if (view === "Credit") {
-      setView(clicked === "Debit" ? "Both" : "Debit");
-      return;
+      setView(clicked === "Debit" ? "Both" : "Debit")
+      return
     }
 
     // currently "Both"
-    setView(clicked === "Debit" ? "Debit" : "Credit");
-  };
+    setView(clicked === "Debit" ? "Debit" : "Credit")
+  }
 
   return (
     <ToggleButtonGroup
@@ -63,7 +63,7 @@ const ExpenseViewToggle = ({
         Credit
       </ToggleButton>
     </ToggleButtonGroup>
-  );
-};
+  )
+}
 
-export default ExpenseViewToggle;
+export default ExpenseViewToggle

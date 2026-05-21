@@ -1,16 +1,16 @@
-import { AlertToastType } from "@/types/types";
-import { Alert, Snackbar } from "@mui/material";
+import { AlertToastType } from "@/types/types"
+import { Alert, Snackbar } from "@mui/material"
 
 const AlertToast = ({
   alertToast,
 }: {
-  alertToast: AlertToastType | undefined;
+  alertToast: AlertToastType | undefined
 }) => {
   if (alertToast === undefined) {
-    return;
+    return
   }
 
-  const { open, onClose, severity, message } = alertToast;
+  const { open, onClose, severity, message } = alertToast
 
   return (
     <Snackbar
@@ -31,7 +31,7 @@ const AlertToast = ({
         {message}
       </Alert>
     </Snackbar>
-  );
-};
+  )
+}
 
-export default AlertToast;
+export default AlertToast

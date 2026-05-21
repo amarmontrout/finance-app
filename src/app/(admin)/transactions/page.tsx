@@ -1,12 +1,12 @@
-import { Metadata } from "next";
-import Transactions from "./Transactions";
+import { Metadata } from "next"
+import Transactions from "./Transactions"
 
 export const metadata: Metadata = {
   title: "Transaction Dashboard Page",
-};
+}
 
 const TransactionDashboardPage = () => {
-  return <Transactions />;
-};
+  return <Transactions />
+}
 
-export default TransactionDashboardPage;
+export default TransactionDashboardPage

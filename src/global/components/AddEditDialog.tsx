@@ -1,14 +1,11 @@
-import { ChoiceType } from "@/api/choices/models";
-import { DateType, TransactionType } from "@/api/transactions/models";
-import {
-  saveTransaction,
-  updateTransaction,
-} from "@/api/transactions/requests";
-import TransactionTypeToggle from "@/app/(admin)/transactions/_components/TransactionTypeToggle";
-import { CloseIcon } from "@/assets/icons";
-import { useUser } from "@/hooks/use-user";
-import { AlertToastType, HookSetter } from "@/types/types";
-import SaveIcon from "@mui/icons-material/Save";
+import { ChoiceType } from "@/api/choices/models"
+import { DateType, TransactionType } from "@/api/transactions/models"
+import { saveTransaction, updateTransaction } from "@/api/transactions/requests"
+import TransactionTypeToggle from "@/app/(admin)/transactions/_components/TransactionTypeToggle"
+import { CloseIcon } from "@/assets/icons"
+import { useUser } from "@/hooks/use-user"
+import { AlertToastType, HookSetter } from "@/types/types"
+import SaveIcon from "@mui/icons-material/Save"
 import {
   Dialog,
   DialogContent,
@@ -16,10 +13,10 @@ import {
   IconButton,
   Stack,
   Typography,
-} from "@mui/material";
-import { RefObject, useEffect, useMemo, useState } from "react";
-import { getCurrentDateInfo, makeId } from "../infoFunctions";
-import NewTransactionForm from "./NewTransactionForm";
+} from "@mui/material"
+import { RefObject, useEffect, useMemo, useState } from "react"
+import { getCurrentDateInfo, makeId } from "../infoFunctions"
+import NewTransactionForm from "./NewTransactionForm"
 
 const AddEditDialog = ({
   openDialog,
@@ -35,27 +32,27 @@ const AddEditDialog = ({
   type,
   setType,
 }: {
-  openDialog: boolean;
-  setOpenDialog: HookSetter<boolean>;
-  setAlertToast: HookSetter<AlertToastType | undefined>;
-  incomeCategories: ChoiceType[];
-  expenseCategories: ChoiceType[];
-  inputRef: RefObject<HTMLInputElement | null>;
-  refreshTransactions: () => Promise<void>;
-  selectedTransaction?: TransactionType | null;
-  setSelectedTransaction?: HookSetter<TransactionType | null>;
-  transactions: TransactionType[];
-  type: "income" | "expense";
-  setType: HookSetter<"income" | "expense">;
+  openDialog: boolean
+  setOpenDialog: HookSetter<boolean>
+  setAlertToast: HookSetter<AlertToastType | undefined>
+  incomeCategories: ChoiceType[]
+  expenseCategories: ChoiceType[]
+  inputRef: RefObject<HTMLInputElement | null>
+  refreshTransactions: () => Promise<void>
+  selectedTransaction?: TransactionType | null
+  setSelectedTransaction?: HookSetter<TransactionType | null>
+  transactions: TransactionType[]
+  type: "income" | "expense"
+  setType: HookSetter<"income" | "expense">
 }) => {
-  const user = useUser();
-  const { currentYear, currentDay, currentMonthString } = getCurrentDateInfo();
+  const user = useUser()
+  const { currentYear, currentDay, currentMonthString } = getCurrentDateInfo()
 
   const TODAY: DateType = {
     month: currentMonthString,
     day: currentDay,
     year: currentYear,
-  };
+  }
 
   const createInitialTransaction = (): TransactionType => ({
     id: makeId(),
@@ -67,14 +64,14 @@ const AddEditDialog = ({
     type: "income",
     is_paid: false,
     is_return: false,
-  });
+  })
 
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false)
   const [transaction, setTransaction] = useState<TransactionType>(
     createInitialTransaction(),
-  );
+  )
 
-  const isEditing = !!selectedTransaction;
+  const isEditing = !!selectedTransaction
 
   const allNotes = useMemo(() => {
     return [
@@ -83,28 +80,28 @@ const AddEditDialog = ({
           .filter((e) => e.type === type && e.note)
           .map((e) => e.note),
       ),
-    ];
-  }, [transactions, type]);
+    ]
+  }, [transactions, type])
 
   const resetFormData = () => {
-    setTransaction(createInitialTransaction());
-  };
+    setTransaction(createInitialTransaction())
+  }
 
   const save = async () => {
-    if (!user || !transaction) return;
-    setIsLoading(true);
+    if (!user || !transaction) return
+    setIsLoading(true)
     try {
       if (isEditing) {
         await updateTransaction({
           userId: user.id,
           rowId: selectedTransaction.id,
           body: transaction,
-        });
+        })
       } else {
         await saveTransaction({
           userId: user.id,
           body: transaction,
-        });
+        })
       }
       setAlertToast({
         open: true,
@@ -113,9 +110,9 @@ const AddEditDialog = ({
         message: isEditing
           ? "Transaction updated successfully!"
           : "Transaction saved successfully!",
-      });
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
       setAlertToast({
         open: true,
         onClose: () => setAlertToast(undefined),
@@ -123,36 +120,36 @@ const AddEditDialog = ({
         message: isEditing
           ? "Transaction could not be updated."
           : "Transaction could not be saved.",
-      });
+      })
     } finally {
-      await refreshTransactions();
-      resetFormData();
-      setSelectedTransaction?.(null);
-      setOpenDialog(false);
-      setIsLoading(false);
+      await refreshTransactions()
+      resetFormData()
+      setSelectedTransaction?.(null)
+      setOpenDialog(false)
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleClose = () => {
-    setOpenDialog(false);
-    resetFormData();
-    setSelectedTransaction?.(null);
-  };
+    setOpenDialog(false)
+    resetFormData()
+    setSelectedTransaction?.(null)
+  }
 
   useEffect(() => {
-    if (!openDialog) return;
+    if (!openDialog) return
 
     if (selectedTransaction) {
-      setType(selectedTransaction.type);
-      setTransaction(selectedTransaction);
+      setType(selectedTransaction.type)
+      setTransaction(selectedTransaction)
     } else {
-      resetFormData();
+      resetFormData()
     }
-  }, [openDialog, selectedTransaction]);
+  }, [openDialog, selectedTransaction])
 
   useEffect(() => {
-    if (!openDialog) return;
-    if (selectedTransaction) return;
+    if (!openDialog) return
+    if (selectedTransaction) return
 
     setTransaction((prev) => ({
       ...prev,
@@ -162,8 +159,8 @@ const AddEditDialog = ({
       type: type,
       is_paid: type === "expense" ? true : false,
       is_return: false,
-    }));
-  }, [type, openDialog, selectedTransaction]);
+    }))
+  }, [type, openDialog, selectedTransaction])
 
   return (
     <Dialog open={openDialog} fullScreen>
@@ -213,7 +210,7 @@ const AddEditDialog = ({
         </Stack>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AddEditDialog;
+export default AddEditDialog

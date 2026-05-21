@@ -1,19 +1,19 @@
 export const positiveColor = {
   color: "mediumseagreen",
   bg: "rgba(22, 163, 74, 0.2)",
-};
+}
 export const negativeColor = {
   color: "indianred",
   bg: "rgba(220, 38, 38, 0.2)",
-};
+}
 export const neutralColor = {
   color: "steelblue",
   bg: "rgba(37, 99, 235, 0.2)",
-};
+}
 export const infoColor = {
   color: "chocolate",
   bg: "rgba(255, 69, 0, 0.2)",
-};
+}
 
 export enum lightMode {
   primaryText = "#111827",

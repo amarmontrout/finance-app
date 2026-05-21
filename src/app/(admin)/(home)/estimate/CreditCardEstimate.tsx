@@ -1,28 +1,28 @@
-"use client";
+"use client"
 
-import { TransactionType } from "@/api/transactions/models";
-import { useTransactionContext } from "@/contexts/transaction-context";
-import { neutralColor } from "@/global/colors";
-import { getExpenseTransactionsByPaymentMethod } from "@/global/dataFunctions";
+import { TransactionType } from "@/api/transactions/models"
+import { useTransactionContext } from "@/contexts/transaction-context"
+import { neutralColor } from "@/global/colors"
+import { getExpenseTransactionsByPaymentMethod } from "@/global/dataFunctions"
 import {
   dateTypeToTimestamp,
   numberToString,
-} from "@/global/formattingFunctions";
-import { getCurrentDateInfo } from "@/global/infoFunctions";
-import { MONTH_INDEX } from "@/global/objects";
-import { Button, Divider, Stack, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+} from "@/global/formattingFunctions"
+import { getCurrentDateInfo } from "@/global/infoFunctions"
+import { MONTH_INDEX } from "@/global/objects"
+import { Button, Divider, Stack, Typography } from "@mui/material"
+import { useEffect, useMemo, useState } from "react"
 
-const MAX_VISIBLE = 8;
+const MAX_VISIBLE = 8
 
 const CreditCardEstimate = () => {
-  const { transactions } = useTransactionContext();
-  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo();
+  const { transactions } = useTransactionContext()
+  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
 
   const [creditTransactions, setCreditTransactions] = useState<
     TransactionType[]
-  >([]);
-  const [showAll, setShowAll] = useState(false);
+  >([])
+  const [showAll, setShowAll] = useState(false)
 
   const thisMonthsCreditCardPurchases = useMemo(
     () =>
@@ -33,18 +33,18 @@ const CreditCardEstimate = () => {
         year: currentYear,
       }),
     [transactions],
-  );
+  )
 
   useEffect(() => {
-    const statementStartDay = 6;
-    let startMonth = MONTH_INDEX[currentMonthString];
-    let startYear = currentYear;
+    const statementStartDay = 6
+    let startMonth = MONTH_INDEX[currentMonthString]
+    let startYear = currentYear
 
     if (currentDay < statementStartDay) {
-      startMonth -= 1;
+      startMonth -= 1
       if (startMonth < 0) {
-        startMonth = 11;
-        startYear -= 1;
+        startMonth = 11
+        startYear -= 1
       }
     }
 
@@ -52,15 +52,15 @@ const CreditCardEstimate = () => {
       startYear,
       startMonth,
       statementStartDay,
-    ).getTime();
+    ).getTime()
     const statementEndDate = new Date(
       startYear,
       startMonth + 1,
       statementStartDay - 1,
-    );
+    )
     if (statementEndDate.getDate() <= 0)
-      statementEndDate.setMonth(statementEndDate.getMonth(), 0);
-    const statementEnd = statementEndDate.getTime();
+      statementEndDate.setMonth(statementEndDate.getMonth(), 0)
+    const statementEnd = statementEndDate.getTime()
 
     const filtered = thisMonthsCreditCardPurchases
       .filter(
@@ -70,27 +70,27 @@ const CreditCardEstimate = () => {
       )
       .sort(
         (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),
-      );
+      )
 
-    setCreditTransactions(filtered);
+    setCreditTransactions(filtered)
   }, [
     thisMonthsCreditCardPurchases,
     currentDay,
     currentMonthString,
     currentYear,
-  ]);
+  ])
 
   const estimatedBill = useMemo(
     () => creditTransactions.reduce((total, tx) => total + tx.amount, 0),
     [creditTransactions],
-  );
+  )
 
   const displayedTransactions = showAll
     ? creditTransactions
-    : creditTransactions.slice(0, MAX_VISIBLE);
+    : creditTransactions.slice(0, MAX_VISIBLE)
 
   if (transactions.length === 0) {
-    return;
+    return
   }
 
   return (
@@ -113,13 +113,13 @@ const CreditCardEstimate = () => {
         divider={<Divider sx={{ borderColor: neutralColor.color }} />}
       >
         {displayedTransactions.map((tx) => {
-          const { month, day, year } = tx.date!;
-          const txDate = new Date(year, MONTH_INDEX[month], day!);
+          const { month, day, year } = tx.date!
+          const txDate = new Date(year, MONTH_INDEX[month], day!)
           const formattedDate = txDate.toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
             year: "numeric",
-          });
+          })
 
           return (
             <Stack
@@ -144,7 +144,7 @@ const CreditCardEstimate = () => {
                 ${numberToString(tx.amount ?? 0)}
               </Typography>
             </Stack>
-          );
+          )
         })}
 
         {/* Show More / Show Less Button */}
@@ -164,7 +164,7 @@ const CreditCardEstimate = () => {
         )}
       </Stack>
     </Stack>
-  );
-};
+  )
+}
 
-export default CreditCardEstimate;
+export default CreditCardEstimate

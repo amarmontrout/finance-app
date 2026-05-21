@@ -1,20 +1,20 @@
-import { BudgetType } from "@/api/choices/models";
-import { TransactionType } from "@/api/transactions/models";
-import { deleteTransaction } from "@/api/transactions/requests";
-import { negativeColor, neutralColor, positiveColor } from "@/global/colors";
-import ListItemSwipe from "@/global/components/ListItemSwipe";
-import LoadingCircle from "@/global/components/LoadingCircle";
-import { getTransactionsTotal } from "@/global/dataFunctions";
+import { BudgetType } from "@/api/choices/models"
+import { TransactionType } from "@/api/transactions/models"
+import { deleteTransaction } from "@/api/transactions/requests"
+import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
+import ListItemSwipe from "@/global/components/ListItemSwipe"
+import LoadingCircle from "@/global/components/LoadingCircle"
+import { getTransactionsTotal } from "@/global/dataFunctions"
 import {
   dateTypeToTimestamp,
   numberToString,
   timestampToDateString,
-} from "@/global/formattingFunctions";
-import { useUser } from "@/hooks/use-user";
-import { AlertToastType, HookSetter } from "@/types/types";
-import { Divider, Stack, Typography } from "@mui/material";
-import { RefObject, useMemo, useState } from "react";
-import BudgetProgressBar from "../(home)/_components/ProgressBar";
+} from "@/global/formattingFunctions"
+import { useUser } from "@/hooks/use-user"
+import { AlertToastType, HookSetter } from "@/types/types"
+import { Divider, Stack, Typography } from "@mui/material"
+import { RefObject, useMemo, useState } from "react"
+import BudgetProgressBar from "../(home)/_components/ProgressBar"
 
 const BudgetTransactions = ({
   transactions,
@@ -28,87 +28,87 @@ const BudgetTransactions = ({
   setConfirmEdit,
   inputRef,
 }: {
-  transactions: TransactionType[];
-  refreshTransactions: () => Promise<void>;
-  budgetCategories: BudgetType[];
-  setSelectedTransaction: HookSetter<TransactionType | null>;
-  setAlertToast: HookSetter<AlertToastType | undefined>;
-  setOpenDialog: HookSetter<boolean>;
-  isLoading: boolean;
-  setBudgetEditDialogOpen: HookSetter<boolean>;
-  setConfirmEdit: HookSetter<BudgetType | null>;
-  inputRef: RefObject<HTMLInputElement | null>;
+  transactions: TransactionType[]
+  refreshTransactions: () => Promise<void>
+  budgetCategories: BudgetType[]
+  setSelectedTransaction: HookSetter<TransactionType | null>
+  setAlertToast: HookSetter<AlertToastType | undefined>
+  setOpenDialog: HookSetter<boolean>
+  isLoading: boolean
+  setBudgetEditDialogOpen: HookSetter<boolean>
+  setConfirmEdit: HookSetter<BudgetType | null>
+  inputRef: RefObject<HTMLInputElement | null>
 }) => {
-  const user = useUser();
+  const user = useUser()
 
-  const [noteId, setNoteId] = useState<number | null>(null);
+  const [noteId, setNoteId] = useState<number | null>(null)
 
   const groupedTransactions = useMemo(() => {
-    const allowedCategories = new Set(budgetCategories.map((c) => c.category));
+    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
 
     return transactions.reduce<Record<string, TransactionType[]>>(
       (acc, transaction) => {
-        if (!allowedCategories.has(transaction.category)) return acc;
-        const category = transaction.category;
+        if (!allowedCategories.has(transaction.category)) return acc
+        const category = transaction.category
         if (!acc[category]) {
-          acc[category] = [];
+          acc[category] = []
         }
-        acc[category].push(transaction);
-        return acc;
+        acc[category].push(transaction)
+        return acc
       },
       {},
-    );
-  }, [transactions, budgetCategories]);
+    )
+  }, [transactions, budgetCategories])
 
   const budgetLookup = useMemo(() => {
     return budgetCategories.reduce(
       (acc, budget) => {
-        acc[budget.category] = budget.amount;
-        return acc;
+        acc[budget.category] = budget.amount
+        return acc
       },
       {} as Record<string, number>,
-    );
-  }, [budgetCategories]);
+    )
+  }, [budgetCategories])
 
   const budgetCategoryLookup = useMemo(() => {
     return budgetCategories.reduce(
       (acc, budget) => {
-        acc[budget.category] = budget;
-        return acc;
+        acc[budget.category] = budget
+        return acc
       },
       {} as Record<string, BudgetType>,
-    );
-  }, [budgetCategories]);
+    )
+  }, [budgetCategories])
 
   const handleDeleteEntry = async (id: number) => {
-    if (!user) return;
+    if (!user) return
     try {
       await deleteTransaction({
         userId: user?.id,
         rowId: id,
-      });
+      })
       setAlertToast({
         open: true,
         onClose: () => {
-          setAlertToast(undefined);
+          setAlertToast(undefined)
         },
         severity: "success",
         message: "Budget entry deleted successfully!",
-      });
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
       setAlertToast({
         open: true,
         onClose: () => {
-          setAlertToast(undefined);
+          setAlertToast(undefined)
         },
         severity: "error",
         message: "Budget entry could not be deleted.",
-      });
+      })
     } finally {
-      await refreshTransactions();
+      await refreshTransactions()
     }
-  };
+  }
 
   return (
     <Stack className="xl:w-[50%]" sx={{ margin: "0 auto" }}>
@@ -126,8 +126,8 @@ const BudgetTransactions = ({
               const sortedEntries = [...entries].sort(
                 (a, b) =>
                   dateTypeToTimestamp(b.date) - dateTypeToTimestamp(a.date),
-              );
-              const total = getTransactionsTotal({ transactions: entries });
+              )
+              const total = getTransactionsTotal({ transactions: entries })
 
               return (
                 <Stack key={category} direction={"column"}>
@@ -136,11 +136,11 @@ const BudgetTransactions = ({
                     actual={total}
                     budget={budgetLookup[category] ?? 0}
                     onEdit={() => {
-                      setBudgetEditDialogOpen(true);
-                      setConfirmEdit(budgetCategoryLookup[category]);
+                      setBudgetEditDialogOpen(true)
+                      setConfirmEdit(budgetCategoryLookup[category])
                       setTimeout(() => {
-                        inputRef.current?.focus();
-                      }, 50);
+                        inputRef.current?.focus()
+                      }, 50)
                     }}
                   />
 
@@ -157,11 +157,11 @@ const BudgetTransactions = ({
                     {sortedEntries.map((entry) => {
                       const entryDate = timestampToDateString(
                         dateTypeToTimestamp(entry.date),
-                      );
-                      const transactionAmount = `${entry.is_return ? "+" : "-"}$${numberToString(entry.amount)}`;
+                      )
+                      const transactionAmount = `${entry.is_return ? "+" : "-"}$${numberToString(entry.amount)}`
                       const amountColor = entry.is_return
                         ? positiveColor.color
-                        : negativeColor.color;
+                        : negativeColor.color
                       return (
                         <ListItemSwipe
                           key={entry.id}
@@ -172,27 +172,27 @@ const BudgetTransactions = ({
                           buttonCondition={noteId === entry.id}
                           onDelete={() => handleDeleteEntry(entry.id)}
                           onSetDelete={() => {
-                            setNoteId(entry.id);
+                            setNoteId(entry.id)
                           }}
                           onCancelDelete={() => {
-                            setSelectedTransaction(null);
-                            setNoteId(null);
+                            setSelectedTransaction(null)
+                            setNoteId(null)
                           }}
                           onEdit={() => {
-                            setOpenDialog(true);
-                            setSelectedTransaction(entry);
+                            setOpenDialog(true)
+                            setSelectedTransaction(entry)
                           }}
                         />
-                      );
+                      )
                     })}
                   </Stack>
                 </Stack>
-              );
+              )
             })}
         </Stack>
       )}
     </Stack>
-  );
-};
+  )
+}
 
-export default BudgetTransactions;
+export default BudgetTransactions

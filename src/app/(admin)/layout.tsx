@@ -1,37 +1,37 @@
-"use client";
+"use client"
 
-import { Header } from "@/components/Layouts/header";
-import { Sidebar } from "@/components/Layouts/sidebar";
-import { NAV_DATA } from "@/components/Layouts/sidebar/data";
-import { neutralColor } from "@/global/colors";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import type { PropsWithChildren } from "react";
+import { Header } from "@/components/Layouts/header"
+import { Sidebar } from "@/components/Layouts/sidebar"
+import { NAV_DATA } from "@/components/Layouts/sidebar/data"
+import { neutralColor } from "@/global/colors"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import type { PropsWithChildren } from "react"
 
 export default function AdminLayout({ children }: PropsWithChildren) {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
-  const sections = NAV_DATA[0].items;
+  const sections = NAV_DATA[0].items
 
   const isRouteActive = (url?: string) => {
-    if (!url) return false;
-    if (url === "/") return pathname === "/";
-    return pathname === url || pathname.startsWith(url + "/");
-  };
+    if (!url) return false
+    if (url === "/") return pathname === "/"
+    return pathname === url || pathname.startsWith(url + "/")
+  }
 
   const isSectionActive = (section: any) => {
     if (section.items?.length) {
-      return section.items.some((item: any) => isRouteActive(item.url));
+      return section.items.some((item: any) => isRouteActive(item.url))
     }
-    return isRouteActive(section.url);
-  };
+    return isRouteActive(section.url)
+  }
 
-  const activeSection = sections.find(isSectionActive) ?? sections[0];
+  const activeSection = sections.find(isSectionActive) ?? sections[0]
 
   const getFirstValidUrl = (section: any) => {
-    if (section.items?.length) return section.items[0].url;
-    return section.url ?? "/";
-  };
+    if (section.items?.length) return section.items[0].url
+    return section.url ?? "/"
+  }
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -48,7 +48,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         {activeSection?.items?.length > 1 && pathname !== "/settings" && (
           <div className="flex h-[40px] items-center justify-around gap-4 border-b border-stroke bg-white px-4 dark:border-stroke-dark dark:bg-gray-dark md:hidden">
             {activeSection.items.map((subpage: any) => {
-              const active = isRouteActive(subpage.url);
+              const active = isRouteActive(subpage.url)
 
               return (
                 <Link
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                 >
                   {subpage.title}
                 </Link>
-              );
+              )
             })}
           </div>
         )}
@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         {/* MOBILE BOTTOM NAV */}
         <div className="sticky bottom-0 z-30 flex h-[80px] justify-between bg-white px-4 py-2 dark:bg-gray-dark md:hidden">
           {sections.map((section: any) => {
-            const active = isSectionActive(section);
+            const active = isSectionActive(section)
 
             return (
               <Link key={section.title} href={getFirstValidUrl(section)}>
@@ -84,10 +84,10 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   <span className="text-sm">{section.title}</span>
                 </div>
               </Link>
-            );
+            )
           })}
         </div>
       </div>
     </div>
-  );
+  )
 }

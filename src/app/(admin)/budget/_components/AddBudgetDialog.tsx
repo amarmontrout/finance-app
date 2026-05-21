@@ -1,6 +1,6 @@
-import { BudgetType, ChoiceType } from "@/api/choices/models";
-import { CloseIcon } from "@/assets/icons";
-import { AlertToastType, HookSetter } from "@/types/types";
+import { BudgetType, ChoiceType } from "@/api/choices/models"
+import { CloseIcon } from "@/assets/icons"
+import { AlertToastType, HookSetter } from "@/types/types"
 import {
   Dialog,
   DialogContent,
@@ -8,8 +8,8 @@ import {
   IconButton,
   Stack,
   Typography,
-} from "@mui/material";
-import AddBudgetForm from "./AddBudgetForm";
+} from "@mui/material"
+import AddBudgetForm from "./AddBudgetForm"
 
 const AddBudgetDialog = ({
   openBudgetDialog,
@@ -21,18 +21,18 @@ const AddBudgetDialog = ({
   expenseCategories,
   setAlertToast,
 }: {
-  openBudgetDialog: boolean;
-  setOpenBudgetDialog: HookSetter<boolean>;
-  confirmSelection: BudgetType | null;
-  setConfirmSelection: HookSetter<BudgetType | null>;
-  budgetCategories: BudgetType[];
-  loadCategories: () => Promise<void>;
-  expenseCategories: ChoiceType[];
-  setAlertToast: HookSetter<AlertToastType | undefined>;
+  openBudgetDialog: boolean
+  setOpenBudgetDialog: HookSetter<boolean>
+  confirmSelection: BudgetType | null
+  setConfirmSelection: HookSetter<BudgetType | null>
+  budgetCategories: BudgetType[]
+  loadCategories: () => Promise<void>
+  expenseCategories: ChoiceType[]
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const handleClose = () => {
-    setOpenBudgetDialog(false);
-  };
+    setOpenBudgetDialog(false)
+  }
 
   return (
     <Dialog open={openBudgetDialog} fullScreen>
@@ -48,7 +48,7 @@ const AddBudgetDialog = ({
           }}
         >
           <Typography sx={{ width: "100%", textAlign: "center" }}>
-            Add Weekly Budget
+            Add Monthly Budget
           </Typography>
           <IconButton
             onClick={handleClose}
@@ -70,7 +70,7 @@ const AddBudgetDialog = ({
         />
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default AddBudgetDialog;
+export default AddBudgetDialog

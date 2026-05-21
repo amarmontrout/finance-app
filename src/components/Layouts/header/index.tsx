@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { UserInfo } from "./user-info";
+import { UserInfo } from "./user-info"
 
 export function Header() {
   return (
@@ -15,5 +15,5 @@ export function Header() {
         </div>
       </div>
     </header>
-  );
+  )
 }

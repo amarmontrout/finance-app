@@ -1,6 +1,6 @@
-import { TransactionType } from "@/api/transactions/models";
-import { HookSetter } from "@/types/types";
-import { Autocomplete, TextField } from "@mui/material";
+import { TransactionType } from "@/api/transactions/models"
+import { HookSetter } from "@/types/types"
+import { Autocomplete, TextField } from "@mui/material"
 
 const NoteAutocomplete = ({
   transaction,
@@ -8,10 +8,10 @@ const NoteAutocomplete = ({
   sortedNotes,
   handleClose,
 }: {
-  transaction: TransactionType;
-  setTransaction: HookSetter<TransactionType>;
-  sortedNotes: string[];
-  handleClose?: () => void;
+  transaction: TransactionType
+  setTransaction: HookSetter<TransactionType>
+  sortedNotes: string[]
+  handleClose?: () => void
 }) => {
   return (
     <Autocomplete
@@ -19,7 +19,7 @@ const NoteAutocomplete = ({
       options={sortedNotes}
       inputValue={transaction.note}
       onInputChange={(_, newValue) => {
-        setTransaction((prev) => ({ ...prev, note: newValue }));
+        setTransaction((prev) => ({ ...prev, note: newValue }))
       }}
       onClose={handleClose}
       openOnFocus
@@ -49,7 +49,7 @@ const NoteAutocomplete = ({
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default NoteAutocomplete;
+export default NoteAutocomplete

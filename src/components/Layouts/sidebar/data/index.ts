@@ -1,7 +1,7 @@
-import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
-import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined";
-import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import MultilineChartOutlinedIcon from "@mui/icons-material/MultilineChartOutlined";
+import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined"
+import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined"
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
+import MultilineChartOutlinedIcon from "@mui/icons-material/MultilineChartOutlined"
 
 export const NAV_DATA = [
   {
@@ -57,4 +57,4 @@ export const NAV_DATA = [
       },
     ],
   },
-];
+]

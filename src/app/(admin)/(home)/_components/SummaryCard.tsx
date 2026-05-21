@@ -3,9 +3,9 @@ import {
   negativeColor,
   neutralColor,
   positiveColor,
-} from "@/global/colors";
-import { numberToString } from "@/global/formattingFunctions";
-import { Box, Stack, Typography } from "@mui/material";
+} from "@/global/colors"
+import { numberToString } from "@/global/formattingFunctions"
+import { Box, Stack, Typography } from "@mui/material"
 
 export const SummaryCard = ({
   title,
@@ -13,10 +13,10 @@ export const SummaryCard = ({
   comparison,
   type,
 }: {
-  title: string;
-  amount: number;
-  comparison?: number;
-  type: "income" | "expense" | "net" | "total";
+  title: string
+  amount: number
+  comparison?: number
+  type: "income" | "expense" | "net" | "total"
 }) => {
   const typeStyles = {
     income: {
@@ -35,10 +35,10 @@ export const SummaryCard = ({
       main: infoColor.color,
       bg: infoColor.bg,
     },
-  };
-  const style = typeStyles[type];
-  const diff = comparison !== undefined ? amount - comparison : undefined;
-  const isPositive = diff !== undefined && diff >= 0;
+  }
+  const style = typeStyles[type]
+  const diff = comparison !== undefined ? amount - comparison : undefined
+  const isPositive = diff !== undefined && diff >= 0
 
   return (
     <Box
@@ -99,5 +99,5 @@ export const SummaryCard = ({
         )}
       </Stack>
     </Box>
-  );
-};
+  )
+}

@@ -1,24 +1,24 @@
-import { TransactionType } from "@/api/transactions/models";
-import { neutralColor } from "@/global/colors";
-import { getTransactionsTotal } from "@/global/dataFunctions";
-import { numberToString } from "@/global/formattingFunctions";
-import { Stack, Typography } from "@mui/material";
+import { TransactionType } from "@/api/transactions/models"
+import { neutralColor } from "@/global/colors"
+import { getTransactionsTotal } from "@/global/dataFunctions"
+import { numberToString } from "@/global/formattingFunctions"
+import { Stack, Typography } from "@mui/material"
 
 const TransactionCategoryHeader = ({
   transactions,
   date,
 }: {
-  transactions: TransactionType[];
-  date: string;
+  transactions: TransactionType[]
+  date: string
 }) => {
-  const categoryTotal = getTransactionsTotal({ transactions: transactions });
+  const categoryTotal = getTransactionsTotal({ transactions: transactions })
 
   const formatDateLabel = (dateKey: string) =>
     new Date(dateKey).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
       year: "numeric",
-    });
+    })
 
   return (
     <Stack
@@ -36,7 +36,7 @@ const TransactionCategoryHeader = ({
         ${numberToString(categoryTotal)}
       </Typography>
     </Stack>
-  );
-};
+  )
+}
 
-export default TransactionCategoryHeader;
+export default TransactionCategoryHeader

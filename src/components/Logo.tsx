@@ -1,6 +1,6 @@
-import darkLogo from "@/assets/logos/dark.svg";
-import logo from "@/assets/logos/main.svg";
-import Image from "next/image";
+import darkLogo from "@/assets/logos/dark.svg"
+import logo from "@/assets/logos/main.svg"
+import Image from "next/image"
 
 export function Logo() {
   return (
@@ -23,5 +23,5 @@ export function Logo() {
         quality={100}
       />
     </div>
-  );
+  )
 }

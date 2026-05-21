@@ -1,25 +1,25 @@
-import { BudgetType, ChoiceType } from "@/api/choices/models";
+import { BudgetType, ChoiceType } from "@/api/choices/models"
 import {
   deleteBudgetCategory,
   saveBudgetCategory,
   saveExpenseCategory,
-} from "@/api/choices/requests";
-import { neutralColor, positiveColor } from "@/global/colors";
-import ListItemSwipe from "@/global/components/ListItemSwipe";
-import MoneyInput from "@/global/components/MoneyInput";
-import { numberToString } from "@/global/formattingFunctions";
-import { makeId } from "@/global/infoFunctions";
-import { useUser } from "@/hooks/use-user";
-import { AlertToastType, HookSetter } from "@/types/types";
+} from "@/api/choices/requests"
+import { neutralColor, positiveColor } from "@/global/colors"
+import ListItemSwipe from "@/global/components/ListItemSwipe"
+import MoneyInput from "@/global/components/MoneyInput"
+import { numberToString } from "@/global/formattingFunctions"
+import { makeId } from "@/global/infoFunctions"
+import { useUser } from "@/hooks/use-user"
+import { AlertToastType, HookSetter } from "@/types/types"
 import {
   Button,
   Divider,
   OutlinedInput,
   Stack,
   Typography,
-} from "@mui/material";
-import { useTheme } from "next-themes";
-import { ChangeEvent, useState } from "react";
+} from "@mui/material"
+import { useTheme } from "next-themes"
+import { ChangeEvent, useState } from "react"
 
 const AddBudgetForm = ({
   confirmSelection,
@@ -29,31 +29,31 @@ const AddBudgetForm = ({
   expenseCategories,
   setAlertToast,
 }: {
-  confirmSelection: BudgetType | null;
-  setConfirmSelection: HookSetter<BudgetType | null>;
-  budgetCategories: BudgetType[];
-  loadCategories: () => Promise<void>;
-  expenseCategories: ChoiceType[];
-  setAlertToast: HookSetter<AlertToastType | undefined>;
+  confirmSelection: BudgetType | null
+  setConfirmSelection: HookSetter<BudgetType | null>
+  budgetCategories: BudgetType[]
+  loadCategories: () => Promise<void>
+  expenseCategories: ChoiceType[]
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
-  const user = useUser();
-  const { theme: currentTheme } = useTheme();
+  const user = useUser()
+  const { theme: currentTheme } = useTheme()
 
   const createBudgetInit = (): BudgetType => ({
     id: makeId(),
     category: "",
     amount: 0,
-  });
+  })
 
   const [budgetCategory, setBudgetCategory] =
-    useState<BudgetType>(createBudgetInit());
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+    useState<BudgetType>(createBudgetInit())
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0);
+  const budgetTotal = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
   const categoryExists = budgetCategories.some(
     (c) => c.category.toLowerCase() === budgetCategory.category.toLowerCase(),
-  );
-  const borderColor = currentTheme === "light" ? "#4B5563" : "#9CA3AF";
+  )
+  const borderColor = currentTheme === "light" ? "#4B5563" : "#9CA3AF"
 
   const syncBudgetToExpense = async (
     budgetCategory: BudgetType,
@@ -61,7 +61,7 @@ const AddBudgetForm = ({
   ) => {
     const exists = expenseCategories.some(
       (c) => c.name === budgetCategory.category,
-    );
+    )
 
     if (!exists) {
       await saveExpenseCategory({
@@ -70,10 +70,10 @@ const AddBudgetForm = ({
           id: makeId(),
           name: budgetCategory.category,
         },
-      });
-      await loadCategories();
+      })
+      await loadCategories()
     }
-  };
+  }
 
   const handleCategory = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -81,25 +81,25 @@ const AddBudgetForm = ({
     setBudgetCategory((prev) => ({
       ...prev,
       category: e.target.value,
-    }));
-  };
+    }))
+  }
 
   const resetFormData = () => {
-    setBudgetCategory(createBudgetInit());
-  };
+    setBudgetCategory(createBudgetInit())
+  }
 
   const save = async () => {
-    if (!user) return;
-    setIsLoading(true);
+    if (!user) return
+    setIsLoading(true)
     await saveBudgetCategory({
       userId: user.id,
       body: budgetCategory,
-    });
-    await syncBudgetToExpense(budgetCategory, user.id);
-    setIsLoading(false);
-    loadCategories();
-    resetFormData();
-  };
+    })
+    await syncBudgetToExpense(budgetCategory, user.id)
+    setIsLoading(false)
+    loadCategories()
+    resetFormData()
+  }
 
   const showToast = (severity: "success" | "error", message: string) =>
     setAlertToast({
@@ -107,24 +107,24 @@ const AddBudgetForm = ({
       severity,
       message,
       onClose: () => setAlertToast(undefined),
-    });
+    })
 
   const handleDeleteSelection = async (rowId: number) => {
-    if (!user || !rowId) return;
+    if (!user || !rowId) return
 
     try {
       await deleteBudgetCategory({
         userId: user.id,
         rowId: rowId,
-      });
-      showToast("success", "Budget deleted successfully!");
+      })
+      showToast("success", "Budget deleted successfully!")
     } catch {
-      showToast("error", "Budget could not be deleted.");
+      showToast("error", "Budget could not be deleted.")
     } finally {
-      setConfirmSelection(null);
-      loadCategories();
+      setConfirmSelection(null)
+      loadCategories()
     }
-  };
+  }
 
   return (
     <Stack direction={"column"} spacing={1}>
@@ -196,7 +196,7 @@ const AddBudgetForm = ({
                   onEdit={() => {}}
                   noEdit={true}
                 />
-              );
+              )
             })}
         </Stack>
       </Stack>
@@ -205,7 +205,7 @@ const AddBudgetForm = ({
         {`$${numberToString(budgetTotal)} Total`}
       </Typography>
     </Stack>
-  );
-};
+  )
+}
 
-export default AddBudgetForm;
+export default AddBudgetForm

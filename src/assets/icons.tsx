@@ -1,4 +1,4 @@
-import type { IconProps } from "@/types/icon-props";
+import type { IconProps } from "@/types/icon-props"
 
 export function SearchIcon(props: IconProps) {
   return (
@@ -22,7 +22,7 @@ export function SearchIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function CloseIcon(props: IconProps) {
@@ -36,7 +36,7 @@ export function CloseIcon(props: IconProps) {
     >
       <path d="M12.998 10.586l4.95-4.95 1.414 1.414-4.95 4.95 4.95 4.95-1.414 1.414-4.95-4.95-4.95 4.95-1.414-1.414 4.95-4.95-4.95-4.95 1.414-1.414 4.95 4.95z" />
     </svg>
-  );
+  )
 }
 
 export function ArrowLeftIcon(props: IconProps) {
@@ -53,7 +53,7 @@ export function ArrowLeftIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function ChevronUpIcon(props: IconProps) {
@@ -71,7 +71,7 @@ export function ChevronUpIcon(props: IconProps) {
         d="M10.551 7.728a.687.687 0 01.895 0l6.417 5.5a.687.687 0 11-.895 1.044l-5.97-5.117-5.969 5.117a.687.687 0 01-.894-1.044l6.416-5.5z"
       />
     </svg>
-  );
+  )
 }
 
 export function ArrowUpIcon(props: IconProps) {
@@ -85,7 +85,7 @@ export function ArrowUpIcon(props: IconProps) {
     >
       <path d="M4.357 2.393L.91 5.745 0 4.861 5 0l5 4.861-.909.884-3.448-3.353V10H4.357V2.393z" />
     </svg>
-  );
+  )
 }
 
 export function ArrowDownIcon(props: IconProps) {
@@ -99,7 +99,7 @@ export function ArrowDownIcon(props: IconProps) {
     >
       <path d="M5.643 7.607L9.09 4.255l.909.884L5 10 0 5.139l.909-.884 3.448 3.353V0h1.286v7.607z" />
     </svg>
-  );
+  )
 }
 
 export function DotIcon(props: IconProps) {
@@ -107,7 +107,7 @@ export function DotIcon(props: IconProps) {
     <svg width={2} height={3} viewBox="0 0 2 3" fill="currentColor" {...props}>
       <circle cx={1} cy={1.5} r={1} fill="#637381" />
     </svg>
-  );
+  )
 }
 
 export function TrendingUpIcon(props: IconProps) {
@@ -124,7 +124,7 @@ export function TrendingUpIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function CheckIcon(props: IconProps) {
@@ -143,7 +143,7 @@ export function CheckIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function XIcon(props: IconProps) {
@@ -168,7 +168,7 @@ export function XIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function GlobeIcon(props: IconProps) {
@@ -186,7 +186,7 @@ export function GlobeIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function TrashIcon(props: IconProps) {
@@ -217,7 +217,7 @@ export function TrashIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function MessageOutlineIcon(props: IconProps) {
@@ -236,7 +236,7 @@ export function MessageOutlineIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function EmailIcon(props: IconProps) {
@@ -255,7 +255,7 @@ export function EmailIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function PasswordIcon(props: IconProps) {
@@ -280,7 +280,7 @@ export function PasswordIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function GoogleIcon(props: IconProps) {
@@ -316,7 +316,7 @@ export function GoogleIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function UserIcon(props: IconProps) {
@@ -341,7 +341,7 @@ export function UserIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function CallIcon(props: IconProps) {
@@ -360,7 +360,7 @@ export function CallIcon(props: IconProps) {
         fill=""
       />
     </svg>
-  );
+  )
 }
 
 export function PencilSquareIcon(props: IconProps) {
@@ -386,7 +386,7 @@ export function PencilSquareIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }
 
 export function UploadIcon(props: IconProps) {
@@ -414,5 +414,5 @@ export function UploadIcon(props: IconProps) {
         </clipPath>
       </defs>
     </svg>
-  );
+  )
 }

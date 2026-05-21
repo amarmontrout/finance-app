@@ -1,67 +1,67 @@
-"use client";
+"use client"
 
-import { useClickOutside } from "@/hooks/use-click-outside";
-import { cn } from "@/lib/utils";
-import { SetStateActionType } from "@/types/set-state-action-type";
+import { useClickOutside } from "@/hooks/use-click-outside"
+import { cn } from "@/lib/utils"
+import { HookSetter } from "@/types/types"
 import {
   createContext,
   type PropsWithChildren,
   useContext,
   useEffect,
   useRef,
-} from "react";
+} from "react"
 
 type DropdownContextType = {
-  isOpen: boolean;
-  handleOpen: () => void;
-  handleClose: () => void;
-};
+  isOpen: boolean
+  handleOpen: () => void
+  handleClose: () => void
+}
 
-const DropdownContext = createContext<DropdownContextType | null>(null);
+const DropdownContext = createContext<DropdownContextType | null>(null)
 
 function useDropdownContext() {
-  const context = useContext(DropdownContext);
+  const context = useContext(DropdownContext)
   if (!context) {
-    throw new Error("useDropdownContext must be used within a Dropdown");
+    throw new Error("useDropdownContext must be used within a Dropdown")
   }
-  return context;
+  return context
 }
 
 type DropdownProps = {
-  children: React.ReactNode;
-  isOpen: boolean;
-  setIsOpen: SetStateActionType<boolean>;
-};
+  children: React.ReactNode
+  isOpen: boolean
+  setIsOpen: HookSetter<boolean>
+}
 
 export function Dropdown({ children, isOpen, setIsOpen }: DropdownProps) {
-  const triggerRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLElement>(null)
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Escape") {
-      handleClose();
+      handleClose()
     }
-  };
+  }
 
   useEffect(() => {
     if (isOpen) {
-      triggerRef.current = document.activeElement as HTMLElement;
+      triggerRef.current = document.activeElement as HTMLElement
 
-      document.body.style.pointerEvents = "none";
+      document.body.style.pointerEvents = "none"
     } else {
-      document.body.style.removeProperty("pointer-events");
+      document.body.style.removeProperty("pointer-events")
 
       setTimeout(() => {
-        triggerRef.current?.focus();
-      }, 0);
+        triggerRef.current?.focus()
+      }, 0)
     }
-  }, [isOpen]);
+  }, [isOpen])
 
   function handleClose() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   function handleOpen() {
-    setIsOpen(true);
+    setIsOpen(true)
   }
 
   return (
@@ -70,27 +70,27 @@ export function Dropdown({ children, isOpen, setIsOpen }: DropdownProps) {
         {children}
       </div>
     </DropdownContext.Provider>
-  );
+  )
 }
 
 type DropdownContentProps = {
-  align?: "start" | "end" | "center";
-  className?: string;
-  children: React.ReactNode;
-};
+  align?: "start" | "end" | "center"
+  className?: string
+  children: React.ReactNode
+}
 
 export function DropdownContent({
   children,
   align = "center",
   className,
 }: DropdownContentProps) {
-  const { isOpen, handleClose } = useDropdownContext();
+  const { isOpen, handleClose } = useDropdownContext()
 
   const contentRef = useClickOutside<HTMLDivElement>(() => {
-    if (isOpen) handleClose();
-  });
+    if (isOpen) handleClose()
+  })
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div
@@ -109,15 +109,15 @@ export function DropdownContent({
     >
       {children}
     </div>
-  );
+  )
 }
 
 type DropdownTriggerProps = React.HTMLAttributes<HTMLButtonElement> & {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 export function DropdownTrigger({ children, className }: DropdownTriggerProps) {
-  const { handleOpen, isOpen } = useDropdownContext();
+  const { handleOpen, isOpen } = useDropdownContext()
 
   return (
     <button
@@ -129,11 +129,11 @@ export function DropdownTrigger({ children, className }: DropdownTriggerProps) {
     >
       {children}
     </button>
-  );
+  )
 }
 
 export function DropdownClose({ children }: PropsWithChildren) {
-  const { handleClose } = useDropdownContext();
+  const { handleClose } = useDropdownContext()
 
-  return <div onClick={handleClose}>{children}</div>;
+  return <div onClick={handleClose}>{children}</div>
 }

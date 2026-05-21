@@ -1,19 +1,19 @@
-import CancelIcon from "@mui/icons-material/Cancel";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
-import { Box, IconButton, Stack, Typography } from "@mui/material";
-import { useTheme } from "next-themes";
-import { memo, useRef, useState } from "react";
-import { darkMode, lightMode, negativeColor, neutralColor } from "../colors";
+import CancelIcon from "@mui/icons-material/Cancel"
+import DeleteIcon from "@mui/icons-material/Delete"
+import EditIcon from "@mui/icons-material/Edit"
+import { Box, IconButton, Stack, Typography } from "@mui/material"
+import { useTheme } from "next-themes"
+import { memo, useRef, useState } from "react"
+import { darkMode, lightMode, negativeColor, neutralColor } from "../colors"
 
 const EditDeleteButton = ({
   onEdit,
   onSetDelete,
   noEdit,
 }: {
-  onEdit: () => void;
-  onSetDelete: () => void;
-  noEdit?: boolean;
+  onEdit: () => void
+  onSetDelete: () => void
+  noEdit?: boolean
 }) => {
   return (
     <Stack direction={"row"} spacing={1}>
@@ -35,15 +35,15 @@ const EditDeleteButton = ({
         <DeleteIcon />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 const ConfirmCancelButton = ({
   onDelete,
   onCancelDelete,
 }: {
-  onDelete: () => void;
-  onCancelDelete: () => void;
+  onDelete: () => void
+  onCancelDelete: () => void
 }) => {
   return (
     <Stack direction={"row"} spacing={1}>
@@ -63,8 +63,8 @@ const ConfirmCancelButton = ({
         <CancelIcon />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
 const ListItemSwipe = ({
   icon,
@@ -79,65 +79,65 @@ const ListItemSwipe = ({
   onEdit,
   noEdit,
 }: {
-  icon?: React.ReactNode;
-  mainTitle: string;
-  secondaryTitle: string;
-  amount: string;
-  amountColor: string;
-  buttonCondition: boolean;
-  onDelete: () => Promise<void>;
-  onSetDelete: () => void;
-  onCancelDelete: () => void;
-  onEdit: () => void;
-  noEdit?: boolean;
+  icon?: React.ReactNode
+  mainTitle: string
+  secondaryTitle: string
+  amount: string
+  amountColor: string
+  buttonCondition: boolean
+  onDelete: () => Promise<void>
+  onSetDelete: () => void
+  onCancelDelete: () => void
+  onEdit: () => void
+  noEdit?: boolean
 }) => {
-  const { theme: currentTheme } = useTheme();
-  const startEdgeRef = useRef<"left" | "right" | null>(null);
-  const startXRef = useRef(0);
-  const startYRef = useRef(0);
-  const gestureLockRef = useRef<"horizontal" | "vertical" | null>(null);
+  const { theme: currentTheme } = useTheme()
+  const startEdgeRef = useRef<"left" | "right" | null>(null)
+  const startXRef = useRef(0)
+  const startYRef = useRef(0)
+  const gestureLockRef = useRef<"horizontal" | "vertical" | null>(null)
 
-  const [offset, setOffset] = useState(0);
-  const [isActioning, setIsActioning] = useState(false);
+  const [offset, setOffset] = useState(0)
+  const [isActioning, setIsActioning] = useState(false)
 
-  const EDGE_WIDTH = 75;
-  const ACTION_WIDTH = 100;
-  const SWIPE_THRESHOLD = ACTION_WIDTH;
-  const MAX_SWIPE = ACTION_WIDTH;
-  const DIRECTION_THRESHOLD = 10;
+  const EDGE_WIDTH = 75
+  const ACTION_WIDTH = 100
+  const SWIPE_THRESHOLD = ACTION_WIDTH
+  const MAX_SWIPE = ACTION_WIDTH
+  const DIRECTION_THRESHOLD = 10
 
-  const isDeleteActive = offset <= -SWIPE_THRESHOLD;
-  const isEditActive = offset >= SWIPE_THRESHOLD;
+  const isDeleteActive = offset <= -SWIPE_THRESHOLD
+  const isEditActive = offset >= SWIPE_THRESHOLD
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    const element = e.currentTarget.getBoundingClientRect();
+    const touch = e.touches[0]
+    const element = e.currentTarget.getBoundingClientRect()
 
-    const touchX = touch.clientX;
-    const touchY = touch.clientY;
+    const touchX = touch.clientX
+    const touchY = touch.clientY
 
-    const isLeftEdge = touchX - element.left <= EDGE_WIDTH;
-    const isRightEdge = element.right - touchX <= EDGE_WIDTH;
+    const isLeftEdge = touchX - element.left <= EDGE_WIDTH
+    const isRightEdge = element.right - touchX <= EDGE_WIDTH
 
     if (!isLeftEdge && !isRightEdge) {
-      startEdgeRef.current = null;
-      return;
+      startEdgeRef.current = null
+      return
     }
 
-    startEdgeRef.current = isLeftEdge ? "left" : "right";
+    startEdgeRef.current = isLeftEdge ? "left" : "right"
 
-    startXRef.current = touchX;
-    startYRef.current = touchY;
-    gestureLockRef.current = null;
-  };
+    startXRef.current = touchX
+    startYRef.current = touchY
+    gestureLockRef.current = null
+  }
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!startEdgeRef.current) return;
+    if (!startEdgeRef.current) return
 
-    const touch = e.touches[0];
+    const touch = e.touches[0]
 
-    const deltaX = touch.clientX - startXRef.current;
-    const deltaY = touch.clientY - startYRef.current;
+    const deltaX = touch.clientX - startXRef.current
+    const deltaY = touch.clientY - startYRef.current
 
     // Determine gesture direction once threshold exceeded
     if (!gestureLockRef.current) {
@@ -146,48 +146,48 @@ const ListItemSwipe = ({
         Math.abs(deltaY) > DIRECTION_THRESHOLD
       ) {
         if (Math.abs(deltaX) > Math.abs(deltaY)) {
-          gestureLockRef.current = "horizontal";
+          gestureLockRef.current = "horizontal"
         } else {
-          gestureLockRef.current = "vertical";
+          gestureLockRef.current = "vertical"
         }
       }
     }
 
     // If vertical scroll → ignore swipe
-    if (gestureLockRef.current === "vertical") return;
+    if (gestureLockRef.current === "vertical") return
 
     // If horizontal → apply edge restriction
     if (gestureLockRef.current === "horizontal") {
-      e.preventDefault();
+      e.preventDefault()
 
       if (startEdgeRef.current === "left") {
         if (noEdit) {
-          setOffset(0);
+          setOffset(0)
         } else {
-          setOffset(Math.max(0, Math.min(deltaX, MAX_SWIPE)));
+          setOffset(Math.max(0, Math.min(deltaX, MAX_SWIPE)))
         }
       } else {
-        setOffset(Math.min(0, Math.max(deltaX, -MAX_SWIPE)));
+        setOffset(Math.min(0, Math.max(deltaX, -MAX_SWIPE)))
       }
     }
-  };
+  }
 
   const handleTouchEnd = async () => {
-    if (isActioning) return;
+    if (isActioning) return
 
     if (offset <= -SWIPE_THRESHOLD) {
-      setIsActioning(true);
-      await onDelete();
+      setIsActioning(true)
+      await onDelete()
     } else if (!noEdit && offset >= SWIPE_THRESHOLD) {
-      setIsActioning(true);
-      onEdit();
+      setIsActioning(true)
+      onEdit()
     }
 
-    setOffset(0);
-    startEdgeRef.current = null;
-    gestureLockRef.current = null;
-    setIsActioning(false);
-  };
+    setOffset(0)
+    startEdgeRef.current = null
+    gestureLockRef.current = null
+    setIsActioning(false)
+  }
 
   return (
     <Box
@@ -331,7 +331,7 @@ const ListItemSwipe = ({
         </Stack>
       </Box>
     </Box>
-  );
-};
+  )
+}
 
-export default memo(ListItemSwipe);
+export default memo(ListItemSwipe)

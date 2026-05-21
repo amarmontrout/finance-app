@@ -1,10 +1,10 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { ReactNode } from "react";
+import { Box, Stack, Typography } from "@mui/material"
+import { ReactNode } from "react"
 
 export type CardColorsType = {
-  bg: string;
-  color: string;
-};
+  bg: string
+  color: string
+}
 
 const InfoCard = ({
   cardColors,
@@ -13,11 +13,11 @@ const InfoCard = ({
   moreInfo,
   onClick,
 }: {
-  cardColors: CardColorsType;
-  title: string;
-  amount: string;
-  moreInfo?: ReactNode;
-  onClick?: () => void;
+  cardColors: CardColorsType
+  title: string
+  amount: string
+  moreInfo?: ReactNode
+  onClick?: () => void
 }) => {
   return (
     <Stack
@@ -73,7 +73,7 @@ const InfoCard = ({
         </Box>
       )}
     </Stack>
-  );
-};
+  )
+}
 
-export default InfoCard;
+export default InfoCard

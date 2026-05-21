@@ -1,12 +1,12 @@
-import EditIcon from "@mui/icons-material/Edit";
-import { IconButton, LinearProgress, Stack, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit"
+import { IconButton, LinearProgress, Stack, Typography } from "@mui/material"
 
 type ProgressBarProps = {
-  label: string;
-  actual: number;
-  budget: number;
-  onEdit?: () => void;
-};
+  label: string
+  actual: number
+  budget: number
+  onEdit?: () => void
+}
 
 const BudgetProgressBar = ({
   label,
@@ -14,13 +14,13 @@ const BudgetProgressBar = ({
   budget,
   onEdit,
 }: ProgressBarProps) => {
-  const percentage = budget === 0 ? 0 : (actual / budget) * 100;
+  const percentage = budget === 0 ? 0 : (actual / budget) * 100
 
   const getColor = () => {
-    if (percentage < 75) return "success";
-    if (percentage < 100) return "warning";
-    return "error";
-  };
+    if (percentage < 75) return "success"
+    if (percentage < 100) return "warning"
+    return "error"
+  }
 
   return (
     <Stack spacing={0.5}>
@@ -72,7 +72,7 @@ const BudgetProgressBar = ({
         {percentage.toFixed(1)}% used
       </Typography>
     </Stack>
-  );
-};
+  )
+}
 
-export default BudgetProgressBar;
+export default BudgetProgressBar

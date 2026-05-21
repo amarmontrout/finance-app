@@ -1,7 +1,7 @@
-import { ChoiceType } from "@/api/choices/models";
-import { TransactionType } from "@/api/transactions/models";
-import { HookSetter } from "@/types/types";
-import { Autocomplete, TextField } from "@mui/material";
+import { ChoiceType } from "@/api/choices/models"
+import { TransactionType } from "@/api/transactions/models"
+import { HookSetter } from "@/types/types"
+import { Autocomplete, TextField } from "@mui/material"
 
 const CategoryAutocomplete = ({
   transaction,
@@ -9,10 +9,10 @@ const CategoryAutocomplete = ({
   categories,
   handleClose,
 }: {
-  transaction: TransactionType;
-  setTransaction: HookSetter<TransactionType>;
-  categories: ChoiceType[];
-  handleClose?: () => void;
+  transaction: TransactionType
+  setTransaction: HookSetter<TransactionType>
+  categories: ChoiceType[]
+  handleClose?: () => void
 }) => {
   return (
     <Autocomplete
@@ -20,7 +20,7 @@ const CategoryAutocomplete = ({
       value={transaction.category || ""}
       onChange={(_, newValue) => {
         if (newValue !== null) {
-          setTransaction((prev) => ({ ...prev, category: newValue }));
+          setTransaction((prev) => ({ ...prev, category: newValue }))
         }
       }}
       onClose={handleClose}
@@ -49,7 +49,7 @@ const CategoryAutocomplete = ({
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default CategoryAutocomplete;
+export default CategoryAutocomplete

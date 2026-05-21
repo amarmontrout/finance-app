@@ -1,48 +1,48 @@
-"use client";
+"use client"
 
-import { useIsMobile } from "@/hooks/use-mobile";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile"
+import { createContext, useContext, useEffect, useState } from "react"
 
-type SidebarState = "expanded" | "collapsed";
+type SidebarState = "expanded" | "collapsed"
 
 type SidebarContextType = {
-  state: SidebarState;
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  isMobile: boolean;
-  toggleSidebar: () => void;
-};
+  state: SidebarState
+  isOpen: boolean
+  setIsOpen: (open: boolean) => void
+  isMobile: boolean
+  toggleSidebar: () => void
+}
 
-const SidebarContext = createContext<SidebarContextType | null>(null);
+const SidebarContext = createContext<SidebarContextType | null>(null)
 
 export function useSidebarContext() {
-  const context = useContext(SidebarContext);
+  const context = useContext(SidebarContext)
   if (!context) {
-    throw new Error("useSidebarContext must be used within a SidebarProvider");
+    throw new Error("useSidebarContext must be used within a SidebarProvider")
   }
-  return context;
+  return context
 }
 
 export function SidebarProvider({
   children,
   defaultOpen = true,
 }: {
-  children: React.ReactNode;
-  defaultOpen?: boolean;
+  children: React.ReactNode
+  defaultOpen?: boolean
 }) {
-  const [isOpen, setIsOpen] = useState(defaultOpen);
-  const isMobile = useIsMobile();
+  const [isOpen, setIsOpen] = useState(defaultOpen)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     if (isMobile) {
-      setIsOpen(false);
+      setIsOpen(false)
     } else {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [isMobile]);
+  }, [isMobile])
 
   function toggleSidebar() {
-    setIsOpen((prev) => !prev);
+    setIsOpen((prev) => !prev)
   }
 
   return (
@@ -57,5 +57,5 @@ export function SidebarProvider({
     >
       {children}
     </SidebarContext.Provider>
-  );
+  )
 }

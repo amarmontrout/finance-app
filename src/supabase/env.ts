@@ -7,7 +7,7 @@ function getEnv(name: string): string {
     throw new Error(`Missing environment variable: ${name}`)
   }
 
-  return value;
+  return value
 }
 
 export const env = {

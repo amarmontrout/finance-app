@@ -1,22 +1,22 @@
-import { negativeColor, neutralColor, positiveColor } from "@/global/colors";
-import { HookSetter } from "@/types/types";
-import { ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
+import { HookSetter } from "@/types/types"
+import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
 const TransactionTypeToggle = ({
   type,
   setType,
 }: {
-  type: "income" | "expense";
-  setType: HookSetter<"income" | "expense">;
+  type: "income" | "expense"
+  setType: HookSetter<"income" | "expense">
 }) => {
   const handleSelectType = (
     event: React.MouseEvent<HTMLElement>,
     newType: "income" | "expense" | null,
   ) => {
     if (newType !== null) {
-      setType(newType);
+      setType(newType)
     }
-  };
+  }
   return (
     <ToggleButtonGroup
       value={type}
@@ -70,7 +70,7 @@ const TransactionTypeToggle = ({
         Expense
       </ToggleButton>
     </ToggleButtonGroup>
-  );
-};
+  )
+}
 
-export default TransactionTypeToggle;
+export default TransactionTypeToggle

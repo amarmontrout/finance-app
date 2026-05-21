@@ -1,13 +1,13 @@
-import { TransactionType } from "@/api/transactions/models";
-import LoadingCircle from "@/global/components/LoadingCircle";
-import { getTransactionsTotal } from "@/global/dataFunctions";
-import { numberToString } from "@/global/formattingFunctions";
-import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types";
-import { Stack, Typography } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
-import ExpenseViewToggle from "./_components/ExpenseViewToggle";
-import TransactionTypeToggle from "./_components/TransactionTypeToggle";
-import TransactionCategoryStack from "./TransactionCategoryStack";
+import { TransactionType } from "@/api/transactions/models"
+import LoadingCircle from "@/global/components/LoadingCircle"
+import { getTransactionsTotal } from "@/global/dataFunctions"
+import { numberToString } from "@/global/formattingFunctions"
+import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types"
+import { Stack, Typography } from "@mui/material"
+import { useEffect, useMemo, useState } from "react"
+import ExpenseViewToggle from "./_components/ExpenseViewToggle"
+import TransactionTypeToggle from "./_components/TransactionTypeToggle"
+import TransactionCategoryStack from "./TransactionCategoryStack"
 
 const TransactionsDisplay = ({
   transactions,
@@ -22,40 +22,40 @@ const TransactionsDisplay = ({
   openDialog,
   setOpenDialog,
 }: {
-  transactions: TransactionType[];
-  refreshTransactions: () => Promise<void>;
-  type: "income" | "expense";
-  setType: HookSetter<"income" | "expense">;
-  selectedDate: SelectedDateType;
-  setAlertToast: HookSetter<AlertToastType | undefined>;
-  selectedTransaction: TransactionType | null;
-  setSelectedTransaction: HookSetter<TransactionType | null>;
-  isLoading: boolean;
-  openDialog: boolean;
-  setOpenDialog: HookSetter<boolean>;
+  transactions: TransactionType[]
+  refreshTransactions: () => Promise<void>
+  type: "income" | "expense"
+  setType: HookSetter<"income" | "expense">
+  selectedDate: SelectedDateType
+  setAlertToast: HookSetter<AlertToastType | undefined>
+  selectedTransaction: TransactionType | null
+  setSelectedTransaction: HookSetter<TransactionType | null>
+  isLoading: boolean
+  openDialog: boolean
+  setOpenDialog: HookSetter<boolean>
 }) => {
-  const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit");
+  const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
 
   const { filteredTransactions, total } = useMemo(() => {
     const filtered = transactions.filter((t) => {
-      const matchesType = t.type === type;
+      const matchesType = t.type === type
       const matchesView =
         type === "expense"
           ? view === "Both" ||
             (view === "Debit" && t.payment_method === "Debit") ||
             (view === "Credit" && t.payment_method === "Credit")
-          : true;
-      return matchesType && matchesView;
-    });
+          : true
+      return matchesType && matchesView
+    })
 
-    const totalAmount = getTransactionsTotal({ transactions: filtered });
+    const totalAmount = getTransactionsTotal({ transactions: filtered })
 
-    return { filteredTransactions: filtered, total: totalAmount };
-  }, [transactions, type, selectedDate, view]);
+    return { filteredTransactions: filtered, total: totalAmount }
+  }, [transactions, type, selectedDate, view])
 
   useEffect(() => {
-    setView("Both");
-  }, [type]);
+    setView("Both")
+  }, [type])
 
   return (
     <Stack className="xl:w-[50%]" spacing={1} sx={{ paddingBottom: "50px" }}>
@@ -96,7 +96,7 @@ const TransactionsDisplay = ({
         />
       )}
     </Stack>
-  );
-};
+  )
+}
 
-export default TransactionsDisplay;
+export default TransactionsDisplay

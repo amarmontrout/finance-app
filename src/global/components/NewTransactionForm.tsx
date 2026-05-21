@@ -1,18 +1,18 @@
-import { ChoiceType } from "@/api/choices/models";
-import { DateType, TransactionType } from "@/api/transactions/models";
-import { HookSetter } from "@/types/types";
-import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material";
-import { RefObject, useEffect, useMemo, useState } from "react";
-import { neutralColor } from "../colors";
+import { ChoiceType } from "@/api/choices/models"
+import { DateType, TransactionType } from "@/api/transactions/models"
+import { HookSetter } from "@/types/types"
+import { Box, Checkbox, Divider, Stack, Typography } from "@mui/material"
+import { RefObject, useEffect, useMemo, useState } from "react"
+import { neutralColor } from "../colors"
 import {
   dateTypeToTimestamp,
   timestampToDateString,
-} from "../formattingFunctions";
-import { getDaysInMonth } from "../infoFunctions";
-import CategoryAutocomplete from "./CategoryAutocomplete";
-import MoneyInput from "./MoneyInput";
-import NoteAutocomplete from "./NoteAutocomplete";
-import TransactionDatePicker from "./TransactionDatePicker";
+} from "../formattingFunctions"
+import { getDaysInMonth } from "../infoFunctions"
+import CategoryAutocomplete from "./CategoryAutocomplete"
+import MoneyInput from "./MoneyInput"
+import NoteAutocomplete from "./NoteAutocomplete"
+import TransactionDatePicker from "./TransactionDatePicker"
 
 const Row = ({
   active,
@@ -21,11 +21,11 @@ const Row = ({
   edit,
   onClick,
 }: {
-  active?: boolean;
-  label: string;
-  display: React.ReactNode;
-  edit?: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  active?: boolean
+  label: string
+  display: React.ReactNode
+  edit?: React.ReactNode
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
 }) => {
   return (
     <Stack
@@ -40,8 +40,8 @@ const Row = ({
         {active ? edit : display}
       </Box>
     </Stack>
-  );
-};
+  )
+}
 
 const NewTransactionForm = ({
   transaction,
@@ -52,61 +52,61 @@ const NewTransactionForm = ({
   inputRef,
   currentYear,
 }: {
-  transaction: TransactionType;
-  setTransaction: HookSetter<TransactionType>;
-  allNotes: string[];
-  categories: ChoiceType[];
-  openDialog: boolean;
-  inputRef: RefObject<HTMLInputElement | null>;
-  currentYear: number;
+  transaction: TransactionType
+  setTransaction: HookSetter<TransactionType>
+  allNotes: string[]
+  categories: ChoiceType[]
+  openDialog: boolean
+  inputRef: RefObject<HTMLInputElement | null>
+  currentYear: number
 }) => {
-  const { month, year } = transaction.date;
+  const { month, year } = transaction.date
 
   const [activeField, setActiveField] = useState<
     "date" | "category" | "note" | "payment_method" | null
-  >(null);
+  >(null)
 
   const { days, years } = useMemo(() => {
     const days = Array.from(
       { length: getDaysInMonth(month, year) },
       (_, i) => i + 1,
-    );
-    const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i);
-    return { days, years };
-  }, [month, year, currentYear]);
+    )
+    const years = Array.from({ length: 21 }, (_, i) => currentYear - 10 + i)
+    return { days, years }
+  }, [month, year, currentYear])
 
-  const sortedNotes = useMemo(() => [...allNotes].sort(), [allNotes]);
+  const sortedNotes = useMemo(() => [...allNotes].sort(), [allNotes])
 
   useEffect(() => {
     if (transaction.is_return && transaction.is_paid) {
       setTransaction((prev) => ({
         ...prev,
         is_paid: false,
-      }));
+      }))
     }
-  }, [transaction.is_return, setTransaction]);
+  }, [transaction.is_return, setTransaction])
 
   useEffect(() => {
-    const maxDay = getDaysInMonth(month, year);
+    const maxDay = getDaysInMonth(month, year)
     if ((transaction.date.day ?? 1) > maxDay) {
-      updateDate("day")(maxDay);
+      updateDate("day")(maxDay)
     }
-  }, [month, year, setTransaction, transaction.date.day]);
+  }, [month, year, setTransaction, transaction.date.day])
 
   useEffect(() => {
-    if (!inputRef.current) return;
+    if (!inputRef.current) return
 
     if (transaction.amount === 0) {
-      inputRef.current.focus();
+      inputRef.current.focus()
     }
-  }, [transaction.type]);
+  }, [transaction.type])
 
   const updateTransaction =
     (field: keyof TransactionType) => (value: string | number | boolean) =>
       setTransaction((prev) => ({
         ...prev,
         [field]: value,
-      }));
+      }))
 
   const updateDate = (field: keyof DateType) => (value: string | number) =>
     setTransaction((prev) => ({
@@ -115,15 +115,15 @@ const NewTransactionForm = ({
         ...prev.date,
         [field]: value,
       },
-    }));
+    }))
 
   const handleOpen = (field: typeof activeField) => {
-    setActiveField(field);
-  };
+    setActiveField(field)
+  }
 
   const handleClose = () => {
-    setActiveField(null);
-  };
+    setActiveField(null)
+  }
 
   return (
     <Stack className="md:w-[50%] 2xl:w-[30%]" spacing={2}>
@@ -261,7 +261,7 @@ const NewTransactionForm = ({
         )}
       </Stack>
     </Stack>
-  );
-};
+  )
+}
 
-export default NewTransactionForm;
+export default NewTransactionForm

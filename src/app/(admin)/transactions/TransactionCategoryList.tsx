@@ -1,12 +1,12 @@
-import { TransactionType } from "@/api/transactions/models";
-import { deleteTransaction } from "@/api/transactions/requests";
-import { negativeColor, neutralColor, positiveColor } from "@/global/colors";
-import ListItemSwipe from "@/global/components/ListItemSwipe";
-import { numberToString } from "@/global/formattingFunctions";
-import { useUser } from "@/hooks/use-user";
-import { AlertToastType, HookSetter } from "@/types/types";
-import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined";
-import { Divider, Stack } from "@mui/material";
+import { TransactionType } from "@/api/transactions/models"
+import { deleteTransaction } from "@/api/transactions/requests"
+import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
+import ListItemSwipe from "@/global/components/ListItemSwipe"
+import { numberToString } from "@/global/formattingFunctions"
+import { useUser } from "@/hooks/use-user"
+import { AlertToastType, HookSetter } from "@/types/types"
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined"
+import { Divider, Stack } from "@mui/material"
 
 const TransactionCategoryList = ({
   sortedTransactions,
@@ -17,15 +17,15 @@ const TransactionCategoryList = ({
   setOpenDialog,
   setAlertToast,
 }: {
-  sortedTransactions: TransactionType[];
-  selectedTransaction: TransactionType | null;
-  setSelectedTransaction: HookSetter<TransactionType | null>;
-  refreshTransactions: () => Promise<void>;
-  openDialog: boolean;
-  setOpenDialog: HookSetter<boolean>;
-  setAlertToast: HookSetter<AlertToastType | undefined>;
+  sortedTransactions: TransactionType[]
+  selectedTransaction: TransactionType | null
+  setSelectedTransaction: HookSetter<TransactionType | null>
+  refreshTransactions: () => Promise<void>
+  openDialog: boolean
+  setOpenDialog: HookSetter<boolean>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
-  const user = useUser();
+  const user = useUser()
 
   const showToast = (severity: "success" | "error", message: string) =>
     setAlertToast({
@@ -33,21 +33,21 @@ const TransactionCategoryList = ({
       severity,
       message,
       onClose: () => setAlertToast(undefined),
-    });
+    })
 
   const handleDeleteTransaction = async (rowId: number) => {
-    if (!user || !rowId) return;
+    if (!user || !rowId) return
 
     try {
-      await deleteTransaction({ userId: user.id, rowId });
-      showToast("success", "Transaction deleted successfully!");
+      await deleteTransaction({ userId: user.id, rowId })
+      showToast("success", "Transaction deleted successfully!")
     } catch {
-      showToast("error", "Transaction could not be deleted.");
+      showToast("error", "Transaction could not be deleted.")
     } finally {
-      refreshTransactions();
-      setSelectedTransaction(null);
+      refreshTransactions()
+      setSelectedTransaction(null)
     }
-  };
+  }
 
   return (
     <Stack
@@ -60,16 +60,16 @@ const TransactionCategoryList = ({
     >
       {sortedTransactions.map((transaction, index) => {
         const mainTitle =
-          transaction.note === "" ? transaction.category : transaction.note;
+          transaction.note === "" ? transaction.category : transaction.note
         const transactionSign =
-          transaction.is_return || transaction.type === "income" ? "+" : "-";
-        const transactionAmount = `$${numberToString(transaction.amount)}`;
+          transaction.is_return || transaction.type === "income" ? "+" : "-"
+        const transactionAmount = `$${numberToString(transaction.amount)}`
         const amountColor =
           transaction.type === "income" || transaction.is_return
             ? positiveColor.color
-            : negativeColor.color;
+            : negativeColor.color
         const buttonCondition =
-          selectedTransaction?.id === transaction.id && !openDialog;
+          selectedTransaction?.id === transaction.id && !openDialog
 
         return (
           <ListItemSwipe
@@ -88,14 +88,14 @@ const TransactionCategoryList = ({
             onSetDelete={() => setSelectedTransaction(transaction)}
             onCancelDelete={() => setSelectedTransaction(null)}
             onEdit={() => {
-              setOpenDialog(true);
-              setSelectedTransaction(transaction);
+              setOpenDialog(true)
+              setSelectedTransaction(transaction)
             }}
           />
-        );
+        )
       })}
     </Stack>
-  );
-};
+  )
+}
 
-export default TransactionCategoryList;
+export default TransactionCategoryList

@@ -1,6 +1,6 @@
-import AddIcon from "@mui/icons-material/Add";
-import { IconButton } from "@mui/material";
-import { neutralColor } from "../colors";
+import AddIcon from "@mui/icons-material/Add"
+import { IconButton } from "@mui/material"
+import { neutralColor } from "../colors"
 
 const AddDataButton = ({ action }: { action: () => void }) => {
   return (
@@ -31,7 +31,7 @@ const AddDataButton = ({ action }: { action: () => void }) => {
     >
       <AddIcon />
     </IconButton>
-  );
-};
+  )
+}
 
-export default AddDataButton;
+export default AddDataButton

@@ -1,12 +1,12 @@
-import { Metadata } from "next";
-import Insights from "./Insights";
+import { Metadata } from "next"
+import Insights from "./Insights"
 
 export const metadata: Metadata = {
   title: "View Insights Page",
-};
+}
 
 const ViewInsightsPage = () => {
-  return <Insights />;
-};
+  return <Insights />
+}
 
-export default ViewInsightsPage;
+export default ViewInsightsPage

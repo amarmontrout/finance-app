@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { ChoiceType } from "@/api/choices/models";
-import { saveBudgetCategory } from "@/api/choices/requests";
-import { useCategoryContext } from "@/contexts/categories-context";
-import AlertToast from "@/global/components/AlertToast";
-import { makeId } from "@/global/infoFunctions";
-import { AlertToastType } from "@/types/types";
-import { Stack, Typography } from "@mui/material";
-import { useState } from "react";
-import AddExpenseCategory from "./_components/AddExpenseCategory";
-import AddIncomeCategory from "./_components/AddIncomeCategory";
-import AddYear from "./_components/AddYear";
-import EditCategorySettingsDialog from "./_components/EditCategorySettingsDialog";
+import { ChoiceType } from "@/api/choices/models"
+import { saveBudgetCategory } from "@/api/choices/requests"
+import { useCategoryContext } from "@/contexts/categories-context"
+import AlertToast from "@/global/components/AlertToast"
+import { makeId } from "@/global/infoFunctions"
+import { AlertToastType } from "@/types/types"
+import { Stack, Typography } from "@mui/material"
+import { useState } from "react"
+import AddExpenseCategory from "./_components/AddExpenseCategory"
+import AddIncomeCategory from "./_components/AddIncomeCategory"
+import AddYear from "./_components/AddYear"
+import EditCategorySettingsDialog from "./_components/EditCategorySettingsDialog"
 
 const Settings = () => {
   const {
@@ -20,14 +20,14 @@ const Settings = () => {
     budgetCategories,
     years,
     loadCategories,
-  } = useCategoryContext();
+  } = useCategoryContext()
 
-  const [choice, setChoice] = useState<ChoiceType | null>(null);
-  const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false);
-  const [alertToast, setAlertToast] = useState<AlertToastType>();
+  const [choice, setChoice] = useState<ChoiceType | null>(null)
+  const [categoryDialogOpen, setCategoryDialogOpen] = useState<boolean>(false)
+  const [alertToast, setAlertToast] = useState<AlertToastType>()
 
   const syncExpenseToBudget = async (expenseName: string, userId: string) => {
-    const exists = budgetCategories.some((b) => b.category === expenseName);
+    const exists = budgetCategories.some((b) => b.category === expenseName)
 
     if (!exists) {
       await saveBudgetCategory({
@@ -37,10 +37,10 @@ const Settings = () => {
           category: expenseName,
           amount: 50,
         },
-      });
-      await loadCategories();
+      })
+      await loadCategories()
     }
-  };
+  }
 
   return (
     <Stack direction={"column"} spacing={3}>
@@ -81,7 +81,7 @@ const Settings = () => {
 
       <AlertToast alertToast={alertToast} />
     </Stack>
-  );
-};
+  )
+}
 
-export default Settings;
+export default Settings

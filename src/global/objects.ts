@@ -6,7 +6,7 @@ export const DAYS = [
   "Thursday",
   "Friday",
   "Saturday",
-];
+]
 export const MONTHS = [
   "January",
   "February",
@@ -20,7 +20,7 @@ export const MONTHS = [
   "October",
   "November",
   "December",
-];
+]
 export const MONTH_INDEX: Record<string, number> = {
   January: 0,
   February: 1,
@@ -34,4 +34,4 @@ export const MONTH_INDEX: Record<string, number> = {
   October: 9,
   November: 10,
   December: 11,
-};
+}

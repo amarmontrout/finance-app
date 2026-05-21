@@ -1,4 +1,4 @@
-import { IconProps } from "@/types/icon-props";
+import { IconProps } from "@/types/icon-props"
 
 export function AlertWarningIcon(props: IconProps) {
   return (
@@ -11,7 +11,7 @@ export function AlertWarningIcon(props: IconProps) {
         fill="#fff"
       />
     </svg>
-  );
+  )
 }
 
 export function AlertSuccessIcon(props: IconProps) {
@@ -24,7 +24,7 @@ export function AlertSuccessIcon(props: IconProps) {
         stroke="#fff"
       />
     </svg>
-  );
+  )
 }
 
 export function AlertErrorIcon(props: IconProps) {
@@ -37,5 +37,5 @@ export function AlertErrorIcon(props: IconProps) {
         stroke="#fff"
       />
     </svg>
-  );
+  )
 }

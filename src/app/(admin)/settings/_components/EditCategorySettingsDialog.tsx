@@ -1,9 +1,9 @@
-import { ChoiceType } from "@/api/choices/models";
-import { updateExpenseCategory } from "@/api/choices/requests";
-import { useUser } from "@/hooks/use-user";
-import { AlertToastType, HookSetter } from "@/types/types";
-import CloseIcon from "@mui/icons-material/Close";
-import SaveIcon from "@mui/icons-material/Save";
+import { ChoiceType } from "@/api/choices/models"
+import { updateExpenseCategory } from "@/api/choices/requests"
+import { useUser } from "@/hooks/use-user"
+import { AlertToastType, HookSetter } from "@/types/types"
+import CloseIcon from "@mui/icons-material/Close"
+import SaveIcon from "@mui/icons-material/Save"
 import {
   Dialog,
   DialogContent,
@@ -14,8 +14,8 @@ import {
   Stack,
   Switch,
   Typography,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
+} from "@mui/material"
+import React, { useEffect, useState } from "react"
 
 const EditCategorySettingsDialog = ({
   categoryDialogOpen,
@@ -24,66 +24,66 @@ const EditCategorySettingsDialog = ({
   refresh,
   setAlertToast,
 }: {
-  categoryDialogOpen: boolean;
-  setCategoryDialogOpen: HookSetter<boolean>;
-  choice: ChoiceType | null;
-  refresh: () => Promise<void>;
-  setAlertToast: HookSetter<AlertToastType | undefined>;
+  categoryDialogOpen: boolean
+  setCategoryDialogOpen: HookSetter<boolean>
+  choice: ChoiceType | null
+  refresh: () => Promise<void>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
-  const user = useUser();
+  const user = useUser()
 
-  const [localChoice, setLocalChoice] = useState<ChoiceType | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [localChoice, setLocalChoice] = useState<ChoiceType | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   useEffect(() => {
     if (categoryDialogOpen && choice) {
-      setLocalChoice(choice);
+      setLocalChoice(choice)
     }
-  }, [choice, categoryDialogOpen]);
+  }, [choice, categoryDialogOpen])
 
   const handleChangeRecurring = (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setLocalChoice((prev) => {
-      if (!prev) return prev;
+      if (!prev) return prev
       return {
         ...prev,
         isRecurring: event.target.checked,
-      };
-    });
-  };
+      }
+    })
+  }
 
   const handleUpdateExpenseCategoryData = async () => {
-    if (!user || !localChoice) return;
-    setIsLoading(true);
+    if (!user || !localChoice) return
+    setIsLoading(true)
     try {
       await updateExpenseCategory({
         userId: user.id,
         rowId: localChoice.id,
         body: localChoice,
-      });
+      })
       setAlertToast({
         open: true,
         onClose: () => setAlertToast(undefined),
         severity: "success",
         message: "Category updated successfully!",
-      });
+      })
     } catch (error) {
-      console.error(error);
+      console.error(error)
       setAlertToast({
         open: true,
         onClose: () => setAlertToast(undefined),
         severity: "error",
         message: "Category could not be updated.",
-      });
+      })
     } finally {
-      await refresh();
-      setIsLoading(false);
-      setCategoryDialogOpen(false);
+      await refresh()
+      setIsLoading(false)
+      setCategoryDialogOpen(false)
     }
-  };
+  }
 
-  if (!localChoice) return null;
+  if (!localChoice) return null
 
   return (
     <Dialog open={categoryDialogOpen}>
@@ -99,8 +99,8 @@ const EditCategorySettingsDialog = ({
         >
           <IconButton
             onClick={() => {
-              setCategoryDialogOpen(false);
-              setLocalChoice(null);
+              setCategoryDialogOpen(false)
+              setLocalChoice(null)
             }}
           >
             <CloseIcon />
@@ -129,7 +129,7 @@ const EditCategorySettingsDialog = ({
         </FormGroup>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
 
-export default EditCategorySettingsDialog;
+export default EditCategorySettingsDialog

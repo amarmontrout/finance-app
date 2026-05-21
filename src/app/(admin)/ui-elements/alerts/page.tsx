@@ -1,11 +1,11 @@
-import { Alert } from "@/components/ui-elements/alert";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import type { Metadata } from "next";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb"
+import { Alert } from "@/components/ui-elements/alert"
+import type { Metadata } from "next"
 
 export const metadata: Metadata = {
   title: "Alerts",
   // other metadata
-};
+}
 
 export default function Page() {
   return (
@@ -32,5 +32,5 @@ export default function Page() {
         />
       </div>
     </>
-  );
+  )
 }

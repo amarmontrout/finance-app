@@ -1,13 +1,13 @@
-import { TransactionType } from "@/api/transactions/models";
-import { numberToString } from "@/global/formattingFunctions";
-import { Divider, Stack, Typography } from "@mui/material";
+import { TransactionType } from "@/api/transactions/models"
+import { numberToString } from "@/global/formattingFunctions"
+import { Divider, Stack, Typography } from "@mui/material"
 
 const TransactionList = ({
   expenses,
   category,
 }: {
-  expenses: TransactionType[];
-  category: string;
+  expenses: TransactionType[]
+  category: string
 }) => {
   return (
     <Stack
@@ -15,7 +15,7 @@ const TransactionList = ({
       divider={<Divider className="border-dark-4 dark:border-dark-6" />}
     >
       {expenses.map((t) => {
-        if (t.category !== category) return;
+        if (t.category !== category) return
         return (
           <Stack
             key={t.id}
@@ -42,10 +42,10 @@ const TransactionList = ({
               {t.is_return ? "+" : "-"}${numberToString(t.amount)}
             </Typography>
           </Stack>
-        );
+        )
       })}
     </Stack>
-  );
-};
+  )
+}
 
-export default TransactionList;
+export default TransactionList

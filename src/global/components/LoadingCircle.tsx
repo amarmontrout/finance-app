@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material"
 
 const LoadingCircle = ({ height }: { height: number }) => {
   return (
@@ -6,7 +6,7 @@ const LoadingCircle = ({ height }: { height: number }) => {
       <CircularProgress size={height} />
       <Typography>Loading</Typography>
     </Box>
-  );
-};
+  )
+}
 
-export default LoadingCircle;
+export default LoadingCircle

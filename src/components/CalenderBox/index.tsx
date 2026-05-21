@@ -231,7 +231,7 @@ const CalendarBox = () => {
         </table>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CalendarBox;
+export default CalendarBox

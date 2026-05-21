@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import * as React from "react";
+import { cn } from "@/lib/utils"
+import * as React from "react"
 
 export function Table({
   className,
@@ -12,14 +12,14 @@ export function Table({
         {...props}
       />
     </div>
-  );
+  )
 }
 
 export function TableHeader({
   className,
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
-  return <thead className={cn("[&_tr]:border-b", className)} {...props} />;
+  return <thead className={cn("[&_tr]:border-b", className)} {...props} />
 }
 
 export function TableBody({
@@ -28,7 +28,7 @@ export function TableBody({
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
     <tbody className={cn("[&_tr:last-child]:border-0", className)} {...props} />
-  );
+  )
 }
 
 export function TableFooter({
@@ -43,7 +43,7 @@ export function TableFooter({
       )}
       {...props}
     />
-  );
+  )
 }
 
 export function TableRow({
@@ -58,7 +58,7 @@ export function TableRow({
       )}
       {...props}
     />
-  );
+  )
 }
 
 export function TableHead({
@@ -73,7 +73,7 @@ export function TableHead({
       )}
       {...props}
     />
-  );
+  )
 }
 
 export function TableCell({
@@ -88,5 +88,5 @@ export function TableCell({
       )}
       {...props}
     />
-  );
+  )
 }

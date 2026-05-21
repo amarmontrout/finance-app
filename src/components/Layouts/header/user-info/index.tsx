@@ -1,37 +1,37 @@
-"use client";
+"use client"
 
-import { doLogout } from "@/api/auth/requests";
+import { doLogout } from "@/api/auth/requests"
 import {
   Dropdown,
   DropdownContent,
   DropdownTrigger,
-} from "@/components/ui/dropdown";
-import { getCurrentDateInfo } from "@/global/infoFunctions";
-import { useUser } from "@/hooks/use-user";
-import CloseIcon from "@mui/icons-material/Close";
-import { AuthError } from "@supabase/supabase-js";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { MenuIcon } from "../icons";
-import { LogOutIcon, SettingsIcon } from "./icons";
+} from "@/components/ui/dropdown"
+import { getCurrentDateInfo } from "@/global/infoFunctions"
+import { useUser } from "@/hooks/use-user"
+import CloseIcon from "@mui/icons-material/Close"
+import { AuthError } from "@supabase/supabase-js"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { MenuIcon } from "../icons"
+import { LogOutIcon, SettingsIcon } from "./icons"
 
 export function UserInfo() {
-  const router = useRouter();
-  const user = useUser();
-  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo();
+  const router = useRouter()
+  const user = useUser()
+  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
 
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleLogOut = () => {
     doLogout({
       router: router,
       errorHandler: (error: AuthError) => {
-        console.error(error.message);
+        console.error(error.message)
       },
-    });
-    setIsOpen(false);
-  };
+    })
+    setIsOpen(false)
+  }
 
   return (
     <Dropdown isOpen={isOpen} setIsOpen={setIsOpen}>
@@ -93,5 +93,5 @@ export function UserInfo() {
         </div>
       </DropdownContent>
     </Dropdown>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import type { Metadata } from "next";
-import Settings from "./Settings";
+import type { Metadata } from "next"
+import Settings from "./Settings"
 
 export const metadata: Metadata = {
   title: "Settings Page",
-};
+}
 
 export default function SettingsPage() {
-  return <Settings />;
+  return <Settings />
 }

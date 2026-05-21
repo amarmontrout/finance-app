@@ -1,6 +1,6 @@
-import { DateType } from "@/api/transactions/models";
-import { MenuItem, Select, Stack } from "@mui/material";
-import { MONTHS } from "../objects";
+import { DateType } from "@/api/transactions/models"
+import { MenuItem, Select, Stack } from "@mui/material"
+import { MONTHS } from "../objects"
 
 const TransactionDatePicker = ({
   date,
@@ -8,10 +8,10 @@ const TransactionDatePicker = ({
   years,
   onChange,
 }: {
-  date: DateType;
-  days: number[];
-  years: number[];
-  onChange: (field: keyof DateType, value: string | number) => void;
+  date: DateType
+  days: number[]
+  years: number[]
+  onChange: (field: keyof DateType, value: string | number) => void
 }) => {
   return (
     <Stack
@@ -76,7 +76,7 @@ const TransactionDatePicker = ({
         ))}
       </Select>
     </Stack>
-  );
-};
+  )
+}
 
-export default TransactionDatePicker;
+export default TransactionDatePicker

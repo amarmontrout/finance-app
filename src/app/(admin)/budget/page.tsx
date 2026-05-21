@@ -1,12 +1,12 @@
-import { Metadata } from "next";
-import Budget from "./Budget";
+import { Metadata } from "next"
+import Budget from "./Budget"
 
 export const metadata: Metadata = {
   title: "Budget Page",
-};
+}
 
 const BudgetPage = () => {
-  return <Budget />;
-};
+  return <Budget />
+}
 
-export default BudgetPage;
+export default BudgetPage

@@ -1,50 +1,50 @@
-import { HookSetter, WeekType } from "@/types/types";
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { IconButton, Stack, Typography } from "@mui/material";
-import { useRef } from "react";
-import { timestampToDateString } from "../formattingFunctions";
+import { HookSetter, WeekType } from "@/types/types"
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
+import ChevronRightIcon from "@mui/icons-material/ChevronRight"
+import { IconButton, Stack, Typography } from "@mui/material"
+import { useRef } from "react"
+import { timestampToDateString } from "../formattingFunctions"
 
 const WeekSelector = ({
   week,
   weekOffset,
   setWeekOffset,
 }: {
-  week: WeekType;
-  weekOffset: number;
-  setWeekOffset: HookSetter<number>;
+  week: WeekType
+  weekOffset: number
+  setWeekOffset: HookSetter<number>
 }) => {
-  const clickLock = useRef(false);
+  const clickLock = useRef(false)
 
   const handlePrevWeek = () => {
-    if (clickLock.current) return;
-    clickLock.current = true;
+    if (clickLock.current) return
+    clickLock.current = true
 
     setWeekOffset((offset) => {
-      return offset - 1;
-    });
+      return offset - 1
+    })
 
     setTimeout(() => {
-      clickLock.current = false;
-    }, 100);
-  };
+      clickLock.current = false
+    }, 100)
+  }
 
   const handleNextWeek = () => {
-    if (clickLock.current) return;
-    clickLock.current = true;
+    if (clickLock.current) return
+    clickLock.current = true
 
     setWeekOffset((offset) => {
-      return offset + 1;
-    });
+      return offset + 1
+    })
 
     setTimeout(() => {
-      clickLock.current = false;
-    }, 100);
-  };
+      clickLock.current = false
+    }, 100)
+  }
 
   const handleResetWeek = () => {
-    setWeekOffset(0);
-  };
+    setWeekOffset(0)
+  }
 
   return (
     <Stack
@@ -68,7 +68,7 @@ const WeekSelector = ({
         <ChevronRightIcon />
       </IconButton>
     </Stack>
-  );
-};
+  )
+}
 
-export default WeekSelector;
+export default WeekSelector

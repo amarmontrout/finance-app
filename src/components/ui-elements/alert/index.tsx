@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import { cva } from "class-variance-authority";
-import React from "react";
-import { AlertErrorIcon, AlertSuccessIcon, AlertWarningIcon } from "./icons";
+import { cn } from "@/lib/utils"
+import { cva } from "class-variance-authority"
+import React from "react"
+import { AlertErrorIcon, AlertSuccessIcon, AlertWarningIcon } from "./icons"
 
 const alertVariants = cva(
   "flex gap-5 w-full rounded-[10px] border-l-6 px-7 py-8 dark:bg-opacity-30 md:p-9",
@@ -17,19 +17,19 @@ const alertVariants = cva(
       variant: "error",
     },
   },
-);
+)
 
 const icons = {
   error: AlertErrorIcon,
   success: AlertSuccessIcon,
   warning: AlertWarningIcon,
-};
+}
 
 type AlertProps = React.HTMLAttributes<HTMLDivElement> & {
-  variant: "error" | "success" | "warning";
-  title: string;
-  description: string;
-};
+  variant: "error" | "success" | "warning"
+  title: string
+  description: string
+}
 
 const Alert = ({
   className,
@@ -38,7 +38,7 @@ const Alert = ({
   description,
   ...props
 }: AlertProps) => {
-  const IconComponent = icons[variant];
+  const IconComponent = icons[variant]
 
   return (
     <div
@@ -70,7 +70,7 @@ const Alert = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { Alert, type AlertProps };
+export { Alert, type AlertProps }

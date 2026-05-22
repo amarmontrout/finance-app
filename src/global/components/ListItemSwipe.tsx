@@ -270,7 +270,11 @@ const ListItemSwipe = ({
             willChange: "transform",
           }}
         >
-          <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
+          <Stack
+            direction={"row"}
+            spacing={1}
+            sx={{ width: "100%", alignItems: "center" }}
+          >
             {icon && icon}
 
             <Stack direction={"column"}>
@@ -302,11 +306,12 @@ const ListItemSwipe = ({
             </Stack>
           </Stack>
 
-          <Stack direction={"row"} spacing={2}>
+          <Stack direction={"row"} spacing={2} sx={{ minWidth: "fit-content" }}>
             <Typography
               sx={{
                 fontSize: "1rem",
                 color: amountColor,
+                lineHeight: "36px",
                 alignContent: "center",
               }}
             >

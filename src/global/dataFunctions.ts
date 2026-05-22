@@ -14,7 +14,7 @@ export const getTransactionsByType = ({
   return transactions.filter((transaction) => {
     if (transaction.type !== type) return false
     if (month && transaction.date.month !== month) return false
-    if (year !== undefined && transaction.date.year !== year) return false
+    if (year && transaction.date.year !== year) return false
 
     return true
   })
@@ -26,12 +26,12 @@ export const getTransactionsByDate = ({
   year,
 }: {
   transactions: TransactionType[]
-  month: string
-  year: number
+  month?: string
+  year?: number
 }) => {
   return transactions.filter((transaction) => {
     if (month && transaction.date.month !== month) return false
-    if (year !== undefined && transaction.date.year !== year) return false
+    if (year && transaction.date.year !== year) return false
 
     return true
   })
@@ -68,4 +68,20 @@ export const getTransactionsTotal = ({
       (transaction.is_return ? -transaction.amount : transaction.amount),
     0,
   )
+}
+
+export const getTransactionsTotalByCategory = ({
+  transactions,
+  category,
+}: {
+  transactions: TransactionType[]
+  category: string
+}) => {
+  return transactions.reduce((total, transaction) => {
+    if (transaction.category !== category) return total
+
+    return (
+      total + (transaction.is_return ? -transaction.amount : transaction.amount)
+    )
+  }, 0)
 }

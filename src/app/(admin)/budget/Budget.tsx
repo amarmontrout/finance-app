@@ -8,7 +8,11 @@ import AddDataButton from "@/global/components/AddDataButton"
 import AddEditDialog from "@/global/components/AddEditDialog"
 import AlertToast from "@/global/components/AlertToast"
 import MonthYearSelector from "@/global/components/MonthYearSelector"
-import { getTransactionsByType } from "@/global/dataFunctions"
+import {
+  getTransactionsByDate,
+  getTransactionsByType,
+  getTransactionsTotalByCategory,
+} from "@/global/dataFunctions"
 import { getCurrentDateInfo } from "@/global/infoFunctions"
 import { AlertToastType, SelectedDateType } from "@/types/types"
 import { Stack } from "@mui/material"
@@ -26,7 +30,7 @@ const Budget = () => {
     budgetCategories,
     loadCategories,
   } = useCategoryContext()
-  const { today } = getCurrentDateInfo()
+  const { today, passedMonths } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const CURRENT_DATE = {
@@ -61,6 +65,25 @@ const Budget = () => {
   const resetSelectedDate = () => {
     setSelectedDate(CURRENT_DATE)
   }
+
+  const recommendedCategoryBudget = useMemo(() => {
+    if (!confirmEdit || passedMonths.length === 0) return
+
+    const monthsPassed = passedMonths.length
+    const thisYearsTransactions = getTransactionsByDate({
+      transactions: transactions,
+      year: today.year,
+    })
+    const totalCategorySpent = getTransactionsTotalByCategory({
+      transactions: thisYearsTransactions,
+      category: confirmEdit.category,
+    })
+
+    const averagedSpent = totalCategorySpent / monthsPassed
+    const roundedBudget = Math.round(averagedSpent / 5) * 5
+
+    return roundedBudget.toFixed(2)
+  }, [confirmEdit, passedMonths, transactions, today])
 
   return (
     <Stack direction={"column"} spacing={1.5} sx={{ paddingBottom: "50px" }}>
@@ -117,6 +140,8 @@ const Budget = () => {
         confirmEdit={confirmEdit}
         setAlertToast={setAlertToast}
         inputRef={inputRef}
+        recommendedBudget={recommendedCategoryBudget}
+        today={today}
       />
 
       <AlertToast alertToast={alertToast} />

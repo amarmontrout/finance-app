@@ -117,8 +117,8 @@ const BudgetProgressBar = ({
             sx={{ fontWeight: 700 }}
           >
             {isOverPace
-              ? `$${variance.toFixed(0)} ahead of pace`
-              : `$${variance.toFixed(0)} under pace`}
+              ? `$${variance.toFixed(0)} over expected`
+              : `$${variance.toFixed(0)} behind expected`}
           </Typography>
         )}
 

@@ -1,4 +1,4 @@
-import { supabaseBrowser } from "@/utils/supabase/client"
+import { supabaseBrowser } from "@/supabase/client"
 import { User } from "@supabase/supabase-js"
 import { useEffect, useState } from "react"
 

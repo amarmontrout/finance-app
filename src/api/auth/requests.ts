@@ -1,4 +1,4 @@
-import { supabaseBrowser } from "@/utils/supabase/client"
+import { supabaseBrowser } from "@/supabase/client"
 import { AuthError, Session, User, WeakPassword } from "@supabase/supabase-js"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { CredType } from "./models"
@@ -9,10 +9,14 @@ import { CredType } from "./models"
 export const doLogin = async ({
   credentials,
   callback,
-  errorHandler
+  errorHandler,
 }: {
   credentials: CredType
-  callback: (response: {user: User, session: Session, weakPassword?: WeakPassword}) => void
+  callback: (response: {
+    user: User
+    session: Session
+    weakPassword?: WeakPassword
+  }) => void
   errorHandler: (error: AuthError) => void
 }) => {
   const supabase = supabaseBrowser()
@@ -34,7 +38,7 @@ export const doLogin = async ({
  */
 export const doLogout = async ({
   router,
-  errorHandler
+  errorHandler,
 }: {
   router: AppRouterInstance
   errorHandler: (error: AuthError) => void
@@ -46,6 +50,6 @@ export const doLogout = async ({
   if (error) {
     errorHandler(error)
   } else {
-    router.replace("/auth/sign-in")
+    router.replace("/sign-in")
   }
 }

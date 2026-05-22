@@ -1,4 +1,4 @@
-import { supabaseBrowser } from "@/utils/supabase/client"
+import { supabaseBrowser } from "@/supabase/client"
 import { PostgrestError } from "@supabase/supabase-js"
 
 type Method = "POST" | "GET" | "PATCH" | "DELETE"
@@ -25,10 +25,7 @@ type Response<T> = {
   error: PostgrestError | null
 }
 
-const applyFilter = <T>(
-  query: any,
-  { column, operator, value }: Filter<T>
-) => {
+const applyFilter = <T>(query: any, { column, operator, value }: Filter<T>) => {
   switch (operator) {
     case "eq":
       return query.eq(column as string, value)
@@ -107,7 +104,7 @@ export const performRequest = async <T>({
           }
 
           const { data, error } = await query
-          
+
           if (error) return { data: null, error }
           if (!data || data.length === 0) break
           allData.push(...data)

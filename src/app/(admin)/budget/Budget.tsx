@@ -82,6 +82,7 @@ const Budget = () => {
         setBudgetEditDialogOpen={setBudgetEditDialogOpen}
         setConfirmEdit={setConfirmEdit}
         inputRef={inputRef}
+        selectedDate={selectedDate}
       />
 
       <AddEditDialog

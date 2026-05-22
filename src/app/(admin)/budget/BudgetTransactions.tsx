@@ -12,7 +12,7 @@ import {
 } from "@/global/formattingFunctions"
 import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
 import { useUser } from "@/hooks/use-user"
-import { AlertToastType, HookSetter } from "@/types/types"
+import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types"
 import { Divider, Stack, Typography } from "@mui/material"
 import { RefObject, useMemo, useState } from "react"
 import BudgetProgressBar from "../(home)/_components/ProgressBar"
@@ -28,6 +28,7 @@ const BudgetTransactions = ({
   setBudgetEditDialogOpen,
   setConfirmEdit,
   inputRef,
+  selectedDate,
 }: {
   transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
@@ -39,6 +40,7 @@ const BudgetTransactions = ({
   setBudgetEditDialogOpen: HookSetter<boolean>
   setConfirmEdit: HookSetter<BudgetType | null>
   inputRef: RefObject<HTMLInputElement | null>
+  selectedDate: SelectedDateType
 }) => {
   const user = useUser()
   const { today } = getCurrentDateInfo()
@@ -81,6 +83,12 @@ const BudgetTransactions = ({
       {} as Record<string, BudgetType>,
     )
   }, [budgetCategories])
+
+  const isCurrentMonth = useMemo(() => {
+    return (
+      selectedDate.month === today.month && selectedDate.year === today.year
+    )
+  }, [selectedDate, today])
 
   const handleDeleteEntry = async (id: number) => {
     if (!user) return
@@ -132,7 +140,6 @@ const BudgetTransactions = ({
               const actualTotal = getTransactionsTotal({
                 transactions: entries,
               })
-
               const { earnedBudget } = getBudgetInfo({
                 budget: budgetLookup[category] ?? 0,
                 spent: actualTotal,
@@ -145,7 +152,7 @@ const BudgetTransactions = ({
                     label={category}
                     actual={actualTotal}
                     budget={budgetLookup[category] ?? 0}
-                    expected={earnedBudget}
+                    expected={isCurrentMonth ? earnedBudget : undefined}
                     onEdit={() => {
                       setBudgetEditDialogOpen(true)
                       setConfirmEdit(budgetCategoryLookup[category])

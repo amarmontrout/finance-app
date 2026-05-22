@@ -101,6 +101,7 @@ export const getBudgetInfo = ({
     remainingBudget,
     earnedBudget,
     budgetLeftToEarn,
+    budgetPerDay,
   }
 }
 

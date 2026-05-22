@@ -2,15 +2,20 @@
 
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transaction-context"
-import { negativeColor, positiveColor } from "@/global/colors"
+import { neutralColor } from "@/global/colors"
 import { getTransactionsByType } from "@/global/dataFunctions"
-import { numberToString } from "@/global/formattingFunctions"
-import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
-import { Stack } from "@mui/material"
+import {
+  numberToString,
+  timestampToDateString,
+} from "@/global/formattingFunctions"
+import {
+  getBudgetInfo,
+  getCurrentDateInfo,
+  getWeekBounds,
+} from "@/global/infoFunctions"
+import { Divider, Stack, Typography } from "@mui/material"
 import { useMemo, useState } from "react"
-import InfoCard from "../_components/InfoCard"
-import TransactionList from "../_components/TransactionList"
-import MonthTotalBudget from "./MonthTotalBudget"
+import MonthTotalBudget from "./_components/MonthTotalBudget"
 
 const MonthlyProgress = () => {
   const { transactions } = useTransactionContext()
@@ -18,6 +23,12 @@ const MonthlyProgress = () => {
   const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
 
   const [shownCategory, setShownCategory] = useState<string>()
+
+  const TODAY = {
+    month: currentMonthString,
+    day: currentDay,
+    year: currentYear,
+  }
 
   // Filter for this month's expenses
   const thisMonthsExpenses = useMemo(
@@ -70,16 +81,25 @@ const MonthlyProgress = () => {
     return { actualTotal: actual, budgetTotal: budget }
   }, [thisMonthsExpenses, budgetCategories, currentMonthString, currentYear])
 
-  const { remainingDays, remainingBudget, earnedBudget, budgetLeftToEarn } =
-    getBudgetInfo({
-      monthlyBudget: budgetTotal,
-      spentSoFar: actualTotal,
-      date: { month: currentMonthString, day: currentDay, year: currentYear },
-    })
+  const {
+    remainingDays,
+    remainingBudget,
+    earnedBudget,
+    budgetLeftToEarn,
+    budgetPerDay,
+  } = getBudgetInfo({
+    monthlyBudget: budgetTotal,
+    spentSoFar: actualTotal,
+    date: { month: currentMonthString, day: currentDay, year: currentYear },
+  })
 
   const handleExpandCategory = (category: string) => {
     setShownCategory((prev) => (prev === category ? undefined : category))
   }
+
+  //============================================================================
+
+  const { start, end } = getWeekBounds(TODAY, 0)
 
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={1}>
@@ -89,7 +109,10 @@ const MonthlyProgress = () => {
         currentMonth={currentMonthString}
       />
 
-      <Stack spacing={0.5}>
+      <Typography>{timestampToDateString(start)}</Typography>
+      <Typography>{timestampToDateString(end)}</Typography>
+
+      {/* <Stack spacing={0.5}>
         {remainingCategoryBudget.map((entry) => {
           const cardColor = entry.amount < 0 ? negativeColor : positiveColor
           return (
@@ -110,13 +133,14 @@ const MonthlyProgress = () => {
             />
           )
         })}
-      </Stack>
+      </Stack> */}
 
-      {/* <Stack
+      <Stack
         spacing={1}
         divider={<Divider sx={{ borderColor: neutralColor.color }} />}
       >
         <Typography>{`Remaining Days: ${remainingDays}`}</Typography>
+        <Typography>{`Budget Per Day: $${numberToString(budgetPerDay)}`}</Typography>
         <Typography>
           {`Remaining Budget: $${numberToString(remainingBudget)}`}
         </Typography>
@@ -126,7 +150,7 @@ const MonthlyProgress = () => {
         <Typography>
           {`Remaining Budget To Earn: $${numberToString(budgetLeftToEarn)}`}
         </Typography>
-      </Stack> */}
+      </Stack>
     </Stack>
   )
 }

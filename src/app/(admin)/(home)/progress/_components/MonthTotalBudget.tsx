@@ -4,7 +4,7 @@ import { getTransactionsTotal } from "@/global/dataFunctions"
 import { numberToString } from "@/global/formattingFunctions"
 import { Stack, Typography } from "@mui/material"
 import { useMemo } from "react"
-import ProgressBar from "../_components/ProgressBar"
+import ProgressBar from "../../_components/ProgressBar"
 
 const MonthTotalBudget = ({
   transactions,

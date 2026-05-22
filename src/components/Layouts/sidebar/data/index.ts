@@ -12,7 +12,7 @@ export const NAV_DATA = [
         icon: HomeOutlinedIcon,
         items: [
           {
-            title: "Dashboard",
+            title: "Summary",
             url: "/",
           },
           {

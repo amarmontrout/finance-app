@@ -92,9 +92,9 @@ export const SummaryCard = ({
                 fontWeight: 700,
               }}
             >
-              {isPositive ? "+" : "-"}${numberToString(Math.abs(diff!))}
+              ${numberToString(Math.abs(diff!))} {isPositive ? "more" : "less"}
             </span>{" "}
-            last month
+            than last month
           </Typography>
         )}
       </Stack>

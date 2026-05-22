@@ -26,12 +26,12 @@ const Budget = () => {
     budgetCategories,
     loadCategories,
   } = useCategoryContext()
-  const { currentMonthString, currentYear } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const CURRENT_DATE = {
-    month: currentMonthString,
-    year: currentYear,
+    month: today.month,
+    year: today.year,
   }
 
   const [selectedDate, setSelectedDate] =

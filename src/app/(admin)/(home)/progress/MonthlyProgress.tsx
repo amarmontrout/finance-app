@@ -2,24 +2,22 @@
 
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transaction-context"
+import { negativeColor, positiveColor } from "@/global/colors"
 import { getTransactionsByType } from "@/global/dataFunctions"
+import { numberToString } from "@/global/formattingFunctions"
 import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
 import { Stack } from "@mui/material"
 import { useMemo, useState } from "react"
-import { BudgetPaceProgressBar } from "../_components/BudgetPaceProgressBar"
+import InfoCard from "../_components/InfoCard"
+import BudgetProgressBar from "../_components/ProgressBar"
+import TransactionList from "../_components/TransactionList"
 
 const MonthlyProgress = () => {
   const { transactions } = useTransactionContext()
   const { budgetCategories } = useCategoryContext()
-  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
 
   const [shownCategory, setShownCategory] = useState<string>()
-
-  const TODAY = {
-    month: currentMonthString,
-    day: currentDay,
-    year: currentYear,
-  }
 
   // Filter for this month's expenses
   const thisMonthsExpenses = useMemo(
@@ -27,8 +25,8 @@ const MonthlyProgress = () => {
       getTransactionsByType({
         transactions: transactions,
         type: "expense",
-        month: currentMonthString,
-        year: currentYear,
+        month: today.month,
+        year: today.year,
       }),
     [transactions],
   )
@@ -58,30 +56,20 @@ const MonthlyProgress = () => {
 
   const { actualTotal, budgetTotal } = useMemo(() => {
     let actual = 0
-
     const allowedCategories = new Set(budgetCategories.map((c) => c.category))
-
     const budget = budgetCategories.reduce((sum, c) => sum + c.amount, 0)
-
     for (const t of thisMonthsExpenses) {
       if (allowedCategories.has(t.category)) {
         actual += t.is_return ? -t.amount : t.amount
       }
     }
-
     return { actualTotal: actual, budgetTotal: budget }
-  }, [thisMonthsExpenses, budgetCategories, currentMonthString, currentYear])
+  }, [thisMonthsExpenses, budgetCategories, today.month, today.year])
 
-  const {
-    remainingDays,
-    remainingBudget,
-    earnedBudget,
-    budgetLeftToEarn,
-    budgetPerDay,
-  } = getBudgetInfo({
+  const { earnedBudget } = getBudgetInfo({
     budget: budgetTotal,
     spent: actualTotal,
-    date: { month: currentMonthString, day: currentDay, year: currentYear },
+    date: today,
   })
 
   const handleExpandCategory = (category: string) => {
@@ -90,19 +78,14 @@ const MonthlyProgress = () => {
 
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={1}>
-      <BudgetPaceProgressBar
-        label={`${currentMonthString} Budget`}
-        total={budgetTotal}
-        spent={actualTotal}
+      <BudgetProgressBar
+        label={`${today.month} Budget`}
+        budget={budgetTotal}
+        actual={actualTotal}
         expected={earnedBudget}
       />
 
-      {/* <MonthTotalBudget
-        transactions={thisMonthsExpenses}
-        budgetCategories={budgetCategories}
-        currentMonth={currentMonthString}
-      /> */}
-      {/* <Stack spacing={0.5}>
+      <Stack spacing={0.5}>
         {remainingCategoryBudget.map((entry) => {
           const cardColor = entry.amount < 0 ? negativeColor : positiveColor
           return (
@@ -123,24 +106,7 @@ const MonthlyProgress = () => {
             />
           )
         })}
-      </Stack> */}
-
-      {/* <Stack
-        spacing={1}
-        divider={<Divider sx={{ borderColor: neutralColor.color }} />}
-      >
-        <Typography>{`Remaining Days: ${remainingDays}`}</Typography>
-        <Typography>{`Budget Per Day: $${numberToString(budgetPerDay)}`}</Typography>
-        <Typography>
-          {`Remaining Budget: $${numberToString(remainingBudget)}`}
-        </Typography>
-        <Typography>
-          {`Earned Budget: $${numberToString(earnedBudget)}`}
-        </Typography>
-        <Typography>
-          {`Remaining Budget To Earn: $${numberToString(budgetLeftToEarn)}`}
-        </Typography>
-      </Stack> */}
+      </Stack>
     </Stack>
   )
 }

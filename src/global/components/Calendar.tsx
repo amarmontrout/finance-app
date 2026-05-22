@@ -12,10 +12,10 @@ const DAYS_ABR = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
 
 const Calendar = () => {
   const clickLock = useRef(false)
-  const { currentYear, currentMonthString, currentDay } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
 
   const [date, setDate] = useState(
-    new Date(currentYear, MONTH_INDEX[currentMonthString], 1),
+    new Date(today.year, MONTH_INDEX[today.month], 1),
   )
 
   const monthIndex = date.getMonth()
@@ -24,7 +24,7 @@ const Calendar = () => {
   const otherDaysColor = neutralColor.color
 
   const resetDate = () => {
-    setDate(new Date(currentYear, MONTH_INDEX[currentMonthString], 1))
+    setDate(new Date(today.year, MONTH_INDEX[today.month], 1))
   }
 
   const prevMonth = () => {
@@ -134,10 +134,10 @@ const Calendar = () => {
           const isLastRow = Math.floor(i / 7) === 5
           const isLastCol = i % 7 === 6
           const isToday =
-            d.day === currentDay &&
+            d.day === today.day &&
             isCurrentMonth &&
-            monthIndex === MONTH_INDEX[currentMonthString] &&
-            year === currentYear
+            monthIndex === MONTH_INDEX[today.month] &&
+            year === today.year
 
           return (
             <Grid key={i} size={1}>

@@ -16,6 +16,11 @@ export const getCurrentDateInfo = () => {
     currentMonthString: MONTHS[today.getMonth()],
     currentMonthNumber: today.getMonth() + 1,
     passedMonths: MONTHS.slice(0, currentMonthIndex + 1),
+    today: {
+      month: MONTHS[today.getMonth()],
+      day: today.getDate(),
+      year: today.getFullYear(),
+    },
   }
 }
 
@@ -25,16 +30,16 @@ export const getCurrentDateInfo = () => {
  * @returns The previous year and previous month
  */
 export const getPreviousMonthInfo = ({
-  currentMonthString,
-  currentYear,
+  month,
+  year,
 }: {
-  currentMonthString: string
-  currentYear: number
+  month: string
+  year: number
 }) => {
-  const currentMonthIndex = MONTH_INDEX[currentMonthString]
+  const currentMonthIndex = MONTH_INDEX[month]
   const previousMonthIndex =
     currentMonthIndex === 0 ? 11 : currentMonthIndex - 1
-  const previousYear = currentMonthIndex === 0 ? currentYear - 1 : currentYear
+  const previousYear = currentMonthIndex === 0 ? year - 1 : year
   const previousMonthString = MONTHS[previousMonthIndex]
   return {
     previousYear: previousYear,

@@ -6,6 +6,10 @@ import {
   DropdownContent,
   DropdownTrigger,
 } from "@/components/ui/dropdown"
+import {
+  dateTypeToTimestamp,
+  timestampToDateString,
+} from "@/global/formattingFunctions"
 import { getCurrentDateInfo } from "@/global/infoFunctions"
 import { useUser } from "@/hooks/use-user"
 import CloseIcon from "@mui/icons-material/Close"
@@ -19,7 +23,7 @@ import { LogOutIcon, SettingsIcon } from "./icons"
 export function UserInfo() {
   const router = useRouter()
   const user = useUser()
-  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
 
   const [isOpen, setIsOpen] = useState(false)
 
@@ -50,7 +54,7 @@ export function UserInfo() {
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {`${currentMonthString} ${currentDay}, ${currentYear}`}
+              {timestampToDateString(dateTypeToTimestamp(today))}
             </div>
 
             <div className="leading-none text-gray-6">{user?.email}</div>

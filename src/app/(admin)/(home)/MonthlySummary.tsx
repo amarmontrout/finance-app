@@ -15,10 +15,10 @@ import { useMemo } from "react"
 import { SummaryCard } from "./_components/SummaryCard"
 
 const MonthlySummary = () => {
-  const { currentMonthString, currentYear } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
   const { previousMonthString, previousYear } = getPreviousMonthInfo({
-    currentMonthString: currentMonthString,
-    currentYear: currentYear,
+    month: today.month,
+    year: today.year,
   })
   const { transactions } = useTransactionContext()
 
@@ -26,8 +26,8 @@ const MonthlySummary = () => {
     const currentIncome = getTransactionsByType({
       transactions,
       type: "income",
-      month: currentMonthString,
-      year: currentYear,
+      month: today.month,
+      year: today.year,
     })
     const previousIncome = getTransactionsByType({
       transactions,
@@ -38,8 +38,8 @@ const MonthlySummary = () => {
     const currentDebitExpenses = getExpenseTransactionsByPaymentMethod({
       transactions,
       paymentMethod: "Debit",
-      month: currentMonthString,
-      year: currentYear,
+      month: today.month,
+      year: today.year,
     })
     const previousDebitExpenses = getExpenseTransactionsByPaymentMethod({
       transactions,
@@ -50,8 +50,8 @@ const MonthlySummary = () => {
     const currentAllExpenses = getTransactionsByType({
       transactions,
       type: "expense",
-      month: currentMonthString,
-      year: currentYear,
+      month: today.month,
+      year: today.year,
     })
     const previousAllExpenses = getTransactionsByType({
       transactions,
@@ -87,13 +87,7 @@ const MonthlySummary = () => {
       netIncome: incomeTotal - debitExpenseTotal,
       previousNetIncome: previousIncomeTotal - previousDebitExpenseTotal,
     }
-  }, [
-    transactions,
-    currentMonthString,
-    currentYear,
-    previousMonthString,
-    previousYear,
-  ])
+  }, [transactions, today, previousMonthString, previousYear])
 
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={2}>

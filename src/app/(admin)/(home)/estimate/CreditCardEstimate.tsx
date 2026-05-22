@@ -17,7 +17,7 @@ const MAX_VISIBLE = 8
 
 const CreditCardEstimate = () => {
   const { transactions } = useTransactionContext()
-  const { currentMonthString, currentDay, currentYear } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
 
   const [creditTransactions, setCreditTransactions] = useState<
     TransactionType[]
@@ -29,18 +29,18 @@ const CreditCardEstimate = () => {
       getExpenseTransactionsByPaymentMethod({
         transactions: transactions,
         paymentMethod: "Credit",
-        month: currentMonthString,
-        year: currentYear,
+        month: today.month,
+        year: today.year,
       }),
     [transactions],
   )
 
   useEffect(() => {
     const statementStartDay = 6
-    let startMonth = MONTH_INDEX[currentMonthString]
-    let startYear = currentYear
+    let startMonth = MONTH_INDEX[today.month]
+    let startYear = today.year
 
-    if (currentDay < statementStartDay) {
+    if (today.day < statementStartDay) {
       startMonth -= 1
       if (startMonth < 0) {
         startMonth = 11
@@ -73,12 +73,7 @@ const CreditCardEstimate = () => {
       )
 
     setCreditTransactions(filtered)
-  }, [
-    thisMonthsCreditCardPurchases,
-    currentDay,
-    currentMonthString,
-    currentYear,
-  ])
+  }, [thisMonthsCreditCardPurchases, today.day, today.month, today.year])
 
   const estimatedBill = useMemo(
     () => creditTransactions.reduce((total, tx) => total + tx.amount, 0),

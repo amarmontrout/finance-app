@@ -10,6 +10,7 @@ import {
   numberToString,
   timestampToDateString,
 } from "@/global/formattingFunctions"
+import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
 import { useUser } from "@/hooks/use-user"
 import { AlertToastType, HookSetter } from "@/types/types"
 import { Divider, Stack, Typography } from "@mui/material"
@@ -40,6 +41,7 @@ const BudgetTransactions = ({
   inputRef: RefObject<HTMLInputElement | null>
 }) => {
   const user = useUser()
+  const { today } = getCurrentDateInfo()
 
   const [noteId, setNoteId] = useState<number | null>(null)
 
@@ -127,14 +129,23 @@ const BudgetTransactions = ({
                 (a, b) =>
                   dateTypeToTimestamp(b.date) - dateTypeToTimestamp(a.date),
               )
-              const total = getTransactionsTotal({ transactions: entries })
+              const actualTotal = getTransactionsTotal({
+                transactions: entries,
+              })
+
+              const { earnedBudget } = getBudgetInfo({
+                budget: budgetLookup[category] ?? 0,
+                spent: actualTotal,
+                date: today,
+              })
 
               return (
-                <Stack key={category} direction={"column"}>
+                <Stack key={category} direction={"column"} spacing={1} p={0.5}>
                   <BudgetProgressBar
                     label={category}
-                    actual={total}
+                    actual={actualTotal}
                     budget={budgetLookup[category] ?? 0}
+                    expected={earnedBudget}
                     onEdit={() => {
                       setBudgetEditDialogOpen(true)
                       setConfirmEdit(budgetCategoryLookup[category])

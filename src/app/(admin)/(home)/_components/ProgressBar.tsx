@@ -1,25 +1,55 @@
+import { negativeColor, positiveColor } from "@/global/colors"
 import EditIcon from "@mui/icons-material/Edit"
-import { IconButton, LinearProgress, Stack, Typography } from "@mui/material"
-
-type ProgressBarProps = {
-  label: string
-  actual: number
-  budget: number
-  onEdit?: () => void
-}
+import {
+  Box,
+  IconButton,
+  LinearProgress,
+  Stack,
+  Typography,
+} from "@mui/material"
+import { useMemo } from "react"
 
 const BudgetProgressBar = ({
   label,
   actual,
   budget,
+  expected,
   onEdit,
-}: ProgressBarProps) => {
-  const percentage = budget === 0 ? 0 : (actual / budget) * 100
+}: {
+  label: string
+  actual: number
+  budget: number
+  expected?: number
+  onEdit?: () => void
+}) => {
+  const safeTotal = Math.max(budget, 1)
+  const spentPercent = budget === 0 ? 0 : Math.min((actual / budget) * 100, 100)
 
-  const getColor = () => {
-    if (percentage < 75) return "success"
-    if (percentage < 100) return "warning"
+  const { expectedPercent, isOverPace, variance } = useMemo(() => {
+    if (!expected) {
+      return {
+        expectedPercent: 0,
+        isOverPace: false,
+        variance: 0,
+      }
+    }
+
+    return {
+      expectedPercent: Math.min((expected / safeTotal) * 100, 100),
+      isOverPace: actual > expected,
+      variance: Math.abs(actual - expected),
+    }
+  }, [actual, expected, safeTotal])
+
+  const getBarColor = () => {
+    if (spentPercent < 75) return "success"
+    if (spentPercent < 100) return "warning"
     return "error"
+  }
+
+  const getPaceColor = () => {
+    if (isOverPace) return negativeColor.color
+    return positiveColor.color
   }
 
   return (
@@ -28,7 +58,7 @@ const BudgetProgressBar = ({
         direction={"row"}
         sx={{
           justifyContent: "space-between",
-          alignItems: "center",
+          alignItems: "end",
         }}
       >
         <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
@@ -48,29 +78,54 @@ const BudgetProgressBar = ({
           )}
         </Stack>
 
-        <Typography>
+        <Typography variant="caption">
           ${actual.toFixed(2)} / ${budget.toFixed(2)}
         </Typography>
       </Stack>
 
-      <LinearProgress
-        variant={"determinate"}
-        value={Math.min(percentage, 100)}
-        color={getColor()}
-        sx={{
-          height: 10,
-          borderRadius: 5,
-        }}
-      />
+      <Box position="relative">
+        <LinearProgress
+          variant={"determinate"}
+          value={spentPercent}
+          color={getBarColor()}
+          sx={{ height: 10, borderRadius: 5 }}
+        />
 
-      <Typography
-        variant={"caption"}
-        sx={{
-          textAlign: "right",
-        }}
+        {expected && (
+          <Box
+            sx={{
+              position: "absolute",
+              top: -3,
+              left: `calc(${expectedPercent}% - 1px)`,
+              width: 2,
+              height: 18,
+              bgcolor: "text.primary",
+              pointerEvents: "none",
+            }}
+          />
+        )}
+      </Box>
+
+      <Stack
+        direction={"row"}
+        justifyContent={expected ? "space-between" : "flex-end"}
       >
-        {percentage.toFixed(1)}% used
-      </Typography>
+        {expected && (
+          <Typography
+            variant={"caption"}
+            color={getPaceColor()}
+            sx={{ fontWeight: 700 }}
+          >
+            {isOverPace
+              ? `$${variance.toFixed(0)} ahead of pace`
+              : `$${variance.toFixed(0)} under pace`}
+          </Typography>
+        )}
+
+        <Typography variant={"caption"}>
+          {spentPercent.toFixed(1)}% of budget used
+        </Typography>
+      </Stack>
     </Stack>
   )
 }

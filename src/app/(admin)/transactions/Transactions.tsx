@@ -18,12 +18,12 @@ const Transactions = () => {
   const { isLoading, transactions, refreshTransactions } =
     useTransactionContext()
   const { incomeCategories, expenseCategories } = useCategoryContext()
-  const { currentYear, currentMonthString } = getCurrentDateInfo()
+  const { today } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const CURRENT_DATE = {
-    month: currentMonthString,
-    year: currentYear,
+    month: today.month,
+    year: today.year,
   }
 
   const [selectedDate, setSelectedDate] =

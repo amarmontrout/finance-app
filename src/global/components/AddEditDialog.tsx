@@ -1,5 +1,5 @@
 import { ChoiceType } from "@/api/choices/models"
-import { DateType, TransactionType } from "@/api/transactions/models"
+import { TransactionType } from "@/api/transactions/models"
 import { saveTransaction, updateTransaction } from "@/api/transactions/requests"
 import TransactionTypeToggle from "@/app/(admin)/transactions/_components/TransactionTypeToggle"
 import { CloseIcon } from "@/assets/icons"
@@ -46,17 +46,11 @@ const AddEditDialog = ({
   setType: HookSetter<"income" | "expense">
 }) => {
   const user = useUser()
-  const { currentYear, currentDay, currentMonthString } = getCurrentDateInfo()
-
-  const TODAY: DateType = {
-    month: currentMonthString,
-    day: currentDay,
-    year: currentYear,
-  }
+  const { today } = getCurrentDateInfo()
 
   const createInitialTransaction = (): TransactionType => ({
     id: makeId(),
-    date: TODAY,
+    date: today,
     amount: 0,
     category: "",
     note: "",
@@ -205,7 +199,7 @@ const AddEditDialog = ({
             }
             openDialog={openDialog}
             inputRef={inputRef}
-            currentYear={currentYear}
+            currentYear={today.year}
           />
         </Stack>
       </DialogContent>

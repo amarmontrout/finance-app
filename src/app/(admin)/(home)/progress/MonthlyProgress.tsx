@@ -2,20 +2,11 @@
 
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transaction-context"
-import { neutralColor } from "@/global/colors"
 import { getTransactionsByType } from "@/global/dataFunctions"
-import {
-  numberToString,
-  timestampToDateString,
-} from "@/global/formattingFunctions"
-import {
-  getBudgetInfo,
-  getCurrentDateInfo,
-  getWeekBounds,
-} from "@/global/infoFunctions"
-import { Divider, Stack, Typography } from "@mui/material"
+import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
+import { Stack } from "@mui/material"
 import { useMemo, useState } from "react"
-import MonthTotalBudget from "./_components/MonthTotalBudget"
+import { BudgetPaceProgressBar } from "../_components/BudgetPaceProgressBar"
 
 const MonthlyProgress = () => {
   const { transactions } = useTransactionContext()
@@ -88,8 +79,8 @@ const MonthlyProgress = () => {
     budgetLeftToEarn,
     budgetPerDay,
   } = getBudgetInfo({
-    monthlyBudget: budgetTotal,
-    spentSoFar: actualTotal,
+    budget: budgetTotal,
+    spent: actualTotal,
     date: { month: currentMonthString, day: currentDay, year: currentYear },
   })
 
@@ -97,21 +88,20 @@ const MonthlyProgress = () => {
     setShownCategory((prev) => (prev === category ? undefined : category))
   }
 
-  //============================================================================
-
-  const { start, end } = getWeekBounds(TODAY, 0)
-
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={1}>
-      <MonthTotalBudget
+      <BudgetPaceProgressBar
+        label={`${currentMonthString} Budget`}
+        total={budgetTotal}
+        spent={actualTotal}
+        expected={earnedBudget}
+      />
+
+      {/* <MonthTotalBudget
         transactions={thisMonthsExpenses}
         budgetCategories={budgetCategories}
         currentMonth={currentMonthString}
-      />
-
-      <Typography>{timestampToDateString(start)}</Typography>
-      <Typography>{timestampToDateString(end)}</Typography>
-
+      /> */}
       {/* <Stack spacing={0.5}>
         {remainingCategoryBudget.map((entry) => {
           const cardColor = entry.amount < 0 ? negativeColor : positiveColor
@@ -135,7 +125,7 @@ const MonthlyProgress = () => {
         })}
       </Stack> */}
 
-      <Stack
+      {/* <Stack
         spacing={1}
         divider={<Divider sx={{ borderColor: neutralColor.color }} />}
       >
@@ -150,7 +140,7 @@ const MonthlyProgress = () => {
         <Typography>
           {`Remaining Budget To Earn: $${numberToString(budgetLeftToEarn)}`}
         </Typography>
-      </Stack>
+      </Stack> */}
     </Stack>
   )
 }

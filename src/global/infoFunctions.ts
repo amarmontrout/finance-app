@@ -80,19 +80,19 @@ export const getDaysInMonth = (month: string, year: number) => {
  * Calculate remaining budget for the month and remaining daily allowance
  */
 export const getBudgetInfo = ({
-  monthlyBudget,
-  spentSoFar,
+  budget,
+  spent,
   date,
 }: {
-  monthlyBudget: number
-  spentSoFar: number
+  budget: number
+  spent: number
   date: DateType
 }) => {
   const daysInMonth = getDaysInMonth(date.month, date.year)
   const remainingDays = daysInMonth - date.day
-  const remainingBudget = monthlyBudget - spentSoFar
+  const remainingBudget = budget - spent
 
-  const budgetPerDay = monthlyBudget / daysInMonth
+  const budgetPerDay = budget / daysInMonth
   const earnedBudget = budgetPerDay * date.day
   const budgetLeftToEarn = budgetPerDay * remainingDays
 

@@ -1,6 +1,5 @@
 import { BudgetType } from "@/api/choices/models"
 import { updateBudgetCategory } from "@/api/choices/requests"
-import { DateType } from "@/api/transactions/models"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { neutralColor, positiveColor } from "@/global/colors"
 import MoneyInput from "@/global/components/MoneyInput"
@@ -32,7 +31,6 @@ const EditBudgetDialog = ({
   setAlertToast,
   inputRef,
   recommendedBudget,
-  today,
 }: {
   budgetEditDialogOpen: boolean
   setBudgetEditDialogOpen: HookSetter<boolean>
@@ -40,7 +38,6 @@ const EditBudgetDialog = ({
   setAlertToast: HookSetter<AlertToastType | undefined>
   inputRef: RefObject<HTMLInputElement | null>
   recommendedBudget: string | undefined
-  today: DateType
 }) => {
   const { loadCategories } = useCategoryContext()
   const user = useUser()
@@ -119,7 +116,7 @@ const EditBudgetDialog = ({
         <Stack direction={"column"} spacing={1}>
           <Stack direction={"column"}>
             <Typography variant={"caption"} sx={{ textAlign: "center" }}>
-              {`${today.year} Average for ${confirmEdit?.category}`}
+              {`Average for ${confirmEdit?.category}`}
             </Typography>
             <Typography
               variant={"body1"}

@@ -69,21 +69,24 @@ const Budget = () => {
   const recommendedCategoryBudget = useMemo(() => {
     if (!confirmEdit || passedMonths.length === 0) return
 
-    const monthsPassed = passedMonths.length
-    const thisYearsTransactions = getTransactionsByDate({
-      transactions: transactions,
-      year: today.year,
+    const isFirstMonth = passedMonths.length === 1
+
+    const relevantTransactions = getTransactionsByDate({
+      transactions,
+      year: isFirstMonth ? today.year - 1 : today.year,
     })
+
     const totalCategorySpent = getTransactionsTotalByCategory({
-      transactions: thisYearsTransactions,
+      transactions: relevantTransactions,
       category: confirmEdit.category,
     })
 
-    const averagedSpent = totalCategorySpent / monthsPassed
+    const divisor = isFirstMonth ? 12 : passedMonths.length
+    const averagedSpent = totalCategorySpent / divisor
     const roundedBudget = Math.round(averagedSpent / 5) * 5
 
     return roundedBudget.toFixed(2)
-  }, [confirmEdit, passedMonths, transactions, today])
+  }, [confirmEdit, passedMonths.length, transactions, today.year])
 
   return (
     <Stack direction={"column"} spacing={1.5} sx={{ paddingBottom: "50px" }}>
@@ -141,7 +144,6 @@ const Budget = () => {
         setAlertToast={setAlertToast}
         inputRef={inputRef}
         recommendedBudget={recommendedCategoryBudget}
-        today={today}
       />
 
       <AlertToast alertToast={alertToast} />

@@ -2,7 +2,7 @@ import { BudgetType } from "@/api/choices/models"
 import { updateBudgetCategory } from "@/api/choices/requests"
 import { DateType } from "@/api/transactions/models"
 import { useCategoryContext } from "@/contexts/categories-context"
-import { positiveColor } from "@/global/colors"
+import { neutralColor, positiveColor } from "@/global/colors"
 import MoneyInput from "@/global/components/MoneyInput"
 import { useUser } from "@/hooks/use-user"
 import { AlertToastType, HookSetter } from "@/types/types"
@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   DialogTitle,
+  Divider,
   IconButton,
   Stack,
   Typography,
@@ -115,12 +116,9 @@ const EditBudgetDialog = ({
       </DialogTitle>
 
       <DialogContent>
-        <Stack direction={"column"} spacing={2}>
+        <Stack direction={"column"} spacing={1}>
           <Stack direction={"column"}>
-            <Typography
-              variant={"caption"}
-              sx={{ textAlign: "center", fontWeight: 700 }}
-            >
+            <Typography variant={"caption"} sx={{ textAlign: "center" }}>
               {`${today.year} Average for ${confirmEdit?.category}`}
             </Typography>
             <Typography
@@ -130,6 +128,8 @@ const EditBudgetDialog = ({
               ${recommendedBudget}
             </Typography>
           </Stack>
+
+          <Divider sx={{ borderColor: neutralColor.color }} />
 
           <MoneyInput
             value={updateBudget.amount}

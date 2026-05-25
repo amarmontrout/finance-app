@@ -1,7 +1,6 @@
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined"
 import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
-import MultilineChartOutlinedIcon from "@mui/icons-material/MultilineChartOutlined"
 
 export const NAV_DATA = [
   {
@@ -37,24 +36,24 @@ export const NAV_DATA = [
         icon: DataUsageOutlinedIcon,
         items: [],
       },
-      {
-        title: "Insights",
-        icon: MultilineChartOutlinedIcon,
-        items: [
-          {
-            title: "Dashboard",
-            url: "/insights",
-          },
-          {
-            title: "Top Expenses",
-            url: "/insights/top-expenses",
-          },
-          {
-            title: "Trends",
-            url: "/insights/trends",
-          },
-        ],
-      },
+      // {
+      //   title: "Insights",
+      //   icon: MultilineChartOutlinedIcon,
+      //   items: [
+      //     {
+      //       title: "Dashboard",
+      //       url: "/insights",
+      //     },
+      //     {
+      //       title: "Top Expenses",
+      //       url: "/insights/top-expenses",
+      //     },
+      //     {
+      //       title: "Trends",
+      //       url: "/insights/trends",
+      //     },
+      //   ],
+      // },
     ],
   },
 ]

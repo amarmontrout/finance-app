@@ -46,7 +46,7 @@ export default function AdminLayout({ children }: PropsWithChildren) {
 
         {/* MOBILE SUB NAV (only for sections with children) */}
         {activeSection?.items?.length > 1 && pathname !== "/settings" && (
-          <div className="flex h-[40px] items-center justify-around gap-4 border-b border-stroke bg-white px-4 dark:border-stroke-dark dark:bg-gray-dark md:hidden">
+          <div className="flex h-[40px] items-center bg-white px-4 border-b border-stroke dark:border-stroke-dark dark:bg-gray-dark md:hidden">
             {activeSection.items.map((subpage: any) => {
               const active = isRouteActive(subpage.url)
 
@@ -57,6 +57,8 @@ export default function AdminLayout({ children }: PropsWithChildren) {
                   className="text-sm"
                   style={{
                     color: active ? neutralColor.color : undefined,
+                    width: "100%",
+                    textAlign: "center",
                   }}
                 >
                   {subpage.title}
@@ -67,12 +69,19 @@ export default function AdminLayout({ children }: PropsWithChildren) {
         )}
 
         {/* MOBILE BOTTOM NAV */}
-        <div className="sticky bottom-0 z-30 flex h-[80px] justify-between bg-white px-4 py-2 dark:bg-gray-dark md:hidden">
+        <div className="sticky bottom-0 z-30 flex h-[80px] bg-white px-4 py-2 dark:bg-gray-dark md:hidden">
           {sections.map((section: any) => {
             const active = isSectionActive(section)
 
             return (
-              <Link key={section.title} href={getFirstValidUrl(section)}>
+              <Link
+                key={section.title}
+                href={getFirstValidUrl(section)}
+                style={{
+                  width: "100%",
+                  textAlign: "center",
+                }}
+              >
                 <div
                   className="flex flex-col items-center justify-center"
                   style={{

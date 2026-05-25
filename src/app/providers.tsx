@@ -1,33 +1,18 @@
 "use client"
 
-import { ThemeProvider as MUIThemeProvider } from "@mui/material"
-import { ThemeProvider as NextThemeProvider, useTheme } from "next-themes"
-import { lightTheme, darkTheme } from "@/globals/theme"
-import { useState, useEffect } from "react"
-import { TransactionProvider } from "@/contexts/transactions-context"
+import { SidebarProvider } from "@/components/Layouts/sidebar/sidebar-context"
 import { CategoryProvider } from "@/contexts/categories-context"
+import { TransactionProvider } from "@/contexts/transaction-context"
+import { ThemeProvider } from "next-themes"
 
-const MUIThemeWrapper = ({ children }: { children: React.ReactNode }) => {
-  const { resolvedTheme } = useTheme() // "light" | "dark"
-  const theme = resolvedTheme === "dark" ? darkTheme : lightTheme
-
-  return <MUIThemeProvider theme={theme}>{children}</MUIThemeProvider>
-}
-
-const Providers = ({ children }: { children: React.ReactNode }) => {
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => setMounted(true), [])
-
+export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <NextThemeProvider attribute="class" defaultTheme="light">
+    <ThemeProvider defaultTheme="light" attribute="class">
       <CategoryProvider>
         <TransactionProvider>
-          {mounted && <MUIThemeWrapper>{children}</MUIThemeWrapper>}
+          <SidebarProvider>{children}</SidebarProvider>
         </TransactionProvider>
       </CategoryProvider>
-    </NextThemeProvider>
+    </ThemeProvider>
   )
 }
-
-export default Providers

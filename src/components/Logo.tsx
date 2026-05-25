@@ -1,24 +1,27 @@
-import { accentColorPrimary } from "@/globals/colors"
-import { Box } from "@mui/material"
-import PaidIcon from "@mui/icons-material/Paid"
-import SavingsIcon from "@mui/icons-material/Savings"
-import CreditCardIcon from "@mui/icons-material/CreditCard"
+import darkLogo from "@/assets/logos/dark.svg"
+import logo from "@/assets/logos/main.svg"
+import Image from "next/image"
 
-const Logo = () => {
+export function Logo() {
   return (
-    <Box
-      bgcolor={"background.paper"}
-      border={`2px solid ${accentColorPrimary}`}
-      borderRadius={"15px"}
-      width={"fit-content"}
-      height={"fit-content"}
-      padding={"10px 20px 10px 20px"}
-    >
-      <PaidIcon fontSize={"large"} />
-      <SavingsIcon fontSize={"large"} />
-      <CreditCardIcon fontSize={"large"} />
-    </Box>
+    <div className="relative h-8 max-w-[10.847rem]">
+      <Image
+        src={logo}
+        fill
+        className="dark:hidden"
+        alt="NextAdmin logo"
+        role="presentation"
+        quality={100}
+      />
+
+      <Image
+        src={darkLogo}
+        fill
+        className="hidden dark:block"
+        alt="NextAdmin logo"
+        role="presentation"
+        quality={100}
+      />
+    </div>
   )
 }
-
-export default Logo

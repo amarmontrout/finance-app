@@ -1,4 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
+import { dateTypeToTimestamp } from "@/global/formattingFunctions"
 import { AlertToastType, HookSetter } from "@/types/types"
 import { Stack } from "@mui/material"
 import { useMemo } from "react"
@@ -23,12 +24,11 @@ const TransactionCategoryStack = ({
   setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const groupedTransactions = useMemo(() => {
-    return filteredTransactions.reduce<Record<string, TransactionType[]>>(
+    return filteredTransactions.reduce<Record<number, TransactionType[]>>(
       (acc, transaction) => {
-        const { month, day, year } = transaction.date
-        const dateKey = `${year}-${month.padStart(2, "0")}-${String(day).padStart(2, "0")}`
-        if (!acc[dateKey]) acc[dateKey] = []
-        acc[dateKey].push(transaction)
+        const timestamp = dateTypeToTimestamp(transaction.date)
+        if (!acc[timestamp]) acc[timestamp] = []
+        acc[timestamp].push(transaction)
         return acc
       },
       {},
@@ -37,22 +37,22 @@ const TransactionCategoryStack = ({
 
   const sortedDates = useMemo(() => {
     return Object.entries(groupedTransactions).sort(
-      ([a], [b]) => new Date(b).getTime() - new Date(a).getTime(),
+      ([a], [b]) => Number(b) - Number(a),
     )
   }, [groupedTransactions])
 
   return (
     <Stack direction={"column"}>
-      {sortedDates.map(([date, transactions]) => {
+      {sortedDates.map(([timestamp, transactions]) => {
         const sortedTransactions = [...transactions].sort((a, b) =>
           a.note.localeCompare(b.note),
         )
 
         return (
-          <Stack key={date} direction={"column"} spacing={0.5}>
+          <Stack key={timestamp} direction={"column"} spacing={0.5}>
             <TransactionCategoryHeader
               transactions={transactions}
-              date={date}
+              timestamp={Number(timestamp)}
             />
 
             <TransactionCategoryList

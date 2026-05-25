@@ -101,7 +101,7 @@ const ListItemSwipe = ({
   const [isActioning, setIsActioning] = useState(false)
 
   const EDGE_WIDTH = 75
-  const ACTION_WIDTH = 100
+  const ACTION_WIDTH = 225
   const SWIPE_THRESHOLD = ACTION_WIDTH
   const MAX_SWIPE = ACTION_WIDTH
   const DIRECTION_THRESHOLD = 10
@@ -204,17 +204,18 @@ const ListItemSwipe = ({
         {/* Background layer */}
         <Box
           sx={{
-            width: "100%",
-            inset: 0,
             position: "absolute",
-            display: "flex",
-            justifyContent: "space-between",
+            inset: 0,
             pointerEvents: "none",
           }}
         >
-          {/* Blue edit background */}
+          {/* Left edit */}
           <Box
             sx={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              bottom: 0,
               width: ACTION_WIDTH,
               bgcolor: neutralColor.color,
               display: "flex",
@@ -232,9 +233,13 @@ const ListItemSwipe = ({
             />
           </Box>
 
-          {/* Red delete background */}
+          {/* Right delete */}
           <Box
             sx={{
+              position: "absolute",
+              right: 0,
+              top: 0,
+              bottom: 0,
               width: ACTION_WIDTH,
               bgcolor: negativeColor.color,
               display: "flex",

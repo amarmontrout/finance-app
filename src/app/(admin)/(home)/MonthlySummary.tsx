@@ -92,33 +92,37 @@ const MonthlySummary = () => {
   return (
     <Stack sx={{ width: "100%", height: "100%" }} spacing={2}>
       <Stack direction={"column"} spacing={1}>
-        <SummaryCard
-          title={"Income"}
-          amount={summary.incomeTotal}
-          comparison={summary.previousIncomeTotal}
-          type={"income"}
-        />
+        <Stack direction={"row"} spacing={1}>
+          <SummaryCard
+            title={"Income"}
+            amount={summary.incomeTotal}
+            comparison={summary.previousIncomeTotal}
+            type={"income"}
+          />
 
-        <SummaryCard
-          title={"Expense"}
-          amount={summary.debitExpenseTotal}
-          comparison={summary.previousDebitExpenseTotal}
-          type={"expense"}
-        />
+          <SummaryCard
+            title={"Expense"}
+            amount={summary.debitExpenseTotal}
+            comparison={summary.previousDebitExpenseTotal}
+            type={"expense"}
+          />
+        </Stack>
 
-        <SummaryCard
-          title={"Net Income"}
-          amount={summary.netIncome}
-          comparison={summary.previousNetIncome}
-          type={"net"}
-        />
+        <Stack direction={"row"} spacing={1}>
+          <SummaryCard
+            title={"Net Income"}
+            amount={summary.netIncome}
+            comparison={summary.previousNetIncome}
+            type={"net"}
+          />
 
-        <SummaryCard
-          title={"Total Spending"}
-          amount={summary.allExpensesTotal}
-          comparison={summary.previousAllExpensesTotal}
-          type={"total"}
-        />
+          <SummaryCard
+            title={"Total Spending"}
+            amount={summary.allExpensesTotal}
+            comparison={summary.previousAllExpensesTotal}
+            type={"total"}
+          />
+        </Stack>
       </Stack>
     </Stack>
   )

@@ -63,14 +63,14 @@ export const SummaryCard = ({
         {/* Amount */}
         <Typography
           variant={"h5"}
-          sx={{ fontWeight: 600, color: style.main, textAlign: "left" }}
+          sx={{ fontWeight: 600, color: style.main, textAlign: "center" }}
         >
           ${numberToString(amount)}
         </Typography>
 
         {/* Comparison */}
         {comparison !== undefined && (
-          <Typography variant={"caption"} sx={{ textAlign: "right" }}>
+          <Typography variant={"caption"} sx={{ textAlign: "center" }}>
             <span style={{ fontWeight: 700 }}>
               ${numberToString(Math.abs(diff!))} {isPositive ? "more" : "less"}
             </span>{" "}

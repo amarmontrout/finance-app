@@ -47,51 +47,31 @@ export const SummaryCard = ({
         borderRadius: 2,
         border: "2px solid rgba(0,0,0,0.2)",
         bgcolor: style.bg,
-        paddingY: 1.5,
+        paddingY: 1,
         paddingX: 2,
       }}
     >
-      <Stack
-        sx={{
-          height: "100%",
-          justifyContent: "space-between",
-        }}
-      >
+      <Stack direction={"column"}>
         {/* Title */}
         <Typography
-          sx={{
-            fontSize: "0.80rem",
-            fontWeight: 600,
-            color: style.main,
-          }}
+          variant={"caption"}
+          sx={{ fontWeight: 600, color: style.main }}
         >
           {title}
         </Typography>
 
         {/* Amount */}
         <Typography
-          sx={{
-            fontSize: "1.6rem",
-            fontWeight: 600,
-            color: style.main,
-          }}
+          variant={"h5"}
+          sx={{ fontWeight: 600, color: style.main, textAlign: "left" }}
         >
           ${numberToString(amount)}
         </Typography>
 
         {/* Comparison */}
         {comparison !== undefined && (
-          <Typography
-            sx={{
-              fontSize: "0.8rem",
-              textAlign: "right",
-            }}
-          >
-            <span
-              style={{
-                fontWeight: 700,
-              }}
-            >
+          <Typography variant={"caption"} sx={{ textAlign: "right" }}>
+            <span style={{ fontWeight: 700 }}>
               ${numberToString(Math.abs(diff!))} {isPositive ? "more" : "less"}
             </span>{" "}
             than last month

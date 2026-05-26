@@ -84,7 +84,18 @@ const EditBudgetDialog = ({
   if (!updateBudget) return null
 
   return (
-    <Dialog open={budgetEditDialogOpen}>
+    <Dialog
+      open={budgetEditDialogOpen}
+      slotProps={{
+        paper: {
+          sx: {
+            position: "absolute",
+            top: 59,
+            m: 0,
+          },
+        },
+      }}
+    >
       <DialogTitle>
         <Stack
           direction={"row"}
@@ -116,7 +127,7 @@ const EditBudgetDialog = ({
         <Stack direction={"column"} spacing={1}>
           <Stack direction={"column"}>
             <Typography variant={"caption"} sx={{ textAlign: "center" }}>
-              {`Average for ${confirmEdit?.category}`}
+              {`Recommended Budget For ${confirmEdit?.category}`}
             </Typography>
             <Typography
               variant={"body1"}
@@ -138,7 +149,10 @@ const EditBudgetDialog = ({
           <Button
             variant={"contained"}
             onClick={handleUpdateBudgetData}
-            disabled={updateBudget.amount === 0}
+            disabled={
+              updateBudget.amount === 0 ||
+              updateBudget.amount === confirmEdit?.amount
+            }
             sx={{ backgroundColor: positiveColor.color }}
             loading={isLoading}
           >

@@ -30,7 +30,7 @@ const Budget = () => {
     budgetCategories,
     loadCategories,
   } = useCategoryContext()
-  const { today, passedMonths } = getCurrentDateInfo()
+  const { today, passedMonths, currentMonthString } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const CURRENT_DATE = {
@@ -70,23 +70,35 @@ const Budget = () => {
     if (!confirmEdit || passedMonths.length === 0) return
 
     const isFirstMonth = passedMonths.length === 1
+    const targetYear = isFirstMonth ? today.year - 1 : today.year
 
-    const relevantTransactions = getTransactionsByDate({
+    const targetYearTransactions = getTransactionsByDate({
       transactions,
-      year: isFirstMonth ? today.year - 1 : today.year,
+      year: targetYear,
+    })
+
+    const priorMonthsTransactions = targetYearTransactions.filter((t) => {
+      return (
+        passedMonths.includes(t.date.month) &&
+        t.date.month !== currentMonthString
+      )
     })
 
     const totalCategorySpent = getTransactionsTotalByCategory({
-      transactions: relevantTransactions,
+      transactions: priorMonthsTransactions,
       category: confirmEdit.category,
     })
 
-    const divisor = isFirstMonth ? 12 : passedMonths.length
+    const divisor = isFirstMonth ? 12 : passedMonths.length - 1
+    if (divisor <= 0) {
+      return "0.00"
+    }
+
     const averagedSpent = totalCategorySpent / divisor
     const roundedBudget = Math.round(averagedSpent / 5) * 5
 
     return roundedBudget.toFixed(2)
-  }, [confirmEdit, passedMonths.length, transactions, today.year])
+  }, [confirmEdit, passedMonths, transactions, today.year, currentMonthString])
 
   return (
     <Stack direction={"column"} spacing={1.5} sx={{ paddingBottom: "50px" }}>

@@ -161,6 +161,23 @@ export const softDeleteTransaction = async ({
   })
 }
 
+export const undoSoftDeleteTransaction = async ({
+  userId,
+  transactionId,
+}: {
+  userId: string
+  transactionId: number
+}) => {
+  await updateTransaction({
+    userId: userId,
+    rowId: transactionId,
+    body: {
+      is_deleted: false,
+      deleted_at: null,
+    },
+  })
+}
+
 export const deleteTransaction = async ({
   userId,
   rowId,

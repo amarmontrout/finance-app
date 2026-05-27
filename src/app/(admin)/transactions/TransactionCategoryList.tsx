@@ -13,6 +13,7 @@ const TransactionCategoryList = ({
   selectedTransaction,
   setSelectedTransaction,
   refreshTransactions,
+  refreshDeletedTransactions,
   openDialog,
   setOpenDialog,
   setAlertToast,
@@ -21,6 +22,7 @@ const TransactionCategoryList = ({
   selectedTransaction: TransactionType | null
   setSelectedTransaction: HookSetter<TransactionType | null>
   refreshTransactions: () => Promise<void>
+  refreshDeletedTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
@@ -48,6 +50,7 @@ const TransactionCategoryList = ({
       showToast("error", "Transaction could not be deleted.")
     } finally {
       refreshTransactions()
+      refreshDeletedTransactions()
       setSelectedTransaction(null)
     }
   }

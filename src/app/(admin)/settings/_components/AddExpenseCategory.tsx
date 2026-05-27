@@ -107,7 +107,7 @@ const AddExpenseCategory = ({
   }
 
   return (
-    <Stack spacing={1} sx={{ height: "406px" }}>
+    <Stack spacing={1}>
       <SimpleForm
         placeholder={"Add An Expense Category"}
         value={expenseCategoriesInput}

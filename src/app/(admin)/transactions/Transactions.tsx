@@ -15,8 +15,12 @@ import { useMemo, useRef, useState } from "react"
 import TransactionsDisplay from "./TransactionsDisplay"
 
 const Transactions = () => {
-  const { isLoading, transactions, refreshTransactions } =
-    useTransactionContext()
+  const {
+    isLoading,
+    transactions,
+    refreshTransactions,
+    refreshDeletedTransactions,
+  } = useTransactionContext()
   const { incomeCategories, expenseCategories } = useCategoryContext()
   const { today } = getCurrentDateInfo()
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -58,6 +62,7 @@ const Transactions = () => {
       <TransactionsDisplay
         transactions={monthTransactions}
         refreshTransactions={refreshTransactions}
+        refreshDeletedTransactions={refreshDeletedTransactions}
         type={type}
         setType={setType}
         selectedDate={selectedDate}

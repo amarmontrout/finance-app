@@ -12,6 +12,7 @@ import TransactionCategoryStack from "./TransactionCategoryStack"
 const TransactionsDisplay = ({
   transactions,
   refreshTransactions,
+  refreshDeletedTransactions,
   type,
   setType,
   selectedDate,
@@ -24,6 +25,7 @@ const TransactionsDisplay = ({
 }: {
   transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
+  refreshDeletedTransactions: () => Promise<void>
   type: "income" | "expense"
   setType: HookSetter<"income" | "expense">
   selectedDate: SelectedDateType
@@ -90,6 +92,7 @@ const TransactionsDisplay = ({
           selectedTransaction={selectedTransaction}
           setSelectedTransaction={setSelectedTransaction}
           refreshTransactions={refreshTransactions}
+          refreshDeletedTransactions={refreshDeletedTransactions}
           openDialog={openDialog}
           setOpenDialog={setOpenDialog}
           setAlertToast={setAlertToast}

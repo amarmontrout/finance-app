@@ -92,7 +92,7 @@ const AddIncomeCategory = ({
   }
 
   return (
-    <Stack spacing={1} sx={{ height: "406px" }}>
+    <Stack spacing={1}>
       <SimpleForm
         placeholder={"Add An Income Category"}
         value={incomeCategoriesInput}

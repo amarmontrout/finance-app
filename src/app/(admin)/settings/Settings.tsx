@@ -3,17 +3,26 @@
 import { ChoiceType } from "@/api/choices/models"
 import { saveBudgetCategory } from "@/api/choices/requests"
 import { useCategoryContext } from "@/contexts/categories-context"
+import { useTransactionContext } from "@/contexts/transaction-context"
 import AlertToast from "@/global/components/AlertToast"
 import { makeId } from "@/global/infoFunctions"
 import { AlertToastType } from "@/types/types"
-import { Stack, Typography } from "@mui/material"
+
+import { neutralColor } from "@/global/colors"
+import { Divider, Stack } from "@mui/material"
 import { useState } from "react"
 import AddExpenseCategory from "./_components/AddExpenseCategory"
 import AddIncomeCategory from "./_components/AddIncomeCategory"
 import AddYear from "./_components/AddYear"
 import EditCategorySettingsDialog from "./_components/EditCategorySettingsDialog"
+import RecentlyDeleted from "./_components/RecentlyDeleted"
 
 const Settings = () => {
+  const {
+    deletedTransactions,
+    refreshDeletedTransactions,
+    refreshTransactions,
+  } = useTransactionContext()
   const {
     incomeCategories,
     expenseCategories,
@@ -43,12 +52,19 @@ const Settings = () => {
   }
 
   return (
-    <Stack direction={"column"} spacing={3}>
-      <Typography variant={"h5"} sx={{ width: "100%", textAlign: "Center" }}>
-        Settings
-      </Typography>
+    <Stack>
+      <Stack
+        direction={"column"}
+        spacing={2}
+        divider={<Divider sx={{ borderColor: neutralColor.color }} />}
+      >
+        <RecentlyDeleted
+          deletedTransactions={deletedTransactions}
+          refreshDeletedTransactions={refreshDeletedTransactions}
+          refreshTransactions={refreshTransactions}
+          setAlertToast={setAlertToast}
+        />
 
-      <Stack direction={"column"}>
         <AddYear
           years={years}
           loadCategories={loadCategories}

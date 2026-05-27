@@ -58,6 +58,8 @@ const AddEditDialog = ({
     type: "income",
     is_paid: false,
     is_return: false,
+    is_deleted: false,
+    deleted_at: null,
   })
 
   const [isLoading, setIsLoading] = useState<boolean>(false)

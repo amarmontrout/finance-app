@@ -40,6 +40,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
       console.log("Fetching Transactions...")
       const result = await getTransactions({
         userId: user.id,
+        isDeleted: false,
       })
       setTransactions(result ?? [])
     } catch (error) {

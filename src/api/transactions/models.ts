@@ -1,17 +1,19 @@
 export type TransactionType = {
-  id: number, 
-  date: DateType,
-  amount: number, 
-  category: string, 
-  note: string, 
-  payment_method: "Debit" | "Credit" | "", 
-  type: "income" | "expense", 
-  is_paid: boolean, 
+  id: number
+  date: DateType
+  amount: number
+  category: string
+  note: string
+  payment_method: "Debit" | "Credit" | ""
+  type: "income" | "expense"
+  is_paid: boolean
   is_return: boolean
+  is_deleted: boolean
+  deleted_at: string | null
 }
 
 export type DateType = {
-  month: string,
-  day: number, 
+  month: string
+  day: number
   year: number
 }

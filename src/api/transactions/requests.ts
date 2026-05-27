@@ -4,19 +4,19 @@ import { TransactionType } from "./models"
 // Basic Requests ==============================================================
 export const saveTransaction = async ({
   userId,
-  body
+  body,
 }: {
   userId: string
   body: TransactionType
 }) => {
-  const {data, error} = await performRequest<TransactionType>({
+  const { data, error } = await performRequest<TransactionType>({
     schema: "Transactions",
     table: "transactions",
     method: "POST",
     userId: userId,
-    body: body
+    body: body,
   })
-    
+
   if (error) throw error
 
   return data?.[0] ?? null
@@ -24,76 +24,14 @@ export const saveTransaction = async ({
 
 export const getTransactions = async ({
   userId,
-  filters,
-}: {
-  userId: string
-  filters?: Filter<TransactionType>[]
-}) => {
-  const { data, error } = await performRequest<TransactionType>({
-    schema: "Transactions",
-    table: "transactions",
-    method: "GET",
-    userId,
-    filters: filters ?? []
-  })
-
-  if (error) throw error
-  return data
-}
-
-export const updateTransaction = async ({
-  userId,
-  rowId,
-  body
-}: {
-  userId: string
-  rowId: number
-  body: TransactionType
-}) => {
-  const {data, error} = await performRequest<TransactionType>({
-    schema: "Transactions",
-    table: "transactions",
-    method: "PATCH",
-    userId: userId,
-    rowId: rowId,
-    body: body
-  })
-    
-  if (error) throw error
-
-  return data?.[0] ?? null
-}
-
-export const deleteTransaction = async ({
-  userId,
-  rowId,
-}: {
-  userId: string
-  rowId: number
-}) => {
-  const {data, error} = await performRequest<TransactionType>({
-    schema: "Transactions",
-    table: "transactions",
-    method: "DELETE",
-    userId: userId,
-    rowId: rowId
-  })
-    
-  if (error) throw error
-
-  return data?.[0] ?? null
-}
-
-// Custom Requests =============================================================
-export const getTransactionsWithFilter = async ({
-  userId,
   month,
   day,
   year,
   type,
   isPaid,
   isReturn,
-  category
+  category,
+  isDeleted,
 }: {
   userId: string
   month?: string
@@ -103,10 +41,11 @@ export const getTransactionsWithFilter = async ({
   isPaid?: boolean
   isReturn?: boolean
   category?: string
+  isDeleted?: boolean
 }) => {
   const filters: Filter<TransactionType>[] = []
 
-  if (month) {
+  if (month !== undefined) {
     filters.push({
       column: "date->>month",
       operator: "eq",
@@ -114,7 +53,7 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (day) {
+  if (day !== undefined) {
     filters.push({
       column: "date->>day",
       operator: "eq",
@@ -122,7 +61,7 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (year) {
+  if (year !== undefined) {
     filters.push({
       column: "date->>year",
       operator: "eq",
@@ -130,7 +69,7 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (type) {
+  if (type !== undefined) {
     filters.push({
       column: "type",
       operator: "eq",
@@ -138,7 +77,7 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (isPaid) {
+  if (isPaid !== undefined) {
     filters.push({
       column: "is_paid",
       operator: "eq",
@@ -146,7 +85,7 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (isReturn) {
+  if (isReturn !== undefined) {
     filters.push({
       column: "is_return",
       operator: "eq",
@@ -154,11 +93,19 @@ export const getTransactionsWithFilter = async ({
     })
   }
 
-  if (category) {
+  if (category !== undefined) {
     filters.push({
       column: "category",
       operator: "eq",
       value: category,
+    })
+  }
+
+  if (isDeleted !== undefined) {
+    filters.push({
+      column: "is_deleted",
+      operator: "eq",
+      value: isDeleted,
     })
   }
 
@@ -174,6 +121,67 @@ export const getTransactionsWithFilter = async ({
   return data
 }
 
+export const updateTransaction = async ({
+  userId,
+  rowId,
+  body,
+}: {
+  userId: string
+  rowId: number
+  body: Partial<TransactionType>
+}) => {
+  const { data, error } = await performRequest<TransactionType>({
+    schema: "Transactions",
+    table: "transactions",
+    method: "PATCH",
+    userId: userId,
+    rowId: rowId,
+    body: body,
+  })
+
+  if (error) throw error
+
+  return data?.[0] ?? null
+}
+
+export const softDeleteTransaction = async ({
+  userId,
+  transactionId,
+}: {
+  userId: string
+  transactionId: number
+}) => {
+  await updateTransaction({
+    userId: userId,
+    rowId: transactionId,
+    body: {
+      is_deleted: true,
+      deleted_at: new Date().toISOString(),
+    },
+  })
+}
+
+export const deleteTransaction = async ({
+  userId,
+  rowId,
+}: {
+  userId: string
+  rowId: number
+}) => {
+  const { data, error } = await performRequest<TransactionType>({
+    schema: "Transactions",
+    table: "transactions",
+    method: "DELETE",
+    userId: userId,
+    rowId: rowId,
+  })
+
+  if (error) throw error
+
+  return data?.[0] ?? null
+}
+
+// Custom Requests =============================================================
 export const getUnpaidTransactions = async ({
   userId,
   month,
@@ -189,7 +197,7 @@ export const getUnpaidTransactions = async ({
     {
       column: "type",
       operator: "eq",
-      value: 'expense',
+      value: "expense",
     },
     {
       column: "is_return",
@@ -200,7 +208,7 @@ export const getUnpaidTransactions = async ({
       column: "is_paid",
       operator: "eq",
       value: false,
-    }
+    },
   ]
 
   if (month) {
@@ -244,7 +252,7 @@ export const getTransactionsByCategory = async ({
   month,
   day,
   year,
-  category
+  category,
 }: {
   userId: string
   month?: string
@@ -257,7 +265,7 @@ export const getTransactionsByCategory = async ({
       column: "category",
       operator: "eq",
       value: category,
-    }
+    },
   ]
 
   if (month) {

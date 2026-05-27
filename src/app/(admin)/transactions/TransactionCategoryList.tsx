@@ -1,5 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
-import { deleteTransaction } from "@/api/transactions/requests"
+import { softDeleteTransaction } from "@/api/transactions/requests"
 import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
 import ListItemSwipe from "@/global/components/ListItemSwipe"
 import { numberToString } from "@/global/formattingFunctions"
@@ -35,11 +35,14 @@ const TransactionCategoryList = ({
       onClose: () => setAlertToast(undefined),
     })
 
-  const handleDeleteTransaction = async (rowId: number) => {
-    if (!user || !rowId) return
+  const handleDeleteTransaction = async (transaction: TransactionType) => {
+    if (!user || !transaction) return
 
     try {
-      await deleteTransaction({ userId: user.id, rowId })
+      await softDeleteTransaction({
+        userId: user.id,
+        transactionId: transaction.id,
+      })
       showToast("success", "Transaction deleted successfully!")
     } catch {
       showToast("error", "Transaction could not be deleted.")
@@ -84,7 +87,7 @@ const TransactionCategoryList = ({
             amount={`${transactionSign}${transactionAmount}`}
             amountColor={amountColor}
             buttonCondition={buttonCondition}
-            onDelete={() => handleDeleteTransaction(transaction.id)}
+            onDelete={() => handleDeleteTransaction(transaction)}
             onSetDelete={() => setSelectedTransaction(transaction)}
             onCancelDelete={() => setSelectedTransaction(null)}
             onEdit={() => {

@@ -133,18 +133,11 @@ const RecentlyDeleted = ({
   }
 
   const sortedDeletedTransactions = useMemo(() => {
-    return deletedTransactions
-      .filter(
-        (
-          transaction,
-        ): transaction is TransactionType & { deleted_at: string } =>
-          transaction.deleted_at !== null,
+    return [...deletedTransactions].sort((a, b) => {
+      return (
+        new Date(b.deleted_at!).getTime() - new Date(a.deleted_at!).getTime()
       )
-      .sort((a, b) => {
-        return (
-          new Date(b.deleted_at).getTime() - new Date(a.deleted_at).getTime()
-        )
-      })
+    })
   }, [deletedTransactions])
 
   return (

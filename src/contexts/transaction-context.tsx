@@ -83,7 +83,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     }
     refreshTransactions()
     refreshDeletedTransactions()
-  }, [user, refreshTransactions])
+  }, [user, refreshTransactions, refreshDeletedTransactions])
 
   return (
     <TransactionContext.Provider

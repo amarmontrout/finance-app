@@ -5,8 +5,10 @@ import { useTransactionContext } from "@/contexts/transaction-context"
 import { neutralColor } from "@/global/colors"
 import { getExpenseTransactionsByPaymentMethod } from "@/global/dataFunctions"
 import {
+  dateToDateType,
   dateTypeToTimestamp,
   numberToString,
+  timestampToDateString,
 } from "@/global/formattingFunctions"
 import { getCurrentDateInfo } from "@/global/infoFunctions"
 import { MONTH_INDEX } from "@/global/objects"
@@ -24,13 +26,11 @@ const CreditCardEstimate = () => {
   >([])
   const [showAll, setShowAll] = useState(false)
 
-  const thisMonthsCreditCardPurchases = useMemo(
+  const creditCardPurchases = useMemo(
     () =>
       getExpenseTransactionsByPaymentMethod({
         transactions: transactions,
         paymentMethod: "Credit",
-        month: today.month,
-        year: today.year,
       }),
     [transactions],
   )
@@ -62,7 +62,7 @@ const CreditCardEstimate = () => {
       statementEndDate.setMonth(statementEndDate.getMonth(), 0)
     const statementEnd = statementEndDate.getTime()
 
-    const filtered = thisMonthsCreditCardPurchases
+    const filtered = creditCardPurchases
       .filter(
         (tx) =>
           dateTypeToTimestamp(tx.date) >= statementStart &&
@@ -73,7 +73,7 @@ const CreditCardEstimate = () => {
       )
 
     setCreditTransactions(filtered)
-  }, [thisMonthsCreditCardPurchases, today.day, today.month, today.year])
+  }, [creditCardPurchases, today.day, today.month, today.year])
 
   const estimatedBill = useMemo(
     () => creditTransactions.reduce((total, tx) => total + tx.amount, 0),
@@ -110,11 +110,9 @@ const CreditCardEstimate = () => {
         {displayedTransactions.map((tx) => {
           const { month, day, year } = tx.date!
           const txDate = new Date(year, MONTH_INDEX[month], day!)
-          const formattedDate = txDate.toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          })
+          const formattedDate = timestampToDateString(
+            dateTypeToTimestamp(dateToDateType(txDate)),
+          )
 
           return (
             <Stack

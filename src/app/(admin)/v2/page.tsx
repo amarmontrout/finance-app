@@ -66,7 +66,10 @@ const V2Page = () => {
       />
 
       {t.map((transaction) => (
-        <div key={transaction.transaction_id}>
+        <div
+          key={transaction.transaction_id}
+          style={{ border: "1px solid green" }}
+        >
           <div>Transaction ID: {transaction.transaction_id}</div>
           <div>Account name: {transaction.account_name}</div>
           <div>Account type: {transaction.account_type}</div>

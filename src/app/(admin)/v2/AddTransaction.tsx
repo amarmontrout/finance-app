@@ -265,7 +265,6 @@ const AddTransaction = ({
             type="date"
             value={transactionDate}
             onChange={(e) => setTransactionDate(e.target.value)}
-            placeholder="Enter date"
           />
         </Stack>
 

@@ -37,24 +37,22 @@ const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
           />
         </Stack>
 
-        {categories.length !== 0 && (
-          <Stack direction={"row"} gap={1}>
-            <label htmlFor="default-category">Default Category</label>
-            <select
-              id="default-category"
-              value={defaultCategoryId ?? ""}
-              onChange={(e) => setDefaultCategoryId(e.target.value || null)}
-            >
-              <option value="">Select category</option>
+        <Stack direction={"row"} gap={1}>
+          <label htmlFor="default-category">Default Category</label>
+          <select
+            id="default-category"
+            value={defaultCategoryId ?? ""}
+            onChange={(e) => setDefaultCategoryId(e.target.value || null)}
+          >
+            <option value="">None</option>
 
-              {categories.map((category) => (
-                <option key={category.category_id} value={category.category_id}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
-          </Stack>
-        )}
+            {categories.map((category) => (
+              <option key={category.category_id} value={category.category_id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </Stack>
 
         <button type="submit">Add Merchant</button>
       </Stack>

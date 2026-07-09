@@ -262,6 +262,7 @@ const AddTransaction = ({
           <label htmlFor="date">Transaction Date</label>
           <input
             id="date"
+            type="date"
             value={transactionDate}
             onChange={(e) => setTransactionDate(e.target.value)}
             placeholder="Enter date"

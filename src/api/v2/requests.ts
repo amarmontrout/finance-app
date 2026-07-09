@@ -4,6 +4,11 @@ import {
   V2AccountType,
   V2BudgetType,
   V2CategoryType,
+  V2CreateAccountType,
+  V2CreateBudgetType,
+  V2CreateCategoryType,
+  V2CreateMerchantType,
+  V2CreateTransactionType,
   V2MerchantType,
   V2TransactionType,
 } from "./models"
@@ -184,9 +189,9 @@ export const updateTransactionV2 = async ({
 export const saveAccountV2 = async ({
   body,
 }: {
-  body: Partial<V2AccountType>
+  body: V2CreateAccountType
 }) => {
-  const { data, error } = await performRequestV2<Partial<V2AccountType>>({
+  const { data, error } = await performRequestV2<V2CreateAccountType>({
     table: Tables.Accounts,
     method: "POST",
     body: body,
@@ -197,12 +202,8 @@ export const saveAccountV2 = async ({
   return data?.[0] ?? null
 }
 
-export const saveBudgetV2 = async ({
-  body,
-}: {
-  body: Partial<V2BudgetType>
-}) => {
-  const { data, error } = await performRequestV2<Partial<V2BudgetType>>({
+export const saveBudgetV2 = async ({ body }: { body: V2CreateBudgetType }) => {
+  const { data, error } = await performRequestV2<V2CreateBudgetType>({
     table: Tables.Budgets,
     method: "POST",
     body: body,
@@ -216,9 +217,9 @@ export const saveBudgetV2 = async ({
 export const saveCategoryV2 = async ({
   body,
 }: {
-  body: Partial<V2CategoryType>
+  body: V2CreateCategoryType
 }) => {
-  const { data, error } = await performRequestV2<Partial<V2CategoryType>>({
+  const { data, error } = await performRequestV2<V2CreateCategoryType>({
     table: Tables.Categories,
     method: "POST",
     body: body,
@@ -232,9 +233,9 @@ export const saveCategoryV2 = async ({
 export const saveMerchantsV2 = async ({
   body,
 }: {
-  body: Partial<V2MerchantType>
+  body: V2CreateMerchantType
 }) => {
-  const { data, error } = await performRequestV2<Partial<V2MerchantType>>({
+  const { data, error } = await performRequestV2<V2CreateMerchantType>({
     table: Tables.Merchants,
     method: "POST",
     body: body,
@@ -248,9 +249,9 @@ export const saveMerchantsV2 = async ({
 export const saveTransactionV2 = async ({
   body,
 }: {
-  body: Partial<V2TransactionType>
+  body: V2CreateTransactionType
 }) => {
-  const { data, error } = await performRequestV2<Partial<V2TransactionType>>({
+  const { data, error } = await performRequestV2<V2CreateTransactionType>({
     table: Tables.Transactions,
     method: "POST",
     body: body,

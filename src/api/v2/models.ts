@@ -1,20 +1,25 @@
-export type AccountTypeValue = "checking" | "savings" | "credit_card"
+export type AccountTypeValue = "Checking" | "Savings" | "Credit Card"
 
-export type TransactionTypeValue = "income" | "expense" | "refund"
+export type TransactionTypeValue = "Income" | "Expense" | "Refund"
+
+export type TransactionStatusValue = "Paid" | "Unpaid"
 
 // ACCOUNT =====================================================================
 export type V2AccountType = {
   account_id: string
-  user_id: string
   name: string
   type: AccountTypeValue
   deleted_at: string | null
 }
 
+export type V2CreateAccountType = {
+  name: string
+  type: AccountTypeValue
+}
+
 // BUDGET ======================================================================
 export type V2BudgetType = {
   budget_id: string
-  user_id: string
   category_id: string
   start_date: string
   end_date: string | null
@@ -22,10 +27,15 @@ export type V2BudgetType = {
   deleted_at: string | null
 }
 
+export type V2CreateBudgetType = {
+  category_id: string
+  start_date: string
+  amount: number
+}
+
 // CATEGORY ====================================================================
 export type V2CategoryType = {
   category_id: string
-  user_id: string
   parent_id: string | null
   name: string
   default_transaction_type: TransactionTypeValue
@@ -33,31 +43,71 @@ export type V2CategoryType = {
   deleted_at: string | null
 }
 
+export type V2CreateCategoryType = {
+  name: string
+  default_transaction_type: TransactionTypeValue
+  color: string | null
+}
+
 // MERCHANT ====================================================================
 export type V2MerchantType = {
   merchant_id: string
-  user_id: string
   default_category_id: string | null
   name: string
   deleted_at: string | null
 }
 
+export type V2CreateMerchantType = {
+  default_category_id?: string | null
+  name: string
+}
+
 // TRANSACTIONS ================================================================
 export type V2TransactionType = {
   transaction_id: string
-  user_id: string
   account_id: string
-  category_id: string | null
-  merchant_id: string | null
+  category_id: string
+  merchant_id: string
   parent_transaction_id: string | null
   amount: number
   transaction_type: TransactionTypeValue
   description: string | null
   notes: string | null
   transaction_date: string
-  status: string | null
+  status: TransactionStatusValue
   is_recurring: boolean
   created_at: string
+  deleted_at: string | null
+}
+
+export type V2CreateTransactionType = {
+  account_id: string
+  category_id: string
+  merchant_id: string
+  parent_transaction_id?: string | null
+  amount: number
+  transaction_type: TransactionTypeValue
+  description?: string | null
+  notes?: string | null
+  transaction_date: string
+  status: TransactionStatusValue
+  is_recurring: boolean
+}
+
+export type V2HydratedTransactionType = {
+  transaction_id: string
+  account_name: string
+  account_type: string
+  category_name: string
+  category_color: string | null
+  merchant_name: string
+  amount: number
+  transaction_type: TransactionTypeValue
+  description: string | null
+  notes: string | null
+  transaction_date: string
+  status: TransactionStatusValue
+  is_recurring: boolean
   deleted_at: string | null
 }
 

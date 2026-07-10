@@ -1,6 +1,14 @@
 import { AccountTypeValue } from "@/api/v2/models"
 import { saveAccountV2 } from "@/api/v2/requests"
-import { Stack } from "@mui/material"
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material"
 import { useState } from "react"
 
 const ACCOUNT_TYPES = [
@@ -31,33 +39,38 @@ const AddAccount = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={1} border={"1px solid red"}>
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="account-name">Account Name</label>
-          <input
-            id="account-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Chase Checking"
-          />
-        </Stack>
+      <Stack gap={1}>
+        <TextField
+          id={"account-name"}
+          size={"small"}
+          label={"Account Name"}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={"e.g. Chase Checking"}
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="account-type">Account Type</label>
-          <select
-            id="account-type"
+        <FormControl size={"small"}>
+          <InputLabel id={"account-type-label"}>Account Type</InputLabel>
+
+          <Select
+            id={"account-type"}
+            labelId={"account-type-label"}
+            size={"small"}
+            label={"Account Type"}
             value={type}
             onChange={(e) => setType(e.target.value as AccountTypeValue)}
           >
             {ACCOUNT_TYPES.map((accountType) => (
-              <option key={accountType.value} value={accountType.value}>
+              <MenuItem key={accountType.value} value={accountType.value}>
                 {accountType.label}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </Stack>
+          </Select>
+        </FormControl>
 
-        <button type="submit">Add Account</button>
+        <Button type={"submit"} variant={"contained"} disabled={name === ""}>
+          Add Account
+        </Button>
       </Stack>
     </form>
   )

@@ -6,7 +6,15 @@ import {
   V2MerchantType,
 } from "@/api/v2/models"
 import { saveTransactionV2 } from "@/api/v2/requests"
-import { Stack } from "@mui/material"
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 
 export function AccountDropdown({
@@ -21,23 +29,26 @@ export function AccountDropdown({
   disabled?: boolean
 }) {
   return (
-    <select
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-    >
-      <option value="" disabled>
-        Select account
-      </option>
+    <FormControl size={"small"}>
+      <InputLabel id={"select-account-label"}>Select Account</InputLabel>
 
-      {accounts
-        .filter((account) => !account.deleted_at)
-        .map((account) => (
-          <option key={account.account_id} value={account.account_id}>
-            {account.name} - {account.type}
-          </option>
-        ))}
-    </select>
+      <Select
+        size={"small"}
+        labelId={"select-account-label"}
+        label={"Select Account"}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+      >
+        {accounts
+          .filter((account) => !account.deleted_at)
+          .map((account) => (
+            <MenuItem key={account.account_id} value={account.account_id}>
+              {account.name} - {account.type}
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
   )
 }
 
@@ -53,23 +64,26 @@ export function CategoryDropdown({
   disabled?: boolean
 }) {
   return (
-    <select
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-    >
-      <option value="" disabled>
-        Select category
-      </option>
+    <FormControl size={"small"}>
+      <InputLabel id={"select-category-label"}>Select Category</InputLabel>
 
-      {categories
-        .filter((category) => !category.deleted_at)
-        .map((category) => (
-          <option key={category.category_id} value={category.category_id}>
-            {category.name}
-          </option>
-        ))}
-    </select>
+      <Select
+        size={"small"}
+        labelId={"select-category-label"}
+        label={"Select Category"}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+      >
+        {categories
+          .filter((category) => !category.deleted_at)
+          .map((category) => (
+            <MenuItem key={category.category_id} value={category.category_id}>
+              {category.name}
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
   )
 }
 
@@ -85,23 +99,25 @@ export function MerchantDropdown({
   disabled?: boolean
 }) {
   return (
-    <select
-      value={value ?? ""}
-      onChange={(e) => onChange(e.target.value)}
-      disabled={disabled}
-    >
-      <option value="" disabled>
-        Select merchant
-      </option>
-
-      {merchants
-        .filter((merchant) => !merchant.deleted_at)
-        .map((merchant) => (
-          <option key={merchant.merchant_id} value={merchant.merchant_id}>
-            {merchant.name}
-          </option>
-        ))}
-    </select>
+    <FormControl size={"small"}>
+      <InputLabel id={"select-merchant-label"}>Select Merchant</InputLabel>
+      <Select
+        size={"small"}
+        labelId={"select-merchant-label"}
+        label={"Select Merchant"}
+        value={value ?? ""}
+        onChange={(e) => onChange(e.target.value)}
+        disabled={disabled}
+      >
+        {merchants
+          .filter((merchant) => !merchant.deleted_at)
+          .map((merchant) => (
+            <MenuItem key={merchant.merchant_id} value={merchant.merchant_id}>
+              {merchant.name}
+            </MenuItem>
+          ))}
+      </Select>
+    </FormControl>
   )
 }
 
@@ -202,7 +218,7 @@ const AddTransaction = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={1} border={"1px solid red"}>
+      <Stack gap={1}>
         <AccountDropdown
           accounts={accounts}
           value={accountId}
@@ -221,71 +237,84 @@ const AddTransaction = ({
           onChange={setMerchantId}
         />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="amount">Amount</label>
-          <input
-            id="amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="$0"
-          />
-        </Stack>
+        <TextField
+          id={"amount"}
+          label={"Amount"}
+          size={"small"}
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          placeholder={"$0"}
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="transaction-type">Transaction Type</label>
-          <select
-            id="transaction-type"
+        <FormControl size={"small"}>
+          <InputLabel id={"transaction-type-label"}>
+            Transaction Type
+          </InputLabel>
+
+          <Select
+            id={"transaction-type"}
+            labelId={"transaction-type"}
+            label={"Transaction Type"}
+            size={"small"}
             value={transactionType}
             onChange={(e) =>
               setTransactionType(e.target.value as TransactionTypeValue)
             }
           >
             {DEFAULT_TRANSACTION_TYPES.map((categoryType) => (
-              <option key={categoryType.value} value={categoryType.value}>
+              <MenuItem key={categoryType.value} value={categoryType.value}>
                 {categoryType.label}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </Stack>
+          </Select>
+        </FormControl>
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="description">Description</label>
-          <input
-            id="description"
-            value={transactionDescription}
-            onChange={(e) => setTransactionDescription(e.target.value)}
-            placeholder="Enter description"
-          />
-        </Stack>
+        <TextField
+          id={"description"}
+          label={"Description"}
+          size={"small"}
+          value={transactionDescription}
+          onChange={(e) => setTransactionDescription(e.target.value)}
+          placeholder="Enter description"
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="date">Transaction Date</label>
-          <input
-            id="date"
-            type="date"
-            value={transactionDate}
-            onChange={(e) => setTransactionDate(e.target.value)}
-          />
-        </Stack>
+        <TextField
+          id={"date"}
+          type={"date"}
+          label={"Transaction Date"}
+          size={"small"}
+          value={transactionDate}
+          onChange={(e) => setTransactionDate(e.target.value)}
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="status">Status</label>
-          <select
-            id="status"
+        <FormControl size={"small"}>
+          <InputLabel id={"status-label"}>Status</InputLabel>
+
+          <Select
+            id={"status"}
+            labelId={"status-label"}
+            label={"Status"}
+            size={"small"}
             value={status}
             onChange={(e) =>
               setStatus(e.target.value as TransactionStatusValue)
             }
           >
             {DEFAULT_STATUS.map((status) => (
-              <option key={status.value} value={status.value}>
+              <MenuItem key={status.value} value={status.value}>
                 {status.label}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </Stack>
+          </Select>
+        </FormControl>
 
-        <button type="submit">Add Transaction</button>
+        <Button
+          type={"submit"}
+          variant={"contained"}
+          disabled={!accountId || !categoryId || !merchantId || amount == ""}
+        >
+          Add Transaction
+        </Button>
       </Stack>
     </form>
   )

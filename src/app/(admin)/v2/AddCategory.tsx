@@ -1,6 +1,14 @@
 import { TransactionTypeValue } from "@/api/v2/models"
 import { saveCategoryV2 } from "@/api/v2/requests"
-import { Stack } from "@mui/material"
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material"
 import { useState } from "react"
 
 const DEFAULT_TYPES = [
@@ -35,47 +43,51 @@ const AddCategory = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={1} border={"1px solid red"}>
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="category-name">Category Name</label>
-          <input
-            id="category-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Groceries"
-          />
-        </Stack>
+      <Stack gap={1}>
+        <TextField
+          id={"category-name"}
+          size={"small"}
+          label={"Category Name"}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={"e.g. Groceries"}
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="default-transaction-type">
+        <FormControl size={"small"}>
+          <InputLabel id={"default-transaction-type-label"}>
             Default Transaction Type
-          </label>
-          <select
-            id="default-transaction-type"
+          </InputLabel>
+
+          <Select
+            id={"default-transaction-type"}
+            labelId={"default-transaction-type-label"}
+            size={"small"}
+            label={"Default Transaction Type"}
             value={defaultTransactionType}
             onChange={(e) =>
               setDefaultTransactionType(e.target.value as TransactionTypeValue)
             }
           >
             {DEFAULT_TYPES.map((categoryType) => (
-              <option key={categoryType.value} value={categoryType.value}>
+              <MenuItem key={categoryType.value} value={categoryType.value}>
                 {categoryType.label}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </Stack>
+          </Select>
+        </FormControl>
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="color">Color</label>
-          <input
-            id="color"
-            value={color ?? ""}
-            onChange={(e) => setColor(e.target.value.toLowerCase())}
-            placeholder="e.g. Red"
-          />
-        </Stack>
+        <TextField
+          id={"color"}
+          size={"small"}
+          label={"Color"}
+          value={color ?? ""}
+          onChange={(e) => setColor(e.target.value.toLowerCase())}
+          placeholder={"e.g. Red"}
+        />
 
-        <button type="submit">Add Category</button>
+        <Button type={"submit"} variant={"contained"} disabled={name === ""}>
+          Add Category
+        </Button>
       </Stack>
     </form>
   )

@@ -55,7 +55,7 @@ const V2Page = () => {
   }, [])
 
   return (
-    <Stack gap={1}>
+    <Stack gap={1} divider={<hr />}>
       <AddAccount />
       <AddCategory />
       <AddMerchant categories={category} />

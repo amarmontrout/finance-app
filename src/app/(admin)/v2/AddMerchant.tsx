@@ -1,6 +1,14 @@
 import { V2CategoryType } from "@/api/v2/models"
 import { saveMerchantsV2 } from "@/api/v2/requests"
-import { Stack } from "@mui/material"
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+} from "@mui/material"
 import { useState } from "react"
 
 const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
@@ -26,35 +34,41 @@ const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={1} border={"1px solid red"}>
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="merchant-name">Merchant Name</label>
-          <input
-            id="merchant-name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="e.g. Walmart"
-          />
-        </Stack>
+      <Stack gap={1}>
+        <TextField
+          id={"merchant-name"}
+          size={"small"}
+          label={"Merchant Name"}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={"e.g. Walmart"}
+        />
 
-        <Stack direction={"row"} gap={1}>
-          <label htmlFor="default-category">Default Category</label>
-          <select
-            id="default-category"
+        <FormControl size={"small"}>
+          <InputLabel id={"default-category-label"}>
+            Default Category
+          </InputLabel>
+
+          <Select
+            id={"default-category"}
+            labelId={"default-category-label"}
+            label={"Default Category"}
+            size={"small"}
             value={defaultCategoryId ?? ""}
             onChange={(e) => setDefaultCategoryId(e.target.value || null)}
           >
-            <option value="">None</option>
-
+            <MenuItem value="">None</MenuItem>
             {categories.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
+              <MenuItem key={category.category_id} value={category.category_id}>
                 {category.name}
-              </option>
+              </MenuItem>
             ))}
-          </select>
-        </Stack>
+          </Select>
+        </FormControl>
 
-        <button type="submit">Add Merchant</button>
+        <Button type={"submit"} variant={"contained"} disabled={name == ""}>
+          Add Merchant
+        </Button>
       </Stack>
     </form>
   )

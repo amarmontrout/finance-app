@@ -47,6 +47,7 @@ const AddAccount = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={"e.g. Chase Checking"}
+          required
         />
 
         <FormControl size={"small"}>

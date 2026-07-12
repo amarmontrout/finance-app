@@ -1,6 +1,8 @@
 import { TransactionTypeValue } from "@/api/v2/models"
 import { saveCategoryV2 } from "@/api/v2/requests"
+import { CheckIcon, CloseIcon } from "@/assets/icons"
 import {
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -10,6 +12,7 @@ import {
   TextField,
 } from "@mui/material"
 import { useState } from "react"
+import { CATEGORY_COLORS } from "./constants"
 
 const DEFAULT_TYPES = [
   { value: "Income", label: "Income" },
@@ -51,6 +54,7 @@ const AddCategory = () => {
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder={"e.g. Groceries"}
+          required
         />
 
         <FormControl size={"small"}>
@@ -76,14 +80,62 @@ const AddCategory = () => {
           </Select>
         </FormControl>
 
-        <TextField
-          id={"color"}
-          size={"small"}
-          label={"Color"}
-          value={color ?? ""}
-          onChange={(e) => setColor(e.target.value.toLowerCase())}
-          placeholder={"e.g. Red"}
-        />
+        <Stack
+          direction={"row"}
+          gap={1}
+          flexWrap={"wrap"}
+          justifyContent={"center"}
+        >
+          <Box
+            key={"no-color"}
+            onClick={() => setColor(null)}
+            sx={{
+              width: 32,
+              height: 32,
+              border: "2px dotted gray",
+              borderRadius: "50%",
+              cursor: "pointer",
+            }}
+          >
+            {color === null && (
+              <CloseIcon
+                style={{
+                  height: "100%",
+                  width: "100%",
+                  color: "red",
+                  padding: 2,
+                }}
+              />
+            )}
+          </Box>
+
+          {CATEGORY_COLORS.map((hex) => (
+            <Box
+              key={hex}
+              onClick={() => setColor(hex)}
+              sx={{
+                width: 32,
+                height: 32,
+                borderRadius: "50%",
+                bgcolor: hex,
+                cursor: "pointer",
+              }}
+            >
+              {color === hex && (
+                <CheckIcon
+                  style={{
+                    border: "2px solid black",
+                    borderRadius: "50%",
+                    height: "100%",
+                    width: "100%",
+                    color: "white",
+                    padding: 5,
+                  }}
+                />
+              )}
+            </Box>
+          ))}
+        </Stack>
 
         <Button type={"submit"} variant={"contained"} disabled={name === ""}>
           Add Category

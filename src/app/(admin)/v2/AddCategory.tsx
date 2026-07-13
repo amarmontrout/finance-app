@@ -18,6 +18,7 @@ const DEFAULT_TYPES = [
   { value: "Income", label: "Income" },
   { value: "Expense", label: "Expense" },
   { value: "Refund", label: "Refund" },
+  { value: "Return", label: "Return" },
 ]
 
 const AddCategory = () => {

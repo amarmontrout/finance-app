@@ -16,6 +16,7 @@ import {
   TextField,
 } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
+import { getToday } from "./utils"
 
 export function AccountDropdown({
   accounts,
@@ -125,21 +126,13 @@ const DEFAULT_TRANSACTION_TYPES = [
   { value: "Income", label: "Income" },
   { value: "Expense", label: "Expense" },
   { value: "Refund", label: "Refund" },
+  { value: "Return", label: "Return" },
 ]
 
 const DEFAULT_STATUS = [
   { value: "Unpaid", label: "Unpaid" },
   { value: "Paid", label: "Paid" },
 ]
-
-const getToday = () => {
-  const date = new Date()
-
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-    2,
-    "0",
-  )}-${String(date.getDate()).padStart(2, "0")}`
-}
 
 const AddTransaction = ({
   accounts,

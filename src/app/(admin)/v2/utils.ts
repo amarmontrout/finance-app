@@ -1,6 +1,8 @@
 import {
   V2AccountType,
+  V2BudgetType,
   V2CategoryType,
+  V2HydratedBudgetType,
   V2HydratedTransactionType,
   V2MerchantType,
   V2TransactionType,
@@ -37,4 +39,33 @@ export const hydrateTransactions = ({
     is_recurring: transaction.is_recurring,
     deleted_at: transaction.deleted_at,
   }))
+}
+
+export const hydrateBudgets = ({
+  categories,
+  budgets,
+}: {
+  categories: V2CategoryType[]
+  budgets: V2BudgetType[]
+}): V2HydratedBudgetType[] => {
+  const categoryMap = new Map(categories.map((c) => [c.category_id, c]))
+
+  return budgets.map((budget) => ({
+    budget_id: budget.budget_id,
+    category_id: budget.category_id,
+    category_name: categoryMap.get(budget.category_id)?.name ?? "",
+    start_date: budget.start_date,
+    end_date: budget.end_date,
+    amount: budget.amount,
+    deleted_at: budget.deleted_at,
+  }))
+}
+
+export const getToday = () => {
+  const date = new Date()
+
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+    2,
+    "0",
+  )}-${String(date.getDate()).padStart(2, "0")}`
 }

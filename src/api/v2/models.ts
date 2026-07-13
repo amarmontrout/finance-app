@@ -1,6 +1,6 @@
 export type AccountTypeValue = "Checking" | "Savings" | "Credit Card"
 
-export type TransactionTypeValue = "Income" | "Expense" | "Refund"
+export type TransactionTypeValue = "Income" | "Expense" | "Refund" | "Return"
 
 export type TransactionStatusValue = "Paid" | "Unpaid"
 
@@ -31,6 +31,16 @@ export type V2CreateBudgetType = {
   category_id: string
   start_date: string
   amount: number
+}
+
+export type V2HydratedBudgetType = {
+  budget_id: string
+  category_id: string
+  category_name: string
+  start_date: string
+  end_date: string | null
+  amount: number
+  deleted_at: string | null
 }
 
 // CATEGORY ====================================================================

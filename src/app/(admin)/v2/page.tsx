@@ -2,8 +2,8 @@
 
 import {
   V2AccountType,
-  V2BudgetType,
   V2CategoryType,
+  V2HydratedBudgetType,
   V2HydratedTransactionType,
   V2MerchantType,
 } from "@/api/v2/models"
@@ -18,13 +18,14 @@ import AddIcon from "@mui/icons-material/Add"
 import { Box, IconButton, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import AddAccount from "./AddAccount"
+import AddBudget from "./AddBudget"
 import AddCategory from "./AddCategory"
 import AddMerchant from "./AddMerchant"
-import { hydrateTransactions } from "./utils"
+import { hydrateBudgets, hydrateTransactions } from "./utils"
 
 const V2Page = () => {
   const [accounts, setAccounts] = useState<V2AccountType[]>([])
-  const [budgets, setBudgets] = useState<V2BudgetType[]>([])
+  const [budgets, setBudgets] = useState<V2HydratedBudgetType[]>([])
   const [categories, setCategories] = useState<V2CategoryType[]>([])
   const [merchants, setMerchants] = useState<V2MerchantType[]>([])
   const [t, setT] = useState<V2HydratedTransactionType[]>([])
@@ -32,15 +33,11 @@ const V2Page = () => {
   const [showAccountForm, setShowAccountForm] = useState<boolean>(false)
   const [showCategoryForm, setShowCategoryForm] = useState<boolean>(false)
   const [showMerchantForm, setShowMerchantForm] = useState<boolean>(false)
+  const [showBudgetForm, setShowBudgetForm] = useState<boolean>(false)
 
   const refreshAccounts = async () => {
     const a = await getAccountsV2({})
     setAccounts(a ?? [])
-  }
-
-  const refreshBudgets = async () => {
-    const b = await getBudgetsV2({})
-    setBudgets(b ?? [])
   }
 
   const refreshCategories = async () => {
@@ -73,14 +70,20 @@ const V2Page = () => {
 
     async function fetchTransactions() {
       const t = await getTransactionsV2({})
-      const asdf = hydrateTransactions({
+      const b = await getBudgetsV2({})
+      const ht = hydrateTransactions({
         accounts: accounts,
         categories: categories,
         merchants: merchants,
         transactions: t!,
       })
+      const hb = hydrateBudgets({
+        categories: categories,
+        budgets: b!,
+      })
 
-      setT(asdf)
+      setT(ht)
+      setBudgets(hb)
     }
 
     fetchTransactions()
@@ -121,7 +124,7 @@ const V2Page = () => {
           </IconButton>
         </Stack>
 
-        {showAccountForm && (
+        {(showAccountForm || accounts.length === 0) && (
           <Box paddingX={1}>
             <AddAccount />
           </Box>
@@ -181,7 +184,7 @@ const V2Page = () => {
           </IconButton>
         </Stack>
 
-        {showCategoryForm && (
+        {(showCategoryForm || categories.length === 0) && (
           <Box paddingX={1}>
             <AddCategory />
           </Box>
@@ -246,7 +249,7 @@ const V2Page = () => {
           </IconButton>
         </Stack>
 
-        {showMerchantForm && (
+        {(showMerchantForm || merchants.length === 0) && (
           <Box paddingX={1}>
             <AddMerchant categories={categories} />
           </Box>
@@ -262,6 +265,68 @@ const V2Page = () => {
                 alignItems={"center"}
               >
                 <Typography variant={"body1"}>{merchant.name}</Typography>
+
+                <Box>Edit | Delete</Box>
+              </Stack>
+            )
+          })}
+        </Stack>
+      </Stack>
+
+      {/* Budgets card */}
+      <Stack
+        direction={"column"}
+        spacing={1}
+        divider={<hr />}
+        bgcolor={"white"}
+        borderRadius={2}
+      >
+        <Stack
+          direction={"row"}
+          justifyContent={"space-between"}
+          paddingX={1}
+          paddingTop={1}
+        >
+          <Typography variant={"h5"}>Budgets</Typography>
+
+          <IconButton
+            size={"small"}
+            disableRipple
+            onClick={() => {
+              setShowBudgetForm(!showBudgetForm)
+            }}
+          >
+            <AddIcon
+              fontSize={"small"}
+              sx={{
+                transform: showBudgetForm ? "rotate(45deg)" : "rotate(0deg)",
+                transition: "transform 0.2s ease",
+              }}
+            />
+          </IconButton>
+        </Stack>
+
+        {(showBudgetForm || budgets.length === 0) && (
+          <Box paddingX={1}>
+            <AddBudget categories={categories} budgets={budgets} />
+          </Box>
+        )}
+
+        <Stack direction={"column"} spacing={1} paddingX={1} paddingBottom={1}>
+          {budgets.map((budget) => {
+            return (
+              <Stack
+                key={budget.budget_id}
+                direction={"row"}
+                justifyContent={"space-between"}
+                alignItems={"center"}
+              >
+                <Stack direction={"column"}>
+                  <Typography variant={"body1"}>
+                    {budget.category_name}
+                  </Typography>
+                  <Typography variant={"body2"}>{budget.amount}</Typography>
+                </Stack>
 
                 <Box>Edit | Delete</Box>
               </Stack>

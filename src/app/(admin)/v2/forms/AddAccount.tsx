@@ -1,5 +1,6 @@
-import { AccountTypeValue } from "@/api/v2/models"
-import { saveAccountV2 } from "@/api/v2/requests"
+import { AccountTypeValue, V2AccountType } from "@/api/v2/models"
+import { saveAccountV2, updateAccountV2 } from "@/api/v2/requests"
+import { HookSetter } from "@/types/types"
 import {
   Button,
   FormControl,
@@ -9,7 +10,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const ACCOUNT_TYPES = [
   { value: "Checking", label: "Checking" },
@@ -17,25 +18,51 @@ const ACCOUNT_TYPES = [
   { value: "Credit Card", label: "Credit Card" },
 ]
 
-const AddAccount = () => {
+const AddAccount = ({
+  accountToEdit,
+  setAccountToEdit,
+}: {
+  accountToEdit: V2AccountType | undefined
+  setAccountToEdit: HookSetter<V2AccountType | undefined>
+}) => {
   const [name, setName] = useState("")
   const [type, setType] = useState<AccountTypeValue>("Checking")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name.trim()) return
-
-    await saveAccountV2({
-      body: {
-        name: name,
-        type: type,
-      },
-    })
-
-    setName("")
-    setType("Checking")
+    try {
+      if (accountToEdit) {
+        await updateAccountV2({
+          rowId: accountToEdit.account_id,
+          body: {
+            name: name,
+            type: type,
+          },
+        })
+        setAccountToEdit(undefined)
+      } else {
+        await saveAccountV2({
+          body: {
+            name: name,
+            type: type,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setName("")
+      setType("Checking")
+    }
   }
+
+  useEffect(() => {
+    if (accountToEdit) {
+      setName(accountToEdit.name)
+      setType(accountToEdit.type)
+    }
+  }, [accountToEdit])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -70,7 +97,7 @@ const AddAccount = () => {
         </FormControl>
 
         <Button type={"submit"} variant={"contained"} disabled={name === ""}>
-          Add Account
+          {accountToEdit ? "Update" : "Add"} Account
         </Button>
       </Stack>
     </form>

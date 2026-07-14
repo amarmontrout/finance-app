@@ -37,9 +37,13 @@ const ID_KEYS: Record<Tables, string> = {
 const applyFilter = <T>(query: any, { column, operator, value }: Filter<T>) => {
   switch (operator) {
     case "eq":
-      return query.eq(column as string, value)
+      return value === null
+        ? query.is(column as string, null)
+        : query.eq(column as string, value)
     case "neq":
-      return query.neq(column as string, value)
+      return value === null
+        ? query.not(column as string, "is", null)
+        : query.neq(column as string, value)
     case "gt":
       return query.gt(column as string, value)
     case "gte":

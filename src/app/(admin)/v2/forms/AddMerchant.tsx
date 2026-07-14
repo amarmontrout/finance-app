@@ -1,5 +1,6 @@
-import { V2CategoryType } from "@/api/v2/models"
-import { saveMerchantsV2 } from "@/api/v2/requests"
+import { V2CategoryType, V2MerchantType } from "@/api/v2/models"
+import { saveMerchantsV2, updateMerchantV2 } from "@/api/v2/requests"
+import { HookSetter } from "@/types/types"
 import {
   Button,
   FormControl,
@@ -9,9 +10,17 @@ import {
   Stack,
   TextField,
 } from "@mui/material"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
+const AddMerchant = ({
+  categories,
+  merchantToEdit,
+  setMerchantToEdit,
+}: {
+  categories: V2CategoryType[]
+  merchantToEdit: V2MerchantType | undefined
+  setMerchantToEdit: HookSetter<V2MerchantType | undefined>
+}) => {
   const [name, setName] = useState<string>("")
   const [defaultCategoryId, setDefaultCategoryId] = useState<string | null>(
     null,
@@ -19,18 +28,39 @@ const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    const merchantName = name.trim()
-    if (!merchantName) return
-    await saveMerchantsV2({
-      body: {
-        name: merchantName,
-        default_category_id: defaultCategoryId,
-      },
-    })
 
-    setName("")
-    setDefaultCategoryId(null)
+    try {
+      if (merchantToEdit) {
+        await updateMerchantV2({
+          rowId: merchantToEdit.merchant_id,
+          body: {
+            name: name,
+            default_category_id: defaultCategoryId,
+          },
+        })
+        setMerchantToEdit(undefined)
+      } else {
+        await saveMerchantsV2({
+          body: {
+            name: name,
+            default_category_id: defaultCategoryId,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setName("")
+      setDefaultCategoryId(null)
+    }
   }
+
+  useEffect(() => {
+    if (merchantToEdit) {
+      setName(merchantToEdit.name)
+      setDefaultCategoryId(merchantToEdit.default_category_id)
+    }
+  }, [merchantToEdit])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -68,7 +98,7 @@ const AddMerchant = ({ categories }: { categories: V2CategoryType[] }) => {
         </FormControl>
 
         <Button type={"submit"} variant={"contained"} disabled={name == ""}>
-          Add Merchant
+          {merchantToEdit ? "Update" : "Add"} Merchant
         </Button>
       </Stack>
     </form>

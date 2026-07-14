@@ -1,6 +1,7 @@
-import { TransactionTypeValue } from "@/api/v2/models"
-import { saveCategoryV2 } from "@/api/v2/requests"
+import { TransactionTypeValue, V2CategoryType } from "@/api/v2/models"
+import { saveCategoryV2, updateCategoryV2 } from "@/api/v2/requests"
 import { CheckIcon, CloseIcon } from "@/assets/icons"
+import { HookSetter } from "@/types/types"
 import {
   Box,
   Button,
@@ -11,8 +12,8 @@ import {
   Stack,
   TextField,
 } from "@mui/material"
-import { useState } from "react"
-import { CATEGORY_COLORS } from "./constants"
+import { useEffect, useState } from "react"
+import { CATEGORY_COLORS } from "../constants"
 
 const DEFAULT_TYPES = [
   { value: "Income", label: "Income" },
@@ -21,7 +22,13 @@ const DEFAULT_TYPES = [
   { value: "Return", label: "Return" },
 ]
 
-const AddCategory = () => {
+const AddCategory = ({
+  categoryToEdit,
+  setCategoryToEdit,
+}: {
+  categoryToEdit: V2CategoryType | undefined
+  setCategoryToEdit: HookSetter<V2CategoryType | undefined>
+}) => {
   const [name, setName] = useState<string>("")
   const [defaultTransactionType, setDefaultTransactionType] =
     useState<TransactionTypeValue>("Income")
@@ -30,20 +37,42 @@ const AddCategory = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!name.trim()) return
-
-    await saveCategoryV2({
-      body: {
-        name: name,
-        default_transaction_type: defaultTransactionType,
-        color: color,
-      },
-    })
-
-    setName("")
-    setDefaultTransactionType("Income")
-    setColor(null)
+    try {
+      if (categoryToEdit) {
+        await updateCategoryV2({
+          rowId: categoryToEdit.category_id,
+          body: {
+            name: name,
+            default_transaction_type: defaultTransactionType,
+            color: color,
+          },
+        })
+        setCategoryToEdit(undefined)
+      } else {
+        await saveCategoryV2({
+          body: {
+            name: name,
+            default_transaction_type: defaultTransactionType,
+            color: color,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setName("")
+      setDefaultTransactionType("Income")
+      setColor(null)
+    }
   }
+
+  useEffect(() => {
+    if (categoryToEdit) {
+      setName(categoryToEdit.name)
+      setDefaultTransactionType(categoryToEdit.default_transaction_type)
+      setColor(categoryToEdit.color)
+    }
+  }, [categoryToEdit])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -139,7 +168,7 @@ const AddCategory = () => {
         </Stack>
 
         <Button type={"submit"} variant={"contained"} disabled={name === ""}>
-          Add Category
+          {categoryToEdit ? "Update" : "Add"} Category
         </Button>
       </Stack>
     </form>

@@ -1,5 +1,4 @@
 import { TransactionType } from "@/api/transactions/models"
-import { neutralColor } from "@/global/colors"
 import { getTransactionsTotal } from "@/global/dataFunctions"
 import {
   numberToString,
@@ -23,14 +22,14 @@ const TransactionCategoryHeader = ({
         justifyContent: "space-between",
         paddingX: 1,
         borderBottom: 2,
-        borderColor: neutralColor,
+        color: "#102A1B",
       }}
     >
-      <Typography sx={{ fontSize: 14 }}>
+      <Typography sx={{ fontSize: 17 }}>
         {timestampToDateString(timestamp)}
       </Typography>
 
-      <Typography sx={{ fontSize: 14 }}>
+      <Typography sx={{ fontSize: 17 }}>
         ${numberToString(categoryTotal)}
       </Typography>
     </Stack>

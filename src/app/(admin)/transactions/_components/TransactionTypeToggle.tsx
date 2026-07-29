@@ -1,4 +1,3 @@
-import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
 import { HookSetter } from "@/types/types"
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
@@ -40,7 +39,7 @@ const TransactionTypeToggle = ({
         },
         "& .MuiToggleButton-root:not(:last-of-type)": {
           borderRight: "1px solid",
-          borderColor: neutralColor.bg,
+          borderColor: "#102A1B",
         },
       }}
     >
@@ -50,7 +49,7 @@ const TransactionTypeToggle = ({
         disableRipple
         sx={{
           "&.Mui-selected": {
-            color: positiveColor.color,
+            color: "#102A1B",
           },
         }}
       >
@@ -63,7 +62,7 @@ const TransactionTypeToggle = ({
         disableRipple
         sx={{
           "&.Mui-selected": {
-            color: negativeColor.color,
+            color: "#102A1B",
           },
         }}
       >

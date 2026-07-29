@@ -4,7 +4,7 @@ import EditIcon from "@mui/icons-material/Edit"
 import { Box, IconButton, Stack, Typography } from "@mui/material"
 import { useTheme } from "next-themes"
 import { memo, useRef, useState } from "react"
-import { darkMode, lightMode, negativeColor, neutralColor } from "../colors"
+import { negativeColor, neutralColor } from "../colors"
 
 const EditDeleteButton = ({
   onEdit,
@@ -255,7 +255,6 @@ const ListItemSwipe = ({
 
         {/* Foreground content */}
         <Stack
-          className="bg-gray-2 dark:bg-[#020D1A]"
           direction={"row"}
           sx={{
             position: "relative",
@@ -282,10 +281,7 @@ const ListItemSwipe = ({
                 sx={{
                   fontSize: ".9rem",
                   lineHeight: secondaryTitle === "" ? "36px" : "20px",
-                  color:
-                    currentTheme === "light"
-                      ? lightMode.primaryText
-                      : darkMode.primaryText,
+                  fontWeight: "bold",
                 }}
               >
                 {mainTitle}
@@ -295,10 +291,6 @@ const ListItemSwipe = ({
                 sx={{
                   fontSize: "0.7rem",
                   lineHeight: "16px",
-                  color:
-                    currentTheme === "light"
-                      ? lightMode.secondaryText
-                      : darkMode.secondaryText,
                 }}
               >
                 {secondaryTitle}

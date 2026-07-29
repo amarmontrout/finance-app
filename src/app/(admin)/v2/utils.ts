@@ -7,6 +7,7 @@ import {
   V2MerchantType,
   V2TransactionType,
 } from "@/api/v2/models"
+import { MONTH_INDEX_V2 } from "./constants"
 
 export const hydrateTransactions = ({
   accounts,
@@ -68,4 +69,9 @@ export const getToday = () => {
     2,
     "0",
   )}-${String(date.getDate()).padStart(2, "0")}`
+}
+
+export function formatDate(date: string): string {
+  const [year, month, day] = date.split("-")
+  return `${MONTH_INDEX_V2[month]} ${day}, ${year}`
 }

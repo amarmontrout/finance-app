@@ -7,6 +7,8 @@ import {
 } from "@/api/v2/models"
 import { saveTransactionV2 } from "@/api/v2/requests"
 import {
+  Autocomplete,
+  Box,
   Button,
   FormControl,
   InputLabel,
@@ -14,9 +16,11 @@ import {
   Select,
   Stack,
   TextField,
+  Typography,
 } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
-import { getToday } from "../utils"
+import { DEFAULT_STATUS, DEFAULT_TRANSACTION_TYPES } from "../constants"
+import { formatDate, getToday } from "../utils"
 
 export function AccountDropdown({
   accounts,
@@ -30,12 +34,13 @@ export function AccountDropdown({
   disabled?: boolean
 }) {
   return (
-    <FormControl size={"small"}>
+    <FormControl size={"small"} fullWidth>
       <InputLabel id={"select-account-label"}>Select Account</InputLabel>
 
       <Select
         size={"small"}
         labelId={"select-account-label"}
+        variant={"standard"}
         label={"Select Account"}
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
@@ -45,7 +50,7 @@ export function AccountDropdown({
           .filter((account) => !account.deleted_at)
           .map((account) => (
             <MenuItem key={account.account_id} value={account.account_id}>
-              {account.name} - {account.type}
+              {account.name}
             </MenuItem>
           ))}
       </Select>
@@ -65,7 +70,7 @@ export function CategoryDropdown({
   disabled?: boolean
 }) {
   return (
-    <FormControl size={"small"}>
+    <FormControl size={"small"} fullWidth>
       <InputLabel id={"select-category-label"}>Select Category</InputLabel>
 
       <Select
@@ -100,7 +105,7 @@ export function MerchantDropdown({
   disabled?: boolean
 }) {
   return (
-    <FormControl size={"small"}>
+    <FormControl size={"small"} fullWidth>
       <InputLabel id={"select-merchant-label"}>Select Merchant</InputLabel>
       <Select
         size={"small"}
@@ -109,6 +114,7 @@ export function MerchantDropdown({
         value={value ?? ""}
         onChange={(e) => onChange(e.target.value)}
         disabled={disabled}
+        fullWidth
       >
         {merchants
           .filter((merchant) => !merchant.deleted_at)
@@ -122,17 +128,51 @@ export function MerchantDropdown({
   )
 }
 
-const DEFAULT_TRANSACTION_TYPES = [
-  { value: "Income", label: "Income" },
-  { value: "Expense", label: "Expense" },
-  { value: "Refund", label: "Refund" },
-  { value: "Return", label: "Return" },
-]
-
-const DEFAULT_STATUS = [
-  { value: "Unpaid", label: "Unpaid" },
-  { value: "Paid", label: "Paid" },
-]
+const Row = ({
+  active,
+  label,
+  display,
+  edit,
+  onClick,
+}: {
+  active?: boolean
+  label: string
+  display: React.ReactNode
+  edit?: React.ReactNode
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+}) => {
+  return (
+    <Stack
+      direction={"row"}
+      sx={{
+        minHeight: "36px",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+      }}
+    >
+      <Typography
+        sx={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        {label}
+      </Typography>
+      <Box
+        onClick={onClick}
+        sx={{
+          minWidth: 0,
+          flex: 1.5,
+          textAlign: "right",
+          alignContent: "Center",
+        }}
+      >
+        {active ? edit : display}
+      </Box>
+    </Stack>
+  )
+}
 
 const AddTransaction = ({
   accounts,
@@ -152,8 +192,19 @@ const AddTransaction = ({
   const [transactionDescription, setTransactionDescription] =
     useState<string>("")
   const [transactionDate, setTransactionDate] = useState(getToday())
-  const [status, setStatus] = useState<TransactionStatusValue>("Unpaid")
+  const [status, setStatus] = useState<TransactionStatusValue | null>(null)
   const [recurring, setRecurring] = useState<boolean>(false)
+
+  const [activeField, setActiveField] = useState<
+    | "date"
+    | "category"
+    | "account"
+    | "status"
+    | "merchant"
+    | "description"
+    | "type"
+    | null
+  >(null)
 
   const categoryMap = useMemo(
     () => new Map(categories.map((c) => [c.category_id, c])),
@@ -163,6 +214,11 @@ const AddTransaction = ({
   const merchantMap = useMemo(
     () => new Map(merchants.map((m) => [m.merchant_id, m])),
     [merchants],
+  )
+
+  const accountMap = useMemo(
+    () => new Map(accounts.map((a) => [a.account_id, a])),
+    [accounts],
   )
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -189,8 +245,12 @@ const AddTransaction = ({
     setTransactionType("Income")
     setTransactionDescription("")
     setTransactionDate(getToday())
-    setStatus("Unpaid")
+    setStatus(null)
     setRecurring(false)
+  }
+
+  const handleOpen = (field: typeof activeField) => {
+    setActiveField(field)
   }
 
   useEffect(() => {
@@ -209,27 +269,17 @@ const AddTransaction = ({
     }
   }, [merchantId, categoryId, merchantMap])
 
+  useEffect(() => {
+    if (transactionType !== "Expense") {
+      setStatus(null)
+    } else {
+      setStatus("Paid")
+    }
+  }, [transactionType, accountId])
+
   return (
     <form onSubmit={handleSubmit}>
-      <Stack gap={1}>
-        <AccountDropdown
-          accounts={accounts}
-          value={accountId}
-          onChange={setAccountId}
-        />
-
-        <CategoryDropdown
-          categories={categories}
-          value={categoryId}
-          onChange={setCategoryId}
-        />
-
-        <MerchantDropdown
-          merchants={merchants}
-          value={merchantId}
-          onChange={setMerchantId}
-        />
-
+      <Stack direction={"column"} spacing={0.5} divider={<hr />}>
         <TextField
           id={"amount"}
           label={"Amount"}
@@ -239,67 +289,309 @@ const AddTransaction = ({
           placeholder={"$0"}
         />
 
-        <FormControl size={"small"}>
-          <InputLabel id={"transaction-type-label"}>
-            Transaction Type
-          </InputLabel>
-
-          <Select
-            id={"transaction-type"}
-            labelId={"transaction-type"}
-            label={"Transaction Type"}
-            size={"small"}
-            value={transactionType}
-            onChange={(e) =>
-              setTransactionType(e.target.value as TransactionTypeValue)
-            }
-          >
-            {DEFAULT_TRANSACTION_TYPES.map((categoryType) => (
-              <MenuItem key={categoryType.value} value={categoryType.value}>
-                {categoryType.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <TextField
-          id={"description"}
-          label={"Description"}
-          size={"small"}
-          value={transactionDescription}
-          onChange={(e) => setTransactionDescription(e.target.value)}
-          placeholder="Enter description"
+        <Row
+          active={activeField === "date"}
+          label={"Date"}
+          display={<Typography>{formatDate(transactionDate)}</Typography>}
+          edit={
+            <TextField
+              id={"date"}
+              fullWidth
+              type={"date"}
+              label={"Transaction Date"}
+              size={"small"}
+              value={transactionDate}
+              onChange={(e) => setTransactionDate(e.target.value)}
+            />
+          }
+          onClick={
+            activeField !== "date" ? () => handleOpen("date") : undefined
+          }
         />
 
-        <TextField
-          id={"date"}
-          type={"date"}
-          label={"Transaction Date"}
-          size={"small"}
-          value={transactionDate}
-          onChange={(e) => setTransactionDate(e.target.value)}
+        <Row
+          active={activeField === "category"}
+          label={"Category"}
+          display={
+            <Typography>
+              {categoryMap.get(categoryId!)?.name ?? "Select Category"}
+            </Typography>
+          }
+          edit={
+            <Autocomplete
+              options={categories}
+              getOptionLabel={(option) => option.name}
+              value={
+                categories.find((c) => c.category_id === categoryId) ?? null
+              }
+              onChange={(_, newValue) => {
+                setCategoryId(newValue?.category_id ?? null)
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.category_id === value.category_id
+              }
+              onClose={() => {
+                setActiveField(null)
+              }}
+              openOnFocus
+              popupIcon={null}
+              freeSolo={false}
+              slotProps={{
+                listbox: {
+                  style: {
+                    maxHeight: 5 * 39,
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  autoFocus
+                  placeholder="Select Merchant"
+                  sx={{
+                    fontSize: "16px",
+                    maxHeight: 36,
+                    "& .MuiInputBase-root": { fontSize: "16px" },
+                    "& input": { padding: 0, margin: 0, fontSize: "16px" },
+                  }}
+                />
+              )}
+            />
+          }
+          onClick={
+            activeField !== "category"
+              ? () => handleOpen("category")
+              : undefined
+          }
         />
 
-        <FormControl size={"small"}>
-          <InputLabel id={"status-label"}>Status</InputLabel>
+        <Row
+          active={activeField === "merchant"}
+          label={"Merchant"}
+          display={
+            <Typography>
+              {merchantMap.get(merchantId!)?.name ?? "Select Merchant"}
+            </Typography>
+          }
+          edit={
+            <Autocomplete
+              options={merchants}
+              getOptionLabel={(option) => option.name}
+              value={
+                merchants.find((m) => m.merchant_id === merchantId) ?? null
+              }
+              onChange={(_, newValue) => {
+                setMerchantId(newValue?.merchant_id ?? null)
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.merchant_id === value.merchant_id
+              }
+              onClose={() => {
+                setActiveField(null)
+              }}
+              openOnFocus
+              popupIcon={null}
+              freeSolo={false}
+              slotProps={{
+                listbox: {
+                  style: {
+                    maxHeight: 5 * 39,
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  autoFocus
+                  placeholder="Select Merchant"
+                  sx={{
+                    fontSize: "16px",
+                    maxHeight: 36,
+                    "& .MuiInputBase-root": { fontSize: "16px" },
+                    "& input": { padding: 0, margin: 0, fontSize: "16px" },
+                  }}
+                />
+              )}
+            />
+          }
+          onClick={
+            activeField !== "merchant"
+              ? () => handleOpen("merchant")
+              : undefined
+          }
+        />
 
-          <Select
-            id={"status"}
-            labelId={"status-label"}
+        <Row
+          active={activeField === "account"}
+          label={"Payment Account"}
+          display={
+            <Typography>
+              {accountMap.get(accountId!)?.name ?? "Select Account"}
+            </Typography>
+          }
+          edit={
+            <Autocomplete
+              options={accounts}
+              getOptionLabel={(option) => option.name}
+              value={accounts.find((a) => a.account_id === accountId) ?? null}
+              onChange={(_, newValue) => {
+                setAccountId(newValue?.account_id ?? null)
+              }}
+              isOptionEqualToValue={(option, value) =>
+                option.account_id === value.account_id
+              }
+              onClose={() => {
+                setActiveField(null)
+              }}
+              openOnFocus
+              popupIcon={null}
+              freeSolo={false}
+              slotProps={{
+                listbox: {
+                  style: {
+                    maxHeight: 5 * 39,
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  autoFocus
+                  placeholder="Select Account"
+                  sx={{
+                    fontSize: "16px",
+                    maxHeight: 36,
+                    "& .MuiInputBase-root": { fontSize: "16px" },
+                    "& input": { padding: 0, margin: 0, fontSize: "16px" },
+                  }}
+                />
+              )}
+            />
+          }
+          onClick={
+            activeField !== "account" ? () => handleOpen("account") : undefined
+          }
+        />
+
+        <Row
+          active={activeField === "type"}
+          label={"Type"}
+          display={<Typography>{transactionType}</Typography>}
+          edit={
+            <Autocomplete
+              options={DEFAULT_TRANSACTION_TYPES}
+              value={transactionType}
+              onChange={(_, newValue) => {
+                setTransactionType(
+                  (newValue as TransactionTypeValue) ?? "Income",
+                )
+              }}
+              isOptionEqualToValue={(option, value) => option === value}
+              onClose={() => {
+                setActiveField(null)
+              }}
+              openOnFocus
+              popupIcon={null}
+              freeSolo={false}
+              slotProps={{
+                listbox: {
+                  style: {
+                    maxHeight: 5 * 39,
+                  },
+                },
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  variant="standard"
+                  autoFocus
+                  placeholder="Select Type"
+                  sx={{
+                    fontSize: "16px",
+                    maxHeight: 36,
+                    "& .MuiInputBase-root": { fontSize: "16px" },
+                    "& input": { padding: 0, margin: 0, fontSize: "16px" },
+                  }}
+                />
+              )}
+            />
+          }
+          onClick={
+            activeField !== "type" ? () => handleOpen("type") : undefined
+          }
+        />
+
+        {transactionType === "Expense" && (
+          <Row
+            active={activeField === "status"}
             label={"Status"}
-            size={"small"}
-            value={status}
-            onChange={(e) =>
-              setStatus(e.target.value as TransactionStatusValue)
+            display={<Typography>{status}</Typography>}
+            edit={
+              <FormControl size={"small"} fullWidth>
+                <Select
+                  id={"status"}
+                  labelId={"status-label"}
+                  variant={"standard"}
+                  size={"small"}
+                  value={status}
+                  onChange={(e) =>
+                    setStatus(e.target.value as TransactionStatusValue)
+                  }
+                >
+                  {DEFAULT_STATUS.map((status) => (
+                    <MenuItem key={status.value} value={status.value}>
+                      {status.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             }
-          >
-            {DEFAULT_STATUS.map((status) => (
-              <MenuItem key={status.value} value={status.value}>
-                {status.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            onClick={
+              activeField !== "status" ? () => handleOpen("status") : undefined
+            }
+          />
+        )}
+
+        <Row
+          active={activeField === "description"}
+          label={"Description"}
+          display={
+            <Typography>
+              {transactionDescription !== ""
+                ? transactionDescription
+                : "Add a Description"}
+            </Typography>
+          }
+          edit={
+            <TextField
+              id={"description"}
+              variant={"standard"}
+              size={"small"}
+              value={transactionDescription}
+              onChange={(e) => setTransactionDescription(e.target.value)}
+              multiline
+              minRows={1}
+              sx={{
+                width: "100%",
+                "& .MuiInputBase-root": {
+                  minHeight: 36,
+                },
+                "& textarea": {
+                  fontSize: "16px",
+                },
+              }}
+              placeholder="Enter Description"
+            />
+          }
+          onClick={
+            activeField !== "description"
+              ? () => handleOpen("description")
+              : undefined
+          }
+        />
 
         <Button
           type={"submit"}

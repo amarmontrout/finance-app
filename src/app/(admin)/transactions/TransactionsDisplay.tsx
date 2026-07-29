@@ -3,7 +3,7 @@ import LoadingCircle from "@/global/components/LoadingCircle"
 import { getTransactionsTotal } from "@/global/dataFunctions"
 import { numberToString } from "@/global/formattingFunctions"
 import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types"
-import { Stack, Typography } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import ExpenseViewToggle from "./_components/ExpenseViewToggle"
 import TransactionTypeToggle from "./_components/TransactionTypeToggle"
@@ -69,7 +69,7 @@ const TransactionsDisplay = ({
           alignItems: "center",
         }}
       >
-        <Typography variant={"h5"} sx={{ fontWeight: 700 }}>
+        <Typography variant={"h5"} sx={{ fontWeight: 700, color: "#102A1B" }}>
           {`$${numberToString(total)}`}
         </Typography>
 
@@ -78,23 +78,30 @@ const TransactionsDisplay = ({
         )}
       </Stack>
 
-      {isLoading ? (
-        <LoadingCircle height={75} />
-      ) : filteredTransactions.length === 0 ? (
-        <Typography sx={{ width: "100%", textAlign: "center" }}>
-          {`There are no ${type} transactions`}
-        </Typography>
-      ) : (
-        <TransactionCategoryStack
-          filteredTransactions={filteredTransactions}
-          selectedTransaction={selectedTransaction}
-          setSelectedTransaction={setSelectedTransaction}
-          refreshTransactions={refreshTransactions}
-          openDialog={openDialog}
-          setOpenDialog={setOpenDialog}
-          setAlertToast={setAlertToast}
-        />
-      )}
+      <Box
+        bgcolor={"rgba(255,255,255,0.15)"}
+        borderRadius={5}
+        minHeight={"150px"}
+        padding={2}
+      >
+        {isLoading ? (
+          <LoadingCircle height={75} />
+        ) : filteredTransactions.length === 0 ? (
+          <Typography sx={{ width: "100%", textAlign: "center" }}>
+            {`There are no ${type} transactions`}
+          </Typography>
+        ) : (
+          <TransactionCategoryStack
+            filteredTransactions={filteredTransactions}
+            selectedTransaction={selectedTransaction}
+            setSelectedTransaction={setSelectedTransaction}
+            refreshTransactions={refreshTransactions}
+            openDialog={openDialog}
+            setOpenDialog={setOpenDialog}
+            setAlertToast={setAlertToast}
+          />
+        )}
+      </Box>
     </Stack>
   )
 }

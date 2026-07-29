@@ -9,9 +9,11 @@ import { getToday } from "../utils"
 const MerchantSettingsCard = ({
   merchants,
   categories,
+  refreshMerchants,
 }: {
   merchants: V2MerchantType[]
   categories: V2CategoryType[]
+  refreshMerchants: () => Promise<void>
 }) => {
   const [showMerchantForm, setShowMerchantForm] = useState<boolean>(false)
   const [merchantToEdit, setMerchantToEdit] = useState<V2MerchantType>()
@@ -29,9 +31,16 @@ const MerchantSettingsCard = ({
     <Stack
       direction={"column"}
       spacing={1}
-      divider={<hr />}
-      bgcolor={"white"}
-      borderRadius={2}
+      divider={
+        <hr
+          style={{
+            borderColor: "#102A1B",
+          }}
+        />
+      }
+      bgcolor={"rgba(255,255,255,0.15)"}
+      borderRadius={5}
+      padding={2}
     >
       <Stack
         direction={"row"}
@@ -39,10 +48,20 @@ const MerchantSettingsCard = ({
         paddingX={1}
         paddingTop={1}
       >
-        <Typography variant={"h5"}>Merchants</Typography>
+        <Typography
+          variant={"h5"}
+          sx={{
+            color: "#102A1B",
+          }}
+        >
+          Merchants
+        </Typography>
 
         <IconButton
           size={"small"}
+          sx={{
+            color: "#102A1B",
+          }}
           disableRipple
           onClick={() => {
             setShowMerchantForm(!showMerchantForm)
@@ -65,6 +84,7 @@ const MerchantSettingsCard = ({
             categories={categories}
             merchantToEdit={merchantToEdit}
             setMerchantToEdit={setMerchantToEdit}
+            refreshMerchants={refreshMerchants}
           />
         </Box>
       )}
@@ -83,6 +103,10 @@ const MerchantSettingsCard = ({
               <Stack direction={"row"}>
                 <Button
                   size={"small"}
+                  sx={{
+                    color: "#F5F1E8",
+                    bgcolor: "#102A1B",
+                  }}
                   onClick={() => {
                     setMerchantToEdit(merchant)
                     setShowMerchantForm(true)

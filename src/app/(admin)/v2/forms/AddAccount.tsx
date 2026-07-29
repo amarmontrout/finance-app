@@ -11,19 +11,16 @@ import {
   TextField,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-
-const ACCOUNT_TYPES = [
-  { value: "Checking", label: "Checking" },
-  { value: "Savings", label: "Savings" },
-  { value: "Credit Card", label: "Credit Card" },
-]
+import { DEFAULT_ACCOUNT_TYPES } from "../constants"
 
 const AddAccount = ({
   accountToEdit,
   setAccountToEdit,
+  refreshAccounts,
 }: {
   accountToEdit: V2AccountType | undefined
   setAccountToEdit: HookSetter<V2AccountType | undefined>
+  refreshAccounts: () => Promise<void>
 }) => {
   const [name, setName] = useState("")
   const [type, setType] = useState<AccountTypeValue>("Checking")
@@ -54,6 +51,7 @@ const AddAccount = ({
     } finally {
       setName("")
       setType("Checking")
+      refreshAccounts()
     }
   }
 
@@ -88,7 +86,7 @@ const AddAccount = ({
             value={type}
             onChange={(e) => setType(e.target.value as AccountTypeValue)}
           >
-            {ACCOUNT_TYPES.map((accountType) => (
+            {DEFAULT_ACCOUNT_TYPES.map((accountType) => (
               <MenuItem key={accountType.value} value={accountType.value}>
                 {accountType.label}
               </MenuItem>
@@ -96,7 +94,15 @@ const AddAccount = ({
           </Select>
         </FormControl>
 
-        <Button type={"submit"} variant={"contained"} disabled={name === ""}>
+        <Button
+          type={"submit"}
+          variant={"contained"}
+          sx={{
+            color: "#F5F1E8",
+            bgcolor: "#102A1B",
+          }}
+          disabled={name === ""}
+        >
           {accountToEdit ? "Update" : "Add"} Account
         </Button>
       </Stack>

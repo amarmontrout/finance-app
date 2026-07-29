@@ -13,21 +13,16 @@ import {
   TextField,
 } from "@mui/material"
 import { useEffect, useState } from "react"
-import { CATEGORY_COLORS } from "../constants"
-
-const DEFAULT_TYPES = [
-  { value: "Income", label: "Income" },
-  { value: "Expense", label: "Expense" },
-  { value: "Refund", label: "Refund" },
-  { value: "Return", label: "Return" },
-]
+import { CATEGORY_COLORS, DEFAULT_TRANSACTION_TYPES } from "../constants"
 
 const AddCategory = ({
   categoryToEdit,
   setCategoryToEdit,
+  refreshCategories,
 }: {
   categoryToEdit: V2CategoryType | undefined
   setCategoryToEdit: HookSetter<V2CategoryType | undefined>
+  refreshCategories: () => Promise<void>
 }) => {
   const [name, setName] = useState<string>("")
   const [defaultTransactionType, setDefaultTransactionType] =
@@ -63,6 +58,7 @@ const AddCategory = ({
       setName("")
       setDefaultTransactionType("Income")
       setColor(null)
+      refreshCategories()
     }
   }
 
@@ -102,9 +98,9 @@ const AddCategory = ({
               setDefaultTransactionType(e.target.value as TransactionTypeValue)
             }
           >
-            {DEFAULT_TYPES.map((categoryType) => (
-              <MenuItem key={categoryType.value} value={categoryType.value}>
-                {categoryType.label}
+            {DEFAULT_TRANSACTION_TYPES.map((type) => (
+              <MenuItem key={type} value={type}>
+                {type}
               </MenuItem>
             ))}
           </Select>
@@ -122,7 +118,7 @@ const AddCategory = ({
             sx={{
               width: 32,
               height: 32,
-              border: "2px dotted gray",
+              border: "2px dotted black",
               borderRadius: "50%",
               cursor: "pointer",
             }}
@@ -167,7 +163,15 @@ const AddCategory = ({
           ))}
         </Stack>
 
-        <Button type={"submit"} variant={"contained"} disabled={name === ""}>
+        <Button
+          type={"submit"}
+          variant={"contained"}
+          sx={{
+            color: "#F5F1E8",
+            bgcolor: "#102A1B",
+          }}
+          disabled={name === ""}
+        >
           {categoryToEdit ? "Update" : "Add"} Category
         </Button>
       </Stack>

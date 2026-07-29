@@ -1,6 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
 import { deleteTransaction } from "@/api/transactions/requests"
-import { negativeColor, neutralColor, positiveColor } from "@/global/colors"
 import ListItemSwipe from "@/global/components/ListItemSwipe"
 import { numberToString } from "@/global/formattingFunctions"
 import { useUser } from "@/hooks/use-user"
@@ -52,10 +51,7 @@ const TransactionCategoryList = ({
   return (
     <Stack
       divider={
-        <Divider
-          orientation={"horizontal"}
-          sx={{ borderColor: neutralColor.bg }}
-        />
+        <Divider orientation={"horizontal"} sx={{ borderColor: "#F5F1E8" }} />
       }
     >
       {sortedTransactions.map((transaction, index) => {
@@ -64,10 +60,6 @@ const TransactionCategoryList = ({
         const transactionSign =
           transaction.is_return || transaction.type === "income" ? "+" : "-"
         const transactionAmount = `$${numberToString(transaction.amount)}`
-        const amountColor =
-          transaction.type === "income" || transaction.is_return
-            ? positiveColor.color
-            : negativeColor.color
         const buttonCondition =
           selectedTransaction?.id === transaction.id && !openDialog
 
@@ -82,7 +74,7 @@ const TransactionCategoryList = ({
             mainTitle={mainTitle}
             secondaryTitle={transaction.category}
             amount={`${transactionSign}${transactionAmount}`}
-            amountColor={amountColor}
+            amountColor={"#F5F1E8"}
             buttonCondition={buttonCondition}
             onDelete={() => handleDeleteTransaction(transaction.id)}
             onSetDelete={() => setSelectedTransaction(transaction)}

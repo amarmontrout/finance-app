@@ -6,7 +6,13 @@ import { useState } from "react"
 import AddAccount from "../forms/AddAccount"
 import { getToday } from "../utils"
 
-const AccountSettingsCard = ({ accounts }: { accounts: V2AccountType[] }) => {
+const AccountSettingsCard = ({
+  accounts,
+  refreshAccounts,
+}: {
+  accounts: V2AccountType[]
+  refreshAccounts: () => Promise<void>
+}) => {
   const [showAccountForm, setShowAccountForm] = useState<boolean>(false)
   const [accountToEdit, setAccountToEdit] = useState<V2AccountType>()
 
@@ -23,9 +29,16 @@ const AccountSettingsCard = ({ accounts }: { accounts: V2AccountType[] }) => {
     <Stack
       direction={"column"}
       spacing={1}
-      divider={<hr />}
-      bgcolor={"white"}
-      borderRadius={2}
+      divider={
+        <hr
+          style={{
+            borderColor: "#102A1B",
+          }}
+        />
+      }
+      bgcolor={"rgba(255,255,255,0.15)"}
+      borderRadius={5}
+      padding={2}
     >
       <Stack
         direction={"row"}
@@ -33,10 +46,20 @@ const AccountSettingsCard = ({ accounts }: { accounts: V2AccountType[] }) => {
         paddingX={1}
         paddingTop={1}
       >
-        <Typography variant={"h5"}>Accounts</Typography>
+        <Typography
+          variant={"h5"}
+          sx={{
+            color: "#102A1B",
+          }}
+        >
+          Accounts
+        </Typography>
 
         <IconButton
           size={"small"}
+          sx={{
+            color: "#102A1B",
+          }}
           disableRipple
           onClick={() => {
             setShowAccountForm(!showAccountForm)
@@ -58,6 +81,7 @@ const AccountSettingsCard = ({ accounts }: { accounts: V2AccountType[] }) => {
           <AddAccount
             accountToEdit={accountToEdit}
             setAccountToEdit={setAccountToEdit}
+            refreshAccounts={refreshAccounts}
           />
         </Box>
       )}
@@ -79,6 +103,10 @@ const AccountSettingsCard = ({ accounts }: { accounts: V2AccountType[] }) => {
               <Stack direction={"row"}>
                 <Button
                   size={"small"}
+                  sx={{
+                    color: "#F5F1E8",
+                    bgcolor: "#102A1B",
+                  }}
                   onClick={() => {
                     setAccountToEdit(account)
                     setShowAccountForm(true)

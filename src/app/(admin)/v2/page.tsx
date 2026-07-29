@@ -69,69 +69,78 @@ const V2Page = () => {
     setMerchants(m ?? [])
   }
 
+  const refreshBudgets = async () => {
+    if (categories.length === 0) return
+    const b = await getBudgetsV2({
+      filters: [
+        {
+          column: "deleted_at",
+          operator: "eq",
+          value: null,
+        },
+      ],
+    })
+    const hb = hydrateBudgets({
+      categories: categories,
+      budgets: b ?? [],
+    })
+    setBudgets(hb)
+  }
+
+  const refreshTransactions = async () => {
+    if (accounts.length == 0 || categories.length == 0 || merchants.length == 0)
+      return
+    const t = await getTransactionsV2({
+      filters: [
+        {
+          column: "deleted_at",
+          operator: "eq",
+          value: null,
+        },
+      ],
+    })
+    const ht = hydrateTransactions({
+      accounts: accounts,
+      categories: categories,
+      merchants: merchants,
+      transactions: t ?? [],
+    })
+    setT(ht)
+  }
+
   // Initial data fetch
   useEffect(() => {
-    const fetchAccounts = async () => {
-      await refreshAccounts()
-      await refreshCategories()
-      await refreshMerchants()
-    }
-    fetchAccounts()
+    refreshAccounts()
+    refreshCategories()
+    refreshMerchants()
   }, [])
 
   // Fetch hydrated data (transactions, budgets)
   useEffect(() => {
-    if (
-      accounts.length == 0 ||
-      categories.length == 0 ||
-      merchants.length == 0
-    ) {
-      return
-    }
-
-    async function fetchTransactions() {
-      const t = await getTransactionsV2({
-        filters: [
-          {
-            column: "deleted_at",
-            operator: "eq",
-            value: null,
-          },
-        ],
-      })
-      const b = await getBudgetsV2({
-        filters: [
-          {
-            column: "deleted_at",
-            operator: "eq",
-            value: null,
-          },
-        ],
-      })
-      const ht = hydrateTransactions({
-        accounts: accounts,
-        categories: categories,
-        merchants: merchants,
-        transactions: t ?? [],
-      })
-      const hb = hydrateBudgets({
-        categories: categories,
-        budgets: b ?? [],
-      })
-
-      setT(ht)
-      setBudgets(hb)
-    }
-
-    fetchTransactions()
+    refreshBudgets()
+    refreshTransactions()
   }, [accounts, categories, merchants])
 
   return (
     <Stack gap={1} divider={<hr />}>
-      <AccountSettingsCard accounts={accounts} />
-      <CategorySettingsCard categories={categories} />
-      <MerchantSettingsCard merchants={merchants} categories={categories} />
-      <BudgetSettingsCard budgets={budgets} categories={categories} />
+      <AccountSettingsCard
+        accounts={accounts}
+        refreshAccounts={refreshAccounts}
+      />
+      <CategorySettingsCard
+        categories={categories}
+        refreshCategories={refreshCategories}
+      />
+      <MerchantSettingsCard
+        merchants={merchants}
+        categories={categories}
+        refreshMerchants={refreshMerchants}
+      />
+      <BudgetSettingsCard
+        budgets={budgets}
+        categories={categories}
+        refreshBudgets={refreshBudgets}
+      />
 
       <AddTransaction
         accounts={accounts}

@@ -18,11 +18,13 @@ const AddBudget = ({
   budgets,
   budgetToEdit,
   setBudgetToEdit,
+  refreshBudgets,
 }: {
   categories: V2CategoryType[]
   budgets: V2HydratedBudgetType[]
   budgetToEdit: V2HydratedBudgetType | undefined
   setBudgetToEdit: HookSetter<V2HydratedBudgetType | undefined>
+  refreshBudgets: () => Promise<void>
 }) => {
   const [categoryId, setCategoryId] = useState<string | null>(null)
   const [amount, setAmount] = useState<string>("")
@@ -59,6 +61,7 @@ const AddBudget = ({
     } finally {
       setCategoryId(null)
       setAmount("")
+      refreshBudgets()
     }
   }
 
@@ -123,6 +126,10 @@ const AddBudget = ({
         <Button
           type={"submit"}
           variant={"contained"}
+          sx={{
+            color: "#F5F1E8",
+            bgcolor: "#102A1B",
+          }}
           disabled={categoryId === null || amount === ""}
         >
           {budgetToEdit ? "Update" : "Add"} Budget

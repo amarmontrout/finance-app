@@ -1,4 +1,5 @@
 import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined"
+import AccountBoxOutlinedIcon from "@mui/icons-material/AccountBoxOutlined"
 import DataUsageOutlinedIcon from "@mui/icons-material/DataUsageOutlined"
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined"
 
@@ -34,6 +35,12 @@ export const NAV_DATA = [
         title: "Budget",
         url: "/budget",
         icon: DataUsageOutlinedIcon,
+        items: [],
+      },
+      {
+        title: "Profile",
+        url: "/settings",
+        icon: AccountBoxOutlinedIcon,
         items: [],
       },
       // {

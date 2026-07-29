@@ -43,3 +43,8 @@ export function timestampToDateString(
     year: "numeric",
   }).format(new Date(timestamp))
 }
+
+export const currencyFormatter = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+})

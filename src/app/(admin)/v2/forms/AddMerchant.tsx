@@ -16,10 +16,12 @@ const AddMerchant = ({
   categories,
   merchantToEdit,
   setMerchantToEdit,
+  refreshMerchants,
 }: {
   categories: V2CategoryType[]
   merchantToEdit: V2MerchantType | undefined
   setMerchantToEdit: HookSetter<V2MerchantType | undefined>
+  refreshMerchants: () => Promise<void>
 }) => {
   const [name, setName] = useState<string>("")
   const [defaultCategoryId, setDefaultCategoryId] = useState<string | null>(
@@ -52,6 +54,7 @@ const AddMerchant = ({
     } finally {
       setName("")
       setDefaultCategoryId(null)
+      refreshMerchants()
     }
   }
 
@@ -97,7 +100,15 @@ const AddMerchant = ({
           </Select>
         </FormControl>
 
-        <Button type={"submit"} variant={"contained"} disabled={name == ""}>
+        <Button
+          type={"submit"}
+          variant={"contained"}
+          sx={{
+            color: "#F5F1E8",
+            bgcolor: "#102A1B",
+          }}
+          disabled={name == ""}
+        >
           {merchantToEdit ? "Update" : "Add"} Merchant
         </Button>
       </Stack>

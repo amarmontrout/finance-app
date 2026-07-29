@@ -8,8 +8,10 @@ import { getToday } from "../utils"
 
 const CategorySettingsCard = ({
   categories,
+  refreshCategories,
 }: {
   categories: V2CategoryType[]
+  refreshCategories: () => Promise<void>
 }) => {
   const [showCategoryForm, setShowCategoryForm] = useState<boolean>(false)
   const [categoryToEdit, setCategoryToEdit] = useState<V2CategoryType>()
@@ -27,9 +29,16 @@ const CategorySettingsCard = ({
     <Stack
       direction={"column"}
       spacing={1}
-      divider={<hr />}
-      bgcolor={"white"}
-      borderRadius={2}
+      divider={
+        <hr
+          style={{
+            borderColor: "#102A1B",
+          }}
+        />
+      }
+      bgcolor={"rgba(255,255,255,0.15)"}
+      borderRadius={5}
+      padding={2}
     >
       <Stack
         direction={"row"}
@@ -37,10 +46,20 @@ const CategorySettingsCard = ({
         paddingX={1}
         paddingTop={1}
       >
-        <Typography variant={"h5"}>Categories</Typography>
+        <Typography
+          variant={"h5"}
+          sx={{
+            color: "#102A1B",
+          }}
+        >
+          Categories
+        </Typography>
 
         <IconButton
           size={"small"}
+          sx={{
+            color: "#102A1B",
+          }}
           disableRipple
           onClick={() => {
             setShowCategoryForm(!showCategoryForm)
@@ -62,6 +81,7 @@ const CategorySettingsCard = ({
           <AddCategory
             categoryToEdit={categoryToEdit}
             setCategoryToEdit={setCategoryToEdit}
+            refreshCategories={refreshCategories}
           />
         </Box>
       )}
@@ -88,6 +108,10 @@ const CategorySettingsCard = ({
               <Stack direction={"row"}>
                 <Button
                   size={"small"}
+                  sx={{
+                    color: "#F5F1E8",
+                    bgcolor: "#102A1B",
+                  }}
                   onClick={() => {
                     setCategoryToEdit(category)
                     setShowCategoryForm(true)

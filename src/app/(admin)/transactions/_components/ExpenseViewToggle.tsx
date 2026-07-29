@@ -1,4 +1,3 @@
-import { neutralColor } from "@/global/colors"
 import { HookSetter } from "@/types/types"
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
@@ -35,13 +34,13 @@ const ExpenseViewToggle = ({
           backgroundColor: "transparent",
           "&.Mui-selected": {
             backgroundColor: "transparent",
-            color: neutralColor.color,
+            color: "#102A1B",
           },
           "&.Mui-selected:hover": { backgroundColor: "transparent" },
         },
         "& .MuiToggleButton-root:not(:last-of-type)": {
           borderRight: "1px solid",
-          borderColor: neutralColor.bg,
+          borderColor: "#102A1B",
         },
       }}
     >

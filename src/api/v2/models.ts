@@ -2,7 +2,7 @@ export type AccountTypeValue = "Checking" | "Savings" | "Credit Card"
 
 export type TransactionTypeValue = "Income" | "Expense" | "Refund" | "Return"
 
-export type TransactionStatusValue = "Paid" | "Unpaid"
+export type TransactionStatusValue = "Paid" | "Unpaid" | null
 
 // ACCOUNT =====================================================================
 export type V2AccountType = {

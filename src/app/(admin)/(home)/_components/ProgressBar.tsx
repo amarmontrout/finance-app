@@ -42,9 +42,9 @@ const BudgetProgressBar = ({
   }, [actual, expected, safeTotal])
 
   const getBarColor = () => {
-    if (spentPercent < 75) return "success"
-    if (spentPercent < 100) return "warning"
-    return "error"
+    if (spentPercent < 75) return "#7FB685"
+    if (spentPercent < 100) return "#C9A86A"
+    return "#B85C5C"
   }
 
   const getPaceColor = () => {
@@ -53,16 +53,19 @@ const BudgetProgressBar = ({
   }
 
   return (
-    <Stack spacing={0.5}>
+    <Stack spacing={1}>
       <Stack
         direction={"row"}
         sx={{
           justifyContent: "space-between",
-          alignItems: "end",
+          alignItems: "flex-end",
         }}
       >
         <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
-          <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
+          <Typography
+            variant={"h6"}
+            sx={{ fontWeight: 700, alignSelf: "flex-end", lineHeight: 1 }}
+          >
             {label}
           </Typography>
 
@@ -78,7 +81,10 @@ const BudgetProgressBar = ({
           )}
         </Stack>
 
-        <Typography variant="caption">
+        <Typography
+          variant="caption"
+          sx={{ alignSelf: "flex-end", lineHeight: 1 }}
+        >
           ${actual.toFixed(2)} / ${budget.toFixed(2)}
         </Typography>
       </Stack>
@@ -87,8 +93,14 @@ const BudgetProgressBar = ({
         <LinearProgress
           variant={"determinate"}
           value={spentPercent}
-          color={getBarColor()}
-          sx={{ height: 10, borderRadius: 5 }}
+          sx={{
+            height: 15,
+            borderRadius: 5,
+            backgroundColor: "rgba(255,255,255,0.15)",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: getBarColor(),
+            },
+          }}
         />
 
         {expected && (
@@ -98,7 +110,7 @@ const BudgetProgressBar = ({
               top: -3,
               left: `calc(${expectedPercent}% - 1px)`,
               width: 2,
-              height: 18,
+              height: 21,
               bgcolor: "text.primary",
               pointerEvents: "none",
             }}
@@ -114,7 +126,7 @@ const BudgetProgressBar = ({
           <Typography
             variant={"caption"}
             color={getPaceColor()}
-            sx={{ fontWeight: 700 }}
+            sx={{ fontWeight: 700, alignSelf: "flex-start", lineHeight: 1 }}
           >
             {isOverPace
               ? `$${variance.toFixed(0)} over expected`
@@ -122,7 +134,10 @@ const BudgetProgressBar = ({
           </Typography>
         )}
 
-        <Typography variant={"caption"}>
+        <Typography
+          variant={"caption"}
+          sx={{ alignSelf: "flex-start", lineHeight: 1 }}
+        >
           {spentPercent.toFixed(1)}% of budget used
         </Typography>
       </Stack>

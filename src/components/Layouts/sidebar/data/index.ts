@@ -9,39 +9,23 @@ export const NAV_DATA = [
     items: [
       {
         title: "Overview",
+        url: "/",
         icon: HomeOutlinedIcon,
-        items: [
-          {
-            title: "Summary",
-            url: "/",
-          },
-          {
-            title: "Budget",
-            url: "/progress",
-          },
-          {
-            title: "Credit Card",
-            url: "/estimate",
-          },
-        ],
       },
       {
         title: "Transactions",
         url: "/transactions",
         icon: AccountBalanceOutlinedIcon,
-        items: [],
       },
       {
         title: "Budget",
         url: "/budget",
         icon: DataUsageOutlinedIcon,
-        items: [],
       },
       {
         title: "Profile",
         url: "/settings",
         icon: AccountBoxOutlinedIcon,
-        items: [],
       },
       // {
       //   title: "Insights",

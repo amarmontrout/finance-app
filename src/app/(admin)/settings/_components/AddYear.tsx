@@ -96,7 +96,7 @@ const AddYear = ({
   }
 
   return (
-    <Stack spacing={1} sx={{ height: "406px" }}>
+    <Stack spacing={1}>
       <SimpleForm
         placeholder={"Add A Year"}
         value={yearsInput}

@@ -1,16 +1,17 @@
 "use client"
 
+import { SelectedDateType } from "@/types/types"
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore"
 import NavigateNextIcon from "@mui/icons-material/NavigateNext"
 import { Box, Card, Grid, IconButton, Stack, Typography } from "@mui/material"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { neutralColor } from "../colors"
 import { getCurrentDateInfo } from "../infoFunctions"
 import { MONTH_INDEX, MONTHS } from "../objects"
 
 const DAYS_ABR = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
 
-const Calendar = () => {
+const Calendar = ({ selectedDate }: { selectedDate?: SelectedDateType }) => {
   const clickLock = useRef(false)
   const { today } = getCurrentDateInfo()
 
@@ -69,43 +70,54 @@ const Calendar = () => {
     return grid
   }, [date])
 
+  useEffect(() => {
+    if (!selectedDate) return
+
+    setDate(new Date(selectedDate.year, MONTH_INDEX[selectedDate.month], 1))
+  }, [selectedDate])
+
   return (
     <Card
       style={{
         width: "100%",
         height: "100%",
         margin: "0 auto",
-        borderRadius: "15px",
       }}
     >
       {/* Calendar Header */}
-      <Stack
-        direction={"row"}
-        sx={{
-          justifyContent: "space-between",
-          padding: "0.5rem 1rem",
-          alignItems: "center",
-        }}
-      >
-        <IconButton onClick={prevMonth}>
-          <NavigateBeforeIcon />
-        </IconButton>
+      {!selectedDate && (
+        <Stack
+          direction={"row"}
+          sx={{
+            justifyContent: "space-between",
+            padding: "0.15rem 1rem",
+            alignItems: "center",
+          }}
+        >
+          <IconButton onClick={prevMonth}>
+            <NavigateBeforeIcon />
+          </IconButton>
 
-        <Typography variant={"h6"} onClick={resetDate} sx={{ fontSize: "4vw" }}>
-          {MONTHS[monthIndex]} {year}
-        </Typography>
+          <Typography
+            variant={"h6"}
+            onClick={resetDate}
+            sx={{ fontSize: "4vw" }}
+          >
+            {MONTHS[monthIndex]} {year}
+          </Typography>
 
-        <IconButton onClick={nextMonth}>
-          <NavigateNextIcon />
-        </IconButton>
-      </Stack>
+          <IconButton onClick={nextMonth}>
+            <NavigateNextIcon />
+          </IconButton>
+        </Stack>
+      )}
 
       {/* Days of the Week */}
       <Grid
         container
         columns={7}
         sx={{
-          paddingBottom: "5px",
+          paddingY: "5px",
           borderBottom: "1px solid black",
         }}
       >
@@ -116,7 +128,7 @@ const Calendar = () => {
                 sx={{
                   textAlign: "center",
                   alignContent: "center",
-                  fontSize: "2.5vw",
+                  fontSize: "3vw",
                   fontWeight: 700,
                 }}
               >

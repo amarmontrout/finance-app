@@ -11,6 +11,7 @@ const TransactionCategoryStack = ({
   selectedTransaction,
   setSelectedTransaction,
   refreshTransactions,
+  refreshDeletedTransactions,
   openDialog,
   setOpenDialog,
   setAlertToast,
@@ -19,6 +20,7 @@ const TransactionCategoryStack = ({
   selectedTransaction: TransactionType | null
   setSelectedTransaction: HookSetter<TransactionType | null>
   refreshTransactions: () => Promise<void>
+  refreshDeletedTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
@@ -60,6 +62,7 @@ const TransactionCategoryStack = ({
               selectedTransaction={selectedTransaction}
               setSelectedTransaction={setSelectedTransaction}
               refreshTransactions={refreshTransactions}
+              refreshDeletedTransactions={refreshDeletedTransactions}
               openDialog={openDialog}
               setOpenDialog={setOpenDialog}
               setAlertToast={setAlertToast}

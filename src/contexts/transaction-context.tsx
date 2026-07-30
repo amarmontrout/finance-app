@@ -13,6 +13,8 @@ type TransactionsContextType = {
   isLoading: boolean
   transactions: TransactionType[]
   refreshTransactions: () => Promise<void>
+  deletedTransactions: TransactionType[]
+  refreshDeletedTransactions: () => Promise<void>
 }
 
 const TransactionContext = createContext<TransactionsContextType | null>(null)
@@ -30,6 +32,9 @@ export const useTransactionContext = () => {
 export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const user = useUser()
   const [transactions, setTransactions] = useState<TransactionType[]>([])
+  const [deletedTransactions, setDeletedTransactions] = useState<
+    TransactionType[]
+  >([])
   const [isLoading, setIsLoading] = useState(true)
 
   const refreshTransactions = useCallback(async () => {
@@ -40,6 +45,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
       console.log("Fetching Transactions...")
       const result = await getTransactions({
         userId: user.id,
+        isDeleted: false,
       })
       setTransactions(result ?? [])
     } catch (error) {
@@ -50,13 +56,34 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     }
   }, [user])
 
+  const refreshDeletedTransactions = useCallback(async () => {
+    if (!user) return
+
+    try {
+      setIsLoading(true)
+      console.log("Fetching Deleted Transactions...")
+      const result = await getTransactions({
+        userId: user.id,
+        isDeleted: true,
+      })
+      setDeletedTransactions(result ?? [])
+    } catch (error) {
+      console.error("Failed to fetch deleted transactions", error)
+      setDeletedTransactions([])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [user])
+
   useEffect(() => {
     if (!user) {
       setTransactions([])
+      setDeletedTransactions([])
       return
     }
     refreshTransactions()
-  }, [user, refreshTransactions])
+    refreshDeletedTransactions()
+  }, [user, refreshTransactions, refreshDeletedTransactions])
 
   return (
     <TransactionContext.Provider
@@ -64,6 +91,8 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
         isLoading,
         transactions,
         refreshTransactions,
+        deletedTransactions,
+        refreshDeletedTransactions,
       }}
     >
       {props.children}

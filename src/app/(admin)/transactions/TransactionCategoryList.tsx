@@ -1,5 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
-import { deleteTransaction } from "@/api/transactions/requests"
+import { softDeleteTransaction } from "@/api/transactions/requests"
 import ListItemSwipe from "@/global/components/ListItemSwipe"
 import { numberToString } from "@/global/formattingFunctions"
 import { useUser } from "@/hooks/use-user"
@@ -12,6 +12,7 @@ const TransactionCategoryList = ({
   selectedTransaction,
   setSelectedTransaction,
   refreshTransactions,
+  refreshDeletedTransactions,
   openDialog,
   setOpenDialog,
   setAlertToast,
@@ -20,6 +21,7 @@ const TransactionCategoryList = ({
   selectedTransaction: TransactionType | null
   setSelectedTransaction: HookSetter<TransactionType | null>
   refreshTransactions: () => Promise<void>
+  refreshDeletedTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
@@ -34,16 +36,20 @@ const TransactionCategoryList = ({
       onClose: () => setAlertToast(undefined),
     })
 
-  const handleDeleteTransaction = async (rowId: number) => {
-    if (!user || !rowId) return
+  const handleDeleteTransaction = async (transaction: TransactionType) => {
+    if (!user || !transaction) return
 
     try {
-      await deleteTransaction({ userId: user.id, rowId })
+      await softDeleteTransaction({
+        userId: user.id,
+        transactionId: transaction.id,
+      })
       showToast("success", "Transaction deleted successfully!")
     } catch {
       showToast("error", "Transaction could not be deleted.")
     } finally {
       refreshTransactions()
+      refreshDeletedTransactions()
       setSelectedTransaction(null)
     }
   }
@@ -76,7 +82,7 @@ const TransactionCategoryList = ({
             amount={`${transactionSign}${transactionAmount}`}
             amountColor={"#F5F1E8"}
             buttonCondition={buttonCondition}
-            onDelete={() => handleDeleteTransaction(transaction.id)}
+            onDelete={() => handleDeleteTransaction(transaction)}
             onSetDelete={() => setSelectedTransaction(transaction)}
             onCancelDelete={() => setSelectedTransaction(null)}
             onEdit={() => {

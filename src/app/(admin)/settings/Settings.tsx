@@ -4,6 +4,7 @@ import { doLogout } from "@/api/auth/requests"
 import { ChoiceType } from "@/api/choices/models"
 import { saveBudgetCategory } from "@/api/choices/requests"
 import { useCategoryContext } from "@/contexts/categories-context"
+import { useTransactionContext } from "@/contexts/transaction-context"
 import AlertToast from "@/global/components/AlertToast"
 import {
   dateTypeToTimestamp,
@@ -16,17 +17,18 @@ import { Button, Stack, Typography } from "@mui/material"
 import { AuthError } from "@supabase/supabase-js"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import AddTransaction from "../v2/forms/AddTransaction"
-import AccountSettingsCard from "../v2/settings-cards/AccountSettingsCard"
-import BudgetSettingsCard from "../v2/settings-cards/BudgetSettingsCard"
-import CategorySettingsCard from "../v2/settings-cards/CategorySettingsCard"
-import MerchantSettingsCard from "../v2/settings-cards/MerchantSettingsCard"
 import AddExpenseCategory from "./_components/AddExpenseCategory"
 import AddIncomeCategory from "./_components/AddIncomeCategory"
 import AddYear from "./_components/AddYear"
 import EditCategorySettingsDialog from "./_components/EditCategorySettingsDialog"
+import RecentlyDeleted from "./_components/RecentlyDeleted"
 
 const Settings = () => {
+  const {
+    deletedTransactions,
+    refreshDeletedTransactions,
+    refreshTransactions,
+  } = useTransactionContext()
   const {
     incomeCategories,
     expenseCategories,
@@ -98,36 +100,15 @@ const Settings = () => {
         Toggle V2
       </Button>
 
-      {showV2 && (
-        <Stack direction={"column"}>
-          <AccountSettingsCard
-            accounts={accounts}
-            refreshAccounts={refreshAccounts}
-          />
-          <CategorySettingsCard
-            categories={categories}
-            refreshCategories={refreshCategories}
-          />
-          <MerchantSettingsCard
-            merchants={merchants}
-            categories={categories}
-            refreshMerchants={refreshMerchants}
-          />
-          <BudgetSettingsCard
-            budgets={budgets}
-            categories={categories}
-            refreshBudgets={refreshBudgets}
-          />
-          <AddTransaction
-            accounts={accounts}
-            categories={categories}
-            merchants={merchants}
-          />
-        </Stack>
-      )}
-
       {!showV2 && (
-        <Stack direction={"column"}>
+        <Stack direction={"column"} spacing={1}>
+          <RecentlyDeleted
+            deletedTransactions={deletedTransactions}
+            refreshDeletedTransactions={refreshDeletedTransactions}
+            refreshTransactions={refreshTransactions}
+            setAlertToast={setAlertToast}
+          />
+
           <AddYear
             years={years}
             loadCategories={loadCategories}

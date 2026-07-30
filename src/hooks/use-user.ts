@@ -7,21 +7,24 @@ export const useUser = () => {
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data } = await supabase.auth.getUser()
-      setUser(data.user || null)
+    let mounted = true
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) {
+        setUser(data.session?.user ?? null)
+      }
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
     }
-
-    fetchUser()
-
-    // Listen to auth changes (login/logout)
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user || null)
-      },
-    )
-
-    return () => listener.subscription.unsubscribe()
   }, [])
 
   return user

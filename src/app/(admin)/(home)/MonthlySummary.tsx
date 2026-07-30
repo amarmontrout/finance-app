@@ -1,6 +1,5 @@
 "use client"
 
-import { TransactionType } from "@/api/transactions/models"
 import { useCategoryContext } from "@/contexts/categories-context"
 import { useTransactionContext } from "@/contexts/transaction-context"
 import {
@@ -19,7 +18,7 @@ import {
 } from "@/global/infoFunctions"
 import { MONTH_INDEX } from "@/global/objects"
 import { Box, Stack, Typography } from "@mui/material"
-import { useEffect, useMemo, useState } from "react"
+import { useMemo } from "react"
 import BudgetProgressBar from "./_components/ProgressBar"
 
 const MonthlySummary = () => {
@@ -30,10 +29,6 @@ const MonthlySummary = () => {
   })
   const { transactions } = useTransactionContext()
   const { budgetCategories } = useCategoryContext()
-
-  const [creditTransactions, setCreditTransactions] = useState<
-    TransactionType[]
-  >([])
 
   const summary = useMemo(() => {
     const currentIncome = getTransactionsByType({
@@ -132,65 +127,78 @@ const MonthlySummary = () => {
     date: today,
   })
 
-  const thisMonthsCreditCardPurchases = useMemo(
-    () =>
-      getExpenseTransactionsByPaymentMethod({
-        transactions: transactions,
-        paymentMethod: "Credit",
-        month: today.month,
-        year: today.year,
-      }),
-    [transactions],
-  )
-
-  useEffect(() => {
+  const { statementStart, statementEnd } = useMemo(() => {
     const statementStartDay = 6
+
     let startMonth = MONTH_INDEX[today.month]
     let startYear = today.year
 
     if (today.day < statementStartDay) {
       startMonth -= 1
+
       if (startMonth < 0) {
         startMonth = 11
         startYear -= 1
       }
     }
 
-    const statementStart = new Date(
-      startYear,
-      startMonth,
-      statementStartDay,
-    ).getTime()
-    const statementEndDate = new Date(
-      startYear,
-      startMonth + 1,
-      statementStartDay - 1,
-    )
-    if (statementEndDate.getDate() <= 0)
-      statementEndDate.setMonth(statementEndDate.getMonth(), 0)
-    const statementEnd = statementEndDate.getTime()
+    const start = new Date(startYear, startMonth, statementStartDay)
 
-    const filtered = thisMonthsCreditCardPurchases
-      .filter(
-        (tx) =>
-          dateTypeToTimestamp(tx.date) >= statementStart &&
-          dateTypeToTimestamp(tx.date) <= statementEnd,
-      )
-      .sort(
-        (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),
-      )
+    const end = new Date(startYear, startMonth + 1, statementStartDay - 1)
 
-    setCreditTransactions(filtered)
-  }, [thisMonthsCreditCardPurchases, today.day, today.month, today.year])
+    return {
+      statementStart: start,
+      statementEnd: end,
+    }
+  }, [today.day, today.month, today.year])
+
+  const creditTransactions = useMemo(
+    () =>
+      transactions
+        .filter(
+          (tx) =>
+            tx.payment_method === "Credit" &&
+            dateTypeToTimestamp(tx.date) >= statementStart.getTime() &&
+            dateTypeToTimestamp(tx.date) <= statementEnd.getTime(),
+        )
+        .sort(
+          (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),
+        ),
+    [transactions, statementStart, statementEnd],
+  )
 
   const estimatedBill = useMemo(
     () => creditTransactions.reduce((total, tx) => total + tx.amount, 0),
     [creditTransactions],
   )
 
+  const getDaysUntil = (targetDate: Date, currentDate: Date = new Date()) => {
+    const millisecondsPerDay = 1000 * 60 * 60 * 24
+
+    const target = new Date(
+      targetDate.getFullYear(),
+      targetDate.getMonth(),
+      targetDate.getDate(),
+    )
+
+    const current = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      currentDate.getDate(),
+    )
+
+    const days = Math.ceil(
+      (target.getTime() - current.getTime()) / millisecondsPerDay,
+    )
+
+    return Math.max(days, 0)
+  }
+
+  const daysUntilStatementClose = getDaysUntil(statementEnd, new Date())
+
   return (
     <Stack width={"100%"} height={"100%"} spacing={2}>
-      <Stack spacing={0.5}>
+      <Stack direction={"column"} spacing={1}>
         <Box
           bgcolor={"rgba(255,255,255,0.15)"}
           borderRadius={5}
@@ -199,13 +207,13 @@ const MonthlySummary = () => {
         >
           <Stack direction={"column"}>
             <Typography variant={"caption"}>Net Income</Typography>
-            <Typography fontWeight={"bold"} variant={"h6"}>
+            <Typography fontWeight={"bold"} variant={"h5"}>
               {currencyFormatter.format(summary.netIncome)}
             </Typography>
           </Stack>
         </Box>
 
-        <Stack direction={"row"} justifyContent={"space-between"} spacing={0.5}>
+        <Stack direction={"row"} justifyContent={"space-between"} spacing={1}>
           <Box
             bgcolor={"rgba(255,255,255,0.15)"}
             borderRadius={5}
@@ -214,7 +222,7 @@ const MonthlySummary = () => {
           >
             <Stack direction={"column"}>
               <Typography variant={"caption"}>Income</Typography>
-              <Typography fontWeight={"bold"}>
+              <Typography fontWeight={"bold"} variant={"h6"}>
                 {currencyFormatter.format(summary.incomeTotal)}
               </Typography>
             </Stack>
@@ -228,7 +236,7 @@ const MonthlySummary = () => {
           >
             <Stack direction={"column"}>
               <Typography variant={"caption"}>Expense</Typography>
-              <Typography fontWeight={"bold"}>
+              <Typography fontWeight={"bold"} variant={"h6"}>
                 {currencyFormatter.format(summary.debitExpenseTotal)}
               </Typography>
             </Stack>
@@ -242,6 +250,46 @@ const MonthlySummary = () => {
         actual={actualTotal}
         expected={earnedBudget !== 0 ? earnedBudget : undefined}
       />
+
+      <Box bgcolor={"rgba(255,255,255,0.15)"} borderRadius={5} padding={2}>
+        <Stack
+          direction={"column"}
+          height={"100%"}
+          justifyContent={"space-between"}
+        >
+          <Stack
+            direction={"row"}
+            borderBottom={`1px solid ${"#102A1B"}`}
+            justifyContent={"space-between"}
+          >
+            <Typography>Estimated Credit Card Bill</Typography>
+
+            <Typography>
+              {statementStart.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+              {" - "}
+              {statementEnd.toLocaleDateString("en-US", {
+                month: "short",
+                day: "numeric",
+              })}
+            </Typography>
+          </Stack>
+
+          <Stack direction={"column"}>
+            <Typography fontWeight={"bold"} variant={"h5"}>
+              {currencyFormatter.format(estimatedBill)}
+            </Typography>
+            <Typography variant="body2">
+              Closes in {daysUntilStatementClose} days
+            </Typography>
+            <Typography variant={"body2"}>
+              {creditTransactions.length} transactions
+            </Typography>
+          </Stack>
+        </Stack>
+      </Box>
     </Stack>
   )
 }

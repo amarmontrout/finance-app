@@ -159,7 +159,8 @@ const MonthlySummary = () => {
           (tx) =>
             tx.payment_method === "Credit" &&
             dateTypeToTimestamp(tx.date) >= statementStart.getTime() &&
-            dateTypeToTimestamp(tx.date) <= statementEnd.getTime(),
+            dateTypeToTimestamp(tx.date) <= statementEnd.getTime() &&
+            !tx.is_return,
         )
         .sort(
           (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),

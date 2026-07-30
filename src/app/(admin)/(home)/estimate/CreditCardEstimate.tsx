@@ -66,7 +66,8 @@ const CreditCardEstimate = () => {
       .filter(
         (tx) =>
           dateTypeToTimestamp(tx.date) >= statementStart &&
-          dateTypeToTimestamp(tx.date) <= statementEnd,
+          dateTypeToTimestamp(tx.date) <= statementEnd &&
+          !tx.is_return,
       )
       .sort(
         (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),

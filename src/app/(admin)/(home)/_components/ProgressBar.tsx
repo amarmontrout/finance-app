@@ -48,7 +48,7 @@ const BudgetProgressBar = ({
   }
 
   return (
-    <Stack spacing={0.5}>
+    <Stack spacing={0.5} minHeight={"55px"}>
       <Stack
         direction={"row"}
         sx={{

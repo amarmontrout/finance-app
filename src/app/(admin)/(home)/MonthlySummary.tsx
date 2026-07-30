@@ -198,10 +198,11 @@ const MonthlySummary = () => {
   const daysUntilStatementClose = getDaysUntil(statementEnd, new Date())
 
   return (
-    <Stack width={"100%"} height={"100%"} spacing={2}>
+    <Stack width={"100%"} height={"100%"} justifyContent={"space-between"}>
       <Stack direction={"column"} spacing={1}>
         <Box
           bgcolor={"rgba(255,255,255,0.15)"}
+          border={`1px solid ${"#C9A86A"}`}
           borderRadius={5}
           minHeight={"150px"}
           padding={2}
@@ -217,6 +218,7 @@ const MonthlySummary = () => {
         <Stack direction={"row"} justifyContent={"space-between"} spacing={1}>
           <Box
             bgcolor={"rgba(255,255,255,0.15)"}
+            border={`1px solid ${"#7FB685"}`}
             borderRadius={5}
             width={"100%"}
             padding={1.5}
@@ -231,6 +233,7 @@ const MonthlySummary = () => {
 
           <Box
             bgcolor={"rgba(255,255,255,0.15)"}
+            border={`1px solid ${"#B85C5C"}`}
             borderRadius={5}
             width={"100%"}
             padding={1.5}
@@ -245,14 +248,21 @@ const MonthlySummary = () => {
         </Stack>
       </Stack>
 
-      <BudgetProgressBar
-        label={`${today.month} Budget`}
-        budget={budgetTotal}
-        actual={actualTotal}
-        expected={earnedBudget !== 0 ? earnedBudget : undefined}
-      />
-
       <Box bgcolor={"rgba(255,255,255,0.15)"} borderRadius={5} padding={2}>
+        <BudgetProgressBar
+          label={`${today.month} Budget`}
+          budget={budgetTotal}
+          actual={actualTotal}
+          expected={earnedBudget !== 0 ? earnedBudget : undefined}
+        />
+      </Box>
+
+      <Box
+        bgcolor={"rgba(255,255,255,0.15)"}
+        borderRadius={5}
+        padding={2}
+        minHeight={"175px"}
+      >
         <Stack
           direction={"column"}
           height={"100%"}
@@ -263,7 +273,7 @@ const MonthlySummary = () => {
             borderBottom={`1px solid ${"#102A1B"}`}
             justifyContent={"space-between"}
           >
-            <Typography>Estimated Credit Card Bill</Typography>
+            <Typography>Credit Card Statement</Typography>
 
             <Typography>
               {statementStart.toLocaleDateString("en-US", {
@@ -278,12 +288,13 @@ const MonthlySummary = () => {
             </Typography>
           </Stack>
 
-          <Stack direction={"column"}>
-            <Typography fontWeight={"bold"} variant={"h5"}>
-              {currencyFormatter.format(estimatedBill)}
-            </Typography>
+          <Typography fontWeight={"bold"} variant={"h4"}>
+            {currencyFormatter.format(estimatedBill)}
+          </Typography>
+
+          <Stack direction={"column"} textAlign={"right"}>
             <Typography variant="body2">
-              Closes in {daysUntilStatementClose} days
+              {daysUntilStatementClose} days remaining
             </Typography>
             <Typography variant={"body2"}>
               {creditTransactions.length} transactions
@@ -296,55 +307,3 @@ const MonthlySummary = () => {
 }
 
 export default MonthlySummary
-
-{
-  /* <Stack direction={"column"} spacing={1}>
-        <Stack direction={"row"} spacing={1}>
-          <SummaryCard
-            title={"Income"}
-            amount={summary.incomeTotal}
-            comparison={summary.previousIncomeTotal}
-            type={"income"}
-          />
-
-          <SummaryCard
-            title={"Expense"}
-            amount={summary.debitExpenseTotal}
-            comparison={summary.previousDebitExpenseTotal}
-            type={"expense"}
-          />
-        </Stack>
-
-        <Stack direction={"row"} spacing={1}>
-          <SummaryCard
-            title={"Net Income"}
-            amount={summary.netIncome}
-            comparison={summary.previousNetIncome}
-            type={"net"}
-          />
-
-          <SummaryCard
-            title={"Total Spending"}
-            amount={summary.allExpensesTotal}
-            comparison={summary.previousAllExpensesTotal}
-            type={"total"}
-          />
-        </Stack>
-      </Stack>
-
-      <BudgetProgressBar
-        label={`${today.month} Budget`}
-        budget={budgetTotal}
-        actual={actualTotal}
-        expected={earnedBudget}
-      />
-
-      <Stack direction={"row"} sx={{ justifyContent: "space-between" }}>
-        <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
-          Credit Card Estimate
-        </Typography>
-        <Typography variant="h6" sx={{ textAlign: "right" }}>
-          ${numberToString(estimatedBill)}
-        </Typography>
-      </Stack> */
-}

@@ -121,103 +121,96 @@ const BudgetTransactions = ({
 
   return (
     <Stack className="xl:w-[50%]" sx={{ margin: "0 auto" }}>
-      <Box
-        bgcolor={"rgba(255,255,255,0.15)"}
-        borderRadius={5}
-        minHeight={"150px"}
-        padding={2}
-      >
-        {isLoading ? (
-          <LoadingCircle height={75} />
-        ) : transactions.length === 0 ? (
-          <Typography sx={{ width: "100%", textAlign: "center" }}>
-            The are no expense entries for this week
-          </Typography>
-        ) : (
-          <Stack spacing={1}>
-            {Object.entries(groupedTransactions)
-              .sort(([a], [b]) => a.localeCompare(b))
-              .map(([category, entries]) => {
-                const sortedEntries = [...entries].sort(
-                  (a, b) =>
-                    dateTypeToTimestamp(b.date) - dateTypeToTimestamp(a.date),
-                )
-                const actualTotal = getTransactionsTotal({
-                  transactions: entries,
-                })
-                const { earnedBudget } = getBudgetInfo({
-                  budget: budgetLookup[category] ?? 0,
-                  spent: actualTotal,
-                  date: today,
-                })
+      {isLoading ? (
+        <LoadingCircle height={75} />
+      ) : transactions.length === 0 ? (
+        <Typography sx={{ width: "100%", textAlign: "center" }}>
+          The are no expense entries for this week
+        </Typography>
+      ) : (
+        <Stack spacing={1}>
+          {Object.entries(groupedTransactions)
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([category, entries]) => {
+              const sortedEntries = [...entries].sort(
+                (a, b) =>
+                  dateTypeToTimestamp(b.date) - dateTypeToTimestamp(a.date),
+              )
+              const actualTotal = getTransactionsTotal({
+                transactions: entries,
+              })
+              const { earnedBudget } = getBudgetInfo({
+                budget: budgetLookup[category] ?? 0,
+                spent: actualTotal,
+                date: today,
+              })
 
-                return (
+              return (
+                <Box
+                  key={category}
+                  bgcolor={"rgba(255,255,255,0.15)"}
+                  borderRadius={5}
+                  padding={2}
+                >
+                  <BudgetProgressBar
+                    label={category}
+                    actual={actualTotal}
+                    budget={budgetLookup[category] ?? 0}
+                    expected={isCurrentMonth ? earnedBudget : undefined}
+                    onEdit={() => {
+                      setBudgetEditDialogOpen(true)
+                      setConfirmEdit(budgetCategoryLookup[category])
+                      setTimeout(() => {
+                        inputRef.current?.focus()
+                      }, 50)
+                    }}
+                  />
+
                   <Stack
-                    key={category}
                     direction={"column"}
-                    spacing={1}
-                    p={0.5}
+                    sx={{ paddingX: 0.5 }}
+                    divider={
+                      <Divider
+                        orientation={"horizontal"}
+                        sx={{ borderColor: "#F5F1E8" }}
+                      />
+                    }
                   >
-                    <BudgetProgressBar
-                      label={category}
-                      actual={actualTotal}
-                      budget={budgetLookup[category] ?? 0}
-                      expected={isCurrentMonth ? earnedBudget : undefined}
-                      onEdit={() => {
-                        setBudgetEditDialogOpen(true)
-                        setConfirmEdit(budgetCategoryLookup[category])
-                        setTimeout(() => {
-                          inputRef.current?.focus()
-                        }, 50)
-                      }}
-                    />
+                    {sortedEntries.map((entry) => {
+                      const entryDate = timestampToDateString(
+                        dateTypeToTimestamp(entry.date),
+                      )
+                      const transactionAmount = `${entry.is_return ? "+" : "-"}$${numberToString(entry.amount)}`
 
-                    <Stack
-                      direction={"column"}
-                      sx={{ paddingX: 0.5 }}
-                      divider={
-                        <Divider
-                          orientation={"horizontal"}
-                          sx={{ borderColor: "#F5F1E8" }}
+                      return (
+                        <ListItemSwipe
+                          key={entry.id}
+                          mainTitle={entry.note}
+                          secondaryTitle={entryDate}
+                          amount={transactionAmount}
+                          amountColor={"#F5F1E8"}
+                          buttonCondition={noteId === entry.id}
+                          onDelete={() => handleDeleteEntry(entry.id)}
+                          onSetDelete={() => {
+                            setNoteId(entry.id)
+                          }}
+                          onCancelDelete={() => {
+                            setSelectedTransaction(null)
+                            setNoteId(null)
+                          }}
+                          onEdit={() => {
+                            setOpenDialog(true)
+                            setSelectedTransaction(entry)
+                          }}
                         />
-                      }
-                    >
-                      {sortedEntries.map((entry) => {
-                        const entryDate = timestampToDateString(
-                          dateTypeToTimestamp(entry.date),
-                        )
-                        const transactionAmount = `${entry.is_return ? "+" : "-"}$${numberToString(entry.amount)}`
-
-                        return (
-                          <ListItemSwipe
-                            key={entry.id}
-                            mainTitle={entry.note}
-                            secondaryTitle={entryDate}
-                            amount={transactionAmount}
-                            amountColor={"#F5F1E8"}
-                            buttonCondition={noteId === entry.id}
-                            onDelete={() => handleDeleteEntry(entry.id)}
-                            onSetDelete={() => {
-                              setNoteId(entry.id)
-                            }}
-                            onCancelDelete={() => {
-                              setSelectedTransaction(null)
-                              setNoteId(null)
-                            }}
-                            onEdit={() => {
-                              setOpenDialog(true)
-                              setSelectedTransaction(entry)
-                            }}
-                          />
-                        )
-                      })}
-                    </Stack>
+                      )
+                    })}
                   </Stack>
-                )
-              })}
-          </Stack>
-        )}
-      </Box>
+                </Box>
+              )
+            })}
+        </Stack>
+      )}
     </Stack>
   )
 }

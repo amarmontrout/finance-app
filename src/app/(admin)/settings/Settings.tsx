@@ -83,13 +83,13 @@ const Settings = () => {
       <Button
         fullWidth
         color={"error"}
-        variant={"outlined"}
+        variant={"contained"}
         onClick={handleLogOut}
       >
         Log out
       </Button>
 
-      <Button
+      {/* <Button
         fullWidth
         color={"primary"}
         variant={"outlined"}
@@ -98,7 +98,7 @@ const Settings = () => {
         }}
       >
         Toggle V2
-      </Button>
+      </Button> */}
 
       {!showV2 && (
         <Stack direction={"column"} spacing={1}>

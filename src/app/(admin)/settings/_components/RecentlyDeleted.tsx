@@ -3,7 +3,7 @@ import {
   deleteTransaction,
   undoSoftDeleteTransaction,
 } from "@/api/transactions/requests"
-import { darkMode, lightMode, neutralColor } from "@/global/colors"
+import { neutralColor } from "@/global/colors"
 import {
   dateTypeToTimestamp,
   numberToString,
@@ -28,7 +28,9 @@ const EditDeleteButton = ({
   return (
     <Stack direction={"row"} spacing={1}>
       <IconButton
-        className="text-dark-4 dark:text-dark-6"
+        sx={{
+          color: "#F5F1E8",
+        }}
         edge={"end"}
         onClick={onEdit}
       >
@@ -36,7 +38,9 @@ const EditDeleteButton = ({
       </IconButton>
 
       <IconButton
-        className="text-dark-4 dark:text-dark-6"
+        sx={{
+          color: "#F5F1E8",
+        }}
         edge={"end"}
         onClick={onSetDelete}
       >
@@ -56,7 +60,9 @@ const ConfirmCancelButton = ({
   return (
     <Stack direction={"row"} spacing={1}>
       <IconButton
-        className="text-dark-4 dark:text-dark-6"
+        sx={{
+          color: "#F5F1E8",
+        }}
         edge={"end"}
         onClick={onDelete}
       >
@@ -64,7 +70,9 @@ const ConfirmCancelButton = ({
       </IconButton>
 
       <IconButton
-        className="text-dark-4 dark:text-dark-6"
+        sx={{
+          color: "#F5F1E8",
+        }}
         edge={"end"}
         onClick={onCancelDelete}
       >
@@ -167,7 +175,6 @@ const RecentlyDeleted = ({
             return (
               <Stack
                 key={transaction.id}
-                className="bg-gray-2 dark:bg-[#020D1A]"
                 direction={"row"}
                 sx={{
                   position: "relative",
@@ -188,10 +195,7 @@ const RecentlyDeleted = ({
                       sx={{
                         fontSize: ".9rem",
                         lineHeight: "20px",
-                        color:
-                          currentTheme === "light"
-                            ? lightMode.primaryText
-                            : darkMode.primaryText,
+                        color: "#F5F1E8",
                       }}
                     >
                       {mainTitle} - {transaction.type}
@@ -201,10 +205,7 @@ const RecentlyDeleted = ({
                       sx={{
                         fontSize: "0.7rem",
                         lineHeight: "16px",
-                        color:
-                          currentTheme === "light"
-                            ? lightMode.secondaryText
-                            : darkMode.secondaryText,
+                        color: "#F5F1E8",
                       }}
                     >
                       {timestampToDateString(

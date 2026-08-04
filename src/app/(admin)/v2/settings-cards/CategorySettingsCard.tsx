@@ -1,4 +1,4 @@
-import { V2CategoryType } from "@/api/v2/models"
+import { V2AccountType, V2CategoryType } from "@/api/v2/models"
 import { updateCategoryV2 } from "@/api/v2/requests"
 import AddIcon from "@mui/icons-material/Add"
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material"
@@ -9,9 +9,11 @@ import { getToday } from "../utils"
 const CategorySettingsCard = ({
   categories,
   refreshCategories,
+  accounts,
 }: {
   categories: V2CategoryType[]
   refreshCategories: () => Promise<void>
+  accounts: V2AccountType[]
 }) => {
   const [showCategoryForm, setShowCategoryForm] = useState<boolean>(false)
   const [categoryToEdit, setCategoryToEdit] = useState<V2CategoryType>()
@@ -82,6 +84,7 @@ const CategorySettingsCard = ({
             categoryToEdit={categoryToEdit}
             setCategoryToEdit={setCategoryToEdit}
             refreshCategories={refreshCategories}
+            accounts={accounts}
           />
         </Box>
       )}

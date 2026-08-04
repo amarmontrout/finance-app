@@ -36,8 +36,8 @@ export const hydrateTransactions = ({
     description: transaction.description,
     notes: transaction.notes,
     transaction_date: transaction.transaction_date,
-    status: transaction.status,
-    is_recurring: transaction.is_recurring,
+    is_paid: transaction.is_paid,
+    created_at: transaction.created_at,
     deleted_at: transaction.deleted_at,
   }))
 }

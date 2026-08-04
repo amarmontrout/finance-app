@@ -1,15 +1,17 @@
+import { DateType, TransactionType } from "@/api/transactions/models"
 import {
-  TransactionStatusValue,
   TransactionTypeValue,
   V2AccountType,
   V2CategoryType,
   V2MerchantType,
 } from "@/api/v2/models"
 import { saveTransactionV2 } from "@/api/v2/requests"
+import { HookSetter } from "@/types/types"
 import {
   Autocomplete,
   Box,
   Button,
+  Checkbox,
   FormControl,
   InputLabel,
   MenuItem,
@@ -19,7 +21,7 @@ import {
   Typography,
 } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
-import { DEFAULT_STATUS, DEFAULT_TRANSACTION_TYPES } from "../constants"
+import { DEFAULT_TRANSACTION_TYPES } from "../constants"
 import { formatDate, getToday } from "../utils"
 
 export function AccountDropdown({
@@ -178,10 +180,16 @@ const AddTransaction = ({
   accounts,
   categories,
   merchants,
+  v1Transaction,
+  index,
+  setIndex,
 }: {
   accounts: V2AccountType[]
   categories: V2CategoryType[]
   merchants: V2MerchantType[]
+  v1Transaction?: TransactionType[]
+  index: number
+  setIndex: HookSetter<number>
 }) => {
   const [accountId, setAccountId] = useState<string | null>(null)
   const [categoryId, setCategoryId] = useState<string | null>(null)
@@ -192,18 +200,10 @@ const AddTransaction = ({
   const [transactionDescription, setTransactionDescription] =
     useState<string>("")
   const [transactionDate, setTransactionDate] = useState(getToday())
-  const [status, setStatus] = useState<TransactionStatusValue | null>(null)
-  const [recurring, setRecurring] = useState<boolean>(false)
+  const [isPaid, setIsPaid] = useState<boolean | null>(null)
 
   const [activeField, setActiveField] = useState<
-    | "date"
-    | "category"
-    | "account"
-    | "status"
-    | "merchant"
-    | "description"
-    | "type"
-    | null
+    "date" | "category" | "account" | "merchant" | "description" | "type" | null
   >(null)
 
   const categoryMap = useMemo(
@@ -233,11 +233,10 @@ const AddTransaction = ({
         transaction_type: transactionType,
         description: transactionDescription,
         transaction_date: transactionDate,
-        status: status,
-        is_recurring: recurring,
+        is_paid: isPaid,
       },
     })
-
+    setIndex(index + 1)
     setAccountId(null)
     setCategoryId(null)
     setMerchantId(null)
@@ -245,37 +244,79 @@ const AddTransaction = ({
     setTransactionType("Income")
     setTransactionDescription("")
     setTransactionDate(getToday())
-    setStatus(null)
-    setRecurring(false)
+    setIsPaid(false)
   }
 
   const handleOpen = (field: typeof activeField) => {
     setActiveField(field)
   }
 
+  // Handles updating transaction type when category is selected
   useEffect(() => {
     if (!categoryId) return
     const category = categoryMap.get(categoryId)
     if (category) {
       setTransactionType(category.default_transaction_type)
+      setAccountId(category.default_account_id)
     }
   }, [categoryId, categoryMap])
 
+  // Handles updating the category when a merchant is selected
   useEffect(() => {
-    if (!merchantId || categoryId) return
+    if (!merchantId) return
     const merchant = merchantMap.get(merchantId)
     if (merchant?.default_category_id) {
       setCategoryId(merchant.default_category_id)
     }
-  }, [merchantId, categoryId, merchantMap])
+  }, [merchantId, merchantMap])
 
+  // Handles setting paid or not when transaction type changes
   useEffect(() => {
     if (transactionType !== "Expense") {
-      setStatus(null)
+      setIsPaid(null)
     } else {
-      setStatus("Paid")
+      setIsPaid(true)
     }
   }, [transactionType, accountId])
+
+  const categoryMapV1 = useMemo(
+    () => new Map(categories.map((c) => [c.name, c])),
+    [categories],
+  )
+
+  const merchantMapV1 = useMemo(
+    () => new Map(merchants.map((m) => [m.name, m])),
+    [merchants],
+  )
+
+  const accountMapV1 = useMemo(
+    () => new Map(accounts.map((a) => [a.type, a])),
+    [accounts],
+  )
+
+  const toDateString = ({ month, day, year }: DateType): string => {
+    const date = new Date(`${month} ${day}, ${year}`)
+    return date.toISOString().split("T")[0]
+  }
+
+  useEffect(() => {
+    if (v1Transaction === undefined || v1Transaction.length === 0) return
+
+    setAmount(String(v1Transaction[index].amount))
+    setTransactionDate(toDateString(v1Transaction[index].date))
+    setCategoryId(
+      categoryMapV1.get(v1Transaction[index].category)?.category_id ?? null,
+    )
+    setMerchantId(
+      merchantMapV1.get(v1Transaction[index].note)?.merchant_id ?? null,
+    )
+    setAccountId(
+      v1Transaction[index].payment_method === "Credit"
+        ? accountMapV1.get("Credit Card")?.account_id!
+        : accountMapV1.get("Checking")?.account_id!,
+    )
+    setIsPaid(v1Transaction[index].is_paid)
+  }, [v1Transaction, index])
 
   return (
     <form onSubmit={handleSubmit}>
@@ -526,31 +567,15 @@ const AddTransaction = ({
 
         {transactionType === "Expense" && (
           <Row
-            active={activeField === "status"}
-            label={"Status"}
-            display={<Typography>{status}</Typography>}
-            edit={
-              <FormControl size={"small"} fullWidth>
-                <Select
-                  id={"status"}
-                  labelId={"status-label"}
-                  variant={"standard"}
-                  size={"small"}
-                  value={status}
-                  onChange={(e) =>
-                    setStatus(e.target.value as TransactionStatusValue)
-                  }
-                >
-                  {DEFAULT_STATUS.map((status) => (
-                    <MenuItem key={status.value} value={status.value}>
-                      {status.label}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            }
-            onClick={
-              activeField !== "status" ? () => handleOpen("status") : undefined
+            label={"Is Paid"}
+            display={
+              <Checkbox
+                sx={{ p: 0 }}
+                size={"small"}
+                disableRipple
+                checked={isPaid ? isPaid : false}
+                onChange={(e) => setIsPaid(e.target.checked)}
+              />
             }
           />
         )}

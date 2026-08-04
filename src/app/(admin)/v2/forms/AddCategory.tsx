@@ -1,4 +1,8 @@
-import { TransactionTypeValue, V2CategoryType } from "@/api/v2/models"
+import {
+  TransactionTypeValue,
+  V2AccountType,
+  V2CategoryType,
+} from "@/api/v2/models"
 import { saveCategoryV2, updateCategoryV2 } from "@/api/v2/requests"
 import { CheckIcon, CloseIcon } from "@/assets/icons"
 import { HookSetter } from "@/types/types"
@@ -19,14 +23,17 @@ const AddCategory = ({
   categoryToEdit,
   setCategoryToEdit,
   refreshCategories,
+  accounts,
 }: {
   categoryToEdit: V2CategoryType | undefined
   setCategoryToEdit: HookSetter<V2CategoryType | undefined>
   refreshCategories: () => Promise<void>
+  accounts: V2AccountType[]
 }) => {
   const [name, setName] = useState<string>("")
   const [defaultTransactionType, setDefaultTransactionType] =
     useState<TransactionTypeValue>("Income")
+  const [defaultAccountId, setDefaultAccountId] = useState<string | null>(null)
   const [color, setColor] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,6 +46,7 @@ const AddCategory = ({
           body: {
             name: name,
             default_transaction_type: defaultTransactionType,
+            default_account_id: defaultAccountId,
             color: color,
           },
         })
@@ -48,6 +56,7 @@ const AddCategory = ({
           body: {
             name: name,
             default_transaction_type: defaultTransactionType,
+            default_account_id: defaultAccountId,
             color: color,
           },
         })
@@ -57,6 +66,7 @@ const AddCategory = ({
     } finally {
       setName("")
       setDefaultTransactionType("Income")
+      setDefaultAccountId(null)
       setColor(null)
       refreshCategories()
     }
@@ -66,6 +76,7 @@ const AddCategory = ({
     if (categoryToEdit) {
       setName(categoryToEdit.name)
       setDefaultTransactionType(categoryToEdit.default_transaction_type)
+      setDefaultAccountId(categoryToEdit.default_account_id)
       setColor(categoryToEdit.color)
     }
   }, [categoryToEdit])
@@ -103,6 +114,27 @@ const AddCategory = ({
                 {type}
               </MenuItem>
             ))}
+          </Select>
+        </FormControl>
+
+        <FormControl size={"small"}>
+          <InputLabel id={"default-account-label"}>Default Account</InputLabel>
+
+          <Select
+            id={"default-account"}
+            size={"small"}
+            labelId={"default-account-label"}
+            label={"Select Account"}
+            value={defaultAccountId ?? ""}
+            onChange={(e) => setDefaultAccountId(e.target.value)}
+          >
+            {accounts
+              .filter((account) => !account.deleted_at)
+              .map((account) => (
+                <MenuItem key={account.account_id} value={account.account_id}>
+                  {account.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
 

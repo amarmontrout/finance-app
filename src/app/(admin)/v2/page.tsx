@@ -1,5 +1,7 @@
 "use client"
 
+import { TransactionType } from "@/api/transactions/models"
+import { getTransactions } from "@/api/transactions/requests"
 import {
   V2AccountType,
   V2CategoryType,
@@ -14,7 +16,8 @@ import {
   getMerchantsV2,
   getTransactionsV2,
 } from "@/api/v2/requests"
-import { Stack } from "@mui/material"
+import { useUser } from "@/hooks/use-user"
+import { Box, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import AddTransaction from "./forms/AddTransaction"
 import AccountSettingsCard from "./settings-cards/AccountSettingsCard"
@@ -40,7 +43,11 @@ const V2Page = () => {
         },
       ],
     })
-    setAccounts(a ?? [])
+    setAccounts(
+      (a ?? []).sort((x, y) =>
+        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
+      ),
+    )
   }
 
   const refreshCategories = async () => {
@@ -53,7 +60,11 @@ const V2Page = () => {
         },
       ],
     })
-    setCategories(c ?? [])
+    setCategories(
+      (c ?? []).sort((x, y) =>
+        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
+      ),
+    )
   }
 
   const refreshMerchants = async () => {
@@ -66,7 +77,11 @@ const V2Page = () => {
         },
       ],
     })
-    setMerchants(m ?? [])
+    setMerchants(
+      (m ?? []).sort((x, y) =>
+        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
+      ),
+    )
   }
 
   const refreshBudgets = async () => {
@@ -84,7 +99,13 @@ const V2Page = () => {
       categories: categories,
       budgets: b ?? [],
     })
-    setBudgets(hb)
+    setBudgets(
+      hb.sort((x, y) =>
+        x.category_name.localeCompare(y.category_name, undefined, {
+          sensitivity: "base",
+        }),
+      ),
+    )
   }
 
   const refreshTransactions = async () => {
@@ -121,6 +142,34 @@ const V2Page = () => {
     refreshTransactions()
   }, [accounts, categories, merchants])
 
+  // ===========================================================================
+  // THIS IS ONLY USED TO CONVERT OLD V1 TRANSACTIONS TO THE NEW FORMAT. CAN BE DELETED
+  const [transactions, setTransactions] = useState<TransactionType[]>([])
+  const [index, setIndex] = useState<number>(0)
+  const user = useUser()
+
+  useEffect(() => {
+    const refreshTransactionsV1 = async () => {
+      if (!user) return
+      try {
+        console.log("Fetching V1 Transactions...")
+        const result = await getTransactions({
+          userId: user.id,
+          isDeleted: false,
+          month: "July",
+          year: 2026,
+        })
+        setTransactions(result ?? [])
+      } catch (error) {
+        console.error("Failed to fetch v1 transactions", error)
+        setTransactions([])
+      }
+    }
+
+    refreshTransactionsV1()
+  }, [user])
+  // ===========================================================================
+
   return (
     <Stack gap={1} divider={<hr />}>
       <AccountSettingsCard
@@ -130,6 +179,7 @@ const V2Page = () => {
       <CategorySettingsCard
         categories={categories}
         refreshCategories={refreshCategories}
+        accounts={accounts}
       />
       <MerchantSettingsCard
         merchants={merchants}
@@ -146,7 +196,37 @@ const V2Page = () => {
         accounts={accounts}
         categories={categories}
         merchants={merchants}
+        v1Transaction={transactions}
+        index={index}
+        setIndex={setIndex}
       />
+
+      <Stack spacing={2}>
+        {transactions.length && (
+          <Box key={transactions[index].id}>
+            <Typography>${transactions[index].amount}</Typography>
+            <Typography>
+              {transactions[index].date.month} {transactions[index].date.day},{" "}
+              {transactions[index].date.year}
+            </Typography>
+            <Typography>category: {transactions[index].category}</Typography>
+            <Typography>merchant: {transactions[index].note}</Typography>
+            <Typography>
+              payment method {transactions[index].payment_method}
+            </Typography>
+            <Typography>type {transactions[index].type}</Typography>
+            <Typography>
+              is paid {transactions[index].is_paid ? "True" : "False"}
+            </Typography>
+            <Typography
+              variant={transactions[index].is_return ? "h5" : "body1"}
+              color={transactions[index].is_return ? "red" : "inherit"}
+            >
+              is return {transactions[index].is_return ? "True" : "False"}
+            </Typography>
+          </Box>
+        )}
+      </Stack>
 
       {/* {t.map((transaction) => (
         <div

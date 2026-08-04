@@ -2,8 +2,6 @@ export type AccountTypeValue = "Checking" | "Savings" | "Credit Card"
 
 export type TransactionTypeValue = "Income" | "Expense" | "Refund" | "Return"
 
-export type TransactionStatusValue = "Paid" | "Unpaid" | null
-
 // ACCOUNT =====================================================================
 export type V2AccountType = {
   account_id: string
@@ -49,6 +47,7 @@ export type V2CategoryType = {
   parent_id: string | null
   name: string
   default_transaction_type: TransactionTypeValue
+  default_account_id: string | null
   color: string | null
   deleted_at: string | null
 }
@@ -56,6 +55,7 @@ export type V2CategoryType = {
 export type V2CreateCategoryType = {
   name: string
   default_transaction_type: TransactionTypeValue
+  default_account_id: string | null
   color: string | null
 }
 
@@ -84,8 +84,7 @@ export type V2TransactionType = {
   description: string | null
   notes: string | null
   transaction_date: string
-  status: TransactionStatusValue
-  is_recurring: boolean
+  is_paid: boolean | null
   created_at: string
   deleted_at: string | null
 }
@@ -100,8 +99,7 @@ export type V2CreateTransactionType = {
   description?: string | null
   notes?: string | null
   transaction_date: string
-  status: TransactionStatusValue
-  is_recurring: boolean
+  is_paid: boolean | null
 }
 
 export type V2HydratedTransactionType = {
@@ -116,8 +114,8 @@ export type V2HydratedTransactionType = {
   description: string | null
   notes: string | null
   transaction_date: string
-  status: TransactionStatusValue
-  is_recurring: boolean
+  is_paid: boolean | null
+  created_at: string
   deleted_at: string | null
 }
 

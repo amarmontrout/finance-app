@@ -5,30 +5,24 @@ import { getTransactions } from "@/api/transactions/requests"
 import {
   V2AccountType,
   V2CategoryType,
-  V2HydratedBudgetType,
   V2HydratedTransactionType,
   V2MerchantType,
 } from "@/api/v2/models"
 import {
   getAccountsV2,
-  getBudgetsV2,
   getCategoriesV2,
   getMerchantsV2,
   getTransactionsV2,
 } from "@/api/v2/requests"
+import { currencyFormatter } from "@/global/formattingFunctions"
 import { useUser } from "@/hooks/use-user"
-import { Box, Stack, Typography } from "@mui/material"
+import { Stack } from "@mui/material"
 import { useEffect, useState } from "react"
 import AddTransaction from "./forms/AddTransaction"
-import AccountSettingsCard from "./settings-cards/AccountSettingsCard"
-import BudgetSettingsCard from "./settings-cards/BudgetSettingsCard"
-import CategorySettingsCard from "./settings-cards/CategorySettingsCard"
-import MerchantSettingsCard from "./settings-cards/MerchantSettingsCard"
-import { hydrateBudgets, hydrateTransactions } from "./utils"
+import { hydrateTransactions } from "./utils"
 
 const V2Page = () => {
   const [accounts, setAccounts] = useState<V2AccountType[]>([])
-  const [budgets, setBudgets] = useState<V2HydratedBudgetType[]>([])
   const [categories, setCategories] = useState<V2CategoryType[]>([])
   const [merchants, setMerchants] = useState<V2MerchantType[]>([])
   const [t, setT] = useState<V2HydratedTransactionType[]>([])
@@ -84,30 +78,6 @@ const V2Page = () => {
     )
   }
 
-  const refreshBudgets = async () => {
-    if (categories.length === 0) return
-    const b = await getBudgetsV2({
-      filters: [
-        {
-          column: "deleted_at",
-          operator: "eq",
-          value: null,
-        },
-      ],
-    })
-    const hb = hydrateBudgets({
-      categories: categories,
-      budgets: b ?? [],
-    })
-    setBudgets(
-      hb.sort((x, y) =>
-        x.category_name.localeCompare(y.category_name, undefined, {
-          sensitivity: "base",
-        }),
-      ),
-    )
-  }
-
   const refreshTransactions = async () => {
     if (accounts.length == 0 || categories.length == 0 || merchants.length == 0)
       return
@@ -120,11 +90,14 @@ const V2Page = () => {
         },
       ],
     })
+    const sortedTransactions = [...t!].sort((a, b) =>
+      b.transaction_date.localeCompare(a.transaction_date),
+    )
     const ht = hydrateTransactions({
       accounts: accounts,
       categories: categories,
       merchants: merchants,
-      transactions: t ?? [],
+      transactions: sortedTransactions ?? [],
     })
     setT(ht)
   }
@@ -136,9 +109,8 @@ const V2Page = () => {
     refreshMerchants()
   }, [])
 
-  // Fetch hydrated data (transactions, budgets)
+  // Fetch hydrated data (transactions)
   useEffect(() => {
-    refreshBudgets()
     refreshTransactions()
   }, [accounts, categories, merchants])
 
@@ -156,7 +128,7 @@ const V2Page = () => {
         const result = await getTransactions({
           userId: user.id,
           isDeleted: false,
-          month: "July",
+          month: "August",
           year: 2026,
         })
         setTransactions(result ?? [])
@@ -172,36 +144,16 @@ const V2Page = () => {
 
   return (
     <Stack gap={1} divider={<hr />}>
-      <AccountSettingsCard
-        accounts={accounts}
-        refreshAccounts={refreshAccounts}
-      />
-      <CategorySettingsCard
-        categories={categories}
-        refreshCategories={refreshCategories}
-        accounts={accounts}
-      />
-      <MerchantSettingsCard
-        merchants={merchants}
-        categories={categories}
-        refreshMerchants={refreshMerchants}
-      />
-      <BudgetSettingsCard
-        budgets={budgets}
-        categories={categories}
-        refreshBudgets={refreshBudgets}
-      />
-
       <AddTransaction
         accounts={accounts}
         categories={categories}
         merchants={merchants}
-        v1Transaction={transactions}
+        v1Transaction={undefined}
         index={index}
         setIndex={setIndex}
       />
 
-      <Stack spacing={2}>
+      {/* <Stack spacing={2}>
         {transactions.length && (
           <Box key={transactions[index].id}>
             <Typography>${transactions[index].amount}</Typography>
@@ -226,9 +178,9 @@ const V2Page = () => {
             </Typography>
           </Box>
         )}
-      </Stack>
+      </Stack> */}
 
-      {/* {t.map((transaction) => (
+      {t.map((transaction) => (
         <div
           key={transaction.transaction_id}
           style={{
@@ -236,22 +188,20 @@ const V2Page = () => {
             color: transaction.category_color!,
           }}
         >
-          <div>Transaction ID: {transaction.transaction_id}</div>
           <div>Account name: {transaction.account_name}</div>
           <div>Account type: {transaction.account_type}</div>
           <div>Category name: {transaction.category_name}</div>
           <div>Category color: {transaction.category_color}</div>
           <div>Merchant name: {transaction.merchant_name}</div>
-          <div>Amount: {transaction.amount}</div>
+          <div>Amount: {currencyFormatter.format(transaction.amount)}</div>
           <div>Transaction type: {transaction.transaction_type}</div>
           <div>Description: {transaction.description}</div>
           <div>Notes: {transaction.notes}</div>
           <div>Transaction date: {transaction.transaction_date}</div>
-          <div>Status: {transaction.status}</div>
-          <div>Is recurring: {String(transaction.is_recurring)}</div>
+          <div>Status: {transaction.is_paid ? "Paid" : "Unpaid"}</div>
           <div>Delete date: {transaction.deleted_at}</div>
         </div>
-      ))} */}
+      ))}
     </Stack>
   )
 }

@@ -48,3 +48,9 @@ export const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
 })
+
+export const isoToLocalDate = (isoDate: string) => {
+  const [year, month, day] = isoDate.split("-").map(Number)
+
+  return new Date(year, month - 1, day)
+}

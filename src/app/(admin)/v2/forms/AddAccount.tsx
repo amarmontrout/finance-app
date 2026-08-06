@@ -1,6 +1,6 @@
 import { AccountTypeValue, V2AccountType } from "@/api/v2/models"
 import { saveAccountV2, updateAccountV2 } from "@/api/v2/requests"
-import { HookSetter } from "@/types/types"
+import { AlertToastType, HookSetter } from "@/types/types"
 import {
   Button,
   FormControl,
@@ -17,10 +17,12 @@ const AddAccount = ({
   accountToEdit,
   setAccountToEdit,
   refreshAccounts,
+  setAlertToast,
 }: {
   accountToEdit: V2AccountType | undefined
   setAccountToEdit: HookSetter<V2AccountType | undefined>
   refreshAccounts: () => Promise<void>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const [name, setName] = useState("")
   const [type, setType] = useState<AccountTypeValue>("Checking")
@@ -37,6 +39,14 @@ const AddAccount = ({
             type: type,
           },
         })
+        setAlertToast({
+          open: true,
+          onClose: () => {
+            setAlertToast(undefined)
+          },
+          severity: "success",
+          message: "Account updated successfully!",
+        })
         setAccountToEdit(undefined)
       } else {
         await saveAccountV2({
@@ -46,8 +56,24 @@ const AddAccount = ({
           },
         })
       }
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "success",
+        message: "Account saved successfully!",
+      })
     } catch (error) {
       console.log(error)
+      setAlertToast({
+        open: true,
+        onClose: () => {
+          setAlertToast(undefined)
+        },
+        severity: "error",
+        message: "Failed to save/update account!",
+      })
     } finally {
       setName("")
       setType("Checking")

@@ -15,17 +15,15 @@ const AlertToast = ({
   return (
     <Snackbar
       open={open}
-      autoHideDuration={2000}
+      autoHideDuration={2500}
       onClose={onClose}
-      anchorOrigin={{ vertical: "top", horizontal: "center" }}
-      sx={{
-        top: "58px",
-      }}
+      anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      sx={{ bottom: "84px" }}
     >
       <Alert
         onClose={onClose}
         severity={severity}
-        variant="filled"
+        variant={"filled"}
         sx={{ width: "100%" }}
       >
         {message}

@@ -1,4 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
+import { V2TransactionType } from "@/api/v2/models"
 
 export const getTransactionsByType = ({
   transactions,
@@ -60,12 +61,10 @@ export const getExpenseTransactionsByPaymentMethod = ({
 export const getTransactionsTotal = ({
   transactions,
 }: {
-  transactions: TransactionType[]
+  transactions: V2TransactionType[]
 }) => {
   return transactions.reduce(
-    (total, transaction) =>
-      total +
-      (transaction.is_return ? -transaction.amount : transaction.amount),
+    (total, transaction) => total + transaction.amount,
     0,
   )
 }

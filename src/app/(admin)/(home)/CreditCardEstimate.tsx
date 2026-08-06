@@ -1,91 +1,101 @@
-import { TransactionType } from "@/api/transactions/models"
+import { V2AccountType, V2TransactionType } from "@/api/v2/models"
+import { getTransactionsV2 } from "@/api/v2/requests"
 import { getTransactionsTotal } from "@/global/dataFunctions"
+import { currencyFormatter, isoToLocalDate } from "@/global/formattingFunctions"
 import {
-  currencyFormatter,
-  dateTypeToTimestamp,
-} from "@/global/formattingFunctions"
-import { MONTH_INDEX } from "@/global/objects"
+  getDaysUntil,
+  getNextMonthYear,
+  getPreviousMonthYear,
+} from "@/global/infoFunctions"
 import { Box, Stack, Typography } from "@mui/material"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
+import { getToday } from "../v2/utils"
 
-const CreditCardEstimate = ({
-  today,
-  transactions,
-}: {
-  today: { month: string; day: number; year: number }
-  transactions: TransactionType[]
-}) => {
-  const { statementStart, statementEnd } = useMemo(() => {
-    const statementStartDay = 6
+const STATEMENT_START_DAY = "06"
 
-    let startMonth = MONTH_INDEX[today.month]
-    let startYear = today.year
+const CreditCardEstimate = ({ accounts }: { accounts: V2AccountType[] }) => {
+  const today = getToday()
+  const [yearStr, monthStr, dayStr] = today.split("-")
+  const prevMonthYear = getPreviousMonthYear({ isoString: today })
+  const currMonthYear = `${yearStr}-${monthStr}`
+  const nextMonthYear = getNextMonthYear({ isoString: today })
 
-    if (today.day < statementStartDay) {
-      startMonth -= 1
+  const beforeStatement = Number(dayStr) < Number(STATEMENT_START_DAY)
 
-      if (startMonth < 0) {
-        startMonth = 11
-        startYear -= 1
-      }
-    }
+  const startMonthYear = beforeStatement ? prevMonthYear : currMonthYear
+  const endMonthYear = beforeStatement ? currMonthYear : nextMonthYear
 
-    const start = new Date(startYear, startMonth, statementStartDay)
+  const statementStart = `${startMonthYear}-${STATEMENT_START_DAY}`
+  const statementEnd = `${endMonthYear}-${STATEMENT_START_DAY}`
 
-    const end = new Date(startYear, startMonth + 1, statementStartDay - 1)
+  const statementEndDisplay = useMemo(() => {
+    const date = isoToLocalDate(statementEnd)
+    date.setDate(date.getDate() - 1)
+    return date
+  }, [statementEnd])
 
-    return {
-      statementStart: start,
-      statementEnd: end,
-    }
-  }, [today.day, today.month, today.year])
+  const [statementTransactions, setStatementTransactions] = useState<
+    V2TransactionType[]
+  >([])
 
-  const creditTransactions = useMemo(
-    () =>
-      transactions
-        .filter(
-          (tx) =>
-            tx.payment_method === "Credit" &&
-            dateTypeToTimestamp(tx.date) >= statementStart.getTime() &&
-            dateTypeToTimestamp(tx.date) <= statementEnd.getTime(),
-        )
-        .sort(
-          (a, b) => dateTypeToTimestamp(b.date!) - dateTypeToTimestamp(a.date!),
-        ),
-    [transactions, statementStart, statementEnd],
+  const creditCardAccount = useMemo(
+    () => accounts.find((a) => a.type === "Credit Card"),
+    [accounts],
   )
+
+  useEffect(() => {
+    const load = async () => {
+      if (!creditCardAccount) {
+        return
+      }
+
+      const transactions = await getTransactionsV2({
+        filters: [
+          {
+            column: "transaction_date",
+            operator: "gte",
+            value: statementStart,
+          },
+          {
+            column: "transaction_date",
+            operator: "lt",
+            value: statementEnd,
+          },
+          {
+            column: "transaction_type",
+            operator: "eq",
+            value: "Expense",
+          },
+          {
+            column: "account_id",
+            operator: "eq",
+            value: creditCardAccount.account_id,
+          },
+        ],
+      })
+
+      const sortedTransactions = (transactions ?? []).sort((a, b) =>
+        a.transaction_date.localeCompare(b.transaction_date),
+      )
+
+      setStatementTransactions(sortedTransactions)
+    }
+
+    load().catch(console.error)
+  }, [creditCardAccount, statementStart, statementEnd])
 
   const estimatedBill = useMemo(
     () =>
       getTransactionsTotal({
-        transactions: creditTransactions,
+        transactions: statementTransactions,
       }),
-    [creditTransactions],
+    [statementTransactions],
   )
 
-  const getDaysUntil = (targetDate: Date, currentDate: Date = new Date()) => {
-    const millisecondsPerDay = 1000 * 60 * 60 * 24
-
-    const target = new Date(
-      targetDate.getFullYear(),
-      targetDate.getMonth(),
-      targetDate.getDate(),
-    )
-
-    const current = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      currentDate.getDate(),
-    )
-
-    const days = Math.ceil(
-      (target.getTime() - current.getTime()) / millisecondsPerDay,
-    )
-
-    return Math.max(days, 0)
-  }
-
-  const daysUntilStatementClose = getDaysUntil(statementEnd, new Date())
+  const daysUntilStatementClose = getDaysUntil({
+    targetDate: new Date(statementEnd),
+    currentDate: new Date(),
+  })
 
   return (
     <Box bgcolor={"rgba(255,255,255,0.15)"} borderRadius={5} padding={2}>
@@ -97,13 +107,13 @@ const CreditCardEstimate = ({
         <Stack direction={"row"} justifyContent={"space-between"}>
           <Typography variant={"h6"}>Credit Card Statement</Typography>
 
-          <Typography variant={"caption"} alignSelf={"center"}>
-            {statementStart.toLocaleDateString("en-US", {
+          <Typography variant="caption" alignSelf="center">
+            {isoToLocalDate(statementStart).toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
             })}
             {" - "}
-            {statementEnd.toLocaleDateString("en-US", {
+            {statementEndDisplay.toLocaleDateString("en-US", {
               month: "short",
               day: "numeric",
             })}
@@ -119,7 +129,7 @@ const CreditCardEstimate = ({
             {daysUntilStatementClose} days remaining
           </Typography>
           <Typography variant={"body2"}>
-            {creditTransactions.length} transactions
+            {statementTransactions.length} transactions
           </Typography>
         </Stack>
       </Stack>

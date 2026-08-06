@@ -1,17 +1,19 @@
 import { V2AccountType } from "@/api/v2/models"
 import { updateAccountV2 } from "@/api/v2/requests"
+import { AlertToastType, HookSetter } from "@/types/types"
 import AddIcon from "@mui/icons-material/Add"
 import { Box, Button, IconButton, Stack, Typography } from "@mui/material"
 import { useState } from "react"
 import AddAccount from "../forms/AddAccount"
-import { getToday } from "../utils"
 
 const AccountSettingsCard = ({
   accounts,
   refreshAccounts,
+  setAlertToast,
 }: {
   accounts: V2AccountType[]
   refreshAccounts: () => Promise<void>
+  setAlertToast: HookSetter<AlertToastType | undefined>
 }) => {
   const [showAccountForm, setShowAccountForm] = useState<boolean>(false)
   const [accountToEdit, setAccountToEdit] = useState<V2AccountType>()
@@ -20,9 +22,18 @@ const AccountSettingsCard = ({
     await updateAccountV2({
       rowId: account.account_id,
       body: {
-        deleted_at: getToday(),
+        deleted_at: new Date().toISOString(),
       },
     })
+    setAlertToast({
+      open: true,
+      onClose: () => {
+        setAlertToast(undefined)
+      },
+      severity: "success",
+      message: "Account deleted successfully!",
+    })
+    refreshAccounts()
   }
 
   return (
@@ -82,6 +93,7 @@ const AccountSettingsCard = ({
             accountToEdit={accountToEdit}
             setAccountToEdit={setAccountToEdit}
             refreshAccounts={refreshAccounts}
+            setAlertToast={setAlertToast}
           />
         </Box>
       )}
@@ -117,6 +129,10 @@ const AccountSettingsCard = ({
 
                 {/* <Button
                   size={"small"}
+                  sx={{
+                    color: "#F5F1E8",
+                    bgcolor: "#102A1B",
+                  }}
                   onClick={() => {
                     softDeleteAccount(account)
                   }}

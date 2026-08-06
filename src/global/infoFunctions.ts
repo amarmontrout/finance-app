@@ -25,26 +25,45 @@ export const getCurrentDateInfo = () => {
 }
 
 /**
- * This helper function gets the previous year and month.
+ * This helper function gets the month and year of the previous month.
  *
- * @returns The previous year and previous month
+ * @returns ISO string for the previous month. YYYY-MM
  */
-export const getPreviousMonthInfo = ({
-  month,
-  year,
-}: {
-  month: string
-  year: number
-}) => {
-  const currentMonthIndex = MONTH_INDEX[month]
-  const previousMonthIndex =
-    currentMonthIndex === 0 ? 11 : currentMonthIndex - 1
-  const previousYear = currentMonthIndex === 0 ? year - 1 : year
-  const previousMonthString = MONTHS[previousMonthIndex]
-  return {
-    previousYear: previousYear,
-    previousMonthString: previousMonthString,
+export const getPreviousMonthYear = ({ isoString }: { isoString: string }) => {
+  const [yearStr, monthStr, _] = isoString.split("-")
+
+  let year = Number(yearStr)
+  let month = Number(monthStr)
+
+  if (month === 1) {
+    month = 12
+    year--
+  } else {
+    month--
   }
+
+  return `${year}-${String(month).padStart(2, "0")}`
+}
+
+/**
+ * This helper function gets the month and year of next month.
+ *
+ * @returns ISO string for the next month. YYYY-MM
+ */
+export const getNextMonthYear = ({ isoString }: { isoString: string }) => {
+  const [yearStr, monthStr, _] = isoString.split("-")
+
+  let year = Number(yearStr)
+  let month = Number(monthStr)
+
+  if (month === 12) {
+    month = 1
+    year++
+  } else {
+    month++
+  }
+
+  return `${year}-${String(month).padStart(2, "0")}`
 }
 
 /**
@@ -76,9 +95,9 @@ export const getWeekBounds = (
 /**
  * Returns how many days in the provided month
  */
-export const getDaysInMonth = (month: string, year: number) => {
-  const monthIndex = MONTH_INDEX[month]
-  return new Date(year, monthIndex + 1, 0).getDate()
+export const getDaysInMonth = (isoDate: string) => {
+  const [year, month] = isoDate.split("-").map(Number)
+  return new Date(year, month, 0).getDate()
 }
 
 /**
@@ -91,14 +110,16 @@ export const getBudgetInfo = ({
 }: {
   budget: number
   spent: number
-  date: DateType
+  date: string // YYYY-MM-DD
 }) => {
-  const daysInMonth = getDaysInMonth(date.month, date.year)
-  const remainingDays = daysInMonth - date.day
+  const [_, __, day] = date.split("-").map(Number)
+
+  const daysInMonth = getDaysInMonth(date)
+  const remainingDays = daysInMonth - day
   const remainingBudget = budget - spent
 
   const budgetPerDay = budget / daysInMonth
-  const earnedBudget = budgetPerDay * date.day
+  const earnedBudget = budgetPerDay * day
   const budgetLeftToEarn = budgetPerDay * remainingDays
 
   return {
@@ -128,4 +149,32 @@ export const makeId = (): number => {
   }
 
   return Number(result)
+}
+
+export const getDaysUntil = ({
+  targetDate,
+  currentDate,
+}: {
+  targetDate: Date
+  currentDate: Date
+}) => {
+  const millisecondsPerDay = 1000 * 60 * 60 * 24
+
+  const target = new Date(
+    targetDate.getFullYear(),
+    targetDate.getMonth(),
+    targetDate.getDate(),
+  )
+
+  const current = new Date(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+    currentDate.getDate(),
+  )
+
+  const days = Math.ceil(
+    (target.getTime() - current.getTime()) / millisecondsPerDay,
+  )
+
+  return Math.max(days, 0)
 }

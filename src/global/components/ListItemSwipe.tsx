@@ -70,6 +70,7 @@ const ListItemSwipe = ({
   icon,
   mainTitle,
   secondaryTitle,
+  secondaryTitleColor,
   amount,
   amountColor,
   buttonCondition,
@@ -82,6 +83,7 @@ const ListItemSwipe = ({
   icon?: React.ReactNode
   mainTitle: string
   secondaryTitle: string
+  secondaryTitleColor: string | null | undefined
   amount: string
   amountColor: string
   buttonCondition: boolean
@@ -296,6 +298,7 @@ const ListItemSwipe = ({
                 sx={{
                   fontSize: "0.7rem",
                   lineHeight: "16px",
+                  color: secondaryTitleColor,
                 }}
               >
                 {secondaryTitle}

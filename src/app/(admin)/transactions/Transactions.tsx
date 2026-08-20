@@ -1,54 +1,65 @@
 "use client"
 
-import { TransactionType } from "@/api/transactions/models"
-import { useCategoryContext } from "@/contexts/categories-context"
-import { useTransactionContext } from "@/contexts/transaction-context"
+import { V2TransactionType } from "@/api/v2/models"
+import { getTransactionsV2 } from "@/api/v2/requests"
+import { useDataContext } from "@/contexts/data-context"
 import AddDataButton from "@/global/components/AddDataButton"
-import AddEditDialog from "@/global/components/AddEditDialog"
 import AlertToast from "@/global/components/AlertToast"
 import MonthYearSelector from "@/global/components/MonthYearSelector"
-import { getTransactionsByDate } from "@/global/dataFunctions"
-import { getCurrentDateInfo } from "@/global/infoFunctions"
-import { AlertToastType, SelectedDateType } from "@/types/types"
+import { getNextMonthYear } from "@/global/infoFunctions"
+import { AlertToastType } from "@/types/types"
 import { Stack } from "@mui/material"
-import { useMemo, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import TransactionsDisplay from "./TransactionsDisplay"
 
 const Transactions = () => {
-  const {
-    isLoading,
-    transactions,
-    refreshTransactions,
-    refreshDeletedTransactions,
-  } = useTransactionContext()
-  const { incomeCategories, expenseCategories } = useCategoryContext()
-  const { today } = getCurrentDateInfo()
+  const { accounts, categories, merchants } = useDataContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const CURRENT_DATE = {
-    month: today.month,
-    year: today.year,
-  }
-
-  const [selectedDate, setSelectedDate] =
-    useState<SelectedDateType>(CURRENT_DATE)
+  const [currentMonthTransactions, setCurrentMonthTransactions] = useState<
+    V2TransactionType[]
+  >([])
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
-  const [type, setType] = useState<"income" | "expense">("income")
+  const [type, setType] = useState<"Income" | "Expense">("Income")
   const [selectedTransaction, setSelectedTransaction] =
-    useState<TransactionType | null>(null)
+    useState<V2TransactionType | null>(null)
 
   const resetSelectedDate = () => {
-    setSelectedDate(CURRENT_DATE)
+    setSelectedDate(new Date())
   }
 
-  const monthTransactions = useMemo(() => {
-    return getTransactionsByDate({
-      transactions: transactions,
-      month: selectedDate.month,
-      year: selectedDate.year,
+  const loadTransactions = async () => {
+    const year = selectedDate.getFullYear()
+    const month = String(selectedDate.getMonth() + 1).padStart(2, "0")
+
+    const currMonthYear = `${year}-${month}`
+    const nextMonthYear = getNextMonthYear({
+      isoString: `${currMonthYear}-01`,
     })
-  }, [transactions, selectedDate])
+
+    const transactions = await getTransactionsV2({
+      filters: [
+        {
+          column: "transaction_date",
+          operator: "gte",
+          value: `${currMonthYear}-01`,
+        },
+        {
+          column: "transaction_date",
+          operator: "lt",
+          value: `${nextMonthYear}-01`,
+        },
+      ],
+    })
+
+    setCurrentMonthTransactions(transactions ?? [])
+  }
+
+  useEffect(() => {
+    loadTransactions()
+  }, [selectedDate])
 
   return (
     <Stack direction={"column"}>
@@ -60,21 +71,22 @@ const Transactions = () => {
       />
 
       <TransactionsDisplay
-        transactions={monthTransactions}
-        refreshTransactions={refreshTransactions}
-        refreshDeletedTransactions={refreshDeletedTransactions}
+        transactions={currentMonthTransactions}
+        accounts={accounts}
+        merchants={merchants}
+        refreshTransactions={loadTransactions}
         type={type}
         setType={setType}
         selectedDate={selectedDate}
         setAlertToast={setAlertToast}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
-        isLoading={isLoading}
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
+        categories={categories}
       />
 
-      <AddEditDialog
+      {/* <AddEditDialog
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         setAlertToast={setAlertToast}
@@ -87,7 +99,7 @@ const Transactions = () => {
         transactions={transactions}
         type={type}
         setType={setType}
-      />
+      /> */}
 
       <AlertToast alertToast={alertToast} />
 

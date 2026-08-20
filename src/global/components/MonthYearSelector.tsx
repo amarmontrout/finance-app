@@ -1,11 +1,10 @@
-import { HookSetter, SelectedDateType } from "@/types/types"
+import { HookSetter } from "@/types/types"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import FirstPageIcon from "@mui/icons-material/FirstPage"
 import LastPageIcon from "@mui/icons-material/LastPage"
 import { IconButton, Stack, Typography } from "@mui/material"
 import { useRef } from "react"
-import { MONTHS } from "../objects"
 
 const MonthYearSelector = ({
   selectedDate,
@@ -13,71 +12,32 @@ const MonthYearSelector = ({
   resetSelectedDate,
   showMonth,
 }: {
-  selectedDate: SelectedDateType
-  setSelectedDate: HookSetter<SelectedDateType>
+  selectedDate: Date
+  setSelectedDate: HookSetter<Date>
   resetSelectedDate: () => void
   showMonth: boolean
 }) => {
   const clickLock = useRef(false)
 
-  const handlePrevMonth = () => {
+  const [month, year] = new Intl.DateTimeFormat("en-US", {
+    month: "long",
+    year: "numeric",
+  })
+    .format(selectedDate)
+    .split(" ")
+
+  const updateDate = (months = 0, years = 0) => {
     if (clickLock.current) return
     clickLock.current = true
 
-    setSelectedDate(({ month, year }) => {
-      const index = MONTHS.indexOf(month)
-      const newDate =
-        index === 0
-          ? { month: MONTHS[11], year: year - 1 }
-          : { month: MONTHS[index - 1], year }
+    setSelectedDate((prev: Date) => {
+      const newDate = new Date(prev)
+
+      if (months) newDate.setMonth(newDate.getMonth() + months)
+      if (years) newDate.setFullYear(newDate.getFullYear() + years)
+
       return newDate
     })
-
-    setTimeout(() => {
-      clickLock.current = false
-    }, 100)
-  }
-
-  const handlePrevYear = () => {
-    if (clickLock.current) return
-    clickLock.current = true
-
-    setSelectedDate((prev) => ({
-      ...prev,
-      year: selectedDate.year - 1,
-    }))
-
-    setTimeout(() => {
-      clickLock.current = false
-    }, 100)
-  }
-
-  const handleNextMonth = () => {
-    if (clickLock.current) return
-    clickLock.current = true
-
-    setSelectedDate(({ month, year }) => {
-      const index = MONTHS.indexOf(month)
-      const newDate =
-        index === 11
-          ? { month: MONTHS[0], year: year + 1 }
-          : { month: MONTHS[index + 1], year }
-      return newDate
-    })
-
-    setTimeout(() => {
-      clickLock.current = false
-    }, 100)
-  }
-
-  const handleNextYear = () => {
-    if (clickLock.current) return
-    clickLock.current = true
-
-    setSelectedDate((prev) => ({
-      ...prev,
-      year: selectedDate.year + 1,
-    }))
 
     setTimeout(() => {
       clickLock.current = false
@@ -94,29 +54,29 @@ const MonthYearSelector = ({
       }}
     >
       <Stack direction={"row"} spacing={1}>
-        <IconButton onClick={handlePrevYear}>
+        <IconButton onClick={() => updateDate(0, -1)}>
           <FirstPageIcon className="text-dark-4 dark:text-dark-6" />
         </IconButton>
 
         {showMonth && (
-          <IconButton onClick={handlePrevMonth}>
+          <IconButton onClick={() => updateDate(-1)}>
             <ChevronLeftIcon className="text-dark-4 dark:text-dark-6" />
           </IconButton>
         )}
       </Stack>
 
       <Typography onClick={resetSelectedDate}>
-        {showMonth && selectedDate.month} {selectedDate.year}
+        {showMonth && month} {year}
       </Typography>
 
       <Stack direction={"row"} spacing={1}>
         {showMonth && (
-          <IconButton onClick={handleNextMonth}>
+          <IconButton onClick={() => updateDate(1)}>
             <ChevronRightIcon className="text-dark-4 dark:text-dark-6" />
           </IconButton>
         )}
 
-        <IconButton onClick={handleNextYear}>
+        <IconButton onClick={() => updateDate(0, 1)}>
           <LastPageIcon className="text-dark-4 dark:text-dark-6" />
         </IconButton>
       </Stack>

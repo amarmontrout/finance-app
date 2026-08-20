@@ -1,135 +1,89 @@
-import { BudgetType } from "@/api/choices/models"
-import { TransactionType } from "@/api/transactions/models"
-import { deleteTransaction } from "@/api/transactions/requests"
-import ListItemSwipe from "@/global/components/ListItemSwipe"
-import LoadingCircle from "@/global/components/LoadingCircle"
-import { getTransactionsTotal } from "@/global/dataFunctions"
 import {
-  dateTypeToTimestamp,
-  numberToString,
-  timestampToDateString,
-} from "@/global/formattingFunctions"
-import { getBudgetInfo, getCurrentDateInfo } from "@/global/infoFunctions"
-import { useUser } from "@/hooks/use-user"
-import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types"
-import { Box, Divider, Stack, Typography } from "@mui/material"
-import { RefObject, useMemo, useState } from "react"
-import BudgetProgressBar from "../(home)/_components/ProgressBar"
+  V2CategoryType,
+  V2HydratedBudgetType,
+  V2TransactionType,
+} from "@/api/v2/models"
+import { getBudgetsV2 } from "@/api/v2/requests"
+import { AlertToastType, HookSetter } from "@/types/types"
+import { Stack, Typography } from "@mui/material"
+import { RefObject, useEffect, useMemo, useState } from "react"
+import { hydrateBudgets } from "../v2/utils"
 
 const BudgetTransactions = ({
   transactions,
   refreshTransactions,
   budgetCategories,
-  setSelectedTransaction,
+  // setSelectedTransaction,
   setAlertToast,
-  setOpenDialog,
-  isLoading,
-  setBudgetEditDialogOpen,
-  setConfirmEdit,
+  // setOpenDialog,
+  // isLoading,
+  // setBudgetEditDialogOpen,
+  // setConfirmEdit,
   inputRef,
   selectedDate,
 }: {
-  transactions: TransactionType[]
+  transactions: V2TransactionType[]
   refreshTransactions: () => Promise<void>
-  budgetCategories: BudgetType[]
-  setSelectedTransaction: HookSetter<TransactionType | null>
+  budgetCategories: V2CategoryType[]
+  // setSelectedTransaction: HookSetter<TransactionType | null>
   setAlertToast: HookSetter<AlertToastType | undefined>
-  setOpenDialog: HookSetter<boolean>
-  isLoading: boolean
-  setBudgetEditDialogOpen: HookSetter<boolean>
-  setConfirmEdit: HookSetter<BudgetType | null>
+  // setOpenDialog: HookSetter<boolean>
+  // isLoading: boolean
+  // setBudgetEditDialogOpen: HookSetter<boolean>
+  // setConfirmEdit: HookSetter<BudgetType | null>
   inputRef: RefObject<HTMLInputElement | null>
-  selectedDate: SelectedDateType
+  selectedDate: Date
 }) => {
-  const user = useUser()
-  const { today } = getCurrentDateInfo()
+  const [budgets, setBudgets] = useState<V2HydratedBudgetType[]>([])
 
-  const [noteId, setNoteId] = useState<number | null>(null)
+  // Get category budgets
+  useEffect(() => {
+    const refreshBudgets = async () => {
+      if (budgetCategories.length === 0) return
+      const b = await getBudgetsV2({
+        filters: [
+          {
+            column: "deleted_at",
+            operator: "eq",
+            value: null,
+          },
+        ],
+      })
+      const hb = hydrateBudgets({
+        categories: budgetCategories,
+        budgets: b ?? [],
+      })
+      setBudgets(
+        hb.sort((x, y) =>
+          x.category_name.localeCompare(y.category_name, undefined, {
+            sensitivity: "base",
+          }),
+        ),
+      )
+    }
 
-  const groupedTransactions = useMemo(() => {
-    const allowedCategories = new Set(budgetCategories.map((c) => c.category))
-
-    return transactions.reduce<Record<string, TransactionType[]>>(
-      (acc, transaction) => {
-        if (!allowedCategories.has(transaction.category)) return acc
-        const category = transaction.category
-        if (!acc[category]) {
-          acc[category] = []
-        }
-        acc[category].push(transaction)
-        return acc
-      },
-      {},
-    )
-  }, [transactions, budgetCategories])
+    refreshBudgets()
+  }, [budgetCategories])
 
   const budgetLookup = useMemo(() => {
-    return budgetCategories.reduce(
+    return budgets.reduce(
       (acc, budget) => {
-        acc[budget.category] = budget.amount
+        acc[budget.category_name] = budget.amount
         return acc
       },
       {} as Record<string, number>,
     )
   }, [budgetCategories])
 
-  const budgetCategoryLookup = useMemo(() => {
-    return budgetCategories.reduce(
-      (acc, budget) => {
-        acc[budget.category] = budget
-        return acc
-      },
-      {} as Record<string, BudgetType>,
-    )
-  }, [budgetCategories])
-
-  const isCurrentMonth = useMemo(() => {
-    return (
-      selectedDate.month === today.month && selectedDate.year === today.year
-    )
-  }, [selectedDate, today])
-
-  const handleDeleteEntry = async (id: number) => {
-    if (!user) return
-    try {
-      await deleteTransaction({
-        userId: user?.id,
-        rowId: id,
-      })
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "success",
-        message: "Budget entry deleted successfully!",
-      })
-    } catch (error) {
-      console.error(error)
-      setAlertToast({
-        open: true,
-        onClose: () => {
-          setAlertToast(undefined)
-        },
-        severity: "error",
-        message: "Budget entry could not be deleted.",
-      })
-    } finally {
-      await refreshTransactions()
-    }
-  }
-
   return (
     <Stack className="xl:w-[50%]" sx={{ margin: "0 auto" }}>
-      {isLoading ? (
-        <LoadingCircle height={75} />
-      ) : transactions.length === 0 ? (
+      {transactions.length === 0 ? (
         <Typography sx={{ width: "100%", textAlign: "center" }}>
           The are no expense entries for this week
         </Typography>
       ) : (
         <Stack spacing={1}>
-          {Object.entries(groupedTransactions)
+          {/* {Object.entries(groupedTransactions)
             .sort(([a], [b]) => a.localeCompare(b))
             .map(([category, entries]) => {
               const sortedEntries = [...entries].sort(
@@ -154,16 +108,18 @@ const BudgetTransactions = ({
                 >
                   <BudgetProgressBar
                     label={category}
-                    actual={actualTotal}
+                    // actual={actualTotal}
+                    actual={0}
                     budget={budgetLookup[category] ?? 0}
-                    expected={isCurrentMonth ? earnedBudget : undefined}
-                    onEdit={() => {
-                      setBudgetEditDialogOpen(true)
-                      setConfirmEdit(budgetCategoryLookup[category])
-                      setTimeout(() => {
-                        inputRef.current?.focus()
-                      }, 50)
-                    }}
+                    // expected={isCurrentMonth ? earnedBudget : undefined}
+                    expected={undefined}
+                    // onEdit={() => {
+                    //   setBudgetEditDialogOpen(true)
+                    //   setConfirmEdit(budgetCategoryLookup[category])
+                    //   setTimeout(() => {
+                    //     inputRef.current?.focus()
+                    //   }, 50)
+                    // }}
                   />
 
                   <Stack
@@ -208,7 +164,7 @@ const BudgetTransactions = ({
                   </Stack>
                 </Box>
               )
-            })}
+            })} */}
         </Stack>
       )}
     </Stack>

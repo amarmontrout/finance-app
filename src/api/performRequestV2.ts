@@ -1,5 +1,5 @@
-import { supabaseBrowser } from "@/supabase/client"
 import { PostgrestError } from "@supabase/supabase-js"
+import { getAuthenticatedSupabase } from "./getAuthenticatedSupabase"
 import { Schemas, Tables } from "./v2/models"
 
 type Method = "POST" | "GET" | "PATCH" | "DELETE"
@@ -79,11 +79,7 @@ export const performRequestV2 = async <T>({
   body?: Partial<T>
   filters?: Filter<T>[]
 }): Promise<Response<T>> => {
-  const sb = supabaseBrowser()
-  const {
-    data: { user },
-  } = await sb.auth.getUser()
-  if (!user) throw new Error("Not Authenticated")
+  const { sb, user } = await getAuthenticatedSupabase()
   const idColumn = ID_KEYS[table]
 
   try {

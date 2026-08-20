@@ -1,8 +1,12 @@
-import { TransactionType } from "@/api/transactions/models"
-import LoadingCircle from "@/global/components/LoadingCircle"
+import {
+  V2AccountType,
+  V2CategoryType,
+  V2MerchantType,
+  V2TransactionType,
+} from "@/api/v2/models"
 import { getTransactionsTotal } from "@/global/dataFunctions"
 import { numberToString } from "@/global/formattingFunctions"
-import { AlertToastType, HookSetter, SelectedDateType } from "@/types/types"
+import { AlertToastType, HookSetter } from "@/types/types"
 import { Box, Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import ExpenseViewToggle from "./_components/ExpenseViewToggle"
@@ -11,48 +15,57 @@ import TransactionCategoryStack from "./TransactionCategoryStack"
 
 const TransactionsDisplay = ({
   transactions,
+  accounts,
+  merchants,
   refreshTransactions,
-  refreshDeletedTransactions,
   type,
   setType,
   selectedDate,
   setAlertToast,
   selectedTransaction,
   setSelectedTransaction,
-  isLoading,
   openDialog,
   setOpenDialog,
+  categories,
 }: {
-  transactions: TransactionType[]
+  transactions: V2TransactionType[]
+  accounts: V2AccountType[]
+  merchants: V2MerchantType[]
   refreshTransactions: () => Promise<void>
-  refreshDeletedTransactions: () => Promise<void>
-  type: "income" | "expense"
-  setType: HookSetter<"income" | "expense">
-  selectedDate: SelectedDateType
+  type: "Income" | "Expense"
+  setType: HookSetter<"Income" | "Expense">
+  selectedDate: Date
   setAlertToast: HookSetter<AlertToastType | undefined>
-  selectedTransaction: TransactionType | null
-  setSelectedTransaction: HookSetter<TransactionType | null>
-  isLoading: boolean
+  selectedTransaction: V2TransactionType | null
+  setSelectedTransaction: HookSetter<V2TransactionType | null>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
+  categories: V2CategoryType[]
 }) => {
   const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
+  // Account map for transaction payment account
+  const accountMap = useMemo(
+    () => new Map(accounts.map((a) => [a.account_id, a])),
+    [accounts],
+  )
 
-  const { filteredTransactions, total } = useMemo(() => {
+  const { transactionsByType, total } = useMemo(() => {
     const filtered = transactions.filter((t) => {
-      const matchesType = t.type === type
+      const matchesType = t.transaction_type === type
       const matchesView =
-        type === "expense"
+        type === "Expense"
           ? view === "Both" ||
-            (view === "Debit" && t.payment_method === "Debit") ||
-            (view === "Credit" && t.payment_method === "Credit")
+            (view === "Debit" &&
+              accountMap.get(t.account_id)?.type === "Checking") ||
+            (view === "Credit" &&
+              accountMap.get(t.account_id)?.type === "Credit Card")
           : true
       return matchesType && matchesView
     })
 
     const totalAmount = getTransactionsTotal({ transactions: filtered })
 
-    return { filteredTransactions: filtered, total: totalAmount }
+    return { transactionsByType: filtered, total: totalAmount }
   }, [transactions, type, selectedDate, view])
 
   useEffect(() => {
@@ -75,7 +88,7 @@ const TransactionsDisplay = ({
           {`$${numberToString(total)}`}
         </Typography>
 
-        {type === "expense" && (
+        {type === "Expense" && (
           <ExpenseViewToggle view={view} setView={setView} />
         )}
       </Stack>
@@ -86,22 +99,21 @@ const TransactionsDisplay = ({
         minHeight={"150px"}
         padding={2}
       >
-        {isLoading ? (
-          <LoadingCircle height={75} />
-        ) : filteredTransactions.length === 0 ? (
+        {transactionsByType.length === 0 ? (
           <Typography sx={{ width: "100%", textAlign: "center" }}>
             {`There are no ${type} transactions`}
           </Typography>
         ) : (
           <TransactionCategoryStack
-            filteredTransactions={filteredTransactions}
+            transactionsByType={transactionsByType}
             selectedTransaction={selectedTransaction}
             setSelectedTransaction={setSelectedTransaction}
             refreshTransactions={refreshTransactions}
-            refreshDeletedTransactions={refreshDeletedTransactions}
             openDialog={openDialog}
             setOpenDialog={setOpenDialog}
             setAlertToast={setAlertToast}
+            merchants={merchants}
+            categories={categories}
           />
         )}
       </Box>

@@ -5,12 +5,12 @@ const TransactionTypeToggle = ({
   type,
   setType,
 }: {
-  type: "income" | "expense"
-  setType: HookSetter<"income" | "expense">
+  type: "Income" | "Expense"
+  setType: HookSetter<"Income" | "Expense">
 }) => {
   const handleSelectType = (
     event: React.MouseEvent<HTMLElement>,
-    newType: "income" | "expense" | null,
+    newType: "Income" | "Expense" | null,
   ) => {
     if (newType !== null) {
       setType(newType)
@@ -45,7 +45,7 @@ const TransactionTypeToggle = ({
     >
       <ToggleButton
         className="text-dark-4 dark:text-dark-6"
-        value={"income"}
+        value={"Income"}
         disableRipple
         sx={{
           "&.Mui-selected": {
@@ -58,7 +58,7 @@ const TransactionTypeToggle = ({
 
       <ToggleButton
         className="text-dark-4 dark:text-dark-6"
-        value={"expense"}
+        value={"Expense"}
         disableRipple
         sx={{
           "&.Mui-selected": {

@@ -1,5 +1,8 @@
-import { TransactionType } from "@/api/transactions/models"
-import { dateTypeToTimestamp } from "@/global/formattingFunctions"
+import {
+  V2CategoryType,
+  V2MerchantType,
+  V2TransactionType,
+} from "@/api/v2/models"
 import { AlertToastType, HookSetter } from "@/types/types"
 import { Stack } from "@mui/material"
 import { useMemo } from "react"
@@ -7,54 +10,63 @@ import TransactionCategoryHeader from "./TransactionCategoryHeader"
 import TransactionCategoryList from "./TransactionCategoryList"
 
 const TransactionCategoryStack = ({
-  filteredTransactions,
+  transactionsByType,
   selectedTransaction,
   setSelectedTransaction,
   refreshTransactions,
-  refreshDeletedTransactions,
   openDialog,
   setOpenDialog,
   setAlertToast,
+  merchants,
+  categories,
 }: {
-  filteredTransactions: TransactionType[]
-  selectedTransaction: TransactionType | null
-  setSelectedTransaction: HookSetter<TransactionType | null>
+  transactionsByType: V2TransactionType[]
+  selectedTransaction: V2TransactionType | null
+  setSelectedTransaction: HookSetter<V2TransactionType | null>
   refreshTransactions: () => Promise<void>
-  refreshDeletedTransactions: () => Promise<void>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
+  merchants: V2MerchantType[]
+  categories: V2CategoryType[]
 }) => {
-  const groupedTransactions = useMemo(() => {
-    return filteredTransactions.reduce<Record<number, TransactionType[]>>(
-      (acc, transaction) => {
-        const timestamp = dateTypeToTimestamp(transaction.date)
-        if (!acc[timestamp]) acc[timestamp] = []
-        acc[timestamp].push(transaction)
-        return acc
-      },
-      {},
-    )
-  }, [filteredTransactions])
+  const merchantMap = useMemo(
+    () => new Map(merchants.map((m) => [m.merchant_id, m])),
+    [merchants],
+  )
 
-  const sortedDates = useMemo(() => {
-    return Object.entries(groupedTransactions).sort(
-      ([a], [b]) => Number(b) - Number(a),
+  const groupedTransactions = useMemo(() => {
+    const grouped = transactionsByType.reduce<
+      Record<string, V2TransactionType[]>
+    >((acc, transaction) => {
+      const date = transaction.transaction_date
+
+      if (!acc[date]) acc[date] = []
+      acc[date].push(transaction)
+
+      return acc
+    }, {})
+
+    return Object.entries(grouped).sort(([dateA], [dateB]) =>
+      dateB.localeCompare(dateA),
     )
-  }, [groupedTransactions])
+  }, [transactionsByType])
 
   return (
     <Stack direction={"column"}>
-      {sortedDates.map(([timestamp, transactions]) => {
-        const sortedTransactions = [...transactions].sort((a, b) =>
-          a.note.localeCompare(b.note),
-        )
+      {groupedTransactions.map(([date, transactions]) => {
+        const sortedTransactions = [...transactions].sort((a, b) => {
+          const merchantA = merchantMap.get(a.merchant_id)?.name ?? ""
+          const merchantB = merchantMap.get(b.merchant_id)?.name ?? ""
+
+          return merchantA.localeCompare(merchantB)
+        })
 
         return (
-          <Stack key={timestamp} direction={"column"} spacing={0.5}>
+          <Stack key={date} direction={"column"} spacing={0.5}>
             <TransactionCategoryHeader
               transactions={transactions}
-              timestamp={Number(timestamp)}
+              date={date}
             />
 
             <TransactionCategoryList
@@ -62,10 +74,11 @@ const TransactionCategoryStack = ({
               selectedTransaction={selectedTransaction}
               setSelectedTransaction={setSelectedTransaction}
               refreshTransactions={refreshTransactions}
-              refreshDeletedTransactions={refreshDeletedTransactions}
               openDialog={openDialog}
               setOpenDialog={setOpenDialog}
               setAlertToast={setAlertToast}
+              merchants={merchants}
+              categories={categories}
             />
           </Stack>
         )

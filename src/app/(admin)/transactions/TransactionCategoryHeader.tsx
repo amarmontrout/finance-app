@@ -1,17 +1,14 @@
-import { TransactionType } from "@/api/transactions/models"
+import { V2TransactionType } from "@/api/v2/models"
 import { getTransactionsTotal } from "@/global/dataFunctions"
-import {
-  numberToString,
-  timestampToDateString,
-} from "@/global/formattingFunctions"
+import { numberToString } from "@/global/formattingFunctions"
 import { Stack, Typography } from "@mui/material"
 
 const TransactionCategoryHeader = ({
   transactions,
-  timestamp,
+  date,
 }: {
-  transactions: TransactionType[]
-  timestamp: number
+  transactions: V2TransactionType[]
+  date: string
 }) => {
   const categoryTotal = getTransactionsTotal({ transactions: transactions })
 
@@ -25,9 +22,7 @@ const TransactionCategoryHeader = ({
         color: "#102A1B",
       }}
     >
-      <Typography sx={{ fontSize: 17 }}>
-        {timestampToDateString(timestamp)}
-      </Typography>
+      <Typography sx={{ fontSize: 17 }}>{date}</Typography>
 
       <Typography sx={{ fontSize: 17 }}>
         ${numberToString(categoryTotal)}

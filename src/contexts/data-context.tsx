@@ -1,34 +1,30 @@
-import {
-  V2AccountType,
-  V2CategoryType,
-  V2HydratedTransactionType,
-  V2MerchantType,
-} from "@/api/v2/models"
+import { V2AccountType, V2CategoryType, V2MerchantType } from "@/api/v2/models"
 import {
   getAccountsV2,
   getCategoriesV2,
   getMerchantsV2,
-  getTransactionsV2,
 } from "@/api/v2/requests"
-import { hydrateTransactions } from "@/app/(admin)/v2/utils"
+import { NOT_DELETED_FILTER } from "@/app/(admin)/v2/constants"
 import {
   createContext,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react"
 
 type DataContextType = {
-  // isLoading: boolean
-  transactions: V2HydratedTransactionType[]
-  refreshTransactions: () => Promise<void>
+  isLoading: boolean
   accounts: V2AccountType[]
   refreshAccounts: () => Promise<void>
   categories: V2CategoryType[]
   refreshCategories: () => Promise<void>
   merchants: V2MerchantType[]
   refreshMerchants: () => Promise<void>
+  accountMap: Map<string, V2AccountType>
+  categoryMap: Map<string, V2CategoryType>
+  merchantMap: Map<string, V2MerchantType>
 }
 
 const DataContext = createContext<DataContextType | null>(null)
@@ -41,117 +37,104 @@ export const useDataContext = () => {
   return context
 }
 
+const sortByName = <T extends { name: string }>(items: T[]) => {
+  return [...items].sort((a, b) =>
+    a.name.localeCompare(b.name, undefined, {
+      sensitivity: "base",
+    }),
+  )
+}
+
 export const DataProvider = (props: { children: React.ReactNode }) => {
-  // const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(true)
   const [accounts, setAccounts] = useState<V2AccountType[]>([])
   const [categories, setCategories] = useState<V2CategoryType[]>([])
   const [merchants, setMerchants] = useState<V2MerchantType[]>([])
-  const [transactions, setTransactions] = useState<V2HydratedTransactionType[]>(
-    [],
-  )
 
   const refreshAccounts = useCallback(async () => {
-    const a = await getAccountsV2({
-      filters: [
-        {
-          column: "deleted_at",
-          operator: "eq",
-          value: null,
-        },
-      ],
+    const accounts = await getAccountsV2({
+      filters: [NOT_DELETED_FILTER],
     })
-    setAccounts(
-      (a ?? []).sort((x, y) =>
-        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
-      ),
-    )
+
+    setAccounts(sortByName(accounts ?? []))
   }, [])
 
   const refreshCategories = useCallback(async () => {
-    const c = await getCategoriesV2({
-      filters: [
-        {
-          column: "deleted_at",
-          operator: "eq",
-          value: null,
-        },
-      ],
+    const categories = await getCategoriesV2({
+      filters: [NOT_DELETED_FILTER],
     })
-    setCategories(
-      (c ?? []).sort((x, y) =>
-        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
-      ),
-    )
+
+    setCategories(sortByName(categories ?? []))
   }, [])
 
   const refreshMerchants = useCallback(async () => {
-    const m = await getMerchantsV2({
-      filters: [
-        {
-          column: "deleted_at",
-          operator: "eq",
-          value: null,
-        },
-      ],
+    const merchants = await getMerchantsV2({
+      filters: [NOT_DELETED_FILTER],
     })
-    setMerchants(
-      (m ?? []).sort((x, y) =>
-        x.name.localeCompare(y.name, undefined, { sensitivity: "base" }),
-      ),
-    )
+
+    setMerchants(sortByName(merchants ?? []))
   }, [])
 
-  const refreshTransactions = useCallback(async () => {
-    if (accounts.length == 0 || categories.length == 0 || merchants.length == 0)
-      return
-    const t = await getTransactionsV2({
-      filters: [
-        {
-          column: "deleted_at",
-          operator: "eq",
-          value: null,
-        },
-      ],
-    })
-    const sortedTransactions = [...t!].sort((a, b) =>
-      b.transaction_date.localeCompare(a.transaction_date),
-    )
-    const ht = hydrateTransactions({
-      accounts: accounts,
-      categories: categories,
-      merchants: merchants,
-      transactions: sortedTransactions ?? [],
-    })
-    setTransactions(ht)
-  }, [])
+  const refreshData = useCallback(async () => {
+    setIsLoading(true)
+    try {
+      await Promise.all([
+        refreshAccounts(),
+        refreshCategories(),
+        refreshMerchants(),
+      ])
+    } finally {
+      setIsLoading(false)
+    }
+  }, [refreshAccounts, refreshCategories, refreshMerchants])
 
-  // Initial data fetch
+  const accountMap = useMemo(
+    () => new Map(accounts.map((a) => [a.account_id, a])),
+    [accounts],
+  )
+
+  const categoryMap = useMemo(
+    () => new Map(categories.map((c) => [c.category_id, c])),
+    [categories],
+  )
+
+  const merchantMap = useMemo(
+    () => new Map(merchants.map((m) => [m.merchant_id, m])),
+    [merchants],
+  )
+
   useEffect(() => {
-    refreshAccounts()
-    refreshCategories()
-    refreshMerchants()
-  }, [])
+    void refreshData()
+  }, [refreshData])
 
-  // Fetch hydrated data (transactions)
-  useEffect(() => {
-    refreshTransactions()
-  }, [accounts, categories, merchants])
+  const value = useMemo(
+    () => ({
+      isLoading,
+      accounts,
+      refreshAccounts,
+      categories,
+      refreshCategories,
+      merchants,
+      refreshMerchants,
+      accountMap,
+      categoryMap,
+      merchantMap,
+    }),
+    [
+      isLoading,
+      accounts,
+      refreshAccounts,
+      categories,
+      refreshCategories,
+      merchants,
+      refreshMerchants,
+      accountMap,
+      categoryMap,
+      merchantMap,
+    ],
+  )
 
   return (
-    <DataContext.Provider
-      value={{
-        // isLoading,
-        transactions,
-        refreshTransactions,
-        accounts,
-        refreshAccounts,
-        categories,
-        refreshCategories,
-        merchants,
-        refreshMerchants,
-      }}
-    >
-      {props.children}
-    </DataContext.Provider>
+    <DataContext.Provider value={value}>{props.children}</DataContext.Provider>
   )
 }

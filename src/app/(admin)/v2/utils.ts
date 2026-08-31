@@ -26,11 +26,11 @@ export const hydrateTransactions = ({
 
   return transactions.map((transaction) => ({
     transaction_id: transaction.transaction_id,
-    account_name: accountMap.get(transaction.account_id)?.name ?? "",
-    account_type: accountMap.get(transaction.account_id)?.type ?? "",
-    category_name: categoryMap.get(transaction.category_id)?.name ?? "",
-    category_color: categoryMap.get(transaction.category_id)?.color ?? null,
-    merchant_name: merchantMap.get(transaction.merchant_id)?.name ?? "",
+    account_name: accountMap.get(transaction.account_id!)?.name ?? "",
+    account_type: accountMap.get(transaction.account_id!)?.type ?? "",
+    category_name: categoryMap.get(transaction.category_id!)?.name ?? "",
+    category_color: categoryMap.get(transaction.category_id!)?.color ?? null,
+    merchant_name: merchantMap.get(transaction.merchant_id!)?.name ?? "",
     amount: transaction.amount,
     transaction_type: transaction.transaction_type,
     description: transaction.description,

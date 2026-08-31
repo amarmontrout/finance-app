@@ -3,6 +3,7 @@ import {
   V2MerchantType,
   V2TransactionType,
 } from "@/api/v2/models"
+import { updateTransactionV2 } from "@/api/v2/requests"
 import ListItemSwipe from "@/global/components/ListItemSwipe"
 import { numberToString } from "@/global/formattingFunctions"
 import { useUser } from "@/hooks/use-user"
@@ -56,10 +57,12 @@ const TransactionCategoryList = ({
     if (!user || !transaction) return
 
     try {
-      // await softDeleteTransaction({
-      //   userId: user.id,
-      //   transactionId: transaction.id,
-      // })
+      await updateTransactionV2({
+        rowId: transaction.transaction_id,
+        body: {
+          deleted_at: new Date().toISOString(),
+        },
+      })
       showToast("success", "Transaction deleted successfully!")
     } catch {
       showToast("error", "Transaction could not be deleted.")

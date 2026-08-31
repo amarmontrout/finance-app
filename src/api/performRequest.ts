@@ -3,7 +3,7 @@ import { PostgrestError } from "@supabase/supabase-js"
 
 type Method = "POST" | "GET" | "PATCH" | "DELETE"
 
-type FilterOperator =
+export type FilterOperator =
   | "eq"
   | "neq"
   | "gt"

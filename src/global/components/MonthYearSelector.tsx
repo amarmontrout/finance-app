@@ -1,4 +1,4 @@
-import { HookSetter } from "@/types/types"
+import { useTransactionContext } from "@/app/(admin)/v2/TransactionsContext"
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft"
 import ChevronRightIcon from "@mui/icons-material/ChevronRight"
 import FirstPageIcon from "@mui/icons-material/FirstPage"
@@ -7,16 +7,13 @@ import { IconButton, Stack, Typography } from "@mui/material"
 import { useRef } from "react"
 
 const MonthYearSelector = ({
-  selectedDate,
-  setSelectedDate,
-  resetSelectedDate,
   showMonth,
+  showYearButtons,
 }: {
-  selectedDate: Date
-  setSelectedDate: HookSetter<Date>
-  resetSelectedDate: () => void
   showMonth: boolean
+  showYearButtons: boolean
 }) => {
+  const { selectedDate, setSelectedDate } = useTransactionContext()
   const clickLock = useRef(false)
 
   const [month, year] = new Intl.DateTimeFormat("en-US", {
@@ -54,9 +51,11 @@ const MonthYearSelector = ({
       }}
     >
       <Stack direction={"row"} spacing={1}>
-        <IconButton onClick={() => updateDate(0, -1)}>
-          <FirstPageIcon className="text-dark-4 dark:text-dark-6" />
-        </IconButton>
+        {showYearButtons && (
+          <IconButton onClick={() => updateDate(0, -1)}>
+            <FirstPageIcon className="text-dark-4 dark:text-dark-6" />
+          </IconButton>
+        )}
 
         {showMonth && (
           <IconButton onClick={() => updateDate(-1)}>
@@ -65,7 +64,11 @@ const MonthYearSelector = ({
         )}
       </Stack>
 
-      <Typography onClick={resetSelectedDate}>
+      <Typography
+        onClick={() => {
+          setSelectedDate(new Date())
+        }}
+      >
         {showMonth && month} {year}
       </Typography>
 
@@ -76,9 +79,11 @@ const MonthYearSelector = ({
           </IconButton>
         )}
 
-        <IconButton onClick={() => updateDate(0, 1)}>
-          <LastPageIcon className="text-dark-4 dark:text-dark-6" />
-        </IconButton>
+        {showYearButtons && (
+          <IconButton onClick={() => updateDate(0, 1)}>
+            <LastPageIcon className="text-dark-4 dark:text-dark-6" />
+          </IconButton>
+        )}
       </Stack>
     </Stack>
   )

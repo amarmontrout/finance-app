@@ -2,63 +2,43 @@
 
 import { V2TransactionType } from "@/api/v2/models"
 import { getTransactionsV2 } from "@/api/v2/requests"
-import { useDataContext } from "@/contexts/data-context"
 import AddDataButton from "@/global/components/AddDataButton"
+import AddEditDialog from "@/global/components/AddEditDialog"
 import AlertToast from "@/global/components/AlertToast"
 import MonthYearSelector from "@/global/components/MonthYearSelector"
-import { getNextMonthYear } from "@/global/infoFunctions"
+import { getMonthRange } from "@/global/formattingFunctions"
 import { AlertToastType } from "@/types/types"
 import { Stack } from "@mui/material"
 import { useEffect, useRef, useState } from "react"
 import TransactionsDisplay from "./TransactionsDisplay"
 
 const Transactions = () => {
-  const { accounts, categories, merchants } = useDataContext()
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const [currentMonthTransactions, setCurrentMonthTransactions] = useState<
-    V2TransactionType[]
-  >([])
+  const [currTransactions, setCurrTransactions] = useState<V2TransactionType[]>(
+    [],
+  )
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
   const [openDialog, setOpenDialog] = useState<boolean>(false)
   const [alertToast, setAlertToast] = useState<AlertToastType>()
-  const [type, setType] = useState<"Income" | "Expense">("Income")
+  const [displayType, setDisplayType] = useState<"Income" | "Expense">("Income")
   const [selectedTransaction, setSelectedTransaction] =
     useState<V2TransactionType | null>(null)
 
-  const resetSelectedDate = () => {
-    setSelectedDate(new Date())
-  }
-
-  const loadTransactions = async () => {
-    const year = selectedDate.getFullYear()
-    const month = String(selectedDate.getMonth() + 1).padStart(2, "0")
-
-    const currMonthYear = `${year}-${month}`
-    const nextMonthYear = getNextMonthYear({
-      isoString: `${currMonthYear}-01`,
-    })
-
+  const refreshTransactions = async () => {
+    const { startDate, endDate } = getMonthRange({ currentDate: selectedDate })
     const transactions = await getTransactionsV2({
       filters: [
-        {
-          column: "transaction_date",
-          operator: "gte",
-          value: `${currMonthYear}-01`,
-        },
-        {
-          column: "transaction_date",
-          operator: "lt",
-          value: `${nextMonthYear}-01`,
-        },
+        { column: "transaction_date", operator: "gte", value: startDate },
+        { column: "transaction_date", operator: "lt", value: endDate },
+        { column: "deleted_at", operator: "eq", value: null },
       ],
     })
-
-    setCurrentMonthTransactions(transactions ?? [])
+    setCurrTransactions(transactions ?? [])
   }
 
   useEffect(() => {
-    loadTransactions()
+    refreshTransactions()
   }, [selectedDate])
 
   return (
@@ -66,40 +46,33 @@ const Transactions = () => {
       <MonthYearSelector
         selectedDate={selectedDate}
         setSelectedDate={setSelectedDate}
-        resetSelectedDate={resetSelectedDate}
+        resetSelectedDate={() => {
+          setSelectedDate(new Date())
+        }}
         showMonth={true}
       />
 
       <TransactionsDisplay
-        transactions={currentMonthTransactions}
-        accounts={accounts}
-        merchants={merchants}
-        refreshTransactions={loadTransactions}
-        type={type}
-        setType={setType}
-        selectedDate={selectedDate}
+        currTransactions={currTransactions}
+        refreshTransactions={refreshTransactions}
+        displayType={displayType}
+        setDisplayType={setDisplayType}
         setAlertToast={setAlertToast}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
-        categories={categories}
       />
 
-      {/* <AddEditDialog
+      <AddEditDialog
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         setAlertToast={setAlertToast}
-        incomeCategories={incomeCategories}
-        expenseCategories={expenseCategories}
         inputRef={inputRef}
         refreshTransactions={refreshTransactions}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
-        transactions={transactions}
-        type={type}
-        setType={setType}
-      /> */}
+      />
 
       <AlertToast alertToast={alertToast} />
 

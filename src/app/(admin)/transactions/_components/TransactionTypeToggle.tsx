@@ -1,24 +1,22 @@
-import { HookSetter } from "@/types/types"
+import { TransactionTypeValue } from "@/api/v2/models"
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { useTransactionContext } from "../../v2/TransactionsContext"
 
-const TransactionTypeToggle = ({
-  type,
-  setType,
-}: {
-  type: "Income" | "Expense"
-  setType: HookSetter<"Income" | "Expense">
-}) => {
+const TransactionTypeToggle = () => {
+  const { displayType, setDisplayType } = useTransactionContext()
+
   const handleSelectType = (
-    event: React.MouseEvent<HTMLElement>,
-    newType: "Income" | "Expense" | null,
+    _: React.MouseEvent<HTMLElement>,
+    newType: Partial<TransactionTypeValue>,
   ) => {
     if (newType !== null) {
-      setType(newType)
+      setDisplayType(newType)
     }
   }
+
   return (
     <ToggleButtonGroup
-      value={type}
+      value={displayType}
       exclusive
       onChange={handleSelectType}
       sx={{

@@ -1,18 +1,17 @@
 import AddIcon from "@mui/icons-material/Add"
 import { IconButton } from "@mui/material"
-import { neutralColor } from "../colors"
 
 const AddDataButton = ({ action }: { action: () => void }) => {
   return (
     <IconButton
       onClick={action}
-      size="large"
+      size={"medium"}
       disableRipple
       sx={{
         position: "fixed",
         right: "15px",
         bottom: "95px",
-        backgroundColor: neutralColor.color,
+        backgroundColor: "#A97C2F",
         color: "white",
         zIndex: 100,
         boxShadow: `

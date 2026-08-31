@@ -1,48 +1,39 @@
-import {
-  V2AccountType,
-  V2CategoryType,
-  V2MerchantType,
-  V2TransactionType,
-} from "@/api/v2/models"
+import { V2TransactionType } from "@/api/v2/models"
+import { useDataContext } from "@/contexts/data-context"
 import { getTransactionsTotal } from "@/global/dataFunctions"
 import { numberToString } from "@/global/formattingFunctions"
 import { AlertToastType, HookSetter } from "@/types/types"
 import { Box, Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
-import ExpenseViewToggle from "./_components/ExpenseViewToggle"
+import ExpenseViewToggle from "./_components/TransactionExpenseViewToggle"
 import TransactionTypeToggle from "./_components/TransactionTypeToggle"
 import TransactionCategoryStack from "./TransactionCategoryStack"
 
 const TransactionsDisplay = ({
-  transactions,
-  accounts,
-  merchants,
+  currTransactions,
   refreshTransactions,
-  type,
-  setType,
-  selectedDate,
+  displayType,
+  setDisplayType,
   setAlertToast,
   selectedTransaction,
   setSelectedTransaction,
   openDialog,
   setOpenDialog,
-  categories,
 }: {
-  transactions: V2TransactionType[]
-  accounts: V2AccountType[]
-  merchants: V2MerchantType[]
+  currTransactions: V2TransactionType[]
   refreshTransactions: () => Promise<void>
-  type: "Income" | "Expense"
-  setType: HookSetter<"Income" | "Expense">
-  selectedDate: Date
+  displayType: "Income" | "Expense"
+  setDisplayType: HookSetter<"Income" | "Expense">
   setAlertToast: HookSetter<AlertToastType | undefined>
   selectedTransaction: V2TransactionType | null
   setSelectedTransaction: HookSetter<V2TransactionType | null>
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
-  categories: V2CategoryType[]
 }) => {
-  const [view, setView] = useState<"Credit" | "Debit" | "Both">("Debit")
+  const { accounts, categories, merchants } = useDataContext()
+  const [expenseView, setExpenseView] = useState<"Credit" | "Debit" | "Both">(
+    "Debit",
+  )
   // Account map for transaction payment account
   const accountMap = useMemo(
     () => new Map(accounts.map((a) => [a.account_id, a])),
@@ -50,31 +41,59 @@ const TransactionsDisplay = ({
   )
 
   const { transactionsByType, total } = useMemo(() => {
-    const filtered = transactions.filter((t) => {
-      const matchesType = t.transaction_type === type
-      const matchesView =
-        type === "Expense"
-          ? view === "Both" ||
-            (view === "Debit" &&
-              accountMap.get(t.account_id)?.type === "Checking") ||
-            (view === "Credit" &&
-              accountMap.get(t.account_id)?.type === "Credit Card")
-          : true
-      return matchesType && matchesView
+    const filtered = currTransactions.filter((t) => {
+      const accountType = accountMap.get(t.account_id!)?.type
+
+      const matchesDisplayType =
+        displayType === "Income"
+          ? ["Income", "Refund", "Return"].includes(t.transaction_type)
+          : t.transaction_type === "Expense"
+
+      if (!matchesDisplayType) {
+        return false
+      }
+
+      // Income/Refund/Return don't need debit/credit filtering
+      if (displayType === "Income") {
+        return true
+      }
+
+      // Expense filtering
+      if (expenseView === "Both") {
+        return true
+      }
+
+      if (expenseView === "Debit") {
+        return accountType === "Checking"
+      }
+
+      if (expenseView === "Credit") {
+        return accountType === "Credit Card"
+      }
+
+      return false
     })
 
-    const totalAmount = getTransactionsTotal({ transactions: filtered })
+    const totalAmount = getTransactionsTotal({
+      transactions: filtered,
+    })
 
-    return { transactionsByType: filtered, total: totalAmount }
-  }, [transactions, type, selectedDate, view])
+    return {
+      transactionsByType: filtered,
+      total: totalAmount,
+    }
+  }, [currTransactions, displayType, expenseView, accountMap])
 
   useEffect(() => {
-    setView("Both")
-  }, [type])
+    setExpenseView("Both")
+  }, [displayType])
 
   return (
     <Stack className="xl:w-[50%]" spacing={1} sx={{ paddingBottom: "50px" }}>
-      <TransactionTypeToggle type={type} setType={setType} />
+      <TransactionTypeToggle
+        displayType={displayType}
+        setDisplayType={setDisplayType}
+      />
 
       <Stack
         direction={"row"}
@@ -88,8 +107,11 @@ const TransactionsDisplay = ({
           {`$${numberToString(total)}`}
         </Typography>
 
-        {type === "Expense" && (
-          <ExpenseViewToggle view={view} setView={setView} />
+        {displayType === "Expense" && (
+          <ExpenseViewToggle
+            expenseView={expenseView}
+            setExpenseView={setExpenseView}
+          />
         )}
       </Stack>
 
@@ -101,7 +123,7 @@ const TransactionsDisplay = ({
       >
         {transactionsByType.length === 0 ? (
           <Typography sx={{ width: "100%", textAlign: "center" }}>
-            {`There are no ${type} transactions`}
+            {`There are no ${displayType} transactions`}
           </Typography>
         ) : (
           <TransactionCategoryStack

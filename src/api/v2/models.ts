@@ -75,9 +75,9 @@ export type V2CreateMerchantType = {
 // TRANSACTIONS ================================================================
 export type V2TransactionType = {
   transaction_id: string
-  account_id: string
-  category_id: string
-  merchant_id: string
+  account_id: string | null
+  category_id: string | null
+  merchant_id: string | null
   parent_transaction_id: string | null
   amount: number
   transaction_type: TransactionTypeValue
@@ -90,13 +90,13 @@ export type V2TransactionType = {
 }
 
 export type V2CreateTransactionType = {
-  account_id: string
-  category_id: string
-  merchant_id: string
+  account_id: string | null
+  category_id: string | null
+  merchant_id: string | null
   parent_transaction_id?: string | null
   amount: number
   transaction_type: TransactionTypeValue
-  description?: string | null
+  description?: string
   notes?: string | null
   transaction_date: string
   is_paid: boolean | null

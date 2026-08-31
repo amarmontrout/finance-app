@@ -1,31 +1,34 @@
+import { AccountTypeValue } from "@/api/v2/models"
 import { HookSetter } from "@/types/types"
 import { ToggleButton, ToggleButtonGroup } from "@mui/material"
 
-const ExpenseViewToggle = ({
-  view,
-  setView,
+const TransactionExpenseViewToggle = ({
+  expenseView,
+  setExpenseView,
 }: {
-  view: "Debit" | "Credit" | "Both"
-  setView: HookSetter<"Debit" | "Credit" | "Both">
+  expenseView: Partial<AccountTypeValue> | "Both"
+  setExpenseView: HookSetter<Partial<AccountTypeValue> | "Both">
 }) => {
-  const handleToggle = (clicked: "Debit" | "Credit") => {
-    if (view === "Debit") {
-      setView(clicked === "Debit" ? "Credit" : "Both")
+  const handleToggle = (clicked: Partial<AccountTypeValue> | "Both") => {
+    if (expenseView === "Checking") {
+      setExpenseView(clicked === "Checking" ? "Credit Card" : "Both")
       return
     }
 
-    if (view === "Credit") {
-      setView(clicked === "Debit" ? "Both" : "Debit")
+    if (expenseView === "Credit Card") {
+      setExpenseView(clicked === "Checking" ? "Both" : "Checking")
       return
     }
 
     // currently "Both"
-    setView(clicked === "Debit" ? "Debit" : "Credit")
+    setExpenseView(clicked === "Checking" ? "Checking" : "Credit Card")
   }
 
   return (
     <ToggleButtonGroup
-      value={view === "Both" ? ["Debit", "Credit"] : [view]}
+      value={
+        expenseView === "Both" ? ["Checking", "Credit Card"] : [expenseView]
+      }
       size="small"
       sx={{
         "& .MuiToggleButton-root": {
@@ -46,18 +49,18 @@ const ExpenseViewToggle = ({
     >
       <ToggleButton
         className="text-dark-4 dark:text-dark-6"
-        value="Debit"
+        value="Checking"
         disableRipple
-        onClick={() => handleToggle("Debit")}
+        onClick={() => handleToggle("Checking")}
       >
         Debit
       </ToggleButton>
 
       <ToggleButton
         className="text-dark-4 dark:text-dark-6"
-        value="Credit"
+        value="Credit Card"
         disableRipple
-        onClick={() => handleToggle("Credit")}
+        onClick={() => handleToggle("Credit Card")}
       >
         Credit
       </ToggleButton>
@@ -65,4 +68,4 @@ const ExpenseViewToggle = ({
   )
 }
 
-export default ExpenseViewToggle
+export default TransactionExpenseViewToggle

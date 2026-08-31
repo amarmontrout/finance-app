@@ -1,12 +1,12 @@
 import { Metadata } from "next"
-import MonthlySummary from "./MonthlySummary"
+import V2Home from "../v2/V2Home"
 
 export const metadata: Metadata = {
   title: "Monthly Summary Page",
 }
 
 const MonthlySummaryPage = () => {
-  return <MonthlySummary />
+  return <V2Home />
 }
 
 export default MonthlySummaryPage

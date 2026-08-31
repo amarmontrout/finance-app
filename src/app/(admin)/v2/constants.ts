@@ -1,3 +1,5 @@
+import { FilterOperator } from "@/api/performRequest"
+
 export const CATEGORY_COLORS = [
   "#F44336",
   "#E91E63",
@@ -47,4 +49,36 @@ export const MONTH_INDEX_V2: Record<string, string> = {
   "10": "October",
   "11": "November",
   "12": "December",
+}
+
+// FILTERS =====================================================================
+
+export const NOT_DELETED_FILTER = {
+  column: "deleted_at",
+  operator: "eq" as FilterOperator,
+  value: null,
+}
+
+export const START_DATE_FILTER = (startDate: string) => {
+  return {
+    column: "transaction_date",
+    operator: "gte" as FilterOperator,
+    value: startDate,
+  }
+}
+
+export const END_DATE_FILTER = (endDate: string) => {
+  return {
+    column: "transaction_date",
+    operator: "lt" as FilterOperator,
+    value: endDate,
+  }
+}
+
+export const TYPE_FILTER = (type: string) => {
+  return {
+    column: "transaction_type",
+    operator: "eq" as FilterOperator,
+    value: type,
+  }
 }

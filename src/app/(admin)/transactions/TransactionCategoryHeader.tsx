@@ -1,6 +1,6 @@
 import { V2TransactionType } from "@/api/v2/models"
 import { getTransactionsTotal } from "@/global/dataFunctions"
-import { numberToString } from "@/global/formattingFunctions"
+import { currencyFormatter } from "@/global/formattingFunctions"
 import { Stack, Typography } from "@mui/material"
 
 const TransactionCategoryHeader = ({
@@ -25,7 +25,7 @@ const TransactionCategoryHeader = ({
       <Typography sx={{ fontSize: 17 }}>{date}</Typography>
 
       <Typography sx={{ fontSize: 17 }}>
-        ${numberToString(categoryTotal)}
+        {currencyFormatter.format(categoryTotal)}
       </Typography>
     </Stack>
   )

@@ -67,7 +67,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
     useState<Partial<TransactionTypeValue>>("Income")
   const [expenseView, setExpenseView] = useState<
     Partial<AccountTypeValue> | "Both"
-  >("Checking")
+  >("Both")
 
   // VARIABLES =================================================================
 

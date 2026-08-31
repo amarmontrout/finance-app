@@ -63,10 +63,13 @@ export const getTransactionsTotal = ({
 }: {
   transactions: V2TransactionType[]
 }) => {
-  return transactions.reduce(
-    (total, transaction) => total + transaction.amount,
-    0,
-  )
+  return transactions
+    .filter((transaction) =>
+      transaction.transaction_type === "Income"
+        ? transaction
+        : transaction.is_paid,
+    )
+    .reduce((total, transaction) => total + transaction.amount, 0)
 }
 
 export const getTransactionsTotalByCategory = ({

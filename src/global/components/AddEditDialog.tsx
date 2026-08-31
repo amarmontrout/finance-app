@@ -4,23 +4,30 @@ import {
   V2TransactionType,
 } from "@/api/v2/models"
 import { saveTransactionV2, updateTransactionV2 } from "@/api/v2/requests"
-import AddTransaction from "@/app/(admin)/v2/forms/AddTransaction"
-import { getToday } from "@/app/(admin)/v2/utils"
+import AddTransaction, {
+  ActiveFieldType,
+} from "@/app/(admin)/v2/forms/AddTransaction"
+import { useTransactionContext } from "@/app/(admin)/v2/TransactionsContext"
+import { formatDate, getToday } from "@/app/(admin)/v2/utils"
 import { CloseIcon } from "@/assets/icons"
 import { AlertToastType, HookSetter } from "@/types/types"
 
+import { useDataContext } from "@/contexts/data-context"
 import SaveIcon from "@mui/icons-material/Save"
 import {
+  Box,
   Dialog,
   DialogContent,
   DialogTitle,
   IconButton,
   Stack,
+  TextField,
   ToggleButton,
   ToggleButtonGroup,
   Typography,
 } from "@mui/material"
 import { RefObject, useEffect, useState } from "react"
+import MoneyInput from "./MoneyInput"
 
 const transactionToForm = (
   transaction: V2TransactionType,
@@ -46,74 +53,129 @@ const createInitialTransaction = (): V2CreateTransactionType => ({
   is_paid: null,
 })
 
-// TODO: Then when calculating total expense, subtract the return amount from
-// the transaction_id that equals the parent_transaction_id so that the amount
-// display is reduced by the return amount. Mabye note that this transaction
-// contains a return. Do the same with the total expense calculation. We also
-// want to not count unpaid transactions in the total amount.
+const Row = ({
+  active,
+  label,
+  display,
+  edit,
+  onClick,
+}: {
+  active?: boolean
+  label: string
+  display: React.ReactNode
+  edit?: React.ReactNode
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void
+}) => {
+  return (
+    <Stack
+      direction={"row"}
+      sx={{
+        minHeight: "36px",
+        justifyContent: "space-between",
+        alignItems: "stretch",
+      }}
+    >
+      <Typography
+        sx={{
+          display: "flex",
+          flex: 1,
+          alignItems: "center",
+        }}
+      >
+        {label}
+      </Typography>
+      <Box
+        onClick={onClick}
+        sx={{
+          minWidth: 0,
+          flex: 1.5,
+          textAlign: "right",
+          alignContent: "Center",
+        }}
+      >
+        {active ? edit : display}
+      </Box>
+    </Stack>
+  )
+}
 
 const AddEditDialog = ({
   openDialog,
   setOpenDialog,
   setAlertToast,
   inputRef,
-  refreshTransactions,
   selectedTransaction,
   setSelectedTransaction,
-  transactionsWithReturns,
 }: {
   openDialog: boolean
   setOpenDialog: HookSetter<boolean>
   setAlertToast: HookSetter<AlertToastType | undefined>
   inputRef: RefObject<HTMLInputElement | null>
-  refreshTransactions: () => Promise<void>
   selectedTransaction?: V2TransactionType | null
   setSelectedTransaction?: HookSetter<V2TransactionType | null>
-  transactionsWithReturns: Map<string, string[]>
 }) => {
+  const { refreshTransactions, transactionsWithReturns } =
+    useTransactionContext()
+  const { merchantMap, categoryMap } = useDataContext()
+
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [transaction, setTransaction] = useState<V2CreateTransactionType>(
     createInitialTransaction(),
   )
+  const [returnTransaction, setReturnTransaction] =
+    useState<V2CreateTransactionType>(createInitialTransaction())
+  const [creatingReturn, setCreatingReturn] = useState<boolean>(false)
+  const [activeReturnField, setActiveReturnField] =
+    useState<ActiveFieldType>(null)
 
   const isEditing = !!selectedTransaction
-  const containsReturn = transactionsWithReturns.has(
-    selectedTransaction?.transaction_id!,
-  )
-
-  const updateTransaction = async () => {
-    if (!selectedTransaction) return
-    const updatedTransaction: V2TransactionType = {
-      ...selectedTransaction,
-      ...transaction,
-    }
-    await updateTransactionV2({
-      rowId: selectedTransaction.transaction_id,
-      body: updatedTransaction,
-    })
-  }
-
-  const saveNewTransaction = async () => {
-    await saveTransactionV2({
-      body: transaction,
-    })
-  }
+  const containsReturn =
+    selectedTransaction != null &&
+    transactionsWithReturns.has(selectedTransaction.transaction_id)
 
   const save = async () => {
     setIsLoading(true)
     try {
-      if (isEditing) {
-        updateTransaction()
+      if (isEditing && selectedTransaction && creatingReturn) {
+        await saveTransactionV2({
+          body: {
+            ...returnTransaction,
+            parent_transaction_id: selectedTransaction.transaction_id,
+          },
+        })
+        await updateTransactionV2({
+          rowId: selectedTransaction.transaction_id,
+          body: {
+            ...selectedTransaction,
+            amount: selectedTransaction.amount - returnTransaction.amount,
+          },
+        })
+      } else if (isEditing && selectedTransaction && !creatingReturn) {
+        const updatedTransaction: V2TransactionType = {
+          ...selectedTransaction,
+          ...transaction,
+        }
+        await updateTransactionV2({
+          rowId: selectedTransaction.transaction_id,
+          body: updatedTransaction,
+        })
       } else {
-        saveNewTransaction()
+        await saveTransactionV2({
+          body: transaction,
+        })
       }
+
+      await refreshTransactions()
+
       setAlertToast({
         open: true,
         onClose: () => setAlertToast(undefined),
         severity: "success",
-        message: isEditing
-          ? "Transaction updated successfully!"
-          : "Transaction saved successfully!",
+        message: creatingReturn
+          ? "Return saved successfully!"
+          : isEditing
+            ? "Transaction updated successfully!"
+            : "Transaction saved successfully!",
       })
     } catch (error) {
       console.error(error)
@@ -121,24 +183,35 @@ const AddEditDialog = ({
         open: true,
         onClose: () => setAlertToast(undefined),
         severity: "error",
-        message: isEditing
-          ? "Transaction could not be updated."
-          : "Transaction could not be saved.",
+        message: creatingReturn
+          ? "Return could not be saved!"
+          : isEditing
+            ? "Transaction could not be updated!"
+            : "Transaction could not be saved!",
       })
     } finally {
-      await refreshTransactions()
       setTransaction(createInitialTransaction())
       setSelectedTransaction?.(null)
       setOpenDialog(false)
       setIsLoading(false)
+      setCreatingReturn(false)
+      setReturnTransaction(createInitialTransaction())
+      setActiveReturnField(null)
     }
   }
 
   // Resets state when dialog is closed
   const closeDialog = () => {
-    setOpenDialog(false)
-    setTransaction(createInitialTransaction())
-    setSelectedTransaction?.(null)
+    if (creatingReturn) {
+      setCreatingReturn(false)
+      setReturnTransaction(createInitialTransaction())
+      setActiveReturnField(null)
+      return
+    } else {
+      setOpenDialog(false)
+      setTransaction(createInitialTransaction())
+      setSelectedTransaction?.(null)
+    }
   }
 
   // Toggles transaction type for new transaction
@@ -153,6 +226,25 @@ const AddEditDialog = ({
       }))
     }
   }
+
+  // Set up return transaction when an expense is selected
+  useEffect(() => {
+    if (
+      selectedTransaction &&
+      selectedTransaction.transaction_type === "Expense"
+    ) {
+      setReturnTransaction({
+        transaction_type: "Return",
+        amount: 0,
+        transaction_date: getToday(),
+        category_id: selectedTransaction.category_id,
+        merchant_id: selectedTransaction.merchant_id,
+        account_id: selectedTransaction.account_id,
+        description: "",
+        is_paid: null,
+      })
+    }
+  }, [selectedTransaction])
 
   // Populates form with default values or selected transaction values
   useEffect(() => {
@@ -187,17 +279,21 @@ const AddEditDialog = ({
           <IconButton onClick={closeDialog}>
             <CloseIcon />
           </IconButton>
-
-          <Typography>{`${isEditing ? "EDIT" : "NEW"} TRANSACTION`}</Typography>
+          {!creatingReturn && (
+            <Typography>{`${isEditing ? "EDIT" : "NEW"} TRANSACTION`}</Typography>
+          )}
+          {creatingReturn && <Typography>RETURN</Typography>}
 
           <IconButton
             loading={isLoading}
             onClick={save}
             disabled={
-              transaction.amount === 0 ||
-              transaction.account_id === null ||
-              transaction.category_id === null ||
-              transaction.merchant_id === null
+              creatingReturn
+                ? returnTransaction.amount === 0
+                : transaction.amount === 0 ||
+                  transaction.account_id === null ||
+                  transaction.category_id === null ||
+                  transaction.merchant_id === null
             }
           >
             <SaveIcon />
@@ -206,73 +302,175 @@ const AddEditDialog = ({
       </DialogTitle>
 
       <DialogContent sx={{ backgroundColor: "#3E5942" }}>
-        <Stack width={"100%"} textAlign={"center"} spacing={3}>
-          {!isEditing && (
-            <ToggleButtonGroup
-              value={transaction.transaction_type}
-              exclusive
-              onChange={handleSelectType}
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                "& .MuiToggleButton-root": {
-                  border: "none",
-                  textTransform: "none",
-                  fontWeight: 400,
-                  backgroundColor: "transparent",
-                  "&.Mui-selected": {
-                    backgroundColor: "transparent",
-                    color: "white",
-                  },
-                  "&.Mui-selected:hover": {
-                    backgroundColor: "transparent",
-                  },
-                },
-                "& .MuiToggleButton-root:not(:last-of-type)": {
-                  borderRight: "1px solid",
-                  borderColor: "#102A1B",
-                },
-              }}
-            >
-              <ToggleButton
-                className="text-dark-4 dark:text-dark-6"
-                value={"Income"}
-                disableRipple
+        {!creatingReturn && (
+          <Stack width={"100%"} textAlign={"center"} spacing={3}>
+            {!isEditing && (
+              <ToggleButtonGroup
+                value={transaction.transaction_type}
+                exclusive
+                onChange={handleSelectType}
                 sx={{
-                  "&.Mui-selected": {
-                    color: "#102A1B",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  "& .MuiToggleButton-root": {
+                    border: "none",
+                    textTransform: "none",
+                    fontWeight: 400,
+                    backgroundColor: "transparent",
+                    "&.Mui-selected": {
+                      backgroundColor: "transparent",
+                      color: "white",
+                    },
+                    "&.Mui-selected:hover": {
+                      backgroundColor: "transparent",
+                    },
+                  },
+                  "& .MuiToggleButton-root:not(:last-of-type)": {
+                    borderRight: "1px solid",
+                    borderColor: "#102A1B",
                   },
                 }}
               >
-                Income
-              </ToggleButton>
+                <ToggleButton
+                  className="text-dark-4 dark:text-dark-6"
+                  value={"Income"}
+                  disableRipple
+                  sx={{
+                    "&.Mui-selected": {
+                      color: "#102A1B",
+                    },
+                  }}
+                >
+                  Income
+                </ToggleButton>
 
-              <ToggleButton
-                className="text-dark-4 dark:text-dark-6"
-                value={"Expense"}
-                disableRipple
-                sx={{
-                  "&.Mui-selected": {
-                    color: "#102A1B",
-                  },
-                }}
-              >
-                Expense
-              </ToggleButton>
-            </ToggleButtonGroup>
-          )}
+                <ToggleButton
+                  className="text-dark-4 dark:text-dark-6"
+                  value={"Expense"}
+                  disableRipple
+                  sx={{
+                    "&.Mui-selected": {
+                      color: "#102A1B",
+                    },
+                  }}
+                >
+                  Expense
+                </ToggleButton>
+              </ToggleButtonGroup>
+            )}
 
-          <AddTransaction
-            inputRef={inputRef}
-            transaction={transaction}
-            setTransaction={setTransaction}
-            openDialog={openDialog}
-            isEditing={isEditing}
-          />
+            <AddTransaction
+              inputRef={inputRef}
+              transaction={transaction}
+              setTransaction={setTransaction}
+              openDialog={openDialog}
+              isEditing={isEditing}
+              setCreatingReturn={setCreatingReturn}
+            />
 
-          {containsReturn && <Typography>Contains a return</Typography>}
-        </Stack>
+            {containsReturn && <Typography>Contains a return</Typography>}
+          </Stack>
+        )}
+
+        {creatingReturn && (
+          <Stack width={"100%"} textAlign={"center"}>
+            <Typography>
+              {`${selectedTransaction?.transaction_date}: 
+              ${merchantMap.get(selectedTransaction?.merchant_id!)?.name} - 
+              ${categoryMap.get(selectedTransaction?.category_id!)?.name}`}
+            </Typography>
+
+            <MoneyInput
+              value={returnTransaction.amount}
+              setValue={setReturnTransaction}
+              inputRef={inputRef}
+              autoFocus={creatingReturn}
+            />
+
+            <Stack direction={"column"} spacing={0.5} divider={<hr />}>
+              {/* DATE */}
+              <Row
+                active={activeReturnField === "date"}
+                label={"Date"}
+                display={
+                  <Typography>
+                    {formatDate(returnTransaction.transaction_date)}
+                  </Typography>
+                }
+                edit={
+                  <TextField
+                    id={"date"}
+                    fullWidth
+                    autoFocus={activeReturnField === "date"}
+                    type={"date"}
+                    label={"Transaction Date"}
+                    size={"small"}
+                    value={returnTransaction.transaction_date}
+                    onChange={(e) =>
+                      setReturnTransaction((prev) => ({
+                        ...prev,
+                        transaction_date: e.target.value,
+                      }))
+                    }
+                  />
+                }
+                onClick={
+                  activeReturnField !== "date"
+                    ? () => {
+                        setActiveReturnField("date")
+                      }
+                    : undefined
+                }
+              />
+
+              {/* DESCRIPTION */}
+              <Row
+                active={activeReturnField === "description"}
+                label={"Description"}
+                display={
+                  <Typography>
+                    {returnTransaction.description !== ""
+                      ? returnTransaction.description
+                      : "Add a Description"}
+                  </Typography>
+                }
+                edit={
+                  <TextField
+                    id={"description"}
+                    variant={"standard"}
+                    size={"small"}
+                    value={returnTransaction.description}
+                    autoFocus={activeReturnField === "description"}
+                    onChange={(e) =>
+                      setReturnTransaction((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    multiline
+                    minRows={1}
+                    sx={{
+                      width: "100%",
+                      "& .MuiInputBase-root": {
+                        minHeight: 36,
+                      },
+                      "& textarea": {
+                        fontSize: "16px",
+                      },
+                    }}
+                    placeholder="Enter Description"
+                  />
+                }
+                onClick={
+                  activeReturnField !== "description"
+                    ? () => setActiveReturnField("description")
+                    : undefined
+                }
+              />
+            </Stack>
+          </Stack>
+        )}
       </DialogContent>
     </Dialog>
   )

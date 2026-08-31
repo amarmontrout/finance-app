@@ -14,7 +14,7 @@ import {
 import { RefObject, useEffect, useState } from "react"
 import { formatDate } from "../utils"
 
-type ActiveFieldType =
+export type ActiveFieldType =
   | "date"
   | "category"
   | "account"
@@ -75,12 +75,14 @@ const AddTransaction = ({
   setTransaction,
   openDialog,
   isEditing,
+  setCreatingReturn,
 }: {
   inputRef: RefObject<HTMLInputElement | null>
   transaction: V2CreateTransactionType
   setTransaction: HookSetter<V2CreateTransactionType>
   openDialog: boolean
   isEditing: boolean
+  setCreatingReturn: HookSetter<boolean>
 }) => {
   const {
     categories,
@@ -157,6 +159,7 @@ const AddTransaction = ({
             <TextField
               id={"date"}
               fullWidth
+              autoFocus={activeField === "date"}
               type={"date"}
               label={"Transaction Date"}
               size={"small"}
@@ -411,6 +414,7 @@ const AddTransaction = ({
               variant={"standard"}
               size={"small"}
               value={transaction.description}
+              autoFocus={activeField === "description"}
               onChange={(e) =>
                 setTransaction((prev) => ({
                   ...prev,
@@ -443,7 +447,9 @@ const AddTransaction = ({
         <Button
           variant={"outlined"}
           sx={{ color: "white", borderColor: "white" }}
-          onClick={() => {}}
+          onClick={() => {
+            setCreatingReturn(true)
+          }}
         >
           Create Return
         </Button>

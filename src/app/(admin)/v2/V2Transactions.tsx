@@ -33,8 +33,6 @@ const V2Transactions = () => {
     typeFilteredTransactions,
     byDateTransactions,
     deleteTransaction,
-    refreshTransactions,
-    transactionsWithReturns,
   } = useTransactionContext()
 
   const [openDialog, setOpenDialog] = useState<boolean>(false)
@@ -164,10 +162,8 @@ const V2Transactions = () => {
         setOpenDialog={setOpenDialog}
         setAlertToast={setAlertToast}
         inputRef={inputRef}
-        refreshTransactions={refreshTransactions}
         selectedTransaction={selectedTransaction}
         setSelectedTransaction={setSelectedTransaction}
-        transactionsWithReturns={transactionsWithReturns}
       />
 
       <AddDataButton

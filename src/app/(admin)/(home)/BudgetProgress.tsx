@@ -6,9 +6,10 @@ import {
 import { getBudgetsV2, getTransactionsV2 } from "@/api/v2/requests"
 import { getBudgetInfo, getNextMonthYear } from "@/global/infoFunctions"
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded"
-import { Box, Stack, Typography } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
+import AppCard from "../v2/components/AppCard"
 import { getToday, hydrateBudgets } from "../v2/utils"
 import BudgetProgressBar from "./_components/ProgressBar"
 
@@ -84,7 +85,7 @@ const BudgetProgress = ({ categories }: { categories: V2CategoryType[] }) => {
 
     const budgetCategoryIds = new Set(budgets.map((b) => b.category_id))
     const actualTotal = currentTransactions.reduce((total, transaction) => {
-      if (!budgetCategoryIds.has(transaction.category_id)) return total
+      if (!budgetCategoryIds.has(transaction.category_id!)) return total
 
       switch (transaction.transaction_type) {
         case "Expense":
@@ -109,7 +110,7 @@ const BudgetProgress = ({ categories }: { categories: V2CategoryType[] }) => {
   })
 
   return (
-    <Box bgcolor={"rgba(255,255,255,0.15)"} borderRadius={5} padding={2}>
+    <AppCard>
       <Stack direction={"column"} spacing={2}>
         <BudgetProgressBar
           label={"Total Budget"}
@@ -135,7 +136,7 @@ const BudgetProgress = ({ categories }: { categories: V2CategoryType[] }) => {
           </Typography>
         </Link>
       </Stack>
-    </Box>
+    </AppCard>
   )
 }
 

@@ -7,8 +7,9 @@ import {
   getNextMonthYear,
   getPreviousMonthYear,
 } from "@/global/infoFunctions"
-import { Box, Stack, Typography } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
+import AppCard from "../v2/components/AppCard"
 import { getToday } from "../v2/utils"
 
 const STATEMENT_START_DAY = "06"
@@ -98,7 +99,7 @@ const CreditCardEstimate = ({ accounts }: { accounts: V2AccountType[] }) => {
   })
 
   return (
-    <Box bgcolor={"rgba(255,255,255,0.15)"} borderRadius={5} padding={2}>
+    <AppCard>
       <Stack
         direction={"column"}
         height={"100%"}
@@ -133,7 +134,7 @@ const CreditCardEstimate = ({ accounts }: { accounts: V2AccountType[] }) => {
           </Typography>
         </Stack>
       </Stack>
-    </Box>
+    </AppCard>
   )
 }
 

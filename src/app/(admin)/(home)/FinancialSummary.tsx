@@ -1,35 +1,15 @@
-import { V2AccountType, V2TransactionType } from "@/api/v2/models"
+import { V2TransactionType } from "@/api/v2/models"
 import { getTransactionsV2 } from "@/api/v2/requests"
+import { useDataContext } from "@/contexts/data-context"
+import { getDebitExpenseTotal, getIncomeTotal } from "@/global/dataFunctions"
 import { currencyFormatter } from "@/global/formattingFunctions"
 import { getNextMonthYear, getPreviousMonthYear } from "@/global/infoFunctions"
 import NorthIcon from "@mui/icons-material/North"
 import SouthIcon from "@mui/icons-material/South"
 import { Box, Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
+import { NOT_DELETED_FILTER } from "../v2/constants"
 import { getToday } from "../v2/utils"
-
-const getIncomeTotal = (transactions: V2TransactionType[]) => {
-  return transactions.reduce((total, transaction) => {
-    if (transaction.transaction_type !== "Income") return total
-
-    return total + transaction.amount
-  }, 0)
-}
-
-const getDebitExpenseTotal = (
-  transactions: V2TransactionType[],
-  accountMap: Map<string, V2AccountType>,
-) => {
-  return transactions.reduce((total, transaction) => {
-    if (
-      transaction.transaction_type !== "Expense" ||
-      accountMap.get(transaction.account_id)?.type !== "Checking"
-    )
-      return total
-
-    return total + transaction.amount
-  }, 0)
-}
 
 const SummaryCard = ({
   children,
@@ -54,7 +34,7 @@ const SummaryCard = ({
   </Box>
 )
 
-const FinancialSummary = ({ accounts }: { accounts: V2AccountType[] }) => {
+const FinancialSummary = () => {
   // Date strings
   const today = getToday()
   const [yearStr, monthStr] = today.split("-")
@@ -63,10 +43,7 @@ const FinancialSummary = ({ accounts }: { accounts: V2AccountType[] }) => {
   const nextMonthYear = getNextMonthYear({ isoString: today })
 
   // Account map for transaction payment account
-  const accountMap = useMemo(
-    () => new Map(accounts.map((a) => [a.account_id, a])),
-    [accounts],
-  )
+  const { accountMap } = useDataContext()
 
   // Transactions
   const [currentTransactions, setCurrentTransactions] = useState<
@@ -110,8 +87,10 @@ const FinancialSummary = ({ accounts }: { accounts: V2AccountType[] }) => {
               operator: "lt",
               value: `${currMonthYear}-01`,
             },
+            NOT_DELETED_FILTER,
           ],
         }),
+
         getTransactionsV2({
           filters: [
             {
@@ -124,6 +103,7 @@ const FinancialSummary = ({ accounts }: { accounts: V2AccountType[] }) => {
               operator: "lt",
               value: `${nextMonthYear}-01`,
             },
+            NOT_DELETED_FILTER,
           ],
         }),
       ])

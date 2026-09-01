@@ -1,5 +1,5 @@
 import { TransactionType } from "@/api/transactions/models"
-import { V2TransactionType } from "@/api/v2/models"
+import { V2AccountType, V2TransactionType } from "@/api/v2/models"
 
 export const getTransactionsByType = ({
   transactions,
@@ -58,6 +58,24 @@ export const getExpenseTransactionsByPaymentMethod = ({
   })
 }
 
+export const getTransactionsTotalByCategory = ({
+  transactions,
+  category,
+}: {
+  transactions: TransactionType[]
+  category: string
+}) => {
+  return transactions.reduce((total, transaction) => {
+    if (transaction.category !== category) return total
+
+    return (
+      total + (transaction.is_return ? -transaction.amount : transaction.amount)
+    )
+  }, 0)
+}
+
+// V2TransactionType ===========================================================
+
 export const getTransactionsTotal = ({
   transactions,
 }: {
@@ -72,18 +90,26 @@ export const getTransactionsTotal = ({
     .reduce((total, transaction) => total + transaction.amount, 0)
 }
 
-export const getTransactionsTotalByCategory = ({
-  transactions,
-  category,
-}: {
-  transactions: TransactionType[]
-  category: string
-}) => {
+export const getIncomeTotal = (transactions: V2TransactionType[]) => {
   return transactions.reduce((total, transaction) => {
-    if (transaction.category !== category) return total
+    if (transaction.transaction_type !== "Income") return total
 
-    return (
-      total + (transaction.is_return ? -transaction.amount : transaction.amount)
+    return total + transaction.amount
+  }, 0)
+}
+
+export const getDebitExpenseTotal = (
+  transactions: V2TransactionType[],
+  accountMap: Map<string, V2AccountType>,
+) => {
+  return transactions.reduce((total, transaction) => {
+    if (
+      transaction.transaction_type !== "Expense" ||
+      accountMap.get(transaction.account_id!)?.type !== "Checking" ||
+      !transaction.is_paid
     )
+      return total
+
+    return total + transaction.amount
   }, 0)
 }

@@ -81,3 +81,9 @@ export const getMonthRange = ({ currentDate }: { currentDate: Date }) => {
     endDate: formatDateToISO(endDate),
   }
 }
+
+export const isoToString = (isoDate: string) => {
+  const [year, month, day] = isoDate.split("-").map(Number)
+
+  return `${month}/${day}/${year}`
+}

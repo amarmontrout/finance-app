@@ -36,15 +36,15 @@ const TransactionList = ({
               transaction.transaction_type === "Expense" &&
               categoryMap.get(transaction.category_id!)
                 ?.default_transaction_type !== "Return" &&
-              !transaction.is_paid && <WarningAmberOutlinedIcon />
+              !transaction.is_paid && (
+                <WarningAmberOutlinedIcon fontSize={"small"} />
+              )
             }
             mainTitle={mainTitle}
             secondaryTitle={
               categoryMap.get(transaction.category_id!)?.name ?? "No Category"
             }
-            secondaryTitleColor={
-              categoryMap.get(transaction.category_id!)?.color
-            }
+            categoryColor={categoryMap.get(transaction.category_id!)?.color}
             amount={transactionAmount}
             amountColor={"#F5F1E8"}
             buttonCondition={buttonCondition}

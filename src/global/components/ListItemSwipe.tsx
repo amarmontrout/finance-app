@@ -70,7 +70,7 @@ const ListItemSwipe = ({
   icon,
   mainTitle,
   secondaryTitle,
-  secondaryTitleColor,
+  categoryColor,
   amount,
   amountColor,
   buttonCondition,
@@ -83,7 +83,7 @@ const ListItemSwipe = ({
   icon?: React.ReactNode
   mainTitle: string
   secondaryTitle: string
-  secondaryTitleColor: string | null | undefined
+  categoryColor: string | null | undefined
   amount: string
   amountColor: string
   buttonCondition: boolean
@@ -199,6 +199,9 @@ const ListItemSwipe = ({
       sx={{
         position: "relative",
         overflow: "hidden",
+        borderRadius: 1,
+        borderLeft: `3px solid ${categoryColor ?? "white"}`,
+        borderRight: `3px solid ${categoryColor ?? "white"}`,
       }}
     >
       {/* Shared height container */}
@@ -268,7 +271,7 @@ const ListItemSwipe = ({
             zIndex: 1,
             justifyContent: "space-between",
             alignItems: "center",
-            px: 1.5,
+            px: 0.5,
             py: 0.5,
             transform: `translate3d(${offset}px,0,0)`,
             transition: offset === 0 ? "transform 0.2s ease" : "none",
@@ -283,10 +286,10 @@ const ListItemSwipe = ({
           >
             {icon && icon}
 
-            <Stack direction={"column"}>
+            <Stack direction={"column"} spacing={0.25}>
               <Typography
                 sx={{
-                  fontSize: ".9rem",
+                  fontSize: ".95rem",
                   lineHeight: secondaryTitle === "" ? "36px" : "20px",
                   fontWeight: "bold",
                 }}
@@ -298,7 +301,11 @@ const ListItemSwipe = ({
                 sx={{
                   fontSize: "0.7rem",
                   lineHeight: "16px",
-                  color: secondaryTitleColor,
+                  width: "fit-content",
+                  paddingX: 0.5,
+                  color: "black",
+                  borderRadius: 1,
+                  backgroundColor: categoryColor ?? "white",
                 }}
               >
                 {secondaryTitle}

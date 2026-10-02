@@ -1,4 +1,9 @@
-import { NEGATIVE_COLOR, POSITIVE_COLOR, TEXT_COLOR } from "@/app/data/colors"
+import {
+  BACKGROUND,
+  NEGATIVE_COLOR,
+  POSITIVE_COLOR,
+  TEXT_COLOR,
+} from "@/app/data/colors"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
 import { Box, Stack, Typography } from "@mui/material"
@@ -245,9 +250,8 @@ const ListItemSwipe = ({
             <Stack direction={"column"} spacing={0.25}>
               <Typography
                 sx={{
-                  fontSize: ".95rem",
+                  fontSize: "1rem",
                   lineHeight: secondaryTitle === "" ? "36px" : "20px",
-                  fontWeight: "bold",
                 }}
               >
                 {mainTitle}
@@ -256,11 +260,11 @@ const ListItemSwipe = ({
               <Stack direction={"row"} spacing={1}>
                 <Typography
                   sx={{
-                    fontSize: "0.7rem",
+                    fontSize: "0.75rem",
                     lineHeight: "16px",
                     width: "fit-content",
-                    paddingX: 0.5,
-                    color: "black",
+                    paddingX: 0.75,
+                    color: BACKGROUND,
                     borderRadius: 0.5,
                     backgroundColor: categoryColor ?? TEXT_COLOR,
                   }}
@@ -271,7 +275,7 @@ const ListItemSwipe = ({
                 {hasReturn && (
                   <Typography
                     sx={{
-                      fontSize: "0.7rem",
+                      fontSize: "0.75rem",
                       lineHeight: "16px",
                       color: POSITIVE_COLOR,
                     }}

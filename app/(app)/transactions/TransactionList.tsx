@@ -50,10 +50,10 @@ const TransactionList = ({
                   direction={"row"}
                   sx={{ justifyContent: "space-between", color: ACCENT_COLOR }}
                 >
-                  <Typography variant={"caption"}>
+                  <Typography sx={{ fontSize: "0.75rem" }}>
                     {formatDate(date)}
                   </Typography>
-                  <Typography variant={"caption"}>
+                  <Typography sx={{ fontSize: "0.75rem" }}>
                     {currencyFormatter.format(dateTotal)}
                   </Typography>
                 </Stack>

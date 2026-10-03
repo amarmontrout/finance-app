@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { Geist, Geist_Mono } from "next/font/google"
+import { BACKGROUND } from "./data/colors"
 import "./global.css"
 import Providers from "./providers"
 
@@ -16,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "My App",
   description: "My personal app",
+}
+
+export const viewport = {
+  themeColor: BACKGROUND,
+  colorScheme: "dark",
 }
 
 export default function RootLayout({

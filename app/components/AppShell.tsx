@@ -53,14 +53,17 @@ export default function AppShell({ children }: { children: ReactNode }) {
         onChange={(_, index) => router.push(NAVIGATION[index].href)}
         sx={{
           flexShrink: 0,
-          height: 64,
+          height: 80,
           borderTop: 1,
+          paddingTop: 1,
           borderColor: "divider",
+          alignItems: "start",
         }}
       >
         {NAVIGATION.map((item) => (
           <BottomNavigationAction
             disableRipple
+            showLabel
             key={item.href}
             label={item.label}
             icon={item.icon}

@@ -40,7 +40,7 @@ const AddButton = ({
       sx={{
         position: "fixed",
         right: 8,
-        bottom: 72,
+        bottom: 88,
         zIndex: 100,
         width: isCollapsed ? 40 : 168,
         minWidth: 40,

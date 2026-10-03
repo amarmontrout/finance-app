@@ -21,7 +21,8 @@ export default function AppShell({ children }: { children: ReactNode }) {
   return (
     <Box
       sx={{
-        height: "100dvh",
+        width: "100%",
+        height: "100%",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",

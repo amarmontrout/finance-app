@@ -15,7 +15,7 @@ import { TEXT_COLOR } from "@/app/data/colors"
 import { getDateRange, getISOMonth } from "@/app/lib/functions/getters"
 import { HookSetter } from "@/app/lib/types"
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded"
-import { CircularProgress, Stack, Typography } from "@mui/material"
+import { Box, CircularProgress, Stack, Typography } from "@mui/material"
 import { useMemo, useState } from "react"
 import CategoryBudgetSection from "./CategoryBudgetSection"
 
@@ -111,11 +111,9 @@ export default function Budget() {
 
   return (
     <PageContainer>
-      <Section>
-        <Surface>
-          <MonthYearSelector showMonth={true} showYearButtons={false} />
-        </Surface>
-      </Section>
+      <Box sx={{ padding: 1.5 }}>
+        <MonthYearSelector showMonth={true} showYearButtons={false} />
+      </Box>
 
       <Surface>
         {isLoading ? (

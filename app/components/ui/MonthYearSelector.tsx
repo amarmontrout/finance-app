@@ -55,7 +55,7 @@ const MonthYearSelector = ({
         )}
       </Stack>
 
-      <Typography onClick={() => setSelectedDate(new Date())}>
+      <Typography variant={"h5"} onClick={() => setSelectedDate(new Date())}>
         {showMonth && month} {year}
       </Typography>
 

@@ -12,7 +12,7 @@ import MerchantsCard from "@/app/components/ui/MerchantsCard"
 import Surface from "@/app/components/ui/Surface"
 import { useDataContext } from "@/app/contexts/data-context"
 import { useUser } from "@/app/lib/hooks/useUser"
-import { Button, Skeleton, Stack, Typography } from "@mui/material"
+import { Box, Button, Skeleton, Stack, Typography } from "@mui/material"
 import { AuthError } from "@supabase/supabase-js"
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import { useRouter } from "next/navigation"
@@ -47,6 +47,10 @@ export default function Settings() {
 
   return (
     <PageContainer>
+      <Box sx={{ padding: 1.5, height: 64 }}>
+        <Typography variant={"h4"}>Settings</Typography>
+      </Box>
+
       <Section>
         <Surface>
           <Section>

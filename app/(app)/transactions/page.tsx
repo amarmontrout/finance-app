@@ -16,7 +16,7 @@ import Surface from "@/app/components/ui/Surface"
 import { useDataContext } from "@/app/contexts/data-context"
 import { useTransactionContext } from "@/app/contexts/transaction-context"
 import { DEFUALT_EXPENSE_TYPE } from "@/app/data/constants"
-import { CircularProgress, Stack, Typography } from "@mui/material"
+import { Box, CircularProgress, Stack, Typography } from "@mui/material"
 import { useEffect, useMemo, useState } from "react"
 import TransactionList from "./TransactionList"
 import TransactionsHeader from "./TransactionsHeader"
@@ -86,11 +86,9 @@ export default function Transactions() {
 
   return (
     <PageContainer>
-      <Section>
-        <Surface>
-          <MonthYearSelector showMonth={true} showYearButtons={false} />
-        </Surface>
-      </Section>
+      <Box sx={{ padding: 1.5 }}>
+        <MonthYearSelector showMonth={true} showYearButtons={false} />
+      </Box>
 
       <Surface>
         <Section>

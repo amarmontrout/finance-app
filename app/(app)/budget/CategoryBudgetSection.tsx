@@ -11,7 +11,7 @@ import { getBudgetInfo, getISODate } from "@/app/lib/functions/getters"
 import { HookSetter } from "@/app/lib/types"
 import ExpandLessIcon from "@mui/icons-material/ExpandLess"
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore"
-import { Divider, IconButton, Stack } from "@mui/material"
+import { IconButton, Stack } from "@mui/material"
 
 const CategoryBudgetSection = ({
   entries,
@@ -90,16 +90,7 @@ const CategoryBudgetSection = ({
         </Stack>
 
         {expandedCategory === categoryId && (
-          <Stack
-            direction={"column"}
-            sx={{ paddingX: 0.5 }}
-            divider={
-              <Divider
-                orientation={"horizontal"}
-                sx={{ borderColor: TEXT_COLOR }}
-              />
-            }
-          >
+          <Stack direction={"column"} spacing={0.5}>
             {entries
               .toSorted((a, b) =>
                 b.transaction_date.localeCompare(a.transaction_date),

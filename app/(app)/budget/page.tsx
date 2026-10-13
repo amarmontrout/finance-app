@@ -130,7 +130,13 @@ export default function Budget() {
               </Center>
             ) : (
               Object.entries(categoryTransactions)
-                .sort(([a], [b]) => a.localeCompare(b))
+                .sort(([a], [b]) =>
+                  (categoryMap.get(a)?.name ?? "").localeCompare(
+                    categoryMap.get(b)?.name ?? "",
+                    undefined,
+                    { sensitivity: "base", numeric: true },
+                  ),
+                )
                 .map(([categoryId, entries]) => {
                   const budget = budgetLookup[categoryId]
 

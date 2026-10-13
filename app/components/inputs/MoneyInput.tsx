@@ -32,7 +32,7 @@ const MoneyInput = ({
         inputRef={inputRef}
         autoFocus={autoFocus}
         type={"text"}
-        inputMode={"decimal"}
+        inputMode={"numeric"}
         inputProps={{
           style: {
             textAlign: "center",

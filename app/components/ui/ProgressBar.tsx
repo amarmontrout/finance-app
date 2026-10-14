@@ -28,19 +28,20 @@ const ProgressBar = ({
   expected?: number
   onEdit?: () => void
 }) => {
-  const spentPercent = budget === 0 ? 0 : Math.min((actual / budget) * 100, 100)
+  const spentPercent =
+    budget === 0 ? 0 : Math.min(Math.max((actual / budget) * 100, 0), 100)
 
   const { expectedPercent, isOverPace, variance } = useMemo(() => {
-    if (!expected) {
+    if (expected === undefined) {
       return { expectedPercent: 0, isOverPace: false, variance: 0 }
     }
     const safeTotal = Math.max(budget, 1)
     return {
-      expectedPercent: Math.min((expected / safeTotal) * 100, 100),
+      expectedPercent: Math.min(Math.max((expected / safeTotal) * 100, 0), 100),
       isOverPace: actual > expected,
       variance: currencyFormatter.format(Math.abs(actual - expected)),
     }
-  }, [actual, expected])
+  }, [actual, budget, expected])
 
   const getBarColor = () => {
     if (spentPercent < 75) return POSITIVE_COLOR

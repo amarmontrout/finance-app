@@ -1,12 +1,11 @@
 import { CategoryType } from "@/app/(api)/categories/models"
 import { TransactionType } from "@/app/(api)/transactions/models"
 import ListItemSwipe from "@/app/components/ui/ListItemSwipe"
-import Surface from "@/app/components/ui/Surface"
 import { ACCENT_COLOR, TEXT_COLOR } from "@/app/data/colors"
 import { currencyFormatter, formatDate } from "@/app/lib/functions/formatters"
 import { HookSetter } from "@/app/lib/types"
 import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined"
-import { Stack, Typography } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 
 const TransactionList = ({
   dateGroupedTransactions,
@@ -44,16 +43,16 @@ const TransactionList = ({
           }, 0)
 
           return (
-            <Surface key={date}>
+            <Box key={date}>
               <Stack direction={"column"} spacing={1}>
                 <Stack
                   direction={"row"}
                   sx={{ justifyContent: "space-between", color: ACCENT_COLOR }}
                 >
-                  <Typography sx={{ fontSize: "0.75rem" }}>
+                  <Typography sx={{ fontSize: "1rem" }}>
                     {formatDate(date)}
                   </Typography>
-                  <Typography sx={{ fontSize: "0.75rem" }}>
+                  <Typography sx={{ fontSize: "1rem" }}>
                     {currencyFormatter.format(dateTotal)}
                   </Typography>
                 </Stack>
@@ -99,7 +98,7 @@ const TransactionList = ({
                     })}
                 </Stack>
               </Stack>
-            </Surface>
+            </Box>
           )
         })}
     </Stack>

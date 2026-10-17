@@ -1,7 +1,7 @@
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded"
 import { Stack, Typography } from "@mui/material"
 import Link from "next/link"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import ProgressBar from "../components/ui/ProgressBar"
 import { useDataContext } from "../contexts/data-context"
 import { useTransactionContext } from "../contexts/transaction-context"
@@ -9,7 +9,7 @@ import { TEXT_COLOR } from "../data/colors"
 import { getBudgetInfo, getISODate } from "../lib/functions/getters"
 
 const BudgetProgress = () => {
-  const { transactions, setSelectedDate } = useTransactionContext()
+  const { transactions } = useTransactionContext()
   const { activeBudgets } = useDataContext()
 
   const { actualTotal, budgetTotal } = useMemo(() => {
@@ -41,8 +41,6 @@ const BudgetProgress = () => {
     spent: actualTotal,
     date: getISODate(),
   })
-
-  useEffect(() => setSelectedDate(new Date()), [setSelectedDate])
 
   return (
     <Stack direction={"column"} spacing={1} sx={{ textAlign: "right" }}>

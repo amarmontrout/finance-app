@@ -15,25 +15,43 @@ import {
   getTotalIncomeAndExpense,
 } from "../lib/functions/getters"
 
+type InfoType = { current: TransactionType[]; previous: TransactionType[] }
+const DEFAULT_INFO: InfoType = { current: [], previous: [] }
+
+const SummaryValue = ({
+  label,
+  value,
+  loading,
+}: {
+  label: string
+  value: number
+  loading: boolean
+}) => {
+  return (
+    <Stack direction={"column"}>
+      <Typography variant={"caption"}>{label}</Typography>
+      <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
+        {loading ? <Skeleton /> : currencyFormatter.format(value)}
+      </Typography>
+    </Stack>
+  )
+}
+
 const Summary = () => {
   const { accountMap, isDataContextLoading } = useDataContext()
   const { transactions } = useTransactionContext()
 
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
-  const [currTransactions, setCurrTransactions] = useState<TransactionType[]>(
-    [],
-  )
-  const [prevTransactions, setPrevTransactions] = useState<TransactionType[]>(
-    [],
-  )
+  const [transactionInfo, setTransactionInfo] = useState<InfoType>(DEFAULT_INFO)
 
   const isPageLoading = isDataContextLoading || isTransactionsLoading
+
   const current = getTotalIncomeAndExpense({
-    transactions: currTransactions,
+    transactions: transactionInfo.current,
     accountMap,
   })
   const previous = getTotalIncomeAndExpense({
-    transactions: prevTransactions,
+    transactions: transactionInfo.previous,
     accountMap,
   })
 
@@ -48,8 +66,7 @@ const Summary = () => {
         getTransactions(getDateRange(currMonth)),
         getTransactions(getDateRange(prevMonth)),
       ])
-      setCurrTransactions(currTrans)
-      setPrevTransactions(prevTrans)
+      setTransactionInfo({ current: currTrans, previous: prevTrans })
     } catch (error) {
       console.error(error)
     } finally {
@@ -108,29 +125,19 @@ const Summary = () => {
 
       <Stack direction={"row"} spacing={2}>
         <SummaryCard borderColor={POSITIVE_COLOR} padding={1.5}>
-          <Stack direction={"column"}>
-            <Typography variant={"caption"}>Income</Typography>
-            <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
-              {isPageLoading ? (
-                <Skeleton />
-              ) : (
-                currencyFormatter.format(current.totalIncome)
-              )}
-            </Typography>
-          </Stack>
+          <SummaryValue
+            label={"Income"}
+            value={current.totalIncome}
+            loading={isPageLoading}
+          />
         </SummaryCard>
 
         <SummaryCard borderColor={NEGATIVE_COLOR} padding={1.5}>
-          <Stack direction={"column"}>
-            <Typography variant={"caption"}>Expense</Typography>
-            <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
-              {isPageLoading ? (
-                <Skeleton />
-              ) : (
-                currencyFormatter.format(current.totalExpense)
-              )}
-            </Typography>
-          </Stack>
+          <SummaryValue
+            label={"Expense"}
+            value={current.totalExpense}
+            loading={isPageLoading}
+          />
         </SummaryCard>
       </Stack>
     </Box>

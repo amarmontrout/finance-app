@@ -139,6 +139,8 @@ export default function Budget() {
                   const budget = budgetLookup[categoryId]
 
                   if (budget === undefined) {
+                    return
+
                     if (!isCurrentMonth) {
                       return null
                     }

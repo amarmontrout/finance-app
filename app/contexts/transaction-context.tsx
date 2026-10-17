@@ -154,7 +154,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
 
   const saveNewTransaction = async () => {
     try {
-      createTransaction({ body: newTransaction })
+      await createTransaction({ body: newTransaction })
       await refreshTransactions()
       setOpenNewTransactionDialog(false)
       setNewTransaction(createInitialTransaction())

@@ -1,5 +1,6 @@
 "use client"
 
+import { ACCENT_COLOR } from "@/app/data/colors"
 import { FormControl, OutlinedInput } from "@mui/material"
 import { ChangeEvent, RefObject, useEffect, useState } from "react"
 
@@ -34,17 +35,18 @@ const MoneyInput = ({
   }
 
   return (
-    <FormControl fullWidth>
+    <FormControl
+      sx={{ borderRadius: "12px", border: `1px solid ${ACCENT_COLOR}` }}
+    >
       <OutlinedInput
         inputRef={inputRef}
         autoFocus={autoFocus}
-        type="text"
+        type={"text"}
         value={inputValue}
         onChange={handleChange}
         slotProps={{
           input: {
             inputMode: "numeric",
-            "aria-label": "Amount",
             style: {
               textAlign: "center",
               fontSize: "2.5rem",
@@ -54,9 +56,7 @@ const MoneyInput = ({
         }}
         sx={{
           backgroundColor: "transparent",
-          "& .MuiOutlinedInput-notchedOutline": {
-            border: "none",
-          },
+          "& .MuiOutlinedInput-notchedOutline": { border: "none" },
         }}
       />
     </FormControl>

@@ -137,7 +137,7 @@ const TransactionForm = <T extends CreateTransactionType | TransactionType>({
 
       <Stack
         direction={"column"}
-        spacing={0.5}
+        spacing={1}
         divider={<hr />}
         sx={{ width: "100%" }}
       >

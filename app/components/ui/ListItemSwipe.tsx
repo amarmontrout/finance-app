@@ -6,12 +6,12 @@ import {
 } from "@/app/data/colors"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
+import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined"
 import { Box, Stack, Typography } from "@mui/material"
-
 import { memo, useRef, useState } from "react"
 
 const ListItemSwipe = ({
-  icon,
+  showAlert,
   mainTitle,
   secondaryTitle,
   categoryColor,
@@ -23,7 +23,7 @@ const ListItemSwipe = ({
   hasReturn,
   returnedAmount,
 }: {
-  icon?: React.ReactNode
+  showAlert?: boolean
   mainTitle: string
   secondaryTitle: string
   categoryColor: string | null | undefined
@@ -171,147 +171,122 @@ const ListItemSwipe = ({
         borderRight: `3px solid ${categoryColor ?? TEXT_COLOR}`,
       }}
     >
-      {/* Shared height container */}
-      <Box sx={{ position: "relative" }}>
-        {/* Background layer */}
+      {/* Background layer */}
+      <Box sx={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        {/* Left edit */}
         <Box
           sx={{
             position: "absolute",
-            inset: 0,
-            pointerEvents: "none",
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: isEditActive ? "100%" : `${Math.max(0, offset)}px`,
+            bgcolor: POSITIVE_COLOR,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-start",
+            color: TEXT_COLOR,
+            overflow: "hidden",
+            transition: isEditActive ? "width 0.75s ease" : "none",
           }}
         >
-          {/* Left edit */}
-          <Box
+          <EditIcon
             sx={{
-              position: "absolute",
-              left: 0,
-              top: 0,
-              bottom: 0,
-              width: isEditActive ? "100%" : `${Math.max(0, offset)}px`,
-              bgcolor: POSITIVE_COLOR,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-start",
-              color: TEXT_COLOR,
-              overflow: "hidden",
-              transition: isEditActive ? "width 0.75s ease" : "none",
+              transform: isEditActive ? "scale(1.2)" : "scale(1)",
+              transition: "transform 0.15s ease",
+              ml: 2,
             }}
-          >
-            <EditIcon
-              sx={{
-                transform: isEditActive ? "scale(1.2)" : "scale(1)",
-                transition: "transform 0.15s ease",
-                ml: 2,
-              }}
-            />
-          </Box>
-
-          {/* Right delete */}
-          <Box
-            sx={{
-              position: "absolute",
-              right: 0,
-              top: 0,
-              bottom: 0,
-              width: isDeleteActive ? "100%" : `${Math.max(0, -offset)}px`,
-              bgcolor: NEGATIVE_COLOR,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              color: TEXT_COLOR,
-              overflow: "hidden",
-              transition: isDeleteActive ? "width 0.75s ease" : "none",
-            }}
-          >
-            <DeleteIcon
-              sx={{
-                transform: isDeleteActive ? "scale(1.2)" : "scale(1)",
-                transition: "transform 0.15s ease",
-                mr: 2,
-              }}
-            />
-          </Box>
+          />
         </Box>
 
-        {/* Foreground content */}
-        <Stack
-          direction={"row"}
+        {/* Right delete */}
+        <Box
           sx={{
-            position: "relative",
-            zIndex: 1,
-            justifyContent: "space-between",
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: isDeleteActive ? "100%" : `${Math.max(0, -offset)}px`,
+            bgcolor: NEGATIVE_COLOR,
+            display: "flex",
             alignItems: "center",
-            px: 0.5,
-            py: 0.5,
-            transform: `translate3d(${offset}px,0,0)`,
-            transition: offset === 0 ? "transform 0.2s ease" : "none",
-            touchAction: "pan-y",
-            willChange: "transform",
-            backgroundColor: icon ? `rgba(255, 255, 255, 0.05)` : undefined,
+            justifyContent: "flex-end",
+            color: TEXT_COLOR,
+            overflow: "hidden",
+            transition: isDeleteActive ? "width 0.75s ease" : "none",
           }}
         >
-          <Stack
-            direction={"row"}
-            spacing={1}
-            sx={{ width: "100%", alignItems: "center" }}
-          >
-            {icon && icon}
+          <DeleteIcon
+            sx={{
+              transform: isDeleteActive ? "scale(1.2)" : "scale(1)",
+              transition: "transform 0.15s ease",
+              mr: 2,
+            }}
+          />
+        </Box>
+      </Box>
 
-            <Stack direction={"column"} spacing={0.25}>
+      {/* Foreground content */}
+      <Stack
+        direction={"row"}
+        sx={{
+          position: "relative",
+          zIndex: 1,
+          justifyContent: "space-between",
+          alignItems: "center",
+          p: 1,
+          transform: `translate3d(${offset}px,0,0)`,
+          transition: offset === 0 ? "transform 0.2s ease" : "none",
+          touchAction: "pan-y",
+          willChange: "transform",
+          backgroundColor: showAlert ? `rgba(255, 255, 255, 0.05)` : undefined,
+        }}
+      >
+        <Stack direction={"row"} spacing={1} sx={{ alignItems: "center" }}>
+          {/* Alert Icon */}
+          {showAlert && <WarningAmberOutlinedIcon fontSize={"small"} />}
+
+          {/* Titles */}
+          <Stack direction={"column"} spacing={0.25}>
+            <Typography
+              sx={{ lineHeight: secondaryTitle === "" ? "36px" : "20px" }}
+            >
+              {mainTitle}
+            </Typography>
+
+            <Stack direction={"row"} spacing={1}>
               <Typography
                 sx={{
-                  fontSize: "1rem",
-                  lineHeight: secondaryTitle === "" ? "36px" : "20px",
+                  fontSize: "0.75rem",
+                  lineHeight: "16px",
+                  width: "fit-content",
+                  paddingX: 0.75,
+                  color: BACKGROUND,
+                  borderRadius: 0.5,
+                  backgroundColor: categoryColor ?? TEXT_COLOR,
                 }}
               >
-                {mainTitle}
+                {secondaryTitle}
               </Typography>
 
-              <Stack direction={"row"} spacing={1}>
+              {hasReturn && (
                 <Typography
                   sx={{
                     fontSize: "0.75rem",
                     lineHeight: "16px",
-                    width: "fit-content",
-                    paddingX: 0.75,
-                    color: BACKGROUND,
-                    borderRadius: 0.5,
-                    backgroundColor: categoryColor ?? TEXT_COLOR,
+                    color: POSITIVE_COLOR,
                   }}
                 >
-                  {secondaryTitle}
+                  ↩ {returnedAmount} returned
                 </Typography>
-
-                {hasReturn && (
-                  <Typography
-                    sx={{
-                      fontSize: "0.75rem",
-                      lineHeight: "16px",
-                      color: POSITIVE_COLOR,
-                    }}
-                  >
-                    ↩ {returnedAmount} returned
-                  </Typography>
-                )}
-              </Stack>
+              )}
             </Stack>
           </Stack>
-
-          <Stack direction={"row"} spacing={2} sx={{ minWidth: "fit-content" }}>
-            <Typography
-              sx={{
-                fontSize: "1rem",
-                color: amountColor,
-                lineHeight: "36px",
-                alignContent: "center",
-              }}
-            >
-              {amount}
-            </Typography>
-          </Stack>
         </Stack>
-      </Box>
+
+        {/* Amount */}
+        <Typography sx={{ color: amountColor }}>{amount}</Typography>
+      </Stack>
     </Box>
   )
 }

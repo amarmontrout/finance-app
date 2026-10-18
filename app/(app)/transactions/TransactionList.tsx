@@ -4,7 +4,6 @@ import ListItemSwipe from "@/app/components/ui/ListItemSwipe"
 import { ACCENT_COLOR, TEXT_COLOR } from "@/app/data/colors"
 import { currencyFormatter, formatDate } from "@/app/lib/functions/formatters"
 import { HookSetter } from "@/app/lib/types"
-import WarningAmberOutlinedIcon from "@mui/icons-material/WarningAmberOutlined"
 import { Box, Stack, Typography } from "@mui/material"
 
 const TransactionList = ({
@@ -67,13 +66,11 @@ const TransactionList = ({
                       return (
                         <ListItemSwipe
                           key={t.transaction_id}
-                          icon={
+                          showAlert={
                             t.transaction_type === "Expense" &&
                             categoryMap.get(t.category_id!)
                               ?.default_transaction_type !== "Return" &&
-                            !t.is_paid && (
-                              <WarningAmberOutlinedIcon fontSize={"small"} />
-                            )
+                            !t.is_paid
                           }
                           mainTitle={t.merchant.name}
                           secondaryTitle={t.category.name}

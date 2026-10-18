@@ -43,7 +43,7 @@ const ListItemSwipe = ({
   const [offset, setOffset] = useState(0)
   const [isActioning, setIsActioning] = useState(false)
 
-  const EDGE_WIDTH = 50
+  const EDGE_WIDTH = 70
   const SWIPE_DISTANCE = 110
   // Prevent accidental swipes while scrolling. Higher threshold less sensitive
   const DIRECTION_THRESHOLD = 15
@@ -56,9 +56,7 @@ const ListItemSwipe = ({
     const direction = Math.sign(delta)
     const distance = Math.abs(delta)
 
-    if (distance <= SWIPE_DISTANCE) {
-      return delta
-    }
+    if (distance <= SWIPE_DISTANCE) return delta
 
     const excess = distance - SWIPE_DISTANCE
     const resistedExcess = excess * 0.25
@@ -72,7 +70,6 @@ const ListItemSwipe = ({
 
     const touchX = touch.clientX
     const touchY = touch.clientY
-
     const isLeftEdge = touchX - element.left <= EDGE_WIDTH
     const isRightEdge = element.right - touchX <= EDGE_WIDTH
 
@@ -82,7 +79,6 @@ const ListItemSwipe = ({
     }
 
     startEdgeRef.current = isLeftEdge ? "left" : "right"
-
     startXRef.current = touchX
     startYRef.current = touchY
     gestureLockRef.current = null
@@ -110,21 +106,27 @@ const ListItemSwipe = ({
     }
 
     // Vertical gesture → let the browser scroll normally
-    if (gestureLockRef.current === "vertical") {
-      return
-    }
+    if (gestureLockRef.current === "vertical") return
 
     // Horizontal gesture → prevent vertical scrolling
     if (gestureLockRef.current === "horizontal") {
       e.preventDefault()
 
       if (startEdgeRef.current === "left") {
-        if (noEdit) {
+        // Left edge: allow right only (edit)
+        if (deltaX <= 0 || noEdit) {
           setOffset(0)
-        } else {
-          setOffset(Math.min(getResistedOffset(deltaX), SWIPE_DISTANCE + 40))
+          return
         }
+
+        setOffset(Math.min(getResistedOffset(deltaX), SWIPE_DISTANCE + 40))
       } else {
+        // Right edge: allow left only (delete)
+        if (deltaX >= 0) {
+          setOffset(0)
+          return
+        }
+
         setOffset(Math.max(getResistedOffset(deltaX), -(SWIPE_DISTANCE + 40)))
       }
     }
@@ -133,18 +135,27 @@ const ListItemSwipe = ({
   const handleTouchEnd = async () => {
     if (isActioning) return
 
-    if (offset <= -SWIPE_DISTANCE) {
-      setIsActioning(true)
-      await onDelete()
-    } else if (!noEdit && offset >= SWIPE_DISTANCE) {
-      setIsActioning(true)
-      onEdit()
-    }
+    const shouldDelete = offset <= -SWIPE_DISTANCE
+    const shouldEdit = !noEdit && offset >= SWIPE_DISTANCE
 
-    setOffset(0)
+    // Clear gesture tracking before running the action.
     startEdgeRef.current = null
     gestureLockRef.current = null
-    setIsActioning(false)
+
+    try {
+      if (shouldDelete || shouldEdit) {
+        setIsActioning(true)
+
+        if (shouldDelete) {
+          await onDelete()
+        } else {
+          onEdit()
+        }
+      }
+    } finally {
+      setOffset(0)
+      setIsActioning(false)
+    }
   }
 
   return (
@@ -177,14 +188,14 @@ const ListItemSwipe = ({
               left: 0,
               top: 0,
               bottom: 0,
-              width: isEditActive ? "100%" : Math.max(0, offset),
+              width: isEditActive ? "100%" : `${Math.max(0, offset)}px`,
               bgcolor: POSITIVE_COLOR,
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-start",
               color: TEXT_COLOR,
               overflow: "hidden",
-              transition: isEditActive ? "width 0.5s ease" : "none",
+              transition: isEditActive ? "width 0.75s ease" : "none",
             }}
           >
             <EditIcon
@@ -203,14 +214,14 @@ const ListItemSwipe = ({
               right: 0,
               top: 0,
               bottom: 0,
-              width: isDeleteActive ? "100%" : Math.max(0, -offset),
+              width: isDeleteActive ? "100%" : `${Math.max(0, -offset)}px`,
               bgcolor: NEGATIVE_COLOR,
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-end",
               color: TEXT_COLOR,
               overflow: "hidden",
-              transition: isDeleteActive ? "width 0.5s ease" : "none",
+              transition: isDeleteActive ? "width 0.75s ease" : "none",
             }}
           >
             <DeleteIcon

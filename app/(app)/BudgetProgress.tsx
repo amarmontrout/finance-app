@@ -43,7 +43,9 @@ const BudgetProgress = () => {
   })
 
   return (
-    <Stack direction={"column"} spacing={1} sx={{ textAlign: "right" }}>
+    <Stack direction={"column"} spacing={2}>
+      <Typography>Budget Progess</Typography>
+
       <ProgressBar
         label={"Total Budget"}
         budget={budgetTotal}
@@ -51,7 +53,10 @@ const BudgetProgress = () => {
         expected={earnedBudget !== 0 ? earnedBudget : undefined}
       />
 
-      <Link href={"/budget"} style={{ textDecoration: "none" }}>
+      <Link
+        href={"/budget"}
+        style={{ textDecoration: "none", textAlign: "right" }}
+      >
         <Typography
           variant={"body2"}
           sx={{ gap: 0.5, color: TEXT_COLOR, lineHeight: 1 }}

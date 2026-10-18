@@ -46,7 +46,12 @@ const TransactionList = ({
               <Stack direction={"column"} spacing={1}>
                 <Stack
                   direction={"row"}
-                  sx={{ justifyContent: "space-between", color: ACCENT_COLOR }}
+                  sx={{
+                    justifyContent: "space-between",
+                    color: ACCENT_COLOR,
+                    borderBottom: `1px dotted ${ACCENT_COLOR}`,
+                    borderTop: `1px dotted ${ACCENT_COLOR}`,
+                  }}
                 >
                   <Typography sx={{ fontSize: "1rem" }}>
                     {formatDate(date)}

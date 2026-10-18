@@ -1,17 +1,17 @@
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp"
-import { Box, Skeleton, Stack, Typography } from "@mui/material"
+import { Skeleton, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import { TransactionType } from "../(api)/transactions/models"
 import { getTransactions } from "../(api)/transactions/requests"
-import Section from "../components/Section"
 import SummaryCard from "../components/ui/SummaryCard"
 import { useDataContext } from "../contexts/data-context"
 import { useTransactionContext } from "../contexts/transaction-context"
 import { ACCENT_COLOR, NEGATIVE_COLOR, POSITIVE_COLOR } from "../data/colors"
-import { currencyFormatter } from "../lib/functions/formatters"
+import { currencyFormatter, formatDate } from "../lib/functions/formatters"
 import {
   getDateRange,
+  getISODate,
   getTotalIncomeAndExpense,
 } from "../lib/functions/getters"
 
@@ -22,14 +22,18 @@ const SummaryValue = ({
   label,
   value,
   loading,
+  textColor,
 }: {
   label: string
   value: number
   loading: boolean
+  textColor: string
 }) => {
   return (
     <Stack direction={"column"}>
-      <Typography variant={"caption"}>{label}</Typography>
+      <Typography variant={"caption"} sx={{ color: textColor }}>
+        {label}
+      </Typography>
       <Typography variant={"h6"} sx={{ fontWeight: 700 }}>
         {loading ? <Skeleton /> : currencyFormatter.format(value)}
       </Typography>
@@ -40,6 +44,7 @@ const SummaryValue = ({
 const Summary = () => {
   const { accountMap, isDataContextLoading } = useDataContext()
   const { transactions } = useTransactionContext()
+  const date = formatDate(getISODate())
 
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
   const [transactionInfo, setTransactionInfo] = useState<InfoType>(DEFAULT_INFO)
@@ -80,48 +85,50 @@ const Summary = () => {
   }, [transactions.length])
 
   return (
-    <Box>
-      <Section>
-        <SummaryCard borderColor={ACCENT_COLOR} padding={2}>
-          <Stack direction={"column"} spacing={1}>
-            <Stack direction={"column"}>
-              <Typography variant={"caption"}>Net Income</Typography>
-              <Typography variant={"h4"} sx={{ fontWeight: 700 }}>
-                {isPageLoading ? (
-                  <Skeleton />
-                ) : (
-                  currencyFormatter.format(current.netIncome)
-                )}
-              </Typography>
-            </Stack>
-            {isPageLoading ? (
-              <Skeleton height={"20px"} />
-            ) : (
-              <Typography
-                variant={"body2"}
-                sx={{
-                  display: "flex",
-                  fontWeight: 700,
-                  color:
-                    current.netIncome >= previous.netIncome
-                      ? POSITIVE_COLOR
-                      : NEGATIVE_COLOR,
-                }}
-              >
-                {current.netIncome >= previous.netIncome ? (
-                  <ArrowDropUpIcon fontSize={"small"} />
-                ) : (
-                  <ArrowDropDownIcon fontSize={"small"} />
-                )}
-                {currencyFormatter.format(
-                  Math.abs(current.netIncome - previous.netIncome),
-                )}{" "}
-                vs last month
-              </Typography>
-            )}
+    <Stack direction={"column"} spacing={2}>
+      <Typography>Finanical Health</Typography>
+
+      <SummaryCard borderColor={ACCENT_COLOR} padding={2}>
+        <Stack direction={"column"} spacing={1}>
+          <Stack direction={"column"}>
+            <Typography variant={"caption"} sx={{ color: ACCENT_COLOR }}>
+              Net Income
+            </Typography>
+            <Typography variant={"h4"} sx={{ fontWeight: 700 }}>
+              {isPageLoading ? (
+                <Skeleton />
+              ) : (
+                currencyFormatter.format(current.netIncome)
+              )}
+            </Typography>
           </Stack>
-        </SummaryCard>
-      </Section>
+          {isPageLoading ? (
+            <Skeleton height={"20px"} />
+          ) : (
+            <Typography
+              variant={"body2"}
+              sx={{
+                display: "flex",
+                fontWeight: 700,
+                color:
+                  current.netIncome >= previous.netIncome
+                    ? POSITIVE_COLOR
+                    : NEGATIVE_COLOR,
+              }}
+            >
+              {current.netIncome >= previous.netIncome ? (
+                <ArrowDropUpIcon fontSize={"small"} />
+              ) : (
+                <ArrowDropDownIcon fontSize={"small"} />
+              )}
+              {currencyFormatter.format(
+                Math.abs(current.netIncome - previous.netIncome),
+              )}{" "}
+              vs last month
+            </Typography>
+          )}
+        </Stack>
+      </SummaryCard>
 
       <Stack direction={"row"} spacing={2}>
         <SummaryCard borderColor={POSITIVE_COLOR} padding={1.5}>
@@ -129,6 +136,7 @@ const Summary = () => {
             label={"Income"}
             value={current.totalIncome}
             loading={isPageLoading}
+            textColor={POSITIVE_COLOR}
           />
         </SummaryCard>
 
@@ -137,10 +145,11 @@ const Summary = () => {
             label={"Expense"}
             value={current.totalExpense}
             loading={isPageLoading}
+            textColor={NEGATIVE_COLOR}
           />
         </SummaryCard>
       </Stack>
-    </Box>
+    </Stack>
   )
 }
 

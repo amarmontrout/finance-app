@@ -1,7 +1,7 @@
 import { AccountTypeValue } from "../(api)/accounts/models"
 import { TransactionTypeValue } from "../(api)/transactions/models"
 
-export const MONTH_INDEX_V2: Record<string, string> = {
+export const MONTH_INDEX: Record<string, string> = {
   "01": "January",
   "02": "February",
   "03": "March",

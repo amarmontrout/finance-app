@@ -53,6 +53,34 @@ export const getMonthRange = (date: Date | string = new Date()) => {
 }
 
 /**
+ * Get the billing cycle containing the given date.
+ * The range starts on startDay and ends the day before
+ * startDay in the following month.
+ */
+export const getDateRangeGivenStartDay = ({
+  date,
+  startDay,
+}: {
+  date: Date | string
+  startDay: number
+}) => {
+  const [year, month, day] =
+    typeof date === "string"
+      ? date.split("-").map(Number)
+      : [date.getFullYear(), date.getMonth() + 1, date.getDate()]
+
+  const startMonth = day >= startDay ? month : month - 1
+
+  const startDate = new Date(year, startMonth - 1, startDay)
+  const endDate = new Date(year, startMonth, startDay - 1)
+
+  return {
+    start: getISODate(startDate),
+    end: getISODate(endDate),
+  }
+}
+
+/**
  * Returns how many days in the provided month
  */
 export const getDaysInMonth = (isoDate: string) => {

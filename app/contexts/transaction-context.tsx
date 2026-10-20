@@ -122,7 +122,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const refreshTransactions = useCallback(async () => {
     const { start, end } = getMonthRange(selectedDate)
     try {
-      const transactions = await getTransactions({
+      const transactions: TransactionType[] = await getTransactions({
         start: start,
         end: end,
       })
@@ -135,7 +135,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
 
   const refreshDeletedTransactions = useCallback(async () => {
     try {
-      const transactions = await getDeletedTransactions()
+      const transactions: TransactionType[] = await getDeletedTransactions()
       setDeletedTransactions(transactions ?? [])
     } catch (error) {
       console.error("Failed to fetch deleted transactions", error)

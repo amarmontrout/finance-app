@@ -20,7 +20,7 @@ import {
   updateTransaction,
 } from "../(api)/transactions/requests"
 import { AlertToastType } from "../components/ui/AlertToast"
-import { getDateRange, getISODate } from "../lib/functions/getters"
+import { getISODate, getMonthRange } from "../lib/functions/getters"
 import { HookSetter } from "../lib/types"
 
 const createInitialTransaction = (): CreateTransactionType => ({
@@ -120,11 +120,11 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   )
 
   const refreshTransactions = useCallback(async () => {
-    const { startOfMonth, endOfMonth } = getDateRange(selectedDate)
+    const { start, end } = getMonthRange(selectedDate)
     try {
       const transactions = await getTransactions({
-        startOfMonth: startOfMonth,
-        endOfMonth: endOfMonth,
+        start: start,
+        end: end,
       })
       setTransactions(transactions ?? [])
     } catch (error) {

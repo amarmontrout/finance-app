@@ -49,11 +49,11 @@ export const getDeletedTransactions = async () => {
 }
 
 export const getTransactions = async ({
-  startOfMonth,
-  endOfMonth,
+  start,
+  end,
 }: {
-  startOfMonth: string
-  endOfMonth: string
+  start: string
+  end: string
 }) => {
   const { sb, user } = await getAuthenticatedSupabase()
   const { data, error } = await sb
@@ -75,8 +75,8 @@ export const getTransactions = async ({
     )
     .eq("user_id", user.id)
     .is("deleted_at", null)
-    .gte("transaction_date", startOfMonth)
-    .lte("transaction_date", endOfMonth)
+    .gte("transaction_date", start)
+    .lte("transaction_date", end)
     .order("transaction_date", { ascending: false })
   if (error) {
     throw error

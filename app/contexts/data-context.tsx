@@ -150,15 +150,15 @@ export const DataProvider = (props: { children: React.ReactNode }) => {
       const currentYear = today.getFullYear()
       const currentMonthIndex = today.getMonth()
       const isJanuary = currentMonthIndex === 0
-      const startDate = isJanuary
+      const start = isJanuary
         ? getISOMonth(new Date(currentYear - 1, 0))
         : getISOMonth(new Date(currentYear, 0))
-      const endDate = isJanuary
+      const end = isJanuary
         ? getISODate(new Date(currentYear - 1, 11, 31))
         : getISODate(new Date(currentYear, currentMonthIndex, 0))
       const periodTransactions = await getTransactions({
-        startOfMonth: startDate,
-        endOfMonth: endDate,
+        start: start,
+        end: end,
       })
       const categoryTransactions = periodTransactions.filter(
         (transaction) =>

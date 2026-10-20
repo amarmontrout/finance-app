@@ -1,12 +1,16 @@
 import { AccountType } from "@/app/(api)/accounts/models"
 import { TransactionType } from "@/app/(api)/transactions/models"
 
-/** Returns today's date in ISO format. YYYY-MM-DD */
+// DATES =======================================================================
+
+/**
+ * Returns Date in ISO format. YYYY-MM-DD
+ */
 export const getISODate = (date: Date = new Date()) => {
-  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-    2,
-    "0",
-  )}-${String(date.getDate()).padStart(2, "0")}`
+  const year = String(date.getFullYear())
+  const month = String(date.getMonth() + 1).padStart(2, "0")
+  const day = String(date.getDate()).padStart(2, "0")
+  return `${year}-${month}-${day}`
 }
 
 /**
@@ -30,24 +34,33 @@ export const getISOMonthWithOffset = (date: Date | string, offset: number) => {
     typeof date === "string"
       ? date.split("-").map(Number)
       : [date.getFullYear(), date.getMonth() + 1]
-
   return getISOMonth(new Date(year, month - 1 + offset, 1))
 }
 
 /**
- * Get start and end dates in ISO format for the provided Date
+ * Get start and end month dates in ISO format for the provided date
  */
-export const getDateRange = (date: Date | string = new Date()) => {
+export const getMonthRange = (date: Date | string = new Date()) => {
   const [year, month] =
     typeof date === "string"
       ? date.split("-").map(Number)
       : [date.getFullYear(), date.getMonth() + 1]
 
   return {
-    startOfMonth: getISOMonth(date),
-    endOfMonth: getISODate(new Date(year, month, 0)),
+    start: getISOMonth(date),
+    end: getISODate(new Date(year, month, 0)),
   }
 }
+
+/**
+ * Returns how many days in the provided month
+ */
+export const getDaysInMonth = (isoDate: string) => {
+  const [year, month] = isoDate.split("-").map(Number)
+  return new Date(year, month, 0).getDate()
+}
+
+// OTHER =======================================================================
 
 export const getTotalIncomeAndExpense = ({
   transactions,
@@ -76,14 +89,6 @@ export const getTotalIncomeAndExpense = ({
     ...totals,
     netIncome: totals.totalIncome - totals.totalExpense,
   }
-}
-
-/**
- * Returns how many days in the provided month
- */
-export const getDaysInMonth = (isoDate: string) => {
-  const [year, month] = isoDate.split("-").map(Number)
-  return new Date(year, month, 0).getDate()
 }
 
 /**

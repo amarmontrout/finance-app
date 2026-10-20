@@ -8,10 +8,9 @@ import SummaryCard from "../components/ui/SummaryCard"
 import { useDataContext } from "../contexts/data-context"
 import { useTransactionContext } from "../contexts/transaction-context"
 import { ACCENT_COLOR, NEGATIVE_COLOR, POSITIVE_COLOR } from "../data/colors"
-import { currencyFormatter, formatDate } from "../lib/functions/formatters"
+import { currencyFormatter } from "../lib/functions/formatters"
 import {
-  getDateRange,
-  getISODate,
+  getMonthRange,
   getTotalIncomeAndExpense,
 } from "../lib/functions/getters"
 
@@ -44,7 +43,6 @@ const SummaryValue = ({
 const Summary = () => {
   const { accountMap, isDataContextLoading } = useDataContext()
   const { transactions } = useTransactionContext()
-  const date = formatDate(getISODate())
 
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
   const [transactionInfo, setTransactionInfo] = useState<InfoType>(DEFAULT_INFO)
@@ -68,8 +66,8 @@ const Summary = () => {
 
     try {
       const [currTrans, prevTrans] = await Promise.all([
-        getTransactions(getDateRange(currMonth)),
-        getTransactions(getDateRange(prevMonth)),
+        getTransactions(getMonthRange(currMonth)),
+        getTransactions(getMonthRange(prevMonth)),
       ])
       setTransactionInfo({ current: currTrans, previous: prevTrans })
     } catch (error) {

@@ -12,7 +12,7 @@ import Surface from "@/app/components/ui/Surface"
 import { useDataContext } from "@/app/contexts/data-context"
 import { useTransactionContext } from "@/app/contexts/transaction-context"
 import { TEXT_COLOR } from "@/app/data/colors"
-import { getDateRange, getISOMonth } from "@/app/lib/functions/getters"
+import { getISOMonth } from "@/app/lib/functions/getters"
 import { HookSetter } from "@/app/lib/types"
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded"
 import { Box, CircularProgress, Stack, Typography } from "@mui/material"
@@ -64,21 +64,21 @@ export default function Budget() {
   const { selectedDate, transactions, alertToast, isTransactionsLoading } =
     useTransactionContext()
 
-  const { startOfMonth } = getDateRange(selectedDate)
+  const firstOfTheMonth = getISOMonth(selectedDate)
   const { budgets, categoryMap, setOpenAddBudget, isDataContextLoading } =
     useDataContext()
   const isLoading = isTransactionsLoading || isDataContextLoading
-  const isCurrentMonth = startOfMonth === getISOMonth()
+  const isCurrentMonth = firstOfTheMonth === getISOMonth()
 
   const [expandedCategory, setExpandedCategory] = useState<string>()
 
   const selectedDateBudgets = useMemo(() => {
     return budgets.filter(
       (budget) =>
-        budget.start_month <= startOfMonth &&
-        (budget.end_month === null || budget.end_month >= startOfMonth),
+        budget.start_month <= firstOfTheMonth &&
+        (budget.end_month === null || budget.end_month >= firstOfTheMonth),
     )
-  }, [budgets, startOfMonth])
+  }, [budgets, firstOfTheMonth])
 
   const budgetLookup = useMemo(() => {
     return selectedDateBudgets.reduce(

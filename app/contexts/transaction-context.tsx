@@ -126,7 +126,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
         start: start,
         end: end,
       })
-      setTransactions(transactions ?? [])
+      setTransactions(transactions)
     } catch (error) {
       console.error("Failed to fetch transactions", error)
       setTransactions([])
@@ -136,7 +136,7 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   const refreshDeletedTransactions = useCallback(async () => {
     try {
       const transactions: TransactionType[] = await getDeletedTransactions()
-      setDeletedTransactions(transactions ?? [])
+      setDeletedTransactions(transactions)
     } catch (error) {
       console.error("Failed to fetch deleted transactions", error)
       setDeletedTransactions([])

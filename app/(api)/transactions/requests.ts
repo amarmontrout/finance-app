@@ -1,6 +1,6 @@
 import { getAuthenticatedSupabase } from "../getAuthenticatedSupabase"
 import { Schemas, Tables } from "../supabase/models"
-import { CreateTransactionType } from "./models"
+import { CreateTransactionType, TransactionType } from "./models"
 
 export const createTransaction = async ({
   body,
@@ -45,7 +45,7 @@ export const getDeletedTransactions = async () => {
   if (error) {
     throw error
   }
-  return data
+  return data as TransactionType[]
 }
 
 export const getTransactions = async ({
@@ -81,7 +81,7 @@ export const getTransactions = async ({
   if (error) {
     throw error
   }
-  return data
+  return data as TransactionType[]
 }
 
 export const updateTransaction = async ({

@@ -10,6 +10,8 @@ import { useTransactionContext } from "../contexts/transaction-context"
 import { ACCENT_COLOR, NEGATIVE_COLOR, POSITIVE_COLOR } from "../data/colors"
 import { currencyFormatter } from "../lib/functions/formatters"
 import {
+  getISOMonth,
+  getISOMonthWithOffset,
   getMonthRange,
   getTotalIncomeAndExpense,
 } from "../lib/functions/getters"
@@ -41,13 +43,11 @@ const SummaryValue = ({
 }
 
 const Summary = () => {
-  const { accountMap, isDataContextLoading } = useDataContext()
+  const { accountMap } = useDataContext()
   const { transactions } = useTransactionContext()
 
   const [isTransactionsLoading, setIsTransactionsLoading] = useState(true)
   const [transactionInfo, setTransactionInfo] = useState<InfoType>(DEFAULT_INFO)
-
-  const isPageLoading = isDataContextLoading || isTransactionsLoading
 
   const current = getTotalIncomeAndExpense({
     transactions: transactionInfo.current,
@@ -60,9 +60,8 @@ const Summary = () => {
 
   const fetchTransactions = async () => {
     setIsTransactionsLoading(true)
-    const currMonth = new Date()
-    const prevMonth = new Date()
-    prevMonth.setMonth(prevMonth.getMonth() - 1)
+    const currMonth = getISOMonth()
+    const prevMonth = getISOMonthWithOffset(currMonth, -1)
 
     try {
       const [currTrans, prevTrans] = await Promise.all([
@@ -72,9 +71,9 @@ const Summary = () => {
       setTransactionInfo({ current: currTrans, previous: prevTrans })
     } catch (error) {
       console.error(error)
-    } finally {
-      setIsTransactionsLoading(false)
     }
+
+    setIsTransactionsLoading(false)
   }
 
   useEffect(() => {
@@ -93,14 +92,14 @@ const Summary = () => {
               Net Income
             </Typography>
             <Typography variant={"h4"} sx={{ fontWeight: 700 }}>
-              {isPageLoading ? (
+              {isTransactionsLoading ? (
                 <Skeleton />
               ) : (
                 currencyFormatter.format(current.netIncome)
               )}
             </Typography>
           </Stack>
-          {isPageLoading ? (
+          {isTransactionsLoading ? (
             <Skeleton height={"20px"} />
           ) : (
             <Typography
@@ -133,7 +132,7 @@ const Summary = () => {
           <SummaryValue
             label={"Income"}
             value={current.totalIncome}
-            loading={isPageLoading}
+            loading={isTransactionsLoading}
             textColor={POSITIVE_COLOR}
           />
         </SummaryCard>
@@ -142,7 +141,7 @@ const Summary = () => {
           <SummaryValue
             label={"Expense"}
             value={current.totalExpense}
-            loading={isPageLoading}
+            loading={isTransactionsLoading}
             textColor={NEGATIVE_COLOR}
           />
         </SummaryCard>

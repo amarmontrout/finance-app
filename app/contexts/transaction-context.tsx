@@ -120,12 +120,10 @@ export const TransactionProvider = (props: { children: React.ReactNode }) => {
   )
 
   const refreshTransactions = useCallback(async () => {
-    const { start, end } = getMonthRange(selectedDate)
     try {
-      const transactions: TransactionType[] = await getTransactions({
-        start: start,
-        end: end,
-      })
+      const transactions: TransactionType[] = await getTransactions(
+        getMonthRange(selectedDate),
+      )
       setTransactions(transactions)
     } catch (error) {
       console.error("Failed to fetch transactions", error)

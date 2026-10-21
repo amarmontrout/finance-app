@@ -1,6 +1,10 @@
 import { getAuthenticatedSupabase } from "../getAuthenticatedSupabase"
 import { Schemas, Tables } from "../supabase/models"
-import { CreateTransactionType, TransactionType } from "./models"
+import {
+  CreateTransactionType,
+  TransactionType,
+  TransactionTypeValue,
+} from "./models"
 
 export const createTransaction = async ({
   body,
@@ -51,12 +55,25 @@ export const getDeletedTransactions = async () => {
 export const getTransactions = async ({
   start,
   end,
+  accountId,
+  merchantId,
+  categoryId,
+  parentTransactionId,
+  transactionType,
+  isPaid,
 }: {
   start: string
   end: string
+  accountId?: string
+  merchantId?: string
+  categoryId?: string
+  parentTransactionId?: string
+  transactionType?: TransactionTypeValue[]
+  isPaid?: boolean
 }) => {
   const { sb, user } = await getAuthenticatedSupabase()
-  const { data, error } = await sb
+
+  let query = sb
     .schema(Schemas.V2)
     .from(Tables.Transactions)
     .select(
@@ -77,7 +94,29 @@ export const getTransactions = async ({
     .is("deleted_at", null)
     .gte("transaction_date", start)
     .lte("transaction_date", end)
-    .order("transaction_date", { ascending: false })
+
+  if (accountId !== undefined) {
+    query = query.eq("account_id", accountId)
+  }
+  if (merchantId !== undefined) {
+    query = query.eq("merchant_id", merchantId)
+  }
+  if (categoryId !== undefined) {
+    query = query.eq("category_id", categoryId)
+  }
+  if (parentTransactionId !== undefined) {
+    query = query.eq("parent_transaction_id", parentTransactionId)
+  }
+  if (transactionType !== undefined && transactionType.length > 0) {
+    query = query.in("transaction_type", transactionType)
+  }
+  if (isPaid !== undefined) {
+    query = query.eq("is_paid", isPaid)
+  }
+
+  const { data, error } = await query.order("transaction_date", {
+    ascending: false,
+  })
   if (error) {
     throw error
   }
